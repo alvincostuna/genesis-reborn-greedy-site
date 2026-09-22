@@ -8,6 +8,10 @@ compatibility_date = "2026-09-22"
 workers_dev = false
 preview_urls = false
 
+# Preserve dashboard-managed preview configuration (Access AUD/team domain)
+# on future Wrangler uploads. Cloudflare secrets are preserved automatically.
+keep_vars = true
+
 [assets]
 directory = "./public"
 binding = "ASSETS"
@@ -27,10 +31,10 @@ preview_urls = true
 SUPABASE_URL = "https://lyhrwymhzhhxszquxnke.supabase.co"
 ADMIN_EMAILS = "alvin.costuna@deped.gov.ph"
 
-# Preview-only secrets required in Cloudflare:
-# npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY --env preview
-# npx wrangler secret put CF_ACCESS_TEAM_DOMAIN --env preview
-# npx wrangler secret put CF_ACCESS_AUD --env preview
+# Preview runtime values managed in Cloudflare dashboard:
+# SUPABASE_SERVICE_ROLE_KEY (Secret)
+# CF_ACCESS_TEAM_DOMAIN (Variable or Secret)
+# CF_ACCESS_AUD (Variable or Secret)
 #
 # DO NOT add a route or custom_domain here.
 # DO NOT point this Worker at genesis-reborn-greedy.hirangnalupa.workers.dev.
