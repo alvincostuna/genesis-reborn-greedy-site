@@ -2,9 +2,6 @@ name: Deploy GENESIS Admin Preview
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feat/admin-manuscript-viewer
 
 permissions:
   contents: read
