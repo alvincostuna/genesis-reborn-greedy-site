@@ -1,0 +1,46 @@
+name: Deploy GENESIS Admin Preview
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: genesis-admin-preview
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    if: github.ref == 'refs/heads/feat/admin-manuscript-viewer'
+    environment: genesis-admin-preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Type-check
+        run: npm run types
+
+      - name: Upload isolated Cloudflare preview version
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: versions upload --env preview
+
+      - name: Safety reminder
+        run: |
+          echo "Preview upload only."
+          echo "No production route or custom domain is configured."
+          echo "Do not attach the live GENESIS hostname to this Worker."
