@@ -2,6 +2,12 @@ name = "genesis-reborn-greedy-site"
 main = "src/worker.ts"
 compatibility_date = "2026-09-22"
 
+# SAFETY LOCK:
+# The top-level Worker has no workers.dev URL, no Preview URLs, and no routes.
+# A plain "wrangler deploy" must not become reachable from the Internet.
+workers_dev = false
+preview_urls = false
+
 [assets]
 directory = "./public"
 binding = "ASSETS"
@@ -10,10 +16,21 @@ binding = "ASSETS"
 SUPABASE_URL = "https://lyhrwymhzhhxszquxnke.supabase.co"
 ADMIN_EMAILS = "alvin.costuna@deped.gov.ph"
 
-# Required secrets:
-# wrangler secret put SUPABASE_SERVICE_ROLE_KEY
-# wrangler secret put CF_ACCESS_TEAM_DOMAIN
-# wrangler secret put CF_ACCESS_AUD
+# Preview is a separate Worker environment:
+# genesis-reborn-greedy-site-preview.<account>.workers.dev
+# It has no route or Custom Domain for the live GENESIS hostname.
+[env.preview]
+workers_dev = true
+preview_urls = true
+
+[env.preview.vars]
+SUPABASE_URL = "https://lyhrwymhzhhxszquxnke.supabase.co"
+ADMIN_EMAILS = "alvin.costuna@deped.gov.ph"
+
+# Preview-only secrets required in Cloudflare:
+# npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY --env preview
+# npx wrangler secret put CF_ACCESS_TEAM_DOMAIN --env preview
+# npx wrangler secret put CF_ACCESS_AUD --env preview
 #
-# SAFETY: do not bind this branch to the production GENESIS domain yet.
-# This branch intentionally handles only /admin*.
+# DO NOT add a route or custom_domain here.
+# DO NOT point this Worker at genesis-reborn-greedy.hirangnalupa.workers.dev.
