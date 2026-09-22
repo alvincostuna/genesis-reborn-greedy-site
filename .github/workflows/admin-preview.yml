@@ -32,15 +32,15 @@ jobs:
       - name: Type-check
         run: npm run types
 
-      - name: Create isolated Cloudflare preview Worker
+      - name: Upload isolated Cloudflare preview version
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --env preview
+          command: versions upload --env preview
 
       - name: Safety reminder
         run: |
-          echo "Isolated preview Worker created/updated."
+          echo "Preview version uploaded."
           echo "No production route or custom domain is configured."
           echo "Do not attach the live GENESIS hostname to this Worker."
