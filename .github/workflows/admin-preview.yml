@@ -2,11 +2,6 @@ name: Deploy GENESIS Admin Preview
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feat/admin-manuscript-viewer
-    paths:
-      - package.json
 
 permissions:
   contents: read
@@ -37,15 +32,15 @@ jobs:
       - name: Type-check
         run: npm run types
 
-      - name: Upload isolated Cloudflare preview version
+      - name: Create isolated Cloudflare preview Worker
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: versions upload --env preview
+          command: deploy --env preview
 
       - name: Safety reminder
         run: |
-          echo "Preview upload only."
+          echo "Isolated preview Worker created/updated."
           echo "No production route or custom domain is configured."
           echo "Do not attach the live GENESIS hostname to this Worker."
