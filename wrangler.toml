@@ -1,0 +1,19 @@
+name = "genesis-reborn-greedy-site"
+main = "src/worker.ts"
+compatibility_date = "2026-09-22"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[vars]
+SUPABASE_URL = "https://lyhrwymhzhhxszquxnke.supabase.co"
+ADMIN_EMAILS = "alvin.costuna@deped.gov.ph"
+
+# Required secrets:
+# wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+# wrangler secret put CF_ACCESS_TEAM_DOMAIN
+# wrangler secret put CF_ACCESS_AUD
+#
+# SAFETY: do not bind this branch to the production GENESIS domain yet.
+# This branch intentionally handles only /admin*.
