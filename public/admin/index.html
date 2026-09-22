@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>GENESIS Admin — Manuscript Viewer</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="sigil">G</div>
+        <div>
+          <strong>GENESIS</strong>
+          <span>Private Admin</span>
+        </div>
+      </div>
+
+      <nav>
+        <button class="nav active" data-view="production">Production</button>
+        <button class="nav" data-view="manuscripts">Manuscripts</button>
+        <button class="nav" data-view="releases">Release Queue</button>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>PRE-103 inspection mode</strong>
+        <span>Read-only. Release mutations are disabled.</span>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">GENESIS: REBORN GREEDY</p>
+          <h1 id="page-title">Production Dashboard</h1>
+        </div>
+        <div id="release-badge" class="badge danger">LOADING</div>
+      </header>
+
+      <section id="production-view" class="view"></section>
+
+      <section id="manuscripts-view" class="view hidden">
+        <div class="toolbar">
+          <input id="search" placeholder="Search Part key or title">
+          <select id="episode-filter">
+            <option value="">All Episodes</option>
+            <option value="1">E001</option>
+            <option value="2">E002</option>
+            <option value="3">E003</option>
+            <option value="4">E004</option>
+            <option value="5">E005</option>
+          </select>
+          <button id="refresh-manuscripts">Refresh</button>
+        </div>
+        <div id="manuscript-table" class="panel"></div>
+      </section>
+
+      <section id="releases-view" class="view hidden">
+        <div id="release-table" class="panel"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="viewer">
+    <div class="viewer-head">
+      <div>
+        <p id="viewer-key" class="eyebrow"></p>
+        <h2 id="viewer-title"></h2>
+      </div>
+      <button id="close-viewer" class="icon-button" aria-label="Close">×</button>
+    </div>
+
+    <div class="tabs">
+      <button data-stage="stage1">Stage 1</button>
+      <button data-stage="stage2" class="active">Stage 2</button>
+      <button data-stage="final">Final Canon</button>
+      <button id="compare-button">Compare S1 ↔ S2</button>
+      <button id="preview-button">Preview as Reader</button>
+    </div>
+
+    <div id="viewer-meta" class="meta-grid"></div>
+    <article id="manuscript-body" class="manuscript"></article>
+  </dialog>
+
+  <dialog id="preview">
+    <div class="preview-banner">PRIVATE PREVIEW — NOT PUBLIC</div>
+    <button id="close-preview" class="preview-close">Close preview</button>
+    <article id="preview-body" class="reader-preview"></article>
+  </dialog>
+
+  <script type="module" src="/admin/admin.js"></script>
+</body>
+</html>
