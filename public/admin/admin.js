@@ -96,13 +96,30 @@ async function loadManuscripts(){
 }
 
 async function loadReleases(){
+  const cards=$("#release-policy");
   const table=$("#release-table");
+  cards.innerHTML='<div class="card"><span>Release policy</span><strong>Loading…</strong></div>';
   table.innerHTML='<div class="empty">Loading release queue…</div>';
   try{
-    const data=await api("/admin/api/releases");
+    const [data,envelope]=await Promise.all([
+      api("/admin/api/releases"),
+      api("/admin/api/release-policy")
+    ]);
+    const policy=envelope.policy||{};
+    const clock=envelope.clock||{};
+    cards.innerHTML=
+      '<div class="card"><span>Launch batch</span><strong>Episodes 1–'+escapeHtml(policy.launch_episode_count??10)+'</strong></div>'+
+      '<div class="card"><span>Ongoing cadence</span><strong>1 Part / '+escapeHtml(policy.cycle_hours??8)+'h</strong></div>'+
+      '<div class="card"><span>Timezone</span><strong>'+escapeHtml(policy.timezone||"Asia/Manila")+'</strong></div>'+
+      '<div class="card"><span>Launch state</span><strong>'+escapeHtml(policy.launch_authorized?"AUTHORIZED":"NOT AUTHORIZED")+'</strong></div>'+
+      '<div class="card"><span>Releases</span><strong>'+escapeHtml(policy.releases_paused?"PAUSED":"ACTIVE")+'</strong></div>'+
+      '<div class="card"><span>Next publish</span><strong>'+escapeHtml(clock.next_publish_at||"NOT SET")+'</strong></div>'+
+      '<div class="card"><span>Released Parts</span><strong>'+escapeHtml(clock.released_parts??0)+'</strong></div>'+
+      '<div class="card"><span>Release unit</span><strong>'+escapeHtml(policy.ongoing_release_unit||"PART")+'</strong></div>';
+
     const items=data.items||[];
     if(!items.length){
-      table.innerHTML='<div class="empty"><strong>No release items yet.</strong><br>That is correct before the real 103 closeout.</div>';
+      table.innerHTML='<div class="empty"><strong>No release items yet.</strong><br>Correct for pre-launch: the fresh E001–E010 Final Canon launch batch has not been created.</div>';
       return;
     }
     table.innerHTML=
@@ -112,6 +129,7 @@ async function loadReleases(){
       ).join("")+
       '</tbody></table>';
   }catch(error){
+    cards.innerHTML='';
     table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
   }
 }
