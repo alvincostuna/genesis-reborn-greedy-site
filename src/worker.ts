@@ -208,6 +208,25 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   throw new HttpError(404, "ADMIN_ROUTE_NOT_FOUND", "Admin API route not found.");
 }
 
+async function handleSitePreviewAsset(request: Request, env: Env): Promise<Response> {
+  await requireAdmin(request, env);
+  const url = new URL(request.url);
+  if (url.pathname === "/site-preview" || url.pathname === "/site-preview/") {
+    url.pathname = "/site-preview/index.html";
+  }
+
+  const response = await env.ASSETS.fetch(new Request(url.toString(), request));
+  const headers = new Headers(response.headers);
+  headers.set("Cache-Control", "no-store, private");
+  headers.set("X-Robots-Tag", "noindex, nofollow");
+  headers.set("X-Content-Type-Options", "nosniff");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
+}
+
 async function handleAdminAsset(request: Request, env: Env): Promise<Response> {
   await requireAdmin(request, env);
   const url = new URL(request.url);
