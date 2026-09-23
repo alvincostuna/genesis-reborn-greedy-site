@@ -102,8 +102,40 @@ jobs:
             exit 1
           fi
 
+      - name: Promote verified version to protected preview Worker
+        env:
+          WRANGLER_OUTPUT: ${{ steps.upload-preview.outputs.command-output }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          VERSION_ID="$(printf '%s\n' "$WRANGLER_OUTPUT" | sed -n 's/.*Worker Version ID: //p' | tail -n 1)"
+          if [ -z "$VERSION_ID" ]; then
+            echo "Could not resolve the verified Worker Version ID."
+            exit 1
+          fi
+          npx wrangler versions deploy "$VERSION_ID" --env preview --yes
+          echo "Verified version promoted to the protected preview Worker only."
+
+      - name: Verify stable protected preview hostname
+        run: |
+          set -euo pipefail
+          PREVIEW_URL="https://genesis-reborn-greedy-site-preview.hirangnalupa.workers.dev"
+          STATUS="$(curl -sS -D /tmp/genesis-stable-headers.txt -o /tmp/genesis-stable-check.txt -w '%{http_code}' "$PREVIEW_URL/site-preview/")"
+          echo "Stable preview unauthenticated check returned HTTP $STATUS"
+          if [ "$STATUS" = "401" ]; then
+            echo "Stable Worker authentication gate verified."
+          elif [ "$STATUS" = "302" ] && grep -Eiq '^(location:.*(cloudflareaccess|/cdn-cgi/access))' /tmp/genesis-stable-headers.txt; then
+            echo "Stable Cloudflare Access redirect gate verified."
+          else
+            echo "Protected stable preview check failed."
+            cat /tmp/genesis-stable-headers.txt
+            cat /tmp/genesis-stable-check.txt
+            exit 1
+          fi
+
       - name: Safety reminder
         run: |
-          echo "Preview version uploaded."
-          echo "No production route or custom domain is configured."
+          echo "Protected preview Worker updated and verified."
+          echo "No live GENESIS reader route or custom domain was changed."
           echo "Do not attach the live GENESIS hostname to this Worker."
