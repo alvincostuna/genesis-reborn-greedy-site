@@ -169,6 +169,17 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     return json({ ok: true, data });
   }
 
+  if (path === "/admin/api/release-policy") {
+    const [policy, clock] = await Promise.all([
+      rpc(env, "api_release_policy"),
+      rpc(env, "api_release_clock")
+    ]);
+    return json({ ok: true, data: {
+      policy: Array.isArray(policy) ? policy[0] : policy,
+      clock: Array.isArray(clock) ? clock[0] : clock
+    }});
+  }
+
   if (path === "/admin/api/database/summary") {
     const data = await rpc(env, "genesis_admin_game_database_summary");
     return json({ ok: true, data });
