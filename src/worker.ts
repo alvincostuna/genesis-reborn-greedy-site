@@ -131,12 +131,32 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   const path = url.pathname;
 
-  if (request.method !== "GET") {
+  if (request.method === "POST") {
+    const replyMatch = path.match(/^\/admin\/api\/messages\/([0-9a-f-]+)\/reply$/i);
+    if (replyMatch) {
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const message = String(body?.body || "").trim();
+      if (!message || message.length > 5000) {
+        throw new HttpError(400, "INVALID_MESSAGE", "Reply must be between 1 and 5000 characters.");
+      }
+      const data = await rpc(env, "genesis_admin_reply_support", {
+        p_conversation_id: replyMatch[1],
+        p_actor: email,
+        p_body: message
+      });
+      return json({ ok: true, data });
+    }
+
     throw new HttpError(
       405,
       "READ_ONLY_PHASE",
-      "Release mutations are intentionally disabled during the PRE-LAUNCH read-only Control Center build."
+      "Only Contact Us message replies are enabled. Release and production mutations remain disabled."
     );
+  }
+
+  if (request.method !== "GET") {
+    throw new HttpError(405, "METHOD_NOT_ALLOWED", "Method not allowed.");
   }
 
   if (path === "/admin/api/production") {
