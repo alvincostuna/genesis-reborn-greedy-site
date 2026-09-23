@@ -2,23 +2,26 @@ name: Deploy GENESIS Admin Preview
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - feat/brand-release-codex-prep
 
 permissions:
   contents: read
 
 concurrency:
-  group: genesis-admin-preview
+  group: genesis-site-control-center-preview
   cancel-in-progress: false
 
 jobs:
   preview:
-    if: github.ref == 'refs/heads/feat/admin-manuscript-viewer'
+    if: github.ref == 'refs/heads/feat/brand-release-codex-prep'
     environment: genesis-admin-preview
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
-      - name: Checkout preview branch
+      - name: Checkout approved preview preparation branch
         uses: actions/checkout@v6
 
       - name: Set up Node
