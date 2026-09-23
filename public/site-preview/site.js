@@ -46,7 +46,7 @@ async function initRead(){
     const head=document.querySelector("#novel-head");
     head.innerHTML='<p class="eyebrow">EPISODE '+esc(number)+'</p><h2>'+esc(episode?.title||"GENESIS")+'</h2><p>'+esc(episode?.summary_public||"Released Final Canon.")+'</p>';
     let parts=[];
-    try{parts=await rpc("api_episode_parts",{p_episode_number:Number(number)})}catch{}
+    try{parts=await rpc("api_episode_parts_for_reader",{p_episode_number:Number(number)})}catch{}
     const tabs=document.querySelector("#part-tabs");
     const body=document.querySelector("#novel-body");
     if(!Array.isArray(parts)||!parts.length){
@@ -55,10 +55,27 @@ async function initRead(){
       return;
     }
     tabs.innerHTML=parts.map((p,i)=>'<button data-part="'+i+'" class="'+(i===0?"active":"")+'">Part '+esc(p.part_number)+'</button>').join("");
-    const openPart=(idx)=>{
+    const openPart=async(idx)=>{
       const part=parts[idx];
       tabs.querySelectorAll("button").forEach((b,i)=>b.classList.toggle("active",i===idx));
-      body.innerHTML='<div class="status-chip">Part '+esc(part.part_number)+' · '+esc(part.title||"")+'</div>'+textParagraphs(part.body_text||"");
+      const access=part.access_mode&&part.access_mode!=="PUBLIC"?' · '+part.access_mode+' EARLY ACCESS':'';
+      body.innerHTML='<div class="status-chip">Part '+esc(part.part_number)+' · '+esc(part.title||"")+esc(access)+'</div>'+textParagraphs(part.body_text||"");
+      const panel=document.querySelector("#comments-panel");
+      const list=document.querySelector("#part-comments");
+      panel?.classList.remove("hidden");
+      if(list&&part.part_id){
+        list.innerHTML='<div class="empty-state">Loading comments…</div>';
+        try{
+          const comments=await rpc("api_part_comments",{p_part_id:part.part_id});
+          if(!Array.isArray(comments)||!comments.length){
+            list.innerHTML='<div class="empty-state">No comments yet. Be the first to share a reaction or prediction when reader accounts open.</div>';
+          }else{
+            list.innerHTML=comments.map(c=>'<article class="comment-card"><div class="comment-meta"><strong>'+esc(c.display_name||"Reader")+'</strong>'+(c.badge?'<span class="reader-badge '+(c.badge==="VIP"?"vip":"")+'">'+esc(c.badge)+'</span>':'')+'<small>'+esc(new Date(c.created_at).toLocaleString())+'</small></div><div>'+esc(c.body)+'</div></article>').join("");
+          }
+        }catch{
+          list.innerHTML='<div class="empty-state">Comments are temporarily unavailable.</div>';
+        }
+      }
       window.scrollTo({top:0,behavior:"smooth"});
     };
     tabs.querySelectorAll("button").forEach((b,i)=>b.addEventListener("click",()=>openPart(i)));
@@ -127,3 +144,33 @@ const page=document.body.dataset.page;
 if(page==="read")await initRead();
 if(page==="world")initWorld();
 if(page==="codex")initCodex();
+if(page==="fan")await initFan();
+if(page==="support")await initSupport();
+
+async function initFan(){
+  const feed=document.querySelector("#fan-feed");
+  try{
+    const rows=await rpc("api_fan_feed",{p_limit:30,p_offset:0});
+    if(!Array.isArray(rows)||!rows.length){
+      feed.innerHTML='<div class="empty-state large">No Fan Page posts yet. Reader uploads are prepared but remain disabled during preview.</div>';
+      return;
+    }
+    feed.innerHTML=rows.map(p=>'<article class="fan-post"><div class="fan-media">Image stored privately</div><div class="fan-copy"><div class="fan-author"><strong>'+esc(p.display_name||"Reader")+'</strong>'+(p.badge?'<span class="reader-badge '+(p.badge==="VIP"?"vip":"")+'">'+esc(p.badge)+'</span>':'')+'</div><p>'+esc(p.caption||"")+'</p></div></article>').join("");
+  }catch{
+    feed.innerHTML='<div class="empty-state large">Fan Page is temporarily unavailable.</div>';
+  }
+}
+
+async function initSupport(){
+  const notice=document.querySelector("#support-status");
+  try{
+    const data=await rpc("api_support_catalog");
+    const s=data?.settings||{};
+    if(notice){
+      const enabled=!!s.payments_enabled||!!s.pure_support_enabled||!!s.share_rewards_enabled;
+      notice.innerHTML='<strong>'+(enabled?'Support services active':'Preview mode')+'</strong><span>'+
+        (enabled?'Available support features follow the limits shown below.':'Payments, pure support, and share rewards are intentionally disabled until final testing and provider setup.')+
+        '</span>';
+    }
+  }catch{}
+}
