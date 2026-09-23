@@ -89,7 +89,7 @@ async function loadManuscripts(){
       ).join("")+
       '</tbody></table>';
 
-    $$("tbody tr").forEach((row)=>row.addEventListener("click",()=>openPart(row.dataset.part)));
+    $("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>openPart(row.dataset.part)));
   }catch(error){
     table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
   }
