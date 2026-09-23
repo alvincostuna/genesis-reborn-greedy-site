@@ -262,6 +262,10 @@ export default {
     try {
       const url = new URL(request.url);
 
+      if (url.pathname === "/site-preview" || url.pathname.startsWith("/site-preview/")) {
+        return await handleSitePreviewAsset(request, env);
+      }
+
       if (url.pathname.startsWith("/admin/api/")) {
         return await handleApi(request, env);
       }
