@@ -27,10 +27,8 @@ ADMIN_EMAILS = "alvin.costuna@deped.gov.ph"
 workers_dev = true
 preview_urls = true
 
-[env.preview.vars]
-SUPABASE_URL = "https://lyhrwymhzhhxszquxnke.supabase.co"
-ADMIN_EMAILS = "alvin.costuna@deped.gov.ph"
-
+# Preview runtime variables are dashboard-managed and preserved by keep_vars=true.
+# Do not duplicate them here; local env vars would overwrite the protected preview configuration.
 # Preview runtime values managed in Cloudflare dashboard:
 # SUPABASE_SERVICE_ROLE_KEY (Secret)
 # CF_ACCESS_TEAM_DOMAIN (Variable or Secret)
