@@ -43,6 +43,42 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: versions upload --env preview --keep-vars --strict
 
+      - name: Verify uploaded runtime bindings
+        env:
+          WRANGLER_OUTPUT: ${{ steps.upload-preview.outputs.command-output }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          VERSION_ID="$(printf '%s\n' "$WRANGLER_OUTPUT" | sed -n 's/.*Worker Version ID: //p' | tail -n 1)"
+          if [ -z "$VERSION_ID" ]; then
+            echo "Could not resolve the uploaded Worker Version ID."
+            exit 1
+          fi
+          npx wrangler versions view "$VERSION_ID" --env preview --json > /tmp/genesis-version.json
+          python - <<'PY'
+          import json, sys
+          with open('/tmp/genesis-version.json', encoding='utf-8') as f:
+              data=json.load(f)
+          names=set()
+          def walk(v):
+              if isinstance(v, dict):
+                  for k,val in v.items():
+                      if k in {'name','binding'} and isinstance(val,str):
+                          names.add(val)
+                      walk(val)
+              elif isinstance(v, list):
+                  for x in v: walk(x)
+          walk(data)
+          required={'SUPABASE_URL','SUPABASE_SERVICE_ROLE_KEY','CF_ACCESS_TEAM_DOMAIN','CF_ACCESS_AUD','ADMIN_EMAILS'}
+          missing=sorted(required-names)
+          print("Runtime binding names present:", ", ".join(sorted(required & names)))
+          if missing:
+              print("Missing required runtime bindings:", ", ".join(missing))
+              sys.exit(1)
+          print("Required runtime bindings verified without exposing values.")
+          PY
+
       - name: Verify preview auth gate before promotion
         env:
           WRANGLER_OUTPUT: ${{ steps.upload-preview.outputs.command-output }}
@@ -53,14 +89,18 @@ jobs:
             echo "Could not resolve the uploaded version URL."
             exit 1
           fi
-          STATUS="$(curl -sS -o /tmp/genesis-preview-check.txt -w '%{http_code}' "$VERSION_URL/site-preview/")"
+          STATUS="$(curl -sS -D /tmp/genesis-preview-headers.txt -o /tmp/genesis-preview-check.txt -w '%{http_code}' "$VERSION_URL/site-preview/")"
           echo "Unauthenticated version check returned HTTP $STATUS"
-          if [ "$STATUS" != "401" ]; then
-            echo "Expected HTTP 401 from the Worker auth gate before promotion."
+          if [ "$STATUS" = "401" ]; then
+            echo "Worker authentication gate verified."
+          elif [ "$STATUS" = "302" ] && grep -Eiq '^(location:.*(cloudflareaccess|/cdn-cgi/access))' /tmp/genesis-preview-headers.txt; then
+            echo "Cloudflare Access redirect gate verified."
+          else
+            echo "Expected a protected 401 or Cloudflare Access 302 before promotion."
+            cat /tmp/genesis-preview-headers.txt
             cat /tmp/genesis-preview-check.txt
             exit 1
           fi
-          echo "Protected preview auth gate verified."
 
       - name: Safety reminder
         run: |
