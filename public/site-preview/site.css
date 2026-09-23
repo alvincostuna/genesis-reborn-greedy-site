@@ -115,3 +115,11 @@ button,input,select{font:inherit}
 .coming-card h1{margin:0;font:500 clamp(50px,8vw,92px)/1 Georgia,serif}
 .coming-card strong{display:block;margin:18px 0;color:var(--gold);letter-spacing:.26em}
 .coming-card p:last-child{color:var(--muted)}
+
+/* final responsive support/community override */
+@media(max-width:820px){
+  .fan-actions,.support-grid,.contact-panel{grid-template-columns:1fr}
+  .comments-panel{padding:22px}
+  .comments-head{display:block}
+  .comments-head .status-chip{margin-top:10px}
+}
