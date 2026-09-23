@@ -34,3 +34,16 @@ The preview must not be promoted as visually complete until this exact approved-
 **Status:** PROTECTED BRAND ASSET / 036**
 
 The compact Admin currently uses a clearly marked glyph placeholder only. The final favicon/header/icon should use the approved diamond artwork extracted or supplied from the protected brand asset, not a newly invented symbol.
+
+
+## Protected preview mount — 2026-09-24
+
+The protected preview now embeds exact derivatives of the approved Commander-supplied source. No generative redraw was used.
+
+- Preview hero derivative: 640px-wide WEBP from `MASTER_KEY_ART_SPLIT_WORLD_V1.png`
+- Preview hero SHA-256: `599158bfd97dc21a59261ec84303a73f35c2f8141356774d3d564618f6ce8301`
+- Preview small sigil derivative: exact crop from the central approved white diamond sigil, 128×128 WEBP
+- Preview sigil SHA-256: `6caff1ac994b6d7847070a32effbdde3940c2b22917b98e16c4b802349ec4762`
+- Mount mode: embedded data assets in protected preview/Admin HTML
+- Public live site: unchanged
+- Future production optimization may replace embedded preview data with static binary files only if hashes/source provenance remain traceable to the approved master.
