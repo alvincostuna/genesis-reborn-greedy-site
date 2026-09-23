@@ -23,6 +23,9 @@
         <button class="nav" data-view="manuscripts">Manuscripts</button>
         <button class="nav" data-view="releases">Release Queue</button>
         <button class="nav" data-view="database">Game Database</button>
+        <button class="nav" data-view="support">Support</button>
+        <button class="nav" data-view="messages">Messages</button>
+        <button class="nav" data-view="community">Community</button>
       </nav>
 
       <div class="sidebar-note">
@@ -83,6 +86,36 @@
           <button id="refresh-database">Refresh</button>
         </div>
         <div id="database-table" class="panel"></div>
+      </section>
+
+      <section id="support-view" class="view hidden">
+        <div id="support-summary" class="cards"></div>
+        <div class="panel admin-note">
+          <strong>Support rules are prepared, but payments remain disabled.</strong>
+          <p>Rewarded support is capped at ₱200 per reader per rolling 30 days. Pure no-return support is separate and grants no advance access.</p>
+        </div>
+      </section>
+
+      <section id="messages-view" class="view hidden">
+        <div class="panel section-intro">
+          <strong>Reader Contact Inbox</strong>
+          <span>Messages sent from Support → Contact Us appear here.</span>
+        </div>
+        <div id="message-inbox" class="message-list"></div>
+      </section>
+
+      <section id="community-view" class="view hidden">
+        <div id="community-summary" class="cards"></div>
+        <div class="community-columns">
+          <div>
+            <h2>Pending Fan Posts</h2>
+            <div id="pending-fan-posts" class="panel"></div>
+          </div>
+          <div>
+            <h2>Open Reports</h2>
+            <div id="community-reports" class="panel"></div>
+          </div>
+        </div>
       </section>
     </main>
   </div>
