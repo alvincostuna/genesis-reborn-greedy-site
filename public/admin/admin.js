@@ -204,6 +204,86 @@ async function loadDatabase(){
 }
 
 
+
+function adminBadge(badge){
+  if(!badge)return "";
+  return '<span class="status '+(badge==="VIP"?"final":"review")+'">'+escapeHtml(badge)+'</span>';
+}
+
+async function loadSupport(){
+  const root=$("#support-summary");
+  root.innerHTML='<div class="card"><span>Support</span><strong>Loading…</strong></div>';
+  try{
+    const d=await api("/admin/api/support/summary");
+    const rows=[
+      ["Payments",d.payments_enabled?"ENABLED":"OFF"],
+      ["Pure support",d.pure_support_enabled?"ENABLED":"OFF"],
+      ["Share rewards",d.share_rewards_enabled?"ENABLED":"OFF"],
+      ["Fan posting",d.fan_posting_enabled?"ENABLED":"OFF"],
+      ["Open messages",d.open_messages??0],
+      ["Pending shares",d.pending_share_claims??0],
+      ["Pending fan posts",d.pending_fan_posts??0],
+      ["Active VIPs",d.active_vips??0]
+    ];
+    root.innerHTML=rows.map(([k,v])=>'<div class="card"><span>'+escapeHtml(k)+'</span><strong>'+escapeHtml(v)+'</strong></div>').join("");
+  }catch(error){
+    root.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+  }
+}
+
+async function loadMessages(){
+  const root=$("#message-inbox");
+  root.innerHTML='<div class="panel"><div class="empty">Loading reader messages…</div></div>';
+  try{
+    const rows=await api("/admin/api/messages");
+    if(!Array.isArray(rows)||!rows.length){
+      root.innerHTML='<div class="panel"><div class="empty"><strong>No reader messages yet.</strong><br>Support → Contact Us conversations will appear here.</div></div>';
+      return;
+    }
+    root.innerHTML=rows.map(x=>
+      '<details class="message-thread" '+((x.unread_count||0)>0?'open':'')+'>'+
+        '<summary><span><strong>'+escapeHtml(x.subject||"No subject")+'</strong><small>'+escapeHtml(x.display_name||"Reader")+' '+adminBadge(x.badge)+'</small></span><span>'+escapeHtml(x.unread_count||0)+' unread</span></summary>'+
+        '<div class="message-transcript">'+(x.messages||[]).map(m=>
+          '<article class="message-bubble '+(m.sender_type==="ADMIN"?"admin":"reader")+'"><div><strong>'+escapeHtml(m.sender_label||m.sender_type)+'</strong><small>'+escapeHtml(m.created_at||"")+'</small></div><p>'+escapeHtml(m.body||"")+'</p></article>'
+        ).join("")+
+        '<div class="admin-note compact"><strong>Reply control</strong><p>Database conversation/reply architecture is prepared. Reader sign-in and Admin reply submission will be enabled after account-flow testing.</p></div>'+
+        '</div></details>'
+    ).join("");
+  }catch(error){
+    root.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+  }
+}
+
+async function loadCommunity(){
+  const fan=$("#pending-fan-posts");
+  const reports=$("#community-reports");
+  const summary=$("#community-summary");
+  fan.innerHTML='<div class="empty">Loading fan moderation queue…</div>';
+  reports.innerHTML='<div class="empty">Loading reports…</div>';
+  try{
+    const [queue,support]=await Promise.all([api("/admin/api/community"),api("/admin/api/support/summary")]);
+    summary.innerHTML=
+      '<div class="card"><span>Pending fan posts</span><strong>'+escapeHtml(support.pending_fan_posts??0)+'</strong></div>'+
+      '<div class="card"><span>Open reports</span><strong>'+escapeHtml(support.open_reports??0)+'</strong></div>'+
+      '<div class="card"><span>Comments</span><strong>ENABLED</strong></div>'+
+      '<div class="card"><span>Reader uploads</span><strong>'+escapeHtml(support.fan_posting_enabled?"ENABLED":"OFF")+'</strong></div>';
+
+    const posts=queue.pending_fan_posts||[];
+    fan.innerHTML=posts.length?posts.map(p=>
+      '<div class="moderation-row"><div><strong>'+escapeHtml(p.display_name||"Reader")+'</strong>'+adminBadge(p.badge)+'<p>'+escapeHtml(p.caption||"No caption")+'</p></div><code>'+escapeHtml(p.media_object_path||"")+'</code></div>'
+    ).join(""):'<div class="empty">No pending Fan Page posts.</div>';
+
+    const rs=queue.reports||[];
+    reports.innerHTML=rs.length?rs.map(r=>
+      '<div class="moderation-row"><div><strong>'+escapeHtml(r.target_type)+'</strong><p>'+escapeHtml(r.reason||"")+'</p></div><code>'+escapeHtml(r.target_id)+'</code></div>'
+    ).join(""):'<div class="empty">No open community reports.</div>';
+  }catch(error){
+    summary.innerHTML='';
+    fan.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    reports.innerHTML='';
+  }
+}
+
 function renderMeta(v){
   const rows=[
     ["Stage",v.stage],["Version",v.version_number],["Words",v.word_count],
@@ -292,11 +372,14 @@ function switchView(name){
   $$(".view").forEach((x)=>x.classList.add("hidden"));
   $$(".nav").forEach((x)=>x.classList.toggle("active",x.dataset.view===name));
   $("#"+name+"-view").classList.remove("hidden");
-  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",database:"Game Database"};
+  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",database:"Game Database",support:"Support",messages:"Reader Messages",community:"Community"};
   $("#page-title").textContent=titles[name]||"Control Center";
   if(name==="manuscripts")loadManuscripts();
   if(name==="releases")loadReleases();
   if(name==="database"){loadDatabaseSummary();loadDatabase();}
+  if(name==="support")loadSupport();
+  if(name==="messages")loadMessages();
+  if(name==="community")loadCommunity();
 }
 
 $$(".nav").forEach((b)=>b.addEventListener("click",()=>switchView(b.dataset.view)));
