@@ -244,6 +244,11 @@ async function handleSitePreviewAsset(request: Request, env: Env): Promise<Respo
   const url = new URL(request.url);
   if (url.pathname === "/site-preview" || url.pathname === "/site-preview/") {
     url.pathname = "/site-preview/index.html";
+  } else {
+    const pageMatch = url.pathname.match(/^\/site-preview\/(read|world|codex)\/?$/);
+    if (pageMatch) {
+      url.pathname = "/site-preview/" + pageMatch[1] + "/index.html";
+    }
   }
 
   const response = await env.ASSETS.fetch(new Request(url.toString(), request));
