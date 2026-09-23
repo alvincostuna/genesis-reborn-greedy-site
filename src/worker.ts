@@ -200,6 +200,27 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     return json({ ok: true, data });
   }
 
+  if (path === "/admin/api/support/summary") {
+    const data = await rpc(env, "genesis_admin_support_summary");
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/messages") {
+    const data = await rpc(env, "genesis_admin_message_inbox", {
+      p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
+      p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
+    });
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/community") {
+    const data = await rpc(env, "genesis_admin_community_queue", {
+      p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
+      p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
+    });
+    return json({ ok: true, data });
+  }
+
   let match = path.match(/^\/admin\/api\/manuscripts\/([0-9a-f-]+)\/versions\/([a-z0-9_]+)$/i);
   if (match) {
     const data = await rpc(env, "genesis_admin_manuscript_version", {
@@ -245,7 +266,7 @@ async function handleSitePreviewAsset(request: Request, env: Env): Promise<Respo
   if (url.pathname === "/site-preview" || url.pathname === "/site-preview/") {
     url.pathname = "/site-preview/index.html";
   } else {
-    const pageMatch = url.pathname.match(/^\/site-preview\/(read|world|codex)\/?$/);
+    const pageMatch = url.pathname.match(/^\/site-preview\/(read|world|codex|fan-page|manga|support)\/?$/);
     if (pageMatch) {
       url.pathname = "/site-preview/" + pageMatch[1] + "/index.html";
     }
