@@ -11,6 +11,20 @@ async function api(path){
   return payload.data;
 }
 
+async function apiPost(path,body){
+  const response=await fetch(path,{
+    method:"POST",
+    credentials:"same-origin",
+    headers:{"Content-Type":"application/json",Accept:"application/json"},
+    body:JSON.stringify(body||{})
+  });
+  const payload=await response.json().catch(()=>null);
+  if(!response.ok||!payload?.ok){
+    throw new Error(payload?.error?.message||("Request failed ("+response.status+")"));
+  }
+  return payload.data;
+}
+
 function escapeHtml(value){
   return String(value??"").replace(/[&<>"']/g,(ch)=>({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
@@ -246,11 +260,40 @@ async function loadMessages(){
         '<div class="message-transcript">'+(x.messages||[]).map(m=>
           '<article class="message-bubble '+(m.sender_type==="ADMIN"?"admin":"reader")+'"><div><strong>'+escapeHtml(m.sender_label||m.sender_type)+'</strong><small>'+escapeHtml(m.created_at||"")+'</small></div><p>'+escapeHtml(m.body||"")+'</p></article>'
         ).join("")+
-        '<div class="admin-note compact"><strong>Reply control</strong><p>Database conversation/reply architecture is prepared. Reader sign-in and Admin reply submission will be enabled after account-flow testing.</p></div>'+
+        '<form class="admin-reply-form" data-conversation="'+escapeHtml(x.conversation_id)+'">'+
+          '<textarea rows="3" maxlength="5000" placeholder="Reply to this reader…" required></textarea>'+
+          '<button type="submit">Send reply</button>'+
+          '<span class="reply-status"></span>'+
+        '</form>'+
         '</div></details>'
     ).join("");
+    root.querySelectorAll(".admin-reply-form").forEach(form=>form.addEventListener("submit",(e)=>{
+      e.preventDefault();
+      sendAdminReply(form);
+    }));
   }catch(error){
     root.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+  }
+}
+
+async function sendAdminReply(form){
+  const conversation=form.dataset.conversation;
+  const textarea=form.querySelector("textarea");
+  const button=form.querySelector("button");
+  const status=form.querySelector(".reply-status");
+  const body=textarea.value.trim();
+  if(!body)return;
+  button.disabled=true;
+  status.textContent="Sending…";
+  try{
+    await apiPost("/admin/api/messages/"+conversation+"/reply",{body});
+    textarea.value="";
+    status.textContent="Reply sent.";
+    await loadMessages();
+  }catch(error){
+    status.textContent=error.message;
+  }finally{
+    button.disabled=false;
   }
 }
 
