@@ -135,7 +135,7 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     throw new HttpError(
       405,
       "READ_ONLY_PHASE",
-      "Release mutations are intentionally disabled during the PRE-103 Admin Viewer build."
+      "Release mutations are intentionally disabled during the PRE-LAUNCH read-only Control Center build."
     );
   }
 
@@ -295,7 +295,7 @@ export default {
       }
 
       // Safety: this feature branch does not replace the current public reader.
-      return new Response("GENESIS Admin Viewer branch — public site is not mounted here.", {
+      return new Response("GENESIS Control Center preview branch — live public site is not mounted here.", {
         status: 404,
         headers: { "Cache-Control": "no-store" }
       });
