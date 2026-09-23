@@ -1,4 +1,4 @@
-# GENESIS Reader Information Architecture — V2
+# SUPERSEDED BY READER_INFORMATION_ARCHITECTURE_V3\n\nThis document remains for provenance only. V3 is the active reader navigation/architecture.\n\n# GENESIS Reader Information Architecture — V2
 
 Status: COMMANDER-APPROVED DIRECTION / READER PREVIEW REBUILD  
 Date: 2026-09-24
