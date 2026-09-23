@@ -169,6 +169,26 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     return json({ ok: true, data });
   }
 
+  if (path === "/admin/api/database/summary") {
+    const data = await rpc(env, "genesis_admin_game_database_summary");
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/database") {
+    const domain = String(url.searchParams.get("domain") || "").trim().toLowerCase();
+    const allowed = new Set(["monsters","classes","professions","skills","loot","maps","items","npcs","quests","crafting","companions"]);
+    if (!allowed.has(domain)) {
+      throw new HttpError(400, "INVALID_DATABASE_DOMAIN", "Invalid game database domain.");
+    }
+    const data = await rpc(env, "genesis_admin_game_database_list", {
+      p_domain: domain,
+      p_query: url.searchParams.get("q") || null,
+      p_limit: intParam(url.searchParams.get("limit"), 50, 1, 200),
+      p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
+    });
+    return json({ ok: true, data });
+  }
+
   let match = path.match(/^\/admin\/api\/manuscripts\/([0-9a-f-]+)\/versions\/([a-z0-9_]+)$/i);
   if (match) {
     const data = await rpc(env, "genesis_admin_manuscript_version", {
