@@ -15,70 +15,115 @@ async function rpc(name,params={}){
   if(!r.ok)throw new Error(await r.text());
   return r.json();
 }
-
-function firstRow(x){return Array.isArray(x)?x[0]:x}
-function fmtTime(ts){if(!ts)return null;return new Intl.DateTimeFormat("en-PH",{dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Manila"}).format(new Date(ts))}
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-
-async function loadBrand(){
-  try{
-    const b=firstRow(await rpc("api_brand_identity"));
-    if(!b)return;
-    document.querySelector("#master-tagline").textContent=b.master_tagline;
-    document.querySelector("#about-tagline").textContent=b.master_tagline;
-  }catch(e){console.warn("brand",e)}
+function firstRow(v){return Array.isArray(v)?v[0]:v}
+function textParagraphs(v){
+  const parts=String(v||"").trim().split(/\n\s*\n/).filter(Boolean);
+  return parts.map(p=>"<p>"+esc(p).replace(/\n/g,"<br>")+"</p>").join("");
+}
+function entityCard(x,kind="codex"){
+  const fields=x?.revealed_fields&&typeof x.revealed_fields==="object"?Object.keys(x.revealed_fields):[];
+  return '<article class="'+kind+'-card"><small>'+esc(x.entity_type||"CODEX")+'</small><h2>'+esc(x.public_name||x.entity_code||"Revealed entry")+'</h2><p>'+esc(x.short_description||"Revealed GENESIS knowledge.")+'</p>'+(fields.length?'<div class="reveal-fields">Revealed fields: '+esc(fields.slice(0,6).join(", "))+'</div>':"")+'</article>';
 }
 
-let timer=null;
-function startCountdown(ts,paused){
-  const el=document.querySelector("#countdown");
-  if(timer)clearInterval(timer);
-  if(paused||!ts){el.textContent=paused?"PAUSED":"—";return}
-  const target=new Date(ts).getTime();
-  const tick=()=>{
-    const d=Math.max(0,target-Date.now());
-    const h=Math.floor(d/36e5),m=Math.floor((d%36e5)/6e4),s=Math.floor((d%6e4)/1000);
-    el.textContent=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
-  };
-  tick();timer=setInterval(tick,1000);
+async function initRead(){
+  const releaseMini=document.querySelector("#release-mini");
+  try{
+    const p=firstRow(await rpc("api_release_policy"));
+    releaseMini.textContent=(p?.releases_paused?"PAUSED · ":"")+"Episodes 1–"+(p?.launch_episode_count??10)+" · then 1 "+(p?.ongoing_release_unit??"Part")+" every "+(p?.cycle_hours??8)+" hours";
+  }catch{}
+  let episodes=[];
+  try{episodes=await rpc("api_episode_library")}catch{}
+  if(!Array.isArray(episodes)||!episodes.length)return;
+  const list=document.querySelector("#episode-list");
+  document.querySelector("#episode-count").textContent=episodes.length+" released";
+  list.innerHTML=episodes.map((e,i)=>
+    '<button class="episode-button" data-episode="'+esc(e.episode_number)+'"><small>EPISODE '+esc(e.episode_number)+'</small><strong>'+esc(e.title)+'</strong></button>'
+  ).join("");
+  async function openEpisode(number){
+    document.querySelectorAll(".episode-button").forEach(b=>b.classList.toggle("active",b.dataset.episode===String(number)));
+    const episode=episodes.find(e=>String(e.episode_number)===String(number));
+    const head=document.querySelector("#novel-head");
+    head.innerHTML='<p class="eyebrow">EPISODE '+esc(number)+'</p><h2>'+esc(episode?.title||"GENESIS")+'</h2><p>'+esc(episode?.summary_public||"Released Final Canon.")+'</p>';
+    let parts=[];
+    try{parts=await rpc("api_episode_parts",{p_episode_number:Number(number)})}catch{}
+    const tabs=document.querySelector("#part-tabs");
+    const body=document.querySelector("#novel-body");
+    if(!Array.isArray(parts)||!parts.length){
+      tabs.innerHTML="";
+      body.innerHTML='<div class="empty-state large">No released Parts are available for this Episode yet.</div>';
+      return;
+    }
+    tabs.innerHTML=parts.map((p,i)=>'<button data-part="'+i+'" class="'+(i===0?"active":"")+'">Part '+esc(p.part_number)+'</button>').join("");
+    const openPart=(idx)=>{
+      const part=parts[idx];
+      tabs.querySelectorAll("button").forEach((b,i)=>b.classList.toggle("active",i===idx));
+      body.innerHTML='<div class="status-chip">Part '+esc(part.part_number)+' · '+esc(part.title||"")+'</div>'+textParagraphs(part.body_text||"");
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
+    tabs.querySelectorAll("button").forEach((b,i)=>b.addEventListener("click",()=>openPart(i)));
+    openPart(0);
+  }
+  list.querySelectorAll(".episode-button").forEach(b=>b.addEventListener("click",()=>openEpisode(b.dataset.episode)));
+  openEpisode(episodes[0].episode_number);
 }
 
-async function loadRelease(){
+async function loadWorld(type){
+  const grid=document.querySelector("#world-grid");
+  grid.innerHTML='<div class="empty-state large">Loading revealed '+esc(type)+' records…</div>';
   try{
-    const [pRaw,cRaw]=await Promise.all([rpc("api_release_policy"),rpc("api_release_clock")]);
-    const p=firstRow(pRaw),c=firstRow(cRaw);
-    const paused=!!p?.releases_paused;
-    document.querySelector("#release-state").textContent=paused?"RELEASES PAUSED":"RELEASES ACTIVE";
-    document.querySelector("#release-heading").textContent=p?.launch_authorized?"Release schedule":"Launch preparation";
-    document.querySelector("#release-copy").textContent=
-      "Episodes 1–"+(p?.launch_episode_count??10)+" launch together. After launch: one "+(p?.ongoing_release_unit??"Part")+" every "+(p?.cycle_hours??8)+" hours.";
-    const next=c?.next_publish_at;
-    document.querySelector("#next-release").textContent=next?"Next scheduled: "+fmtTime(next):"Launch time not set";
-    startCountdown(next,paused);
-  }catch(e){console.warn("release",e)}
+    let rows=[];
+    if(type==="equipment"){
+      const [w,a]=await Promise.all([
+        rpc("api_entity_search",{p_type:"weapon",p_query:null,p_limit:12}),
+        rpc("api_entity_search",{p_type:"armor",p_query:null,p_limit:12})
+      ]);
+      rows=[...(Array.isArray(w)?w:[]),...(Array.isArray(a)?a:[])].slice(0,18);
+    }else{
+      rows=await rpc("api_entity_search",{p_type:type,p_query:null,p_limit:18});
+    }
+    if(!Array.isArray(rows)||!rows.length){
+      grid.innerHTML='<div class="empty-state large">No '+esc(type)+' records have been revealed by released Parts yet.</div>';
+      return;
+    }
+    grid.innerHTML=rows.map(x=>entityCard(x,"world")).join("");
+  }catch(e){
+    grid.innerHTML='<div class="empty-state large">World preview is temporarily unavailable.</div>';
+  }
 }
-
-async function loadEpisodes(){
-  try{
-    const rows=await rpc("api_episode_library");
-    if(!Array.isArray(rows)||!rows.length)return;
-    document.querySelector("#episode-grid").innerHTML=rows.slice(0,10).map(x=>
-      '<article class="story-card"><small>EPISODE '+esc(x.episode_number)+'</small><h3>'+esc(x.title)+'</h3><p>'+esc(x.summary_public||"Released story episode.")+'</p><p>'+esc(x.released_parts)+' released Parts</p></article>'
-    ).join("");
-  }catch(e){console.warn("episodes",e)}
+function initWorld(){
+  const buttons=[...document.querySelectorAll("[data-world-type]")];
+  buttons.forEach(b=>b.addEventListener("click",()=>{
+    buttons.forEach(x=>x.classList.toggle("active",x===b));
+    loadWorld(b.dataset.worldType);
+  }));
+  loadWorld("map");
 }
 
 async function loadCodex(){
+  const results=document.querySelector("#codex-results");
+  const type=document.querySelector("#codex-type").value||null;
+  const query=document.querySelector("#codex-search").value.trim()||null;
+  results.innerHTML='<div class="empty-state large">Searching revealed database…</div>';
   try{
-    const rows=await rpc("api_entity_search",{p_type:null,p_query:null,p_limit:6});
-    if(!Array.isArray(rows)||!rows.length)return;
-    document.querySelector("#codex-grid").innerHTML=rows.map(x=>
-      '<article class="codex-card"><small>'+esc(String(x.entity_type||"CODEX").toUpperCase())+'</small><h3>'+esc(x.public_name)+'</h3><p>'+esc(x.short_description||"Revealed GENESIS knowledge.")+'</p></article>'
-    ).join("");
-  }catch(e){console.warn("codex",e)}
+    const rows=await rpc("api_entity_search",{p_type:type,p_query:query,p_limit:60});
+    if(!Array.isArray(rows)||!rows.length){
+      results.innerHTML='<div class="empty-state large">No revealed Codex records match this search.</div>';
+      return;
+    }
+    results.innerHTML=rows.map(x=>entityCard(x,"codex")).join("");
+  }catch{
+    results.innerHTML='<div class="empty-state large">Codex is temporarily unavailable.</div>';
+  }
+}
+function initCodex(){
+  document.querySelector("#codex-search-button").addEventListener("click",loadCodex);
+  document.querySelector("#codex-type").addEventListener("change",loadCodex);
+  document.querySelector("#codex-search").addEventListener("keydown",e=>{if(e.key==="Enter")loadCodex()});
+  loadCodex();
 }
 
-const hero=document.querySelector("#hero-image");
-hero.addEventListener("error",()=>{hero.style.display="none"});
-
-await Promise.all([loadBrand(),loadRelease(),loadEpisodes(),loadCodex()]);
+const page=document.body.dataset.page;
+if(page==="read")await initRead();
+if(page==="world")initWorld();
+if(page==="codex")initCodex();
