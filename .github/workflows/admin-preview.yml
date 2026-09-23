@@ -36,11 +36,31 @@ jobs:
         run: npm run types
 
       - name: Upload isolated Cloudflare preview version
+        id: upload-preview
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: versions upload --env preview --keep-vars --strict
+
+      - name: Verify preview auth gate before promotion
+        env:
+          WRANGLER_OUTPUT: ${{ steps.upload-preview.outputs.command-output }}
+        run: |
+          set -euo pipefail
+          VERSION_URL="$(printf '%s\n' "$WRANGLER_OUTPUT" | grep -Eo 'https://[A-Za-z0-9.-]+workers\.dev' | tail -n 1)"
+          if [ -z "$VERSION_URL" ]; then
+            echo "Could not resolve the uploaded version URL."
+            exit 1
+          fi
+          STATUS="$(curl -sS -o /tmp/genesis-preview-check.txt -w '%{http_code}' "$VERSION_URL/site-preview/")"
+          echo "Unauthenticated version check returned HTTP $STATUS"
+          if [ "$STATUS" != "401" ]; then
+            echo "Expected HTTP 401 from the Worker auth gate before promotion."
+            cat /tmp/genesis-preview-check.txt
+            exit 1
+          fi
+          echo "Protected preview auth gate verified."
 
       - name: Safety reminder
         run: |
