@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - feat/brand-release-codex-prep
       - feat/admin-manuscript-viewer
 
 permissions:
@@ -16,7 +15,7 @@ concurrency:
 
 jobs:
   preview:
-    if: github.ref == 'refs/heads/feat/brand-release-codex-prep' || github.ref == 'refs/heads/feat/admin-manuscript-viewer'
+    if: github.ref == 'refs/heads/feat/admin-manuscript-viewer'
     environment: genesis-admin-preview
     runs-on: ubuntu-latest
     timeout-minutes: 15
