@@ -116,6 +116,76 @@ async function loadReleases(){
   }
 }
 
+function compactMeta(meta){
+  if(!meta||typeof meta!=="object")return "—";
+  const preferred=["family","species","rank","tier","role","type","region","map_type","category","subtype","rarity","quest_type","source_name","visibility","mode","first_roadmap_use"];
+  const pairs=[];
+  for(const k of preferred){
+    if(meta[k]!==undefined&&meta[k]!==null&&meta[k]!==""&&pairs.length<4){
+      const v=typeof meta[k]==="object"?JSON.stringify(meta[k]):String(meta[k]);
+      pairs.push(k.replaceAll("_"," ")+": "+v);
+    }
+  }
+  if(!pairs.length){
+    for(const [k,v] of Object.entries(meta)){
+      if(v===undefined||v===null||v===""||typeof v==="object")continue;
+      pairs.push(k.replaceAll("_"," ")+": "+String(v));
+      if(pairs.length>=4)break;
+    }
+  }
+  return pairs.join(" · ")||"—";
+}
+
+async function loadDatabaseSummary(){
+  const root=$("#database-summary");
+  root.innerHTML='<div class="card"><span>Database</span><strong>Loading…</strong></div>';
+  try{
+    const data=await api("/admin/api/database/summary");
+    const counts=data.counts||{};
+    const groups=[
+      ["Monsters",counts.monsters??0],["Classes",counts.classes??0],
+      ["Professions",counts.professions??0],["Skills",counts.skills??0],
+      ["Maps",counts.maps??0],["Items",counts.items??0],
+      ["NPCs",counts.npcs??0],["Recipes",counts.recipes??0]
+    ];
+    root.innerHTML=groups.map(([k,v])=>
+      '<div class="card"><span>'+escapeHtml(k)+'</span><strong>'+escapeHtml(v)+'</strong></div>'
+    ).join("");
+  }catch(error){
+    root.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+  }
+}
+
+async function loadDatabase(){
+  const table=$("#database-table");
+  table.innerHTML='<div class="empty">Loading game database…</div>';
+  const domain=$("#database-domain").value;
+  const q=new URLSearchParams({domain,limit:"100"});
+  const search=$("#database-search").value.trim();
+  if(search)q.set("q",search);
+  try{
+    const data=await api("/admin/api/database?"+q.toString());
+    const items=data.items||[];
+    if(!items.length){
+      table.innerHTML='<div class="empty"><strong>No records.</strong><br>'+escapeHtml(domain)+' returned no matching rows.</div>';
+      return;
+    }
+    table.innerHTML=
+      '<div class="database-head"><span>'+escapeHtml(domain.toUpperCase())+'</span><small>'+escapeHtml(data.total??items.length)+' total records</small></div>'+
+      '<div class="table-scroll"><table><thead><tr><th>Name</th><th>Code</th><th>Status</th><th>Key metadata</th></tr></thead><tbody>'+
+      items.map((x)=>
+        '<tr><td><strong>'+escapeHtml(x.name||"—")+'</strong></td>'+
+        '<td><code>'+escapeHtml(x.code||"—")+'</code></td>'+
+        '<td><span class="status review">'+escapeHtml(x.status||"—")+'</span></td>'+
+        '<td class="meta-text">'+escapeHtml(compactMeta(x.meta))+'</td></tr>'
+      ).join("")+
+      '</tbody></table></div>';
+  }catch(error){
+    table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+  }
+}
+
+
 function renderMeta(v){
   const rows=[
     ["Stage",v.stage],["Version",v.version_number],["Words",v.word_count],
@@ -204,9 +274,11 @@ function switchView(name){
   $$(".view").forEach((x)=>x.classList.add("hidden"));
   $$(".nav").forEach((x)=>x.classList.toggle("active",x.dataset.view===name));
   $("#"+name+"-view").classList.remove("hidden");
-  $("#page-title").textContent=name==="production"?"Production Dashboard":name==="manuscripts"?"Manuscript Library":"Release Queue";
+  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",database:"Game Database"};
+  $("#page-title").textContent=titles[name]||"Control Center";
   if(name==="manuscripts")loadManuscripts();
   if(name==="releases")loadReleases();
+  if(name==="database"){loadDatabaseSummary();loadDatabase();}
 }
 
 $$(".nav").forEach((b)=>b.addEventListener("click",()=>switchView(b.dataset.view)));
@@ -218,5 +290,8 @@ $("#close-preview").addEventListener("click",()=>$("#preview").close());
 $$(".tabs [data-stage]").forEach((b)=>b.addEventListener("click",()=>showVersion(b.dataset.stage)));
 $("#compare-button").addEventListener("click",compareCurrent);
 $("#preview-button").addEventListener("click",previewCurrent);
+$("#refresh-database").addEventListener("click",loadDatabase);
+$("#database-domain").addEventListener("change",loadDatabase);
+$("#database-search").addEventListener("keydown",(e)=>{if(e.key==="Enter")loadDatabase();});
 
 loadProduction();
