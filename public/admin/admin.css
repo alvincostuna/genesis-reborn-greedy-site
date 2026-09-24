@@ -139,3 +139,17 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
 .release-row-actions button{background:#0b1724;border:1px solid var(--line);color:var(--text);border-radius:7px;padding:6px 8px;cursor:pointer;font-size:12px}
 .release-row-actions .danger-mini{border-color:#71343b;background:#241217;color:#ffd7d7}
 .release-row-actions button:disabled{opacity:.5;cursor:wait}
+
+
+.settings-panel{margin-top:18px}
+.feature-list{display:grid}
+.feature-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-top:1px solid var(--line)}
+.feature-row:first-child{border-top:0}
+.feature-row>div{display:grid;gap:4px;flex:1}
+.feature-row small{color:var(--muted)}
+.feature-row button{background:#0b1724;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 12px;cursor:pointer}
+.settings-payment-grid{padding:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.settings-payment-grid>div{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;padding:10px;background:#08131f}
+.inline-controls{margin:0 16px 16px}
+@media(max-width:900px){.settings-payment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.feature-row{align-items:flex-start;flex-wrap:wrap}.feature-row button{width:100%}.settings-payment-grid{grid-template-columns:1fr}}
