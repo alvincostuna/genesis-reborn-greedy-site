@@ -200,6 +200,21 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     }});
   }
 
+  if (path === "/admin/api/roadmap") {
+    const data = await rpc(env, "genesis_admin_roadmap_summary");
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/continuity") {
+    const data = await rpc(env, "genesis_admin_continuity_summary");
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/authority") {
+    const data = await rpc(env, "genesis_admin_authority_index");
+    return json({ ok: true, data });
+  }
+
   if (path === "/admin/api/database/summary") {
     const data = await rpc(env, "genesis_admin_game_database_summary");
     return json({ ok: true, data });
@@ -286,7 +301,7 @@ async function handleSitePreviewAsset(request: Request, env: Env): Promise<Respo
   if (url.pathname === "/site-preview" || url.pathname === "/site-preview/") {
     url.pathname = "/site-preview/index.html";
   } else {
-    const pageMatch = url.pathname.match(/^\/site-preview\/(read|world|codex|fan-page|manga|support)\/?$/);
+    const pageMatch = url.pathname.match(/^\/site-preview\/(read|world|codex|fan-page|manga|support|account)\/?$/);
     if (pageMatch) {
       url.pathname = "/site-preview/" + pageMatch[1] + "/index.html";
     }
