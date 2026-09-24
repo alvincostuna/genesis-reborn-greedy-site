@@ -168,10 +168,26 @@ jobs:
             done
             test "$STATUS" = "200"
           done
-          curl -fsS "$BASE/" -o /tmp/home.html
-          grep -q 'data-page="home"' /tmp/home.html
-          grep -q 'GENESIS CYCLE' /tmp/home.html
-          grep -q '/assets/genesis-official-logo.png' /tmp/home.html
-          grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/home.html
-          test "$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/admin/")" = "404"
+          CONTENT_OK=0
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            curl -fsS "$BASE/" -o /tmp/home.html || true
+            if grep -q 'data-page="home"' /tmp/home.html \
+              && grep -q 'GENESIS CYCLE' /tmp/home.html \
+              && grep -q '/assets/genesis-official-logo.png' /tmp/home.html \
+              && grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/home.html; then
+              CONTENT_OK=1
+              break
+            fi
+            echo "Live content propagation attempt $attempt not complete yet."
+            sleep 2
+          done
+          test "$CONTENT_OK" = "1"
+
+          ADMIN_STATUS="000"
+          for attempt in 1 2 3 4 5; do
+            ADMIN_STATUS="$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/admin/" || true)"
+            if [ "$ADMIN_STATUS" = "404" ]; then break; fi
+            sleep 2
+          done
+          test "$ADMIN_STATUS" = "404"
           echo "GENESIS live reader verified."
