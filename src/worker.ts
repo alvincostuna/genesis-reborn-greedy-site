@@ -178,6 +178,63 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       return json({ ok: true, data });
     }
 
+    const fanPostModerationMatch = path.match(/^\/admin\/api\/community\/fan-posts\/([0-9a-f-]+)\/(approve|hide|restore|remove)$/i);
+    if (fanPostModerationMatch) {
+      await requirePermission(email, env, "COMMUNITY_MODERATE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_moderate_fan_post", {
+        p_actor: email,
+        p_post_id: fanPostModerationMatch[1],
+        p_action: fanPostModerationMatch[2].toUpperCase(),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    const fanPostLockMatch = path.match(/^\/admin\/api\/community\/fan-posts\/([0-9a-f-]+)\/comments-(lock|unlock)$/i);
+    if (fanPostLockMatch) {
+      await requirePermission(email, env, "COMMUNITY_MODERATE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_set_fan_post_comment_lock", {
+        p_actor: email,
+        p_post_id: fanPostLockMatch[1],
+        p_locked: fanPostLockMatch[2].toLowerCase() === "lock",
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    const commentModerationMatch = path.match(/^\/admin\/api\/community\/comments\/(part|fan)\/([0-9a-f-]+)\/(hide|restore|remove)$/i);
+    if (commentModerationMatch) {
+      await requirePermission(email, env, "COMMUNITY_MODERATE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_moderate_comment", {
+        p_actor: email,
+        p_comment_type: commentModerationMatch[1].toLowerCase() === "part" ? "PART_COMMENT" : "FAN_COMMENT",
+        p_comment_id: commentModerationMatch[2],
+        p_action: commentModerationMatch[3].toUpperCase(),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    const reportModerationMatch = path.match(/^\/admin\/api\/community\/reports\/([0-9a-f-]+)\/(resolve|dismiss)$/i);
+    if (reportModerationMatch) {
+      await requirePermission(email, env, "COMMUNITY_MODERATE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_resolve_community_report", {
+        p_actor: email,
+        p_report_id: reportModerationMatch[1],
+        p_resolution: reportModerationMatch[2].toLowerCase() === "resolve" ? "RESOLVED" : "DISMISSED",
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
     if (path === "/admin/api/codex/reveals") {
       await requirePermission(email, env, "CODEX_EDIT");
       let body: any = null;
@@ -646,7 +703,8 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
 
   if (path === "/admin/api/community") {
     await requirePermission(email, env, "COMMUNITY_VIEW");
-    const data = await rpc(env, "genesis_admin_community_queue", {
+    const data = await rpc(env, "genesis_admin_community_index", {
+      p_actor: email,
       p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
       p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
     });
