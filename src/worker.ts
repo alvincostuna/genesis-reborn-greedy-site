@@ -178,6 +178,51 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       return json({ ok: true, data });
     }
 
+    const featureFlagMatch = path.match(/^\/admin\/api\/settings\/features\/(comments|fan-posting|share-rewards|pure-support)$/i);
+    if (featureFlagMatch) {
+      await requirePermission(email, env, "FEATURE_FLAGS");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const keyMap: Record<string,string> = {
+        "comments":"COMMENTS",
+        "fan-posting":"FAN_POSTING",
+        "share-rewards":"SHARE_REWARDS",
+        "pure-support":"PURE_SUPPORT"
+      };
+      const data = await rpc(env, "genesis_admin_set_feature_flag", {
+        p_actor: email,
+        p_flag_key: keyMap[featureFlagMatch[1].toLowerCase()],
+        p_enabled: Boolean(body?.enabled),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    if (path === "/admin/api/settings/payment-provider") {
+      await requirePermission(email, env, "PAYMENTS_ENABLE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_set_payment_provider", {
+        p_actor: email,
+        p_enabled: Boolean(body?.enabled),
+        p_mode: String(body?.mode || ""),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    if (path === "/admin/api/settings/payments") {
+      await requirePermission(email, env, "PAYMENTS_ENABLE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_set_payments_enabled", {
+        p_actor: email,
+        p_enabled: Boolean(body?.enabled),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
     if (path === "/admin/api/releases/verify-live-site") {
       await requirePermission(email, env, "RELEASE_LAUNCH");
       const base = "https://genesis-reborn-greedy.hirangnalupa.workers.dev/";
@@ -434,6 +479,12 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
       p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
     });
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/settings/features") {
+    await requirePermission(email, env, "SUPPORT_VIEW");
+    const data = await rpc(env, "genesis_admin_feature_flags_status", { p_actor: email });
     return json({ ok: true, data });
   }
 
