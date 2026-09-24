@@ -127,8 +127,13 @@ jobs:
           CANDIDATE_URL="https://${CANDIDATE_NAME}.hirangnalupa.workers.dev"
 
           for path in / /read/ /world/ /codex/ /fan-page/ /manga/ /support/; do
-            STATUS="$(curl -sS -o /tmp/candidate-page.html -w '%{http_code}' "$CANDIDATE_URL$path")"
-            echo "Candidate $path -> HTTP $STATUS"
+            STATUS="000"
+            for attempt in 1 2 3 4 5 6 7 8 9 10; do
+              STATUS="$(curl -sS -o /tmp/candidate-page.html -w '%{http_code}' "$CANDIDATE_URL$path" || true)"
+              echo "Candidate $path attempt $attempt -> HTTP $STATUS"
+              if [ "$STATUS" = "200" ]; then break; fi
+              sleep 2
+            done
             test "$STATUS" = "200"
           done
 
@@ -155,8 +160,13 @@ jobs:
           set -euo pipefail
           BASE="https://genesis-reborn-greedy.hirangnalupa.workers.dev"
           for path in / /read/ /world/ /codex/ /fan-page/ /manga/ /support/; do
-            STATUS="$(curl -sS -o /tmp/page.html -w '%{http_code}' "$BASE$path")"
-            echo "$path -> HTTP $STATUS"
+            STATUS="000"
+            for attempt in 1 2 3 4 5 6 7 8 9 10; do
+              STATUS="$(curl -sS -o /tmp/page.html -w '%{http_code}' "$BASE$path" || true)"
+              echo "Live $path attempt $attempt -> HTTP $STATUS"
+              if [ "$STATUS" = "200" ]; then break; fi
+              sleep 2
+            done
             test "$STATUS" = "200"
           done
           curl -fsS "$BASE/" -o /tmp/home.html
