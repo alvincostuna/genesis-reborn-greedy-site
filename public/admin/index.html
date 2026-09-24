@@ -30,6 +30,7 @@
         <button class="nav" data-view="codex">Codex</button>
         <button class="nav" data-view="support">Support</button>
         <button class="nav" data-view="messages">Messages</button>
+        <button class="nav" data-view="readers">Readers</button>
         <button class="nav" data-view="community">Community</button>
       </nav>
 
@@ -153,6 +154,19 @@
           <span>Messages sent from Support → Contact Us appear here.</span>
         </div>
         <div id="message-inbox" class="message-list"></div>
+      </section>
+
+
+      <section id="readers-view" class="view hidden">
+        <div id="readers-summary" class="cards"></div>
+        <div class="panel readers-toolbar">
+          <input id="reader-search" type="search" placeholder="Search reader email or display name">
+          <button id="reader-search-button" type="button">Search</button>
+        </div>
+        <div class="readers-grid">
+          <div id="readers-list" class="panel"></div>
+          <div id="reader-detail" class="panel"></div>
+        </div>
       </section>
 
       <section id="community-view" class="view hidden">
