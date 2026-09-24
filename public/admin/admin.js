@@ -164,7 +164,7 @@ async function loadManuscripts(){
     }
     table.innerHTML=
       '<table><thead><tr>'+
-      '<th>Part</th><th>Title</th><th>State</th><th>S1</th><th>S2</th><th>Final</th><th>Words (S2)</th>'+
+      '<th>Part</th><th>Title</th><th>Status</th><th>AI-2 Stage 1</th><th>AI-1 Final</th><th>Compare</th>'+
       '</tr></thead><tbody>'+
       state.manuscripts.map((p)=>
         '<tr data-part="'+escapeHtml(p.production_part_id)+'">'+
