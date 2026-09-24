@@ -178,6 +178,58 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       return json({ ok: true, data });
     }
 
+    if (path === "/admin/api/database/proposals") {
+      await requirePermission(email, env, "DATABASE_EDIT");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_database_proposal_create", {
+        p_actor: email,
+        p_domain: String(body?.domain || ""),
+        p_target_code: String(body?.target_code || ""),
+        p_patch: body?.patch && typeof body.patch === "object" ? body.patch : {},
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    const dbProposalActionMatch = path.match(/^\/admin\/api\/database\/proposals\/([0-9a-f-]+)\/(update|apply|reject)$/i);
+    if (dbProposalActionMatch) {
+      const id = dbProposalActionMatch[1];
+      const action = dbProposalActionMatch[2].toLowerCase();
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+
+      if (action === "update") {
+        await requirePermission(email, env, "DATABASE_EDIT");
+        const data = await rpc(env, "genesis_admin_database_proposal_update", {
+          p_actor: email,
+          p_id: id,
+          p_patch: body?.patch && typeof body.patch === "object" ? body.patch : {},
+          p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+      if (action === "apply") {
+        await requirePermission(email, env, "DATABASE_APPROVE");
+        const data = await rpc(env, "genesis_admin_database_proposal_apply", {
+          p_actor: email,
+          p_id: id,
+          p_confirmation: String(body?.confirmation || ""),
+          p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+      if (action === "reject") {
+        await requirePermission(email, env, "DATABASE_APPROVE");
+        const data = await rpc(env, "genesis_admin_database_proposal_reject", {
+          p_actor: email,
+          p_id: id,
+          p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+    }
+
     const readerSuspendMatch = path.match(/^\/admin\/api\/readers\/([0-9a-f-]+)\/comment-suspension$/i);
     if (readerSuspendMatch) {
       await requirePermission(email, env, "READER_MODERATE");
@@ -702,6 +754,17 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   if (path === "/admin/api/authority") {
     await requirePermission(email, env, "AUTHORITY_VIEW");
     const data = await rpc(env, "genesis_admin_authority_index");
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/database/proposals") {
+    await requirePermission(email, env, "DATABASE_VIEW");
+    const data = await rpc(env, "genesis_admin_database_proposal_index", {
+      p_actor: email,
+      p_status: url.searchParams.get("status") || null,
+      p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
+      p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
+    });
     return json({ ok: true, data });
   }
 
