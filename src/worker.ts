@@ -178,6 +178,114 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       return json({ ok: true, data });
     }
 
+    if (path === "/admin/api/releases/verify-live-site") {
+      await requirePermission(email, env, "RELEASE_LAUNCH");
+      const base = "https://genesis-reborn-greedy.hirangnalupa.workers.dev/";
+      const home = await fetch(base, { method: "GET", redirect: "manual" });
+      const admin = await fetch(base + "admin/", { method: "GET", redirect: "manual" });
+      const h = home.headers;
+      const checks = {
+        homepage_status: home.status,
+        admin_status: admin.status,
+        csp: Boolean(h.get("content-security-policy")),
+        hsts: Boolean(h.get("strict-transport-security")),
+        nosniff: String(h.get("x-content-type-options") || "").toLowerCase() === "nosniff",
+        referrer: Boolean(h.get("referrer-policy")),
+        admin_hidden: admin.status === 404
+      };
+      const data = await rpc(env, "genesis_admin_record_live_site_verification", {
+        p_actor: email,
+        p_url: base,
+        p_homepage_status: checks.homepage_status,
+        p_admin_status: checks.admin_status,
+        p_csp: checks.csp,
+        p_hsts: checks.hsts,
+        p_nosniff: checks.nosniff,
+        p_referrer: checks.referrer,
+        p_admin_hidden: checks.admin_hidden,
+        p_evidence: checks
+      });
+      return json({ ok: true, data: { ...data, checks } });
+    }
+
+    if (path === "/admin/api/releases/pause" || path === "/admin/api/releases/resume") {
+      await requirePermission(email, env, "RELEASE_LAUNCH");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_set_release_pause", {
+        p_actor: email,
+        p_paused: path.endsWith("/pause"),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    if (path === "/admin/api/releases/authorize-launch") {
+      await requirePermission(email, env, "RELEASE_LAUNCH");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_authorize_launch", {
+        p_actor: email,
+        p_launch_at: String(body?.launch_at || ""),
+        p_confirmation: String(body?.confirmation || ""),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    const releaseActionMatch = path.match(/^\/admin\/api\/releases\/([0-9a-f-]+)\/(ready|hide|schedule|next-cycle|withdraw|release-now)$/i);
+    if (releaseActionMatch) {
+      const releaseId = releaseActionMatch[1];
+      const action = releaseActionMatch[2].toLowerCase();
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+
+      if (action === "ready") {
+        await requirePermission(email, env, "RELEASE_MANAGE");
+        const data = await rpc(env, "genesis_admin_release_mark_ready", {
+          p_actor: email, p_release_item_id: releaseId, p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+      if (action === "hide") {
+        await requirePermission(email, env, "RELEASE_MANAGE");
+        const data = await rpc(env, "genesis_admin_release_keep_hidden", {
+          p_actor: email, p_release_item_id: releaseId, p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+      if (action === "schedule") {
+        await requirePermission(email, env, "RELEASE_MANAGE");
+        const data = await rpc(env, "genesis_admin_release_schedule_exact", {
+          p_actor: email, p_release_item_id: releaseId,
+          p_publish_at: String(body?.publish_at || ""), p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+      if (action === "next-cycle") {
+        await requirePermission(email, env, "RELEASE_MANAGE");
+        const data = await rpc(env, "genesis_admin_release_next_cycle", {
+          p_actor: email, p_release_item_id: releaseId,
+          p_after: body?.after ? String(body.after) : null, p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+      if (action === "withdraw") {
+        const data = await rpc(env, "genesis_admin_release_withdraw", {
+          p_actor: email, p_release_item_id: releaseId, p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+      if (action === "release-now") {
+        await requirePermission(email, env, "RELEASE_LAUNCH");
+        const data = await rpc(env, "genesis_admin_release_now", {
+          p_actor: email, p_release_item_id: releaseId,
+          p_confirmation: String(body?.confirmation || ""), p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+    }
+
     if (path === "/admin/api/production/hold") {
       await requirePermission(email, env, "PRODUCTION_CONTROL");
       let body: any = null;
@@ -326,6 +434,12 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
       p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
     });
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/releases/launch-preview") {
+    await requirePermission(email, env, "RELEASE_VIEW");
+    const data = await rpc(env, "genesis_admin_release_launch_preview", { p_actor: email });
     return json({ ok: true, data });
   }
 
