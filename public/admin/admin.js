@@ -693,6 +693,99 @@ async function loadAccess(){
   }
 }
 
+
+async function loadSettings(){
+  const summary=$("#settings-summary");
+  const features=$("#settings-features");
+  const payments=$("#settings-payments");
+  summary.innerHTML='<div class="card"><span>Settings</span><strong>Loading…</strong></div>';
+  features.innerHTML='<div class="empty">Loading feature flags…</div>';
+  payments.innerHTML='<div class="empty">Loading payment provider…</div>';
+  try{
+    const d=await api("/admin/api/settings/features");
+    const s=d.support_settings||{};
+    const p=d.payment_provider||{};
+    const r=d.release_settings||{};
+    const v=d.latest_live_verification||{};
+    summary.innerHTML=
+      '<div class="card"><span>Launch authorized</span><strong>'+escapeHtml(r.launch_authorized?"YES":"NO")+'</strong></div>'+
+      '<div class="card"><span>Comments</span><strong>'+escapeHtml(s.comments_enabled?"ON":"OFF")+'</strong></div>'+
+      '<div class="card"><span>Fan posting</span><strong>'+escapeHtml(s.fan_posting_enabled?"ON":"OFF")+'</strong></div>'+
+      '<div class="card"><span>Payments</span><strong>'+escapeHtml(s.payments_enabled?"ON":"OFF")+'</strong></div>'+
+      '<div class="card"><span>PayMongo</span><strong>'+escapeHtml((p.mode||"—")+" / "+(p.provider_enabled?"ENABLED":"OFF"))+'</strong></div>'+
+      '<div class="card"><span>Live verification</span><strong>'+escapeHtml(v.status||"NONE")+'</strong></div>';
+
+    const flags=[
+      ["comments","Comments",Boolean(s.comments_enabled),false],
+      ["fan-posting","Fan Page posting",Boolean(s.fan_posting_enabled),true],
+      ["share-rewards","Share rewards",Boolean(s.share_rewards_enabled),true],
+      ["pure-support","Pure support / donation",Boolean(s.pure_support_enabled),true]
+    ];
+    features.innerHTML=
+      '<div class="database-head"><span>Website Feature Flags</span><small>Allowlisted controls</small></div>'+
+      '<div class="feature-list">'+
+      flags.map(([key,label,on,launchRequired])=>
+        '<div class="feature-row"><div><strong>'+escapeHtml(label)+'</strong><small>'+(launchRequired?'Requires public launch authorization':'May be changed prelaunch')+'</small></div>'+
+        '<span class="status '+(on?'final':'review')+'">'+(on?'ON':'OFF')+'</span>'+
+        (hasPermission("FEATURE_FLAGS")?'<button data-feature="'+key+'" data-enabled="'+(!on)+'">'+(on?'Disable':'Enable')+'</button>':'')+
+        '</div>'
+      ).join("")+
+      '</div>';
+
+    features.querySelectorAll("[data-feature]").forEach(button=>button.addEventListener("click",async()=>{
+      const key=button.dataset.feature;
+      const enabled=button.dataset.enabled==="true";
+      const reason=prompt("Reason for "+(enabled?"enabling ":"disabling ")+key+":")||"";
+      if(reason.trim().length<6)return;
+      button.disabled=true;
+      try{await apiPost("/admin/api/settings/features/"+key,{enabled,reason});await loadSettings();}
+      catch(error){alert(error.message);button.disabled=false;}
+    }));
+
+    payments.innerHTML=
+      '<div class="database-head"><span>PayMongo / Payments</span><small>High-risk controls</small></div>'+
+      '<div class="settings-payment-grid">'+
+        '<div><small>Provider mode</small><strong>'+escapeHtml(p.mode||"—")+'</strong></div>'+
+        '<div><small>Provider enabled</small><strong>'+escapeHtml(p.provider_enabled?"YES":"NO")+'</strong></div>'+
+        '<div><small>Reader payments</small><strong>'+escapeHtml(s.payments_enabled?"ENABLED":"OFF")+'</strong></div>'+
+        '<div><small>Method</small><strong>'+escapeHtml(Array.isArray(p.payment_method_types)?p.payment_method_types.join(", "):"—")+'</strong></div>'+
+      '</div>'+
+      (hasPermission("PAYMENTS_ENABLE")
+        ?'<div class="admin-control-form inline-controls">'+
+           '<strong>Payment provider control</strong>'+
+           '<select id="payment-provider-mode"><option value="TEST" '+(p.mode==="TEST"?"selected":"")+'>TEST</option><option value="LIVE" '+(p.mode==="LIVE"?"selected":"")+'>LIVE</option></select>'+
+           '<button id="payment-provider-toggle">'+(p.provider_enabled?"Disable provider":"Enable provider")+'</button>'+
+           '<button id="reader-payments-toggle" class="'+(s.payments_enabled?"danger-action":"")+'">'+(s.payments_enabled?"Disable reader payments":"Enable reader payments")+'</button>'+
+         '</div>'
+        :'<div class="empty">PAYMENTS_ENABLE is required to change payment settings.</div>');
+
+    const providerButton=$("#payment-provider-toggle");
+    if(providerButton)providerButton.addEventListener("click",async()=>{
+      const enabled=!Boolean(p.provider_enabled);
+      const mode=$("#payment-provider-mode").value;
+      const reason=prompt("Reason for changing PayMongo provider state:")||"";
+      if(reason.trim().length<8)return;
+      providerButton.disabled=true;
+      try{await apiPost("/admin/api/settings/payment-provider",{enabled,mode,reason});await loadSettings();}
+      catch(error){alert(error.message);providerButton.disabled=false;}
+    });
+
+    const payButton=$("#reader-payments-toggle");
+    if(payButton)payButton.addEventListener("click",async()=>{
+      const enabled=!Boolean(s.payments_enabled);
+      const reason=prompt("Reason for "+(enabled?"enabling":"disabling")+" reader payments:")||"";
+      if(reason.trim().length<8)return;
+      payButton.disabled=true;
+      try{await apiPost("/admin/api/settings/payments",{enabled,reason});await loadSettings();}
+      catch(error){alert(error.message);payButton.disabled=false;}
+    });
+  }catch(error){
+    summary.innerHTML="";
+    features.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    payments.innerHTML="";
+  }
+}
+
 async function initializeAdmin(){
   try{
     const rbac=await api("/admin/api/rbac");
@@ -957,7 +1050,7 @@ function switchView(name){
   $$(".view").forEach((x)=>x.classList.add("hidden"));
   $$(".nav").forEach((x)=>x.classList.toggle("active",x.dataset.view===name));
   $("#"+name+"-view").classList.remove("hidden");
-  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database",support:"Support",messages:"Reader Messages",community:"Community"};
+  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database",support:"Support",messages:"Reader Messages",community:"Community",settings:"Settings"};
   $("#page-title").textContent=titles[name]||"Control Center";
   if(name==="manuscripts")loadManuscripts();
   if(name==="releases")loadReleases();
@@ -969,6 +1062,7 @@ function switchView(name){
   if(name==="support")loadSupport();
   if(name==="messages")loadMessages();
   if(name==="community")loadCommunity();
+  if(name==="settings")loadSettings();
 }
 
 $$(".nav").forEach((b)=>b.addEventListener("click",()=>switchView(b.dataset.view)));
