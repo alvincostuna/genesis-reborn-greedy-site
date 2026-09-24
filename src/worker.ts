@@ -178,6 +178,47 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       return json({ ok: true, data });
     }
 
+    const readerSuspendMatch = path.match(/^\/admin\/api\/readers\/([0-9a-f-]+)\/comment-suspension$/i);
+    if (readerSuspendMatch) {
+      await requirePermission(email, env, "READER_MODERATE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_reader_set_comment_suspension", {
+        p_actor: email,
+        p_user_id: readerSuspendMatch[1],
+        p_suspended_until: body?.suspended_until ? String(body.suspended_until) : null,
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    const readerGrantMatch = path.match(/^\/admin\/api\/readers\/([0-9a-f-]+)\/advance-grants$/i);
+    if (readerGrantMatch) {
+      await requirePermission(email, env, "READER_ENTITLEMENT_ADMIN");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_reader_grant_advance_part", {
+        p_actor: email,
+        p_user_id: readerGrantMatch[1],
+        p_part_id: String(body?.part_id || ""),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    const readerRevokeMatch = path.match(/^\/admin\/api\/readers\/advance-grants\/([0-9a-f-]+)\/revoke$/i);
+    if (readerRevokeMatch) {
+      await requirePermission(email, env, "READER_ENTITLEMENT_ADMIN");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_reader_revoke_advance_part", {
+        p_actor: email,
+        p_access_id: readerRevokeMatch[1],
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
     const fanPostModerationMatch = path.match(/^\/admin\/api\/community\/fan-posts\/([0-9a-f-]+)\/(approve|hide|restore|remove)$/i);
     if (fanPostModerationMatch) {
       await requirePermission(email, env, "COMMUNITY_MODERATE");
@@ -697,6 +738,27 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     const data = await rpc(env, "genesis_admin_message_inbox", {
       p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
       p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
+    });
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/readers") {
+    await requirePermission(email, env, "READER_VIEW");
+    const data = await rpc(env, "genesis_admin_reader_index", {
+      p_actor: email,
+      p_query: url.searchParams.get("q") || null,
+      p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
+      p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
+    });
+    return json({ ok: true, data });
+  }
+
+  const readerDetailMatch = path.match(/^\/admin\/api\/readers\/([0-9a-f-]+)$/i);
+  if (readerDetailMatch) {
+    await requirePermission(email, env, "READER_VIEW");
+    const data = await rpc(env, "genesis_admin_reader_detail", {
+      p_actor: email,
+      p_user_id: readerDetailMatch[1]
     });
     return json({ ok: true, data });
   }
