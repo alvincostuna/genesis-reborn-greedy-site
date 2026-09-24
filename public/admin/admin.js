@@ -187,13 +187,16 @@ async function loadManuscripts(){
 
 async function loadReleases(){
   const cards=$("#release-policy");
+  const launchRoot=$("#release-launch-control");
   const table=$("#release-table");
   cards.innerHTML='<div class="card"><span>Release policy</span><strong>Loading…</strong></div>';
+  launchRoot.innerHTML='<div class="empty">Loading launch readiness…</div>';
   table.innerHTML='<div class="empty">Loading release queue…</div>';
   try{
-    const [data,envelope]=await Promise.all([
+    const [data,envelope,launch]=await Promise.all([
       api("/admin/api/releases"),
-      api("/admin/api/release-policy")
+      api("/admin/api/release-policy"),
+      api("/admin/api/releases/launch-preview")
     ]);
     const policy=envelope.policy||{};
     const clock=envelope.clock||{};
@@ -207,19 +210,144 @@ async function loadReleases(){
       '<div class="card"><span>Released Parts</span><strong>'+escapeHtml(clock.released_parts??0)+'</strong></div>'+
       '<div class="card"><span>Release unit</span><strong>'+escapeHtml(policy.ongoing_release_unit||"PART")+'</strong></div>';
 
+    const active=launch.active_roadmap||{};
+    const verify=launch.latest_live_verification||{};
+    const canLaunch=Boolean(launch.can_authorize);
+    const canManage=hasPermission("RELEASE_MANAGE");
+    const canLaunchControl=hasPermission("RELEASE_LAUNCH");
+
+    launchRoot.innerHTML=
+      '<div class="database-head"><span>Public Launch Gate</span><small>'+escapeHtml(launch.contract_version||"")+'</small></div>'+
+      '<div class="release-control-body">'+
+        '<div class="runtime">'+
+          '<div><small>Active roadmap</small><strong>V'+escapeHtml(active.version??"—")+' · '+escapeHtml(active.source_system||"—")+'</strong></div>'+
+          '<div><small>Final Canon buffer</small><strong>'+escapeHtml(launch.final_canon_parts??0)+' / '+escapeHtml(launch.launch_min_buffer_parts??90)+'</strong></div>'+
+          '<div><small>Opening Episodes</small><strong>'+escapeHtml(launch.opening_final_parts??0)+' / '+escapeHtml(launch.opening_expected_parts??0)+'</strong></div>'+
+          '<div><small>Live site verification</small><strong>'+escapeHtml(launch.live_site_ready?"PASS":"NOT PASS")+'</strong></div>'+
+          '<div><small>Launch authorized</small><strong>'+escapeHtml(policy.launch_authorized?"YES":"NO")+'</strong></div>'+
+          '<div><small>Release engine</small><strong>'+escapeHtml(policy.releases_paused?"PAUSED":"ACTIVE")+'</strong></div>'+
+        '</div>'+
+        (verify.id?'<div class="admin-note compact"><strong>Latest live verification</strong><p>'+escapeHtml(verify.created_at||"")+' · homepage '+escapeHtml(verify.homepage_status)+' · /admin '+escapeHtml(verify.admin_status)+'</p></div>':'')+
+        '<div class="cutover-actions">'+
+          (canLaunchControl?'<button id="verify-live-site">Verify live public site</button>':'')+
+          (canLaunchControl&&!policy.launch_authorized?'<button id="authorize-public-launch" class="danger-action" '+(canLaunch?"":"disabled")+'>Authorize public launch</button>':'')+
+          (canLaunchControl&&policy.releases_paused?'<button id="resume-release-engine" '+(policy.launch_authorized?"":"disabled")+'>Resume release engine</button>':'')+
+          (canLaunchControl&&!policy.releases_paused?'<button id="pause-release-engine" class="danger-action">Pause release engine</button>':'')+
+        '</div>'+
+        (!canLaunch
+          ?'<div class="empty">Launch remains locked until V2 is active, the Final Canon buffer reaches the configured minimum, opening Episodes are complete, and the live site verification passes.</div>'
+          :'<div class="admin-note compact"><strong>Launch prerequisites pass.</strong><p>Authorization still keeps releases paused until you explicitly resume them.</p></div>')+
+      '</div>';
+
+    const verifyButton=$("#verify-live-site");
+    if(verifyButton)verifyButton.addEventListener("click",async()=>{
+      verifyButton.disabled=true;
+      try{
+        const result=await apiPost("/admin/api/releases/verify-live-site",{});
+        alert("Live-site verification: "+result.status+"\nHomepage: "+result.checks.homepage_status+"\n/admin: "+result.checks.admin_status);
+        await loadReleases();
+      }catch(error){alert(error.message);verifyButton.disabled=false;}
+    });
+
+    const authButton=$("#authorize-public-launch");
+    if(authButton)authButton.addEventListener("click",async()=>{
+      const confirmation=prompt("Type exactly:\nAUTHORIZE GENESIS PUBLIC LAUNCH")||"";
+      if(confirmation!=="AUTHORIZE GENESIS PUBLIC LAUNCH")return;
+      const local=prompt("Launch date/time (for example 2026-10-01T18:00):")||"";
+      const dt=new Date(local);
+      if(!local||Number.isNaN(dt.getTime())){alert("Invalid launch date/time.");return;}
+      const reason=prompt("Launch authorization reason (minimum 12 characters):")||"";
+      if(reason.trim().length<12)return;
+      authButton.disabled=true;
+      try{
+        await apiPost("/admin/api/releases/authorize-launch",{launch_at:dt.toISOString(),confirmation,reason});
+        await loadReleases();
+      }catch(error){alert(error.message);authButton.disabled=false;}
+    });
+
+    const resume=$("#resume-release-engine");
+    if(resume)resume.addEventListener("click",async()=>{
+      const reason=prompt("Reason for resuming releases (minimum 8 characters):")||"";
+      if(reason.trim().length<8)return;
+      resume.disabled=true;
+      try{await apiPost("/admin/api/releases/resume",{reason});await loadReleases();}
+      catch(error){alert(error.message);resume.disabled=false;}
+    });
+
+    const pause=$("#pause-release-engine");
+    if(pause)pause.addEventListener("click",async()=>{
+      const reason=prompt("Reason for pausing releases (minimum 8 characters):")||"";
+      if(reason.trim().length<8)return;
+      pause.disabled=true;
+      try{await apiPost("/admin/api/releases/pause",{reason});await loadReleases();}
+      catch(error){alert(error.message);pause.disabled=false;}
+    });
+
     const items=data.items||[];
     if(!items.length){
-      table.innerHTML='<div class="empty"><strong>No release items yet.</strong><br>Correct for pre-launch: the fresh E001–E010 Final Canon launch batch has not been created.</div>';
+      table.innerHTML='<div class="empty"><strong>No release items yet.</strong><br>Fresh Final Canon Parts will appear here automatically.</div>';
       return;
     }
     table.innerHTML=
-      '<table><thead><tr><th>Part</th><th>Title</th><th>Status</th><th>Mode</th><th>Publish at</th></tr></thead><tbody>'+
-      items.map((x)=>
-        '<tr><td>'+escapeHtml(x.part_key)+'</td><td>'+escapeHtml(x.title)+'</td><td>'+escapeHtml(x.release_status)+'</td><td>'+escapeHtml(x.release_mode)+'</td><td>'+escapeHtml(x.publish_at||"—")+'</td></tr>'
-      ).join("")+
-      '</tbody></table>';
+      '<div class="table-scroll"><table><thead><tr><th>Roadmap</th><th>Part</th><th>Title</th><th>Status</th><th>Mode</th><th>Publish at</th><th>Actions</th></tr></thead><tbody>'+
+      items.map((x)=>{
+        const current=Boolean(x.is_current_active);
+        let actions='<span class="muted">'+(current?"No permitted action":"Historical / inactive")+'</span>';
+        if(current&&(canManage||canLaunchControl)){
+          const a=[];
+          if(canManage&&["HIDDEN","RELEASE_READY","SCHEDULED"].includes(x.release_status)){
+            if(x.release_status!=="RELEASE_READY")a.push('<button data-release-action="ready" data-id="'+escapeHtml(x.release_item_id)+'">Ready</button>');
+            if(x.release_status!=="HIDDEN")a.push('<button data-release-action="hide" data-id="'+escapeHtml(x.release_item_id)+'">Hide</button>');
+            if(policy.launch_authorized&&x.release_status!=="PUBLISHED"){
+              a.push('<button data-release-action="next-cycle" data-id="'+escapeHtml(x.release_item_id)+'">Next cycle</button>');
+              a.push('<button data-release-action="schedule" data-id="'+escapeHtml(x.release_item_id)+'">Exact time</button>');
+            }
+          }
+          if((canManage&&x.release_status==="SCHEDULED")||(canLaunchControl&&x.release_status==="PUBLISHED")){
+            a.push('<button data-release-action="withdraw" data-id="'+escapeHtml(x.release_item_id)+'" class="danger-mini">Withdraw</button>');
+          }
+          if(canLaunchControl&&policy.launch_authorized&&!policy.releases_paused&&["RELEASE_READY","SCHEDULED"].includes(x.release_status)){
+            a.push('<button data-release-action="release-now" data-id="'+escapeHtml(x.release_item_id)+'" class="danger-mini">Release now</button>');
+          }
+          if(a.length)actions='<div class="release-row-actions">'+a.join("")+'</div>';
+        }
+        return '<tr><td>V'+escapeHtml(x.roadmap_version??"—")+'<br><small>'+escapeHtml(x.roadmap_status||"—")+'</small></td><td>'+escapeHtml(x.part_key)+'</td><td>'+escapeHtml(x.title)+'</td><td>'+escapeHtml(x.release_status)+'</td><td>'+escapeHtml(x.release_mode)+'</td><td>'+escapeHtml(x.publish_at||"—")+'</td><td>'+actions+'</td></tr>';
+      }).join("")+
+      '</tbody></table></div>';
+
+    table.querySelectorAll("[data-release-action]").forEach(button=>button.addEventListener("click",async()=>{
+      const id=button.dataset.id;
+      const action=button.dataset.releaseAction;
+      let payload={};
+      if(action==="release-now"){
+        const confirmation=prompt("Type exactly:\nRELEASE THIS PART NOW")||"";
+        if(confirmation!=="RELEASE THIS PART NOW")return;
+        const reason=prompt("Reason for immediate release:")||"";
+        if(reason.trim().length<8)return;
+        payload={confirmation,reason};
+      }else if(action==="schedule"){
+        const local=prompt("Publish date/time (for example 2026-10-01T18:00):")||"";
+        const dt=new Date(local);
+        if(!local||Number.isNaN(dt.getTime()))return;
+        const reason=prompt("Scheduling reason:")||"";
+        if(reason.trim().length<4)return;
+        payload={publish_at:dt.toISOString(),reason};
+      }else if(action==="next-cycle"){
+        const reason=prompt("Scheduling reason:")||"";
+        if(reason.trim().length<4)return;
+        payload={reason};
+      }else{
+        const reason=prompt("Reason for "+action+":")||"";
+        if(reason.trim().length<4)return;
+        payload={reason};
+      }
+      button.disabled=true;
+      try{await apiPost("/admin/api/releases/"+id+"/"+action,payload);await loadReleases();}
+      catch(error){alert(error.message);button.disabled=false;}
+    }));
   }catch(error){
     cards.innerHTML='';
+    launchRoot.innerHTML='';
     table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
   }
 }
