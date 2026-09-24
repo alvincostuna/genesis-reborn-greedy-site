@@ -1,0 +1,38 @@
+name = "genesis-reborn-greedy-site"
+main = "src/worker.ts"
+compatibility_date = "2026-09-22"
+
+# SAFETY LOCK:
+# The top-level Worker has no workers.dev URL, no Preview URLs, and no routes.
+# A plain "wrangler deploy" must not become reachable from the Internet.
+workers_dev = false
+preview_urls = false
+
+# Preserve dashboard-managed preview configuration (Access AUD/team domain)
+# on future Wrangler uploads. Cloudflare secrets are preserved automatically.
+keep_vars = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[vars]
+SUPABASE_URL = "https://lyhrwymhzhhxszquxnke.supabase.co"
+ADMIN_EMAILS = "alvin.costuna@deped.gov.ph"
+
+# Preview is a separate Worker environment:
+# genesis-reborn-greedy-site-preview.<account>.workers.dev
+# It has no route or Custom Domain for the live GENESIS hostname.
+[env.preview]
+workers_dev = true
+preview_urls = true
+
+# Preview runtime variables are dashboard-managed and preserved by keep_vars=true.
+# Do not duplicate them here; local env vars would overwrite the protected preview configuration.
+# Preview runtime values managed in Cloudflare dashboard:
+# SUPABASE_SERVICE_ROLE_KEY (Secret)
+# CF_ACCESS_TEAM_DOMAIN (Variable or Secret)
+# CF_ACCESS_AUD (Variable or Secret)
+#
+# DO NOT add a route or custom_domain here.
+# DO NOT point this Worker at genesis-reborn-greedy.hirangnalupa.workers.dev.

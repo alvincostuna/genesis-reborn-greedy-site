@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Codex — GENESIS: REBORN GREEDY</title>\n<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
+  <link rel="stylesheet" href="/site-preview/site.css">
+</head>
+<body data-page="codex">
+  
+<header class="reader-nav">
+  <a class="reader-brand" href="/site-preview/" aria-label="GENESIS home">
+    <img src="/assets/genesis-official-logo.png" alt="" aria-hidden="true">
+    <span>GENESIS</span>
+  </a>
+  <nav aria-label="Primary">
+    <a href="/site-preview/">Home</a>
+    <a href="/site-preview/read/">Read</a>
+    <a href="/site-preview/world/">World</a>
+    <a class="active" href="/site-preview/codex/">Codex</a>
+    <a href="/site-preview/fan-page/">Fan Page</a>
+    <a href="/site-preview/manga/">Manga</a>
+    <a href="/site-preview/support/">Support</a>
+  </nav>
+</header>
+  <main class="page-frame">
+    <header class="page-title codex-title">
+      <div>
+        <p class="eyebrow">READER DATABASE</p>
+        <h1>Codex</h1>
+      </div>
+      <p>The Codex is the public database of knowledge already revealed by released Parts.</p>
+    </header>
+
+    <section class="codex-tools">
+      <select id="codex-type" aria-label="Codex category">
+        <option value="">All revealed records</option>
+        <option value="monster">Monsters</option>
+        <option value="map">Maps</option>
+        <option value="weapon">Weapons</option>
+        <option value="armor">Armor</option>
+        <option value="item">Items</option>
+        <option value="material">Materials</option>
+        <option value="class">Classes</option>
+        <option value="profession">Professions</option>
+        <option value="skill">Skills</option>
+        <option value="npc">NPCs</option>
+        <option value="quest">Quests</option>
+        <option value="shop">Shops</option>
+      </select>
+      <input id="codex-search" type="search" placeholder="Search the revealed database…" autocomplete="off">
+      <button id="codex-search-button">Search</button>
+    </section>
+
+    <section id="codex-results" class="codex-grid">
+      <div class="empty-state large">Loading revealed Codex records…</div>
+    </section>
+  </main>
+  <script type="module" src="/site-preview/site.js"></script>
+</body>
+</html>

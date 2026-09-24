@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>GENESIS Admin — Control Center</title>\n  <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="sigil asset-locked"><img alt="" aria-hidden="true" src="/assets/genesis-official-logo.png"></div>
+        <div>
+          <strong>GENESIS</strong>
+          <span>Control Center</span>
+        </div>
+      </div>
+
+      <nav>
+        <button class="nav active" data-view="production">Production</button>
+        <button class="nav" data-view="manuscripts">Manuscripts</button>
+        <button class="nav" data-view="releases">Release Queue</button>
+        <button class="nav" data-view="database">Game Database</button>
+        <button class="nav" data-view="support">Support</button>
+        <button class="nav" data-view="messages">Messages</button>
+        <button class="nav" data-view="community">Community</button>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>PRE-LAUNCH / READ-ONLY</strong>
+        <span>Supabase-native control view. Releases remain paused.</span>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">GENESIS: REBORN GREEDY</p>
+          <h1 id="page-title">Production Dashboard</h1>
+        </div>
+        <div id="release-badge" class="badge danger">LOADING</div>
+      </header>
+
+      <section id="production-view" class="view"></section>
+
+      <section id="manuscripts-view" class="view hidden">
+        <div class="toolbar">
+          <input id="search" placeholder="Search Part key or title">
+          <select id="episode-filter">
+            <option value="">All Episodes</option>
+            <option value="1">E001</option>
+            <option value="2">E002</option>
+            <option value="3">E003</option>
+            <option value="4">E004</option>
+            <option value="5">E005</option>
+          </select>
+          <button id="refresh-manuscripts">Refresh</button>
+        </div>
+        <div id="manuscript-table" class="panel"></div>
+      </section>
+
+      <section id="releases-view" class="view hidden">
+        <div id="release-policy" class="cards"></div>
+        <div id="release-table" class="panel"></div>
+      </section>
+
+      <section id="database-view" class="view hidden">
+        <div id="database-summary" class="cards"></div>
+        <div class="toolbar">
+          <select id="database-domain">
+            <option value="monsters">Monsters</option>
+            <option value="classes">Classes</option>
+            <option value="professions">Professions</option>
+            <option value="skills">Skills</option>
+            <option value="loot">Loot</option>
+            <option value="maps">Maps</option>
+            <option value="items">Items</option>
+            <option value="npcs">NPCs</option>
+            <option value="quests">Quests</option>
+            <option value="crafting">Crafting</option>
+            <option value="companions">Pets / Mounts</option>
+          </select>
+          <input id="database-search" placeholder="Search canonical name, code, family, role…">
+          <button id="refresh-database">Refresh</button>
+        </div>
+        <div id="database-table" class="panel"></div>
+      </section>
+
+      <section id="support-view" class="view hidden">
+        <div id="support-summary" class="cards"></div>
+        <div class="panel admin-note">
+          <strong>Support rules are prepared, but payments remain disabled.</strong>
+          <p>Rewarded support is capped at ₱200 per reader per rolling 30 days. Pure no-return support is separate and grants no advance access.</p>
+        </div>
+      </section>
+
+      <section id="messages-view" class="view hidden">
+        <div class="panel section-intro">
+          <strong>Reader Contact Inbox</strong>
+          <span>Messages sent from Support → Contact Us appear here.</span>
+        </div>
+        <div id="message-inbox" class="message-list"></div>
+      </section>
+
+      <section id="community-view" class="view hidden">
+        <div id="community-summary" class="cards"></div>
+        <div class="community-columns">
+          <div>
+            <h2>Pending Fan Posts</h2>
+            <div id="pending-fan-posts" class="panel"></div>
+          </div>
+          <div>
+            <h2>Open Reports</h2>
+            <div id="community-reports" class="panel"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="viewer">
+    <div class="viewer-head">
+      <div>
+        <p id="viewer-key" class="eyebrow"></p>
+        <h2 id="viewer-title"></h2>
+      </div>
+      <button id="close-viewer" class="icon-button" aria-label="Close">×</button>
+    </div>
+
+    <div class="tabs">
+      <button data-stage="stage1">Stage 1</button>
+      <button data-stage="stage2" class="active">Stage 2</button>
+      <button data-stage="final">Final Canon</button>
+      <button id="compare-button">Compare S1 ↔ S2</button>
+      <button id="preview-button">Preview as Reader</button>
+    </div>
+
+    <div id="viewer-meta" class="meta-grid"></div>
+    <article id="manuscript-body" class="manuscript"></article>
+  </dialog>
+
+  <dialog id="preview">
+    <div class="preview-banner">PRIVATE PREVIEW — NOT PUBLIC</div>
+    <button id="close-preview" class="preview-close">Close preview</button>
+    <article id="preview-body" class="reader-preview"></article>
+  </dialog>
+
+  <script type="module" src="/admin/admin.js"></script>
+</body>
+</html>
