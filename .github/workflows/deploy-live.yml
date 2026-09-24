@@ -158,6 +158,12 @@ jobs:
           test "$(sha256sum /tmp/candidate-hero.webp | awk '{print $1}')" = "64c2fa7b46053c8ba468be5dbd7f58795624be92cdf71e0e53334f1d501dba25"
           test "$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/admin/")" = "404"
 
+          curl -fsSI "$CANDIDATE_URL/" -o /tmp/candidate-headers.txt
+          grep -Eiq '^content-security-policy:' /tmp/candidate-headers.txt
+          grep -Eiq '^strict-transport-security:' /tmp/candidate-headers.txt
+          grep -Eiq '^x-content-type-options:[[:space:]]*nosniff' /tmp/candidate-headers.txt
+          grep -Eiq '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/candidate-headers.txt
+
       - name: Promote verified candidate
         env:
           WRANGLER_OUTPUT: ${{ steps.upload-live.outputs.command-output }}
@@ -206,4 +212,10 @@ jobs:
             sleep 2
           done
           test "$ADMIN_STATUS" = "404"
+
+          curl -fsSI "$BASE/" -o /tmp/live-headers.txt
+          grep -Eiq '^content-security-policy:' /tmp/live-headers.txt
+          grep -Eiq '^strict-transport-security:' /tmp/live-headers.txt
+          grep -Eiq '^x-content-type-options:[[:space:]]*nosniff' /tmp/live-headers.txt
+          grep -Eiq '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/live-headers.txt
           echo "GENESIS live reader verified."
