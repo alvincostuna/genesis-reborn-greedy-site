@@ -374,7 +374,7 @@ async function loadContinuity(){
       '<div class="card"><span>Registry READY</span><strong>'+escapeHtml((r.ready??0)+" / "+(r.total??0))+'</strong></div>'+
       '<div class="card"><span>Registry blocked</span><strong>'+escapeHtml(r.blocked??0)+'</strong></div>'+
       '<div class="card"><span>Required progression gaps</span><strong>'+escapeHtml(p.required_incomplete??0)+'</strong></div>'+
-      '<div class="card"><span>Optional branch warnings</span><strong>'+escapeHtml(p.optional_incomplete??0)+'</strong></div>'+
+      '<div class="card"><span>Optional branch warnings</span><strong>'+escapeHtml(p.optional_profession_incomplete??0)+'</strong></div>'+
       '<div class="card"><span>First-use exact</span><strong>'+escapeHtml((b.first_use_exact??0)+" / "+(b.first_use_rows??0))+'</strong></div>'+
       '<div class="card"><span>Public reveal plans</span><strong>'+escapeHtml(b.approved_public_reveals??0)+'</strong></div>'+
       '<div class="card"><span>Runtime skill grants</span><strong>'+escapeHtml(run.character_skill_state??0)+'</strong></div>'+
