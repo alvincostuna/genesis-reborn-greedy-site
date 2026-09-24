@@ -96,3 +96,21 @@ It uses the canonical 8-hour cycle from Supabase and displays:
 - 8-hour cycle identity.
 
 It must remain visually secondary to the approved key art and must not become a stacked homepage panel.
+
+
+## LIVE HERO FIX — 2026-09-24
+
+**Status:** DEPLOYED SOURCE FIX / LOCKED-ASSET PRESERVATION
+
+The approved split-world key art is mounted as a real static binary asset instead of relying on an embedded data URI:
+
+- Path: `public/assets/master-key-art-split-world-v1.webp`
+- Source: exact previously embedded approved preview derivative
+- No regeneration or reinterpretation
+- Live reader build must copy this asset into `.live-assets/assets/`
+- Home must reference `/assets/master-key-art-split-world-v1.webp`
+
+Reader header branding must display the complete canonical title:
+**GENESIS: REBORN GREEDY**
+
+A syntax defect caused by an accidental literal `\\n` in `site.js` was corrected so the GENESIS CYCLE initializes normally.

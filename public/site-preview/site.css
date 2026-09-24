@@ -7,6 +7,7 @@ button,input,select{font:inherit}
 .reader-nav{height:66px;position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:0 clamp(18px,4vw,54px);background:rgba(4,7,11,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
 .reader-brand{position:absolute;left:clamp(18px,4vw,54px);display:flex;align-items:center;gap:11px;font-family:Georgia,"Times New Roman",serif;letter-spacing:.13em;font-size:16px}
 .reader-brand img{width:40px;height:40px;object-fit:contain;display:block;filter:drop-shadow(0 0 9px rgba(187,220,255,.42))}
+.reader-brand span{white-space:nowrap;font-size:14px;font-weight:700}
 .reader-nav nav{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,28px)}
 .reader-nav nav a{font-size:13px;color:#9ea9b8;padding:23px 0 19px;border-bottom:2px solid transparent}
 .reader-nav nav a:hover,.reader-nav nav a.active{color:#fff;border-bottom-color:var(--gold)}
