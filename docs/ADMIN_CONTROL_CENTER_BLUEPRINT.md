@@ -32,7 +32,7 @@ Show:
 - defects;
 - latest Builder handoff summary.
 
-Stale E006–E010 router must be visibly flagged until explicit E001 cutover.
+Stale E006–E010 router must be visibly flagged as historical/stale until an explicit post-audit production reset/cutover. Readiness PASS does not execute 202 or change the active 014 route.
 
 ## Manuscripts
 
