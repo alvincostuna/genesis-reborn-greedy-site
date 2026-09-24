@@ -178,6 +178,54 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       return json({ ok: true, data });
     }
 
+    if (path === "/admin/api/production/hold") {
+      await requirePermission(email, env, "PRODUCTION_CONTROL");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_production_hold", {
+        p_actor: email,
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    if (path === "/admin/api/production/resume") {
+      await requirePermission(email, env, "PRODUCTION_CONTROL");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_production_resume", {
+        p_actor: email,
+        p_hold_id: String(body?.hold_id || ""),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    if (path === "/admin/api/production/emergency-stop") {
+      await requirePermission(email, env, "PRODUCTION_AUTHORIZE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_emergency_stop", {
+        p_actor: email,
+        p_confirmation: String(body?.confirmation || ""),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    const packetInvalidateMatch = path.match(/^\/admin\/api\/production\/packets\/([0-9a-f-]+)\/invalidate$/i);
+    if (packetInvalidateMatch) {
+      await requirePermission(email, env, "PRODUCTION_CONTROL");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_runtime_packet_invalidate", {
+        p_actor: email,
+        p_packet_id: packetInvalidateMatch[1],
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
     if (path === "/admin/api/roadmap/cutover-snapshot") {
       await requirePermission(email, env, "ROADMAP_ACTIVATE");
       let body: any = null;
@@ -249,6 +297,12 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
       p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
     });
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/production/control") {
+    await requirePermission(email, env, "DASHBOARD_VIEW");
+    const data = await rpc(env, "genesis_admin_production_control_status", { p_actor: email });
     return json({ ok: true, data });
   }
 
