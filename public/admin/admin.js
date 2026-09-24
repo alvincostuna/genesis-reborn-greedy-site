@@ -1502,7 +1502,7 @@ async function openPart(partId){
   $("#viewer-key").textContent=p.part_key;
   $("#viewer-title").textContent=p.title;
   $("#viewer").showModal();
-  await showVersion("stage2");
+  await showVersion(p.stage2_available?"stage2":"stage1");
 }
 
 async function compareCurrent(){
