@@ -178,6 +178,31 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       return json({ ok: true, data });
     }
 
+    if (path === "/admin/api/roadmap/cutover-snapshot") {
+      await requirePermission(email, env, "ROADMAP_ACTIVATE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_create_pre_cutover_snapshot", {
+        p_actor: email,
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    if (path === "/admin/api/roadmap/activate-v2") {
+      await requirePermission(email, env, "ROADMAP_ACTIVATE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_activate_v2_cutover", {
+        p_actor: email,
+        p_snapshot_id: String(body?.snapshot_id || ""),
+        p_snapshot_hash: String(body?.snapshot_hash || ""),
+        p_confirmation: String(body?.confirmation || ""),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
     const replyMatch = path.match(/^\/admin\/api\/messages\/([0-9a-f-]+)\/reply$/i);
     if (replyMatch) {
       await requirePermission(email, env, "MESSAGES_REPLY");
@@ -270,6 +295,18 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       policy: Array.isArray(policy) ? policy[0] : policy,
       clock: Array.isArray(clock) ? clock[0] : clock
     }});
+  }
+
+  if (path === "/admin/api/roadmap/cutover-preview") {
+    await requirePermission(email, env, "ROADMAP_VIEW");
+    const data = await rpc(env, "genesis_admin_v2_cutover_preview", { p_actor: email });
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/roadmap/cutover-status") {
+    await requirePermission(email, env, "ROADMAP_VIEW");
+    const data = await rpc(env, "genesis_admin_cutover_status", { p_actor: email });
+    return json({ ok: true, data });
   }
 
   if (path === "/admin/api/roadmap") {
