@@ -99,3 +99,4 @@ Not done until later:
 - actual E001–E010 fresh Final Canon release items
 - automatic unpause
 - public publishing
+\n\n## I. Roadmap / production alignment\n\nCurrent audited planning target: **Roadmap V3 (DRAFT)**. Roadmap V1 remains ACTIVE until an explicit cutover; V2 is preserved as the prior draft.\n\nReadiness checks against V3 are validation only. They do not activate V3, reset the 014 router, run 202/203/103/102, authorize launch, schedule a Part, or unpause releases.\n\nProduction-to-public chain:\n`V3 planned Part → explicit roadmap cutover when authorized → 202 → 203 → 103 → 102 when due → FINAL_CANON → release eligibility → queue/schedule → publication`.\n\nThe website may display V3 readiness and planned gates to Admin, but reader-facing content remains governed only by released Final Canon and approved public-reveal projections.\n
