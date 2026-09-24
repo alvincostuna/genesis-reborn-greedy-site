@@ -188,7 +188,8 @@ async function initHome(){
 }
 
 const page=document.body.dataset.page;
-if(page==="home")await initHome();\nif(page==="read")await initRead();
+if(page==="home")await initHome();
+if(page==="read")await initRead();
 if(page==="world")initWorld();
 if(page==="codex")initCodex();
 if(page==="fan")await initFan();
