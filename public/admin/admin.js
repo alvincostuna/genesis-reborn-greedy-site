@@ -327,6 +327,90 @@ async function loadCommunity(){
   }
 }
 
+
+function gateCard(label,gate){
+  const status=gate?.status||"UNKNOWN";
+  return '<div class="card"><span>'+escapeHtml(label)+'</span><strong class="'+(status==="PASS"?"good-text":"danger-text")+'">'+escapeHtml(status)+'</strong></div>';
+}
+
+async function loadRoadmap(){
+  const cards=$("#roadmap-summary");
+  const details=$("#roadmap-details");
+  cards.innerHTML='<div class="card"><span>Roadmap</span><strong>Loading…</strong></div>';
+  details.innerHTML='<div class="empty">Loading roadmap authority…</div>';
+  try{
+    const d=await api("/admin/api/roadmap");
+    const roads=d.roadmaps||[];
+    const gates=d.gates||{};
+    cards.innerHTML=
+      roads.map(r=>'<div class="card"><span>Roadmap V'+escapeHtml(r.version_number)+'</span><strong>'+escapeHtml(r.status)+'</strong><small>'+escapeHtml(r.episodes)+' Episodes · '+escapeHtml(r.parts)+' Parts</small></div>').join("")+
+      gateCard("Database gate",gates.database)+
+      gateCard("Title gate",gates.titles)+
+      gateCard("Registry consistency",gates.registry_consistency)+
+      gateCard("First-use gate",gates.first_use);
+    const snap=d.latest_pre_cutover_snapshot||{};
+    details.innerHTML=
+      '<div class="runtime">'+
+        '<div><small>Target roadmap</small><strong>'+escapeHtml(d.target_roadmap_version_id||"—")+'</strong></div>'+
+        '<div><small>Episode range</small><strong>'+escapeHtml((d.target_episode_range?.start??"—")+"–"+(d.target_episode_range?.end??"—"))+'</strong></div>'+
+        '<div><small>Pre-cutover snapshot</small><strong>'+escapeHtml(snap.status||"—")+'</strong></div>'+
+        '<div><small>Snapshot hash</small><strong><code>'+escapeHtml(snap.payload_hash?String(snap.payload_hash).slice(0,18)+"…":"—")+'</code></strong></div>'+
+      '</div>';
+  }catch(error){
+    cards.innerHTML="";
+    details.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+  }
+}
+
+async function loadContinuity(){
+  const cards=$("#continuity-summary");
+  const details=$("#continuity-details");
+  cards.innerHTML='<div class="card"><span>Continuity</span><strong>Loading…</strong></div>';
+  details.innerHTML='<div class="empty">Loading continuity state…</div>';
+  try{
+    const d=await api("/admin/api/continuity");
+    const r=d.registry_requirements||{},p=d.progression||{},b=d.bindings||{},rel=d.release_safety||{},run=d.runtime||{};
+    cards.innerHTML=
+      '<div class="card"><span>Registry READY</span><strong>'+escapeHtml((r.ready??0)+" / "+(r.total??0))+'</strong></div>'+
+      '<div class="card"><span>Registry blocked</span><strong>'+escapeHtml(r.blocked??0)+'</strong></div>'+
+      '<div class="card"><span>Required progression gaps</span><strong>'+escapeHtml(p.required_incomplete??0)+'</strong></div>'+
+      '<div class="card"><span>Optional branch warnings</span><strong>'+escapeHtml(p.optional_incomplete??0)+'</strong></div>'+
+      '<div class="card"><span>First-use exact</span><strong>'+escapeHtml((b.first_use_exact??0)+" / "+(b.first_use_rows??0))+'</strong></div>'+
+      '<div class="card"><span>Public reveal plans</span><strong>'+escapeHtml(b.approved_public_reveals??0)+'</strong></div>'+
+      '<div class="card"><span>Runtime skill grants</span><strong>'+escapeHtml(run.character_skill_state??0)+'</strong></div>'+
+      '<div class="card"><span>Release safety</span><strong>'+escapeHtml(rel.paused&&!rel.launch_authorized?"PAUSED / SAFE":"CHECK")+'</strong></div>';
+    const warnings=d.warnings||[];
+    details.innerHTML=
+      '<div class="database-head"><span>Continuity bindings</span><small>read-only</small></div>'+
+      '<div class="runtime">'+
+        '<div><small>Class gate plans</small><strong>'+escapeHtml(b.class_gate_plans??0)+'</strong></div>'+
+        '<div><small>Profession gate plans</small><strong>'+escapeHtml(b.profession_gate_plans??0)+'</strong></div>'+
+        '<div><small>Skill unlock rows</small><strong>'+escapeHtml(b.skill_unlock_rows??0)+'</strong></div>'+
+        '<div><small>Temporal rows</small><strong>'+escapeHtml(b.temporal_rows??0)+'</strong></div>'+
+      '</div>'+
+      (warnings.length?'<div class="admin-note"><strong>Non-blocking warnings</strong><p>'+warnings.map(w=>escapeHtml(w.code)+": "+escapeHtml(w.count)).join(" · ")+'</p></div>':'');
+  }catch(error){
+    cards.innerHTML="";
+    details.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+  }
+}
+
+async function loadAuthority(){
+  const root=$("#authority-table");
+  root.innerHTML='<div class="empty">Loading active authority index…</div>';
+  try{
+    const d=await api("/admin/api/authority");
+    const rows=d.authorities||[];
+    root.innerHTML=rows.length
+      ?'<div class="table-scroll"><table><thead><tr><th>Key</th><th>Title</th><th>Type</th><th>Version</th><th>Hash</th></tr></thead><tbody>'+
+        rows.map(a=>'<tr><td><code>'+escapeHtml(a.authority_key)+'</code></td><td>'+escapeHtml(a.title||"—")+'</td><td>'+escapeHtml(a.authority_type||"—")+'</td><td>'+escapeHtml(a.active_version??"—")+'</td><td><code>'+escapeHtml(a.content_hash?String(a.content_hash).slice(0,16)+"…":"—")+'</code></td></tr>').join("")+
+        '</tbody></table></div>'
+      :'<div class="empty">No active authority documents found.</div>';
+  }catch(error){
+    root.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+  }
+}
+
 function renderMeta(v){
   const rows=[
     ["Stage",v.stage],["Version",v.version_number],["Words",v.word_count],
@@ -415,10 +499,13 @@ function switchView(name){
   $$(".view").forEach((x)=>x.classList.add("hidden"));
   $$(".nav").forEach((x)=>x.classList.toggle("active",x.dataset.view===name));
   $("#"+name+"-view").classList.remove("hidden");
-  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",database:"Game Database",support:"Support",messages:"Reader Messages",community:"Community"};
+  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",database:"Game Database",support:"Support",messages:"Reader Messages",community:"Community"};
   $("#page-title").textContent=titles[name]||"Control Center";
   if(name==="manuscripts")loadManuscripts();
   if(name==="releases")loadReleases();
+  if(name==="roadmap")loadRoadmap();
+  if(name==="continuity")loadContinuity();
+  if(name==="authority")loadAuthority();
   if(name==="database"){loadDatabaseSummary();loadDatabase();}
   if(name==="support")loadSupport();
   if(name==="messages")loadMessages();
