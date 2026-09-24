@@ -189,3 +189,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
 .reader-access-section,.reader-progress-section{border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .reader-access-section .admin-control-form{margin:14px}
 @media(max-width:980px){.readers-grid{grid-template-columns:1fr}}
+
+
+.database-staging,.database-proposals{margin-top:18px}
+.db-stage-body{padding:16px;display:grid;gap:16px}
+.db-allowed-fields{color:var(--muted);line-height:1.5}
+.db-json-preview{margin:6px 0 0;max-height:280px;overflow:auto;background:#07101b;border:1px solid var(--line);border-radius:8px;padding:12px;color:var(--muted);white-space:pre-wrap;word-break:break-word}
+.db-stage-button{background:#0b1724;border:1px solid var(--line);color:var(--text);border-radius:7px;padding:7px 9px;cursor:pointer}
+.db-stage-button:hover{border-color:var(--gold)}
+.database-staging textarea{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
