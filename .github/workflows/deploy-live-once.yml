@@ -85,13 +85,7 @@ jobs:
         run: |
           set -euo pipefail
           VERSION_ID="$(printf '%s\n' "$WRANGLER_OUTPUT" | sed -n 's/.*Worker Version ID: //p' | tail -n 1)"
-          VERSION_URL="$(printf '%s\n' "$WRANGLER_OUTPUT" | grep -Eo 'https://[A-Za-z0-9.-]+workers\.dev' | tail -n 1 || true)"
           test -n "$VERSION_ID"
-          if [ -z "$VERSION_URL" ]; then
-            VERSION_PREFIX="$(printf '%s' "$VERSION_ID" | cut -c1-8)"
-            VERSION_URL="https://${VERSION_PREFIX}-genesis-reborn-greedy.hirangnalupa.workers.dev"
-            echo "Derived candidate preview URL: $VERSION_URL"
-          fi
 
           npx wrangler versions view "$VERSION_ID" --config wrangler.live.toml --json > /tmp/live-version.json
           python - <<'PY'
@@ -108,18 +102,43 @@ jobs:
           walk(data)
           forbidden={'SUPABASE_SERVICE_ROLE_KEY','CF_ACCESS_AUD','CF_ACCESS_TEAM_DOMAIN','ADMIN_EMAILS'}
           leaked=sorted(forbidden & names)
-          print("Candidate binding names:",", ".join(sorted(names)) or "(none)")
+          print("Live candidate binding names:",", ".join(sorted(names)) or "(none)")
           if leaked:
               print("Private binding leak:",", ".join(leaked))
               sys.exit(1)
           PY
 
-          curl -fsS "$VERSION_URL/" -o /tmp/home.html
-          grep -q 'data-page="home"' /tmp/home.html
-          grep -q 'GENESIS CYCLE' /tmp/home.html
-          grep -q '/assets/genesis-official-logo.png' /tmp/home.html
-          ! grep -q '/site-preview/' /tmp/home.html
-          test "$(curl -sS -o /dev/null -w '%{http_code}' "$VERSION_URL/admin/")" = "404"
+          CANDIDATE_NAME="genesis-live-check-${GITHUB_RUN_ID}"
+          cp wrangler.live.toml wrangler.candidate.toml
+          python - <<PY
+          from pathlib import Path
+          p=Path('wrangler.candidate.toml')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('name = "genesis-reborn-greedy"','name = "$CANDIDATE_NAME"')
+          p.write_text(s,encoding='utf-8')
+          PY
+
+          cleanup() {
+            npx wrangler delete --config wrangler.candidate.toml --force >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          npx wrangler deploy --config wrangler.candidate.toml
+          CANDIDATE_URL="https://${CANDIDATE_NAME}.hirangnalupa.workers.dev"
+
+          for path in / /read/ /world/ /codex/ /fan-page/ /manga/ /support/; do
+            STATUS="$(curl -sS -o /tmp/candidate-page.html -w '%{http_code}' "$CANDIDATE_URL$path")"
+            echo "Candidate $path -> HTTP $STATUS"
+            test "$STATUS" = "200"
+          done
+
+          curl -fsS "$CANDIDATE_URL/" -o /tmp/candidate-home.html
+          grep -q 'data-page="home"' /tmp/candidate-home.html
+          grep -q 'GENESIS CYCLE' /tmp/candidate-home.html
+          grep -q '/assets/genesis-official-logo.png' /tmp/candidate-home.html
+          ! grep -q '/site-preview/' /tmp/candidate-home.html
+          test "$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/admin/")" = "404"
+          echo "Isolated public-only candidate verified."
 
       - name: Promote verified candidate
         env:
