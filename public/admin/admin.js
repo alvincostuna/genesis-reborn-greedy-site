@@ -1,4 +1,4 @@
-const state={manuscripts:[],activePart:null,activeStage:"stage2",rbac:null};
+const state={manuscripts:[],activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[]};
 const $=(s)=>document.querySelector(s);
 const $$=(s)=>[...document.querySelectorAll(s)];
 
@@ -610,6 +610,180 @@ async function sendAdminReply(form){
     status.textContent=error.message;
   }finally{
     button.disabled=false;
+  }
+}
+
+
+async function loadReaders(){
+  const summary=$("#readers-summary");
+  const list=$("#readers-list");
+  const detail=$("#reader-detail");
+  summary.innerHTML='<div class="card"><span>Readers</span><strong>Loading…</strong></div>';
+  list.innerHTML='<div class="empty">Loading reader accounts…</div>';
+  if(!state.activeReader)detail.innerHTML='<div class="empty">Select a reader to inspect progress and access.</div>';
+  const q=($("#reader-search")?.value||"").trim();
+  try{
+    const params=new URLSearchParams({limit:"200"});
+    if(q)params.set("q",q);
+    const d=await api("/admin/api/readers?"+params.toString());
+    const readers=d.readers||[];
+    state.readerEligibleParts=d.eligible_advance_parts||[];
+    const suspended=readers.filter(r=>r.comments_suspended).length;
+    const vip=readers.filter(r=>r.active_vip).length;
+    const supporters=readers.filter(r=>Number(r.confirmed_support_php||0)>0).length;
+    summary.innerHTML=
+      '<div class="card"><span>Total readers</span><strong>'+escapeHtml(d.total??readers.length)+'</strong></div>'+
+      '<div class="card"><span>Comment suspended</span><strong>'+escapeHtml(suspended)+'</strong></div>'+
+      '<div class="card"><span>Active VIP</span><strong>'+escapeHtml(vip)+'</strong></div>'+
+      '<div class="card"><span>Confirmed supporters</span><strong>'+escapeHtml(supporters)+'</strong></div>';
+
+    list.innerHTML=
+      '<div class="database-head"><span>Reader Accounts</span><small>'+escapeHtml(readers.length)+' shown</small></div>'+
+      (readers.length?readers.map(r=>
+        '<button class="reader-row '+(state.activeReader===r.user_id?"active":"")+'" data-reader-id="'+escapeHtml(r.user_id)+'">'+
+          '<div><strong>'+escapeHtml(r.display_name||"Reader")+'</strong><small>'+escapeHtml(r.email||"")+'</small></div>'+
+          '<div class="reader-row-meta">'+
+            (r.badge?'<span class="status final">'+escapeHtml(r.badge)+'</span>':'')+
+            (r.comments_suspended?'<span class="status review">COMMENTS SUSPENDED</span>':'')+
+            '<span>Ep '+escapeHtml(r.highest_episode_read??0)+'</span>'+
+          '</div>'+
+        '</button>'
+      ).join(""):'<div class="empty">No reader accounts match this search.</div>');
+
+    list.querySelectorAll("[data-reader-id]").forEach(button=>button.addEventListener("click",async()=>{
+      state.activeReader=button.dataset.readerId;
+      await loadReaderDetail(state.activeReader);
+      list.querySelectorAll(".reader-row").forEach(x=>x.classList.toggle("active",x.dataset.readerId===state.activeReader));
+    }));
+
+    if(state.activeReader){
+      const stillVisible=readers.some(r=>r.user_id===state.activeReader);
+      if(stillVisible)await loadReaderDetail(state.activeReader);
+      else{state.activeReader=null;detail.innerHTML='<div class="empty">Select a reader to inspect progress and access.</div>';}
+    }
+  }catch(error){
+    summary.innerHTML="";
+    list.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+  }
+}
+
+async function loadReaderDetail(userId){
+  const root=$("#reader-detail");
+  root.innerHTML='<div class="empty">Loading reader detail…</div>';
+  try{
+    const d=await api("/admin/api/readers/"+userId);
+    const u=d.user||{};
+    const m=d.moderation||{};
+    const grants=d.advance_grants||[];
+    const progress=d.recent_progress||[];
+    const support=d.support_summary||{};
+    const activeAdminGrants=grants.filter(g=>g.source_type==="ADMIN"&&!g.revoked_at);
+
+    root.innerHTML=
+      '<div class="database-head"><span>'+escapeHtml(u.display_name||"Reader")+'</span><small>'+escapeHtml(u.email||"")+'</small></div>'+
+      '<div class="reader-detail-body">'+
+        '<div class="runtime">'+
+          '<div><small>Highest Episode</small><strong>'+escapeHtml(u.highest_episode_read??0)+'</strong></div>'+
+          '<div><small>Highest Part</small><strong>'+escapeHtml(u.highest_part_key||"—")+'</strong></div>'+
+          '<div><small>Badge</small><strong>'+escapeHtml(u.badge||"NONE")+'</strong></div>'+
+          '<div><small>Advance credits</small><strong>'+escapeHtml(d.credit_balance??0)+'</strong></div>'+
+          '<div><small>Confirmed support</small><strong>₱'+escapeHtml(support.confirmed_total_php??0)+'</strong></div>'+
+          '<div><small>Active VIP</small><strong>'+escapeHtml(support.active_vip?"YES":"NO")+'</strong></div>'+
+        '</div>'+
+        '<div class="admin-note compact"><strong>Comment privilege</strong><p>'+
+          (m.comments_suspended
+            ?'Suspended until '+escapeHtml(m.comments_suspended_until||"—")
+            :'Commenting is currently allowed.')+
+        '</p></div>'+
+        '<div class="cutover-actions">'+
+          (hasPermission("READER_MODERATE")
+            ?(m.comments_suspended
+              ?'<button id="reader-clear-suspension">Clear comment suspension</button>'
+              :'<button id="reader-suspend-comments" class="danger-action">Suspend comments</button>')
+            :'')+
+        '</div>'+
+        '<div class="reader-access-section">'+
+          '<div class="database-head"><span>Advance Access</span><small>'+escapeHtml(grants.length)+' grant record(s)</small></div>'+
+          (hasPermission("READER_ENTITLEMENT_ADMIN")&&state.readerEligibleParts.length
+            ?'<form id="reader-advance-grant-form" class="admin-control-form">'+
+              '<strong>Grant scheduled Part access</strong>'+
+              '<select name="part_id">'+state.readerEligibleParts.map(p=>'<option value="'+escapeHtml(p.part_id)+'">'+escapeHtml(p.part_key+" · "+p.title+" · "+p.publish_at)+'</option>').join("")+'</select>'+
+              '<input name="reason" placeholder="Grant reason" required>'+
+              '<button type="submit">Grant Advance Part</button>'+
+             '</form>'
+            :'<div class="empty">'+(state.readerEligibleParts.length?'No entitlement permission.':'No future scheduled Final Canon Parts are eligible right now.')+'</div>')+
+          (grants.length
+            ?'<div class="table-scroll"><table><thead><tr><th>Part</th><th>Source</th><th>Granted</th><th>Revoked</th><th>Action</th></tr></thead><tbody>'+
+              grants.map(g=>'<tr><td>'+escapeHtml(g.part_key||"—")+'<br><small>'+escapeHtml(g.title||"")+'</small></td><td>'+escapeHtml(g.source_type||"—")+'</td><td>'+escapeHtml(g.granted_at||"—")+'</td><td>'+escapeHtml(g.revoked_at||"—")+'</td><td>'+
+                (hasPermission("READER_ENTITLEMENT_ADMIN")&&g.source_type==="ADMIN"&&!g.revoked_at
+                  ?'<button data-revoke-access="'+escapeHtml(g.id)+'" class="danger-mini">Revoke</button>'
+                  :'<span class="muted">—</span>')+
+              '</td></tr>').join("")+
+              '</tbody></table></div>'
+            :'')+
+        '</div>'+
+        '<div class="reader-progress-section">'+
+          '<div class="database-head"><span>Recent Reading Progress</span><small>'+escapeHtml(progress.length)+' row(s)</small></div>'+
+          (progress.length
+            ?'<div class="table-scroll"><table><thead><tr><th>Part</th><th>Progress</th><th>Completed</th><th>Active time</th></tr></thead><tbody>'+
+              progress.map(p=>'<tr><td>'+escapeHtml(p.part_key||"—")+'<br><small>'+escapeHtml(p.title||"")+'</small></td><td>'+escapeHtml(p.progress_percent??0)+'%</td><td>'+escapeHtml(p.completed?"YES":"NO")+'</td><td>'+escapeHtml(p.active_seconds??0)+'s</td></tr>').join("")+
+              '</tbody></table></div>'
+            :'<div class="empty">No reading-progress records yet.</div>')+
+        '</div>'+
+      '</div>';
+
+    const suspend=$("#reader-suspend-comments");
+    if(suspend)suspend.addEventListener("click",async()=>{
+      const days=Number(prompt("Suspend commenting for how many days?","7"));
+      if(!Number.isFinite(days)||days<=0)return;
+      const reason=prompt("Reason for comment suspension:")||"";
+      if(reason.trim().length<6)return;
+      const until=new Date(Date.now()+days*86400000).toISOString();
+      suspend.disabled=true;
+      try{
+        await apiPost("/admin/api/readers/"+userId+"/comment-suspension",{suspended_until:until,reason});
+        await loadReaders();
+      }catch(error){alert(error.message);suspend.disabled=false;}
+    });
+
+    const clear=$("#reader-clear-suspension");
+    if(clear)clear.addEventListener("click",async()=>{
+      const reason=prompt("Reason for clearing comment suspension:")||"";
+      if(reason.trim().length<6)return;
+      clear.disabled=true;
+      try{
+        await apiPost("/admin/api/readers/"+userId+"/comment-suspension",{suspended_until:null,reason});
+        await loadReaders();
+      }catch(error){alert(error.message);clear.disabled=false;}
+    });
+
+    const grantForm=$("#reader-advance-grant-form");
+    if(grantForm)grantForm.addEventListener("submit",async(e)=>{
+      e.preventDefault();
+      const fd=new FormData(grantForm);
+      const button=grantForm.querySelector("button");
+      button.disabled=true;
+      try{
+        await apiPost("/admin/api/readers/"+userId+"/advance-grants",{
+          part_id:String(fd.get("part_id")||""),
+          reason:String(fd.get("reason")||"")
+        });
+        await loadReaders();
+      }catch(error){alert(error.message);}
+      finally{button.disabled=false;}
+    });
+
+    root.querySelectorAll("[data-revoke-access]").forEach(button=>button.addEventListener("click",async()=>{
+      const reason=prompt("Reason for revoking this Admin advance grant:")||"";
+      if(reason.trim().length<8)return;
+      button.disabled=true;
+      try{
+        await apiPost("/admin/api/readers/advance-grants/"+button.dataset.revokeAccess+"/revoke",{reason});
+        await loadReaders();
+      }catch(error){alert(error.message);button.disabled=false;}
+    }));
+  }catch(error){
+    root.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
   }
 }
 
@@ -1255,7 +1429,7 @@ function switchView(name){
   $$(".view").forEach((x)=>x.classList.add("hidden"));
   $$(".nav").forEach((x)=>x.classList.toggle("active",x.dataset.view===name));
   $("#"+name+"-view").classList.remove("hidden");
-  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database",codex:"Codex",support:"Support",messages:"Reader Messages",community:"Community",settings:"Settings"};
+  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database",codex:"Codex",support:"Support",messages:"Reader Messages",readers:"Readers",community:"Community",settings:"Settings"};
   $("#page-title").textContent=titles[name]||"Control Center";
   if(name==="manuscripts")loadManuscripts();
   if(name==="releases")loadReleases();
@@ -1267,6 +1441,7 @@ function switchView(name){
   if(name==="codex")loadCodex();
   if(name==="support")loadSupport();
   if(name==="messages")loadMessages();
+  if(name==="readers")loadReaders();
   if(name==="community")loadCommunity();
   if(name==="settings")loadSettings();
 }
