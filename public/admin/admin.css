@@ -99,3 +99,20 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
 .small-strong{font-size:14px!important;word-break:break-all}
 .good-text{color:var(--green)}.danger-text{color:var(--red)}
 @media(max-width:1050px){.access-grid{grid-template-columns:1fr}}
+
+
+.cutover-panel{margin-top:18px}
+.cutover-body{padding:18px;display:grid;gap:16px}
+.cutover-status{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.cutover-status.ready{border-color:#285944;background:#0d211a}
+.cutover-status.blocked{border-color:#71343b;background:#241217}
+.cutover-status.ready strong{color:var(--green)}
+.cutover-status.blocked strong{color:var(--red)}
+.cutover-status span{color:var(--muted)}
+.cutover-blockers{border:1px solid #71343b;background:#1d1014;border-radius:10px;padding:14px 16px}
+.cutover-blockers>strong{color:var(--red)}
+.cutover-blockers ul{margin:10px 0 0;padding-left:22px;color:var(--muted)}
+.cutover-actions{display:flex;gap:10px;flex-wrap:wrap}
+.cutover-actions button{background:#0b1724;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}
+.cutover-actions .danger-action{background:#5b1d25;border-color:#8c3945}
+.cutover-actions button:disabled{opacity:.45;cursor:not-allowed}
