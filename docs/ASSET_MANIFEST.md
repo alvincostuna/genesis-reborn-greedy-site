@@ -47,3 +47,52 @@ The protected preview now embeds exact derivatives of the approved Commander-sup
 - Mount mode: embedded data assets in protected preview/Admin HTML
 - Public live site: unchanged
 - Future production optimization may replace embedded preview data with static binary files only if hashes/source provenance remain traceable to the approved master.
+
+
+## OFFICIAL GENESIS LOGO — SHINY CHROME V1
+
+**Status:** APPROVED / COMMANDER-LOCKED / PERMANENT BRAND MARK  
+**Authority:** 036  
+**Locked date:** 2026-09-24
+
+The Commander selected the transparent shiny pearl-chrome diamond sigil as the official GENESIS logo.
+
+Master source:
+- dimensions: 1254 × 1254
+- transparent PNG
+- SHA-256: `cf5f49909def9d4c84fc90827485e89c16f70655cefffb7a12fa2c3f5a4eedb8`
+
+Website derivatives:
+- `public/assets/genesis-official-logo.png` — 128 × 128 PNG
+- SHA-256: `893db0d3b6a778a9abf6e29003866b517b690709310b8eef07ae00363e72e649`
+- `public/assets/genesis-official-logo-64.png` — 64 × 64 PNG
+- SHA-256: `b33ac1886e7c7808dacc0117679a6c69d7425fdf699f8a8cc6fa48d97b021eee`
+
+Usage lock:
+- reader navigation;
+- Admin Control Center;
+- favicon/tab icon;
+- Manga coming-soon identity;
+- future compact GENESIS brand placements.
+
+Presentation rules:
+- transparent background;
+- preserve full four-point silhouette;
+- center horizontally and vertically;
+- never crop the lower tip;
+- keep comfortable clear space around every point;
+- preserve the shiny pearl/chrome white body and subtle cool-blue luminous highlights;
+- do not revert to the former black-tile crop or the old key-art-extracted sigil.
+
+The earlier preview crop is **SUPERSEDED for standalone logo use**. It may remain inside the approved master key art as part of that artwork.
+
+## HOMEPAGE GENESIS CYCLE
+
+The reader Home remains key-art-first. A compact **GENESIS CYCLE** overlay is permitted on Home as the only operational information element.
+
+It uses the canonical 8-hour cycle from Supabase and displays:
+- live countdown to the next cycle;
+- next cycle time in Asia/Manila;
+- 8-hour cycle identity.
+
+It must remain visually secondary to the approved key art and must not become a stacked homepage panel.
