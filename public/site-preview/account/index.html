@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Account — GENESIS: REBORN GREEDY</title>
+<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
+<link rel="stylesheet" href="/site-preview/site.css">
+</head><body data-page="account">
+<header class="reader-nav">
+  <a class="reader-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
+    <img src="/assets/genesis-official-logo.png" alt="" aria-hidden="true">
+    <span>GENESIS: REBORN GREEDY</span>
+  </a>
+  <nav aria-label="Primary">
+    <a href="/site-preview/">Home</a>
+    <a href="/site-preview/read/">Read</a>
+    <a href="/site-preview/world/">World</a>
+    <a href="/site-preview/codex/">Codex</a>
+    <a href="/site-preview/fan-page/">Fan Page</a>
+    <a href="/site-preview/manga/">Manga</a>
+    <a href="/site-preview/support/">Support</a>
+  </nav>
+  <a class="auth-nav-link active" data-auth-link href="/site-preview/account/">Sign in</a>
+</header>
+
+<main class="page-frame account-page">
+  <header class="page-title">
+    <div><p class="eyebrow">READER ACCOUNT</p><h1>Account</h1></div>
+    <p>Your reading progress, advance access, supporter badges, comments, and Admin messages stay linked to this account.</p>
+  </header>
+
+  <section id="auth-message" class="account-message hidden" aria-live="polite"></section>
+
+  <section id="auth-guest" class="account-grid">
+    <article class="account-card">
+      <p class="eyebrow">WELCOME BACK</p>
+      <h2>Sign in</h2>
+      <form id="signin-form" class="account-form">
+        <label>Email<input id="signin-email" type="email" autocomplete="email" required></label>
+        <label>Password<input id="signin-password" type="password" autocomplete="current-password" minlength="6" required></label>
+        <button type="submit">Sign in</button>
+      </form>
+      <button id="forgot-password" class="text-button" type="button">Forgot password?</button>
+    </article>
+
+    <article class="account-card">
+      <p class="eyebrow">NEW READER</p>
+      <h2>Create account</h2>
+      <form id="signup-form" class="account-form">
+        <label>Display name<input id="signup-name" type="text" minlength="2" maxlength="40" autocomplete="nickname" required></label>
+        <label>Email<input id="signup-email" type="email" autocomplete="email" required></label>
+        <label>Password<input id="signup-password" type="password" minlength="8" autocomplete="new-password" required></label>
+        <button type="submit">Create account</button>
+      </form>
+      <p class="account-hint">Email confirmation may be required before the first sign-in.</p>
+    </article>
+  </section>
+
+  <section id="auth-reader" class="account-grid hidden">
+    <article class="account-card account-summary">
+      <p class="eyebrow">SIGNED IN</p>
+      <h2 id="account-display-name">Reader</h2>
+      <p id="account-email" class="account-email"></p>
+      <div class="account-stats">
+        <div><small>Advance Credits</small><strong id="account-credits">0</strong></div>
+        <div><small>VIP</small><strong id="account-vip">Inactive</strong></div>
+        <div><small>Public Badge</small><strong id="account-badge">None</strong></div>
+      </div>
+      <button id="signout-button" class="secondary-button" type="button">Sign out</button>
+    </article>
+
+    <article class="account-card">
+      <p class="eyebrow">PROFILE</p>
+      <h2>Reader identity</h2>
+      <form id="profile-form" class="account-form">
+        <label>Display name<input id="profile-display-name" type="text" minlength="2" maxlength="40" required></label>
+        <button type="submit">Save display name</button>
+      </form>
+
+      <div class="badge-settings">
+        <label><input id="badge-supporter" type="checkbox"> Show Supporter badge when eligible</label>
+        <label><input id="badge-vip" type="checkbox"> Show VIP badge while active</label>
+        <button id="save-badges" type="button">Save badge settings</button>
+      </div>
+    </article>
+  </section>
+
+  <section id="recovery-panel" class="account-card recovery-card hidden">
+    <p class="eyebrow">PASSWORD RECOVERY</p>
+    <h2>Choose a new password</h2>
+    <form id="recovery-form" class="account-form">
+      <label>New password<input id="recovery-password" type="password" minlength="8" autocomplete="new-password" required></label>
+      <button type="submit">Update password</button>
+    </form>
+  </section>
+</main>
+<script type="module" src="/site-preview/site.js"></script>
+</body></html>

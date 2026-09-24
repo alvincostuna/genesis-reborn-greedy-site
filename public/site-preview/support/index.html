@@ -20,6 +20,7 @@
     <a href="/site-preview/manga/">Manga</a>
     <a class="active" href="/site-preview/support/">Support</a>
   </nav>
+  <a class="auth-nav-link" data-auth-link href="/site-preview/account/">Sign in</a>
 </header>
 <main class="page-frame">
   <header class="page-title">
@@ -68,10 +69,10 @@
       <h2>Message GENESIS Admin</h2>
       <p>Questions about support, account access, shares, or the community can be sent directly to Admin.</p>
     </div>
-    <form class="contact-form" onsubmit="return false">
-      <input placeholder="Subject" disabled>
-      <textarea rows="6" placeholder="Your message…" disabled></textarea>
-      <button disabled>Reader sign-in required</button>
+    <form id="contact-form" class="contact-form">
+      <input id="contact-subject" placeholder="Subject" disabled>
+      <textarea id="contact-body" rows="6" placeholder="Your message…" disabled></textarea>
+      <button id="contact-submit" disabled>Reader sign-in required</button>
     </form>
   </section>
 
