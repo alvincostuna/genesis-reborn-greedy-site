@@ -659,7 +659,7 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
 
   if (path === "/admin/api/manuscripts") {
     await requirePermission(email, env, "MANUSCRIPTS_VIEW");
-    const data = await rpc(env, "genesis_admin_manuscript_index", {
+    const raw = await rpc(env, "genesis_admin_manuscript_index", {
       p_saga_number: url.searchParams.get("saga")
         ? intParam(url.searchParams.get("saga"), 1, 1, 99)
         : null,
@@ -671,6 +671,12 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
       p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
     });
+    const data = Array.isArray(raw)
+      ? ((raw[0] && typeof raw[0] === "object" && "items" in raw[0]) ? raw[0] : { items: raw, total: raw.length })
+      : raw;
+    if (!data || !Array.isArray(data.items)) {
+      throw new HttpError(502, "MANUSCRIPT_INDEX_SHAPE_INVALID", "Admin manuscript index did not return an items array.");
+    }
     return json({ ok: true, data });
   }
 
