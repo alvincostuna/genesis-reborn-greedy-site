@@ -41,11 +41,17 @@ async function loadProduction(){
   const root=$("#production-view");
   root.innerHTML='<div class="panel"><div class="empty">Loading production state…</div></div>';
   try{
-    const payload=await api("/admin/api/production");
-    const runtime=payload.runtime||{};
+    const [payload,control]=await Promise.all([
+      api("/admin/api/production"),
+      api("/admin/api/production/control")
+    ]);
+    const runtime=payload.runtime||control.runtime||{};
     const dash=payload.dashboard||{};
     const metrics=dash.metrics||{};
     const paused=metrics.releases_paused!==false;
+    const caps=control.capabilities||{};
+    const hold=control.open_hold||null;
+    const packets=control.active_packets||[];
 
     $("#release-badge").textContent=paused?"RELEASES PAUSED":"RELEASES ACTIVE";
     $("#release-badge").className="badge "+(paused?"danger":"good");
@@ -63,8 +69,78 @@ async function loadProduction(){
         '<div><small>Router</small><strong>'+escapeHtml(runtime.router_state||"—")+'</strong></div>'+
         '<div><small>Active role</small><strong>'+escapeHtml(runtime.active_role||"—")+'</strong></div>'+
         '<div><small>Engine / mode</small><strong>'+escapeHtml(runtime.active_engine||"—")+' / '+escapeHtml(runtime.run_mode||"—")+'</strong></div>'+
-        '<div><small>AI-2 gate</small><strong>'+escapeHtml(runtime.ai2_gate||"—")+'</strong></div>'+
+        '<div><small>Next action</small><strong>'+escapeHtml(runtime.next_action_code||"—")+'</strong></div>'+
+      '</div>'+
+      '<div class="panel production-controls">'+
+        '<div class="database-head"><span>Production Routing Controls</span><small>014-safe operator intervention</small></div>'+
+        '<div class="production-control-body">'+
+          '<div class="admin-note compact"><strong>Normal role routing stays automatic.</strong><p>These controls do not execute 202/203/103/102. Hold and Resume operate only at safe READY states; Emergency Stop interrupts the current run and requires Builder recovery.</p></div>'+
+          (hold
+            ?'<div class="hold-banner"><strong>ADMIN HOLD ACTIVE</strong><span>'+escapeHtml(hold.hold_reason||"")+'</span><small>'+escapeHtml(hold.id||"")+'</small></div>'
+            :'')+
+          '<div class="cutover-actions">'+
+            (hasPermission("PRODUCTION_CONTROL")
+              ?'<button id="production-hold" '+(caps.can_hold?"":"disabled")+'>Hold at current READY state</button>'+
+               '<button id="production-resume" '+(caps.can_resume?"":"disabled")+'>Resume stored route</button>'
+              :'')+
+            (hasPermission("PRODUCTION_AUTHORIZE")
+              ?'<button id="production-emergency-stop" class="danger-action" '+(caps.can_emergency_stop?"":"disabled")+'>Emergency Stop</button>'
+              :'')+
+          '</div>'+
+          '<div class="packet-list">'+
+            '<div class="database-head"><span>Active Runtime Packets</span><small>'+escapeHtml(packets.length)+' active</small></div>'+
+            (packets.length
+              ?packets.map(p=>
+                '<div class="packet-row"><div><strong>'+escapeHtml(p.role)+' · '+escapeHtml(p.packet_kind)+'</strong><small>'+escapeHtml(p.id)+'</small><code>'+escapeHtml(p.packet_hash?String(p.packet_hash).slice(0,18)+"…":"—")+'</code></div>'+
+                (hasPermission("PRODUCTION_CONTROL")?'<button data-packet="'+escapeHtml(p.id)+'">Invalidate</button>':'')+
+                '</div>'
+              ).join("")
+              :'<div class="empty">No active runtime packets.</div>')+
+          '</div>'+
+        '</div>'+
       '</div>';
+
+    const holdButton=$("#production-hold");
+    if(holdButton)holdButton.addEventListener("click",async()=>{
+      const reason=prompt("Reason for holding production (minimum 8 characters):")||"";
+      if(reason.trim().length<8)return;
+      holdButton.disabled=true;
+      try{await apiPost("/admin/api/production/hold",{reason});await loadProduction();}
+      catch(error){alert(error.message);holdButton.disabled=false;}
+    });
+
+    const resumeButton=$("#production-resume");
+    if(resumeButton)resumeButton.addEventListener("click",async()=>{
+      if(!hold?.id)return;
+      const reason=prompt("Reason for resuming production (minimum 8 characters):")||"";
+      if(reason.trim().length<8)return;
+      resumeButton.disabled=true;
+      try{await apiPost("/admin/api/production/resume",{hold_id:hold.id,reason});await loadProduction();}
+      catch(error){alert(error.message);resumeButton.disabled=false;}
+    });
+
+    const stopButton=$("#production-emergency-stop");
+    if(stopButton)stopButton.addEventListener("click",async()=>{
+      const confirmation=prompt("Type exactly:\nEMERGENCY STOP PRODUCTION")||"";
+      if(confirmation!=="EMERGENCY STOP PRODUCTION")return;
+      const reason=prompt("Emergency stop reason (minimum 12 characters):")||"";
+      if(reason.trim().length<12)return;
+      stopButton.disabled=true;
+      try{
+        const result=await apiPost("/admin/api/production/emergency-stop",{confirmation,reason});
+        alert("Production stopped. Next required action: "+(result.next_required_action||"BUILDER_RECOVERY"));
+        await loadProduction();
+      }catch(error){alert(error.message);stopButton.disabled=false;}
+    });
+
+    root.querySelectorAll("[data-packet]").forEach(button=>button.addEventListener("click",async()=>{
+      const id=button.dataset.packet;
+      const reason=prompt("Reason for invalidating this runtime packet:")||"";
+      if(reason.trim().length<8)return;
+      button.disabled=true;
+      try{await apiPost("/admin/api/production/packets/"+id+"/invalidate",{reason});await loadProduction();}
+      catch(error){alert(error.message);button.disabled=false;}
+    }));
   }catch(error){
     root.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
   }
