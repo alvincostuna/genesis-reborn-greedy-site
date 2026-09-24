@@ -523,14 +523,18 @@ async function initSupport(){
     const data=await rpc("api_support_catalog");
     const s=data?.settings||{};
     const providerReady=!!s.payment_provider_enabled;
+    const testMode=String(s.payment_provider_mode||"").toUpperCase()==="TEST";
+    const testAllowed=Array.isArray(s.test_allowed_rule_keys)?s.test_allowed_rule_keys:[];
     const session=await getSession();
     const user=session?await getAuthUser(session):null;
 
     if(notice&&!paymentReturn){
       const enabled=providerReady&&(!!s.payments_enabled||!!s.pure_support_enabled||!!s.share_rewards_enabled);
-      notice.innerHTML='<strong>'+(enabled?'Secure PayMongo checkout ready':'PayMongo preparation mode')+'</strong><span>'+
+      notice.innerHTML='<strong>'+(enabled?(testMode?'PayMongo TEST MODE active':'Secure PayMongo checkout ready'):'PayMongo preparation mode')+'</strong><span>'+
         (enabled
-          ?'Payments are verified server-side before credits, VIP, or Supporter eligibility are granted.'
+          ?(testMode
+            ?'Testing only — no GENESIS live entitlement sales are active. Do not scan a QR Ph test code with a real banking or e-wallet app; use PayMongo\'s test simulation controls.'
+            :'Payments are verified server-side before credits, VIP, or Supporter eligibility are granted.')
           :'PayMongo is selected and wired, but collection remains disabled until merchant keys, webhook signing, and test-mode verification pass.')+
         '</span>';
     }
@@ -561,12 +565,15 @@ async function initSupport(){
       const ruleKey=button.dataset.paymongoRule;
       const pure=ruleKey==="PURE_SUPPORT_ANY";
       const featureEnabled=pure?!!s.pure_support_enabled:!!s.payments_enabled;
-      const ready=providerReady&&featureEnabled;
+      const testRuleAllowed=!testMode||testAllowed.includes(ruleKey);
+      const ready=providerReady&&featureEnabled&&testRuleAllowed;
 
       button.disabled=!ready;
       button.textContent=ready
-        ?(user?(pure?"Give through PayMongo":"Pay with PayMongo"):"Sign in to continue")
-        :"PayMongo not live yet";
+        ?(user
+          ?(testMode?(pure?"TEST Give through PayMongo":"TEST Pay with PayMongo"):(pure?"Give through PayMongo":"Pay with PayMongo"))
+          :"Sign in to continue")
+        :(testMode&&!testRuleAllowed?"Locked until next test phase":"PayMongo not live yet");
 
       if(pure){
         const amount=document.querySelector("#pure-support-amount");
