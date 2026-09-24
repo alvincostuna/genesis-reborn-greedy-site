@@ -178,6 +178,55 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
       return json({ ok: true, data });
     }
 
+    if (path === "/admin/api/codex/reveals") {
+      await requirePermission(email, env, "CODEX_EDIT");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_codex_reveal_create", {
+        p_actor: email,
+        p_entity_code: String(body?.entity_code || ""),
+        p_part_key: String(body?.part_key || ""),
+        p_reveal_kind: String(body?.reveal_kind || ""),
+        p_public_fields: body?.public_fields && typeof body.public_fields === "object" ? body.public_fields : {},
+        p_notes: String(body?.notes || ""),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    const codexActionMatch = path.match(/^\/admin\/api\/codex\/reveals\/([0-9a-f-]+)\/(update|approve|retire)$/i);
+    if (codexActionMatch) {
+      const id = codexActionMatch[1];
+      const action = codexActionMatch[2].toLowerCase();
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      if (action === "update") {
+        await requirePermission(email, env, "CODEX_EDIT");
+        const data = await rpc(env, "genesis_admin_codex_reveal_update", {
+          p_actor: email,
+          p_id: id,
+          p_public_fields: body?.public_fields && typeof body.public_fields === "object" ? body.public_fields : {},
+          p_notes: String(body?.notes || ""),
+          p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+      if (action === "approve") {
+        await requirePermission(email, env, "CODEX_APPROVE");
+        const data = await rpc(env, "genesis_admin_codex_reveal_approve", {
+          p_actor: email, p_id: id, p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+      if (action === "retire") {
+        await requirePermission(email, env, "CODEX_APPROVE");
+        const data = await rpc(env, "genesis_admin_codex_reveal_retire", {
+          p_actor: email, p_id: id, p_reason: String(body?.reason || "")
+        });
+        return json({ ok: true, data });
+      }
+    }
+
     const featureFlagMatch = path.match(/^\/admin\/api\/settings\/features\/(comments|fan-posting|share-rewards|pure-support)$/i);
     if (featureFlagMatch) {
       await requirePermission(email, env, "FEATURE_FLAGS");
@@ -475,6 +524,18 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
         ? intParam(url.searchParams.get("episode"), 1, 1, 9999)
         : null,
       p_dashboard_state: url.searchParams.get("state") || null,
+      p_query: url.searchParams.get("q") || null,
+      p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
+      p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
+    });
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/codex/reveals") {
+    await requirePermission(email, env, "CODEX_EDIT");
+    const data = await rpc(env, "genesis_admin_codex_reveal_index", {
+      p_actor: email,
+      p_status: url.searchParams.get("status") || null,
       p_query: url.searchParams.get("q") || null,
       p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
       p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
