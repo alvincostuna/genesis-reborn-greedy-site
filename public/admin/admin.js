@@ -1,4 +1,4 @@
-const state={manuscripts:[],activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[]};
+const state={manuscripts:[],activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[],activeDatabaseRecord:null,databaseAllowedFields:{}};
 const $=(s)=>document.querySelector(s);
 const $$=(s)=>[...document.querySelectorAll(s)];
 
@@ -408,19 +408,140 @@ async function loadDatabase(){
     }
     table.innerHTML=
       '<div class="database-head"><span>'+escapeHtml(domain.toUpperCase())+'</span><small>'+escapeHtml(data.total??items.length)+' total records</small></div>'+
-      '<div class="table-scroll"><table><thead><tr><th>Name</th><th>Code</th><th>Status</th><th>Key metadata</th></tr></thead><tbody>'+
+      '<div class="table-scroll"><table><thead><tr><th>Name</th><th>Code</th><th>Status</th><th>Key metadata</th><th>Staged edit</th></tr></thead><tbody>'+
       items.map((x)=>
         '<tr><td><strong>'+escapeHtml(x.name||"—")+'</strong></td>'+
         '<td><code>'+escapeHtml(x.code||"—")+'</code></td>'+
         '<td><span class="status review">'+escapeHtml(x.status||"—")+'</span></td>'+
-        '<td class="meta-text">'+escapeHtml(compactMeta(x.meta))+'</td></tr>'
+        '<td class="meta-text">'+escapeHtml(compactMeta(x.meta))+'</td>'+
+        '<td>'+(hasPermission("DATABASE_EDIT")?'<button class="db-stage-button" data-db-code="'+escapeHtml(x.code||"")+'">Stage change</button>':'<span class="muted">View only</span>')+'</td></tr>'
       ).join("")+
       '</tbody></table></div>';
+
+    table.querySelectorAll("[data-db-code]").forEach(button=>button.addEventListener("click",()=>{
+      const record=items.find(x=>String(x.code)===button.dataset.dbCode);
+      if(record)renderDatabaseStaging(domain,record);
+    }));
   }catch(error){
     table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
   }
 }
 
+async function loadDatabaseProposals(){
+  const root=$("#database-proposals");
+  const staging=$("#database-staging");
+  root.innerHTML='<div class="empty">Loading staged changes…</div>';
+  if(!state.activeDatabaseRecord)staging.innerHTML='<div class="empty">Select “Stage change” on a database record. Direct table editing is disabled.</div>';
+  try{
+    const d=await api("/admin/api/database/proposals?limit=200");
+    state.databaseAllowedFields=d.allowed_fields||{};
+    const rows=d.proposals||[];
+    root.innerHTML=
+      '<div class="database-head"><span>Staged Database Changes</span><small>'+escapeHtml(rows.length)+' proposal(s)</small></div>'+
+      (rows.length
+        ?'<div class="table-scroll"><table><thead><tr><th>Target</th><th>Status</th><th>Patch</th><th>Validation</th><th>Created by</th><th>Actions</th></tr></thead><tbody>'+
+          rows.map(p=>{
+            const actions=[];
+            if(["DRAFT","VALIDATED"].includes(p.status)&&hasPermission("DATABASE_EDIT")){
+              actions.push('<button data-db-proposal="update" data-id="'+escapeHtml(p.id)+'">Edit / revalidate</button>');
+            }
+            if(p.status==="VALIDATED"&&hasPermission("DATABASE_APPROVE")){
+              actions.push('<button data-db-proposal="apply" data-id="'+escapeHtml(p.id)+'" class="danger-mini">Apply</button>');
+            }
+            if(["DRAFT","VALIDATED"].includes(p.status)&&hasPermission("DATABASE_APPROVE")){
+              actions.push('<button data-db-proposal="reject" data-id="'+escapeHtml(p.id)+'">Reject</button>');
+            }
+            const validation=(p.validation_errors||[]).length
+              ?JSON.stringify(p.validation_errors)
+              :"PASS";
+            return '<tr>'+
+              '<td><strong>'+escapeHtml(p.domain)+'</strong><br><code>'+escapeHtml(p.target_code)+'</code></td>'+
+              '<td><span class="status '+(p.status==="APPLIED"?"final":"review")+'">'+escapeHtml(p.status)+'</span></td>'+
+              '<td><code class="json-cell">'+escapeHtml(JSON.stringify(p.patch||{}))+'</code></td>'+
+              '<td><code class="json-cell">'+escapeHtml(validation)+'</code></td>'+
+              '<td>'+escapeHtml(p.created_by||"—")+'<br><small>'+escapeHtml(p.created_at||"")+'</small></td>'+
+              '<td><div class="release-row-actions">'+(actions.join("")||'<span class="muted">No action</span>')+'</div></td>'+
+            '</tr>';
+          }).join("")+
+          '</tbody></table></div>'
+        :'<div class="empty">No staged database changes.</div>');
+
+    root.querySelectorAll("[data-db-proposal]").forEach(button=>button.addEventListener("click",async()=>{
+      const id=button.dataset.id;
+      const action=button.dataset.dbProposal;
+      const row=rows.find(x=>x.id===id);
+      if(!row)return;
+      button.disabled=true;
+      try{
+        if(action==="update"){
+          const raw=prompt("Patch JSON:",JSON.stringify(row.patch||{},null,2));
+          if(raw===null){button.disabled=false;return;}
+          let patch={};
+          try{patch=JSON.parse(raw);}catch{alert("Patch must be valid JSON.");button.disabled=false;return;}
+          const reason=prompt("Reason for updating/revalidating this proposal:",row.reason||"")||"";
+          if(reason.trim().length<8){button.disabled=false;return;}
+          await apiPost("/admin/api/database/proposals/"+id+"/update",{patch,reason});
+        }else if(action==="apply"){
+          const confirmation=prompt("Type exactly:\nAPPLY STAGED DATABASE CHANGE")||"";
+          if(confirmation!=="APPLY STAGED DATABASE CHANGE"){button.disabled=false;return;}
+          const reason=prompt("Approval reason (minimum 12 characters):")||"";
+          if(reason.trim().length<12){button.disabled=false;return;}
+          await apiPost("/admin/api/database/proposals/"+id+"/apply",{confirmation,reason});
+        }else if(action==="reject"){
+          const reason=prompt("Reason for rejecting this proposal:")||"";
+          if(reason.trim().length<8){button.disabled=false;return;}
+          await apiPost("/admin/api/database/proposals/"+id+"/reject",{reason});
+        }
+        await Promise.all([loadDatabase(),loadDatabaseSummary(),loadDatabaseProposals()]);
+      }catch(error){alert(error.message);button.disabled=false;}
+    }));
+  }catch(error){
+    root.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+  }
+}
+
+function renderDatabaseStaging(domain,record){
+  state.activeDatabaseRecord={domain,record};
+  const root=$("#database-staging");
+  const allowed=state.databaseAllowedFields?.[domain]||[];
+  root.innerHTML=
+    '<div class="database-head"><span>Stage Change · '+escapeHtml(record.name||record.code)+'</span><small>'+escapeHtml(domain)+' · '+escapeHtml(record.code)+'</small></div>'+
+    '<div class="db-stage-body">'+
+      '<div class="admin-note compact"><strong>Staged-only editor</strong><p>IDs, codes, relationships, first-use anchors and other continuity pointers cannot be changed here. The proposal must validate before a separate approver can apply it.</p></div>'+
+      '<div><small>Allowed fields</small><p class="db-allowed-fields">'+escapeHtml(allowed.join(", ")||"Loading allowlist…")+'</p></div>'+
+      '<div><small>Current browser snapshot</small><pre class="db-json-preview">'+escapeHtml(JSON.stringify({name:record.name,status:record.status,meta:record.meta},null,2))+'</pre></div>'+
+      (hasPermission("DATABASE_EDIT")
+        ?'<form id="database-proposal-form" class="admin-control-form">'+
+           '<strong>Create staged patch</strong>'+
+           '<textarea name="patch" rows="7">{}</textarea>'+
+           '<input name="reason" placeholder="Why this canonical database change is needed" required>'+
+           '<button type="submit">Validate & Stage Proposal</button>'+
+         '</form>'
+        :'<div class="empty">DATABASE_EDIT is required to stage changes.</div>')+
+    '</div>';
+
+  const form=$("#database-proposal-form");
+  if(form)form.addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    const fd=new FormData(form);
+    let patch={};
+    try{patch=JSON.parse(String(fd.get("patch")||"{}"));}catch{alert("Patch must be valid JSON.");return;}
+    const reason=String(fd.get("reason")||"");
+    if(reason.trim().length<8)return;
+    const button=form.querySelector("button");
+    button.disabled=true;
+    try{
+      const result=await apiPost("/admin/api/database/proposals",{
+        domain,target_code:String(record.code||""),patch,reason
+      });
+      alert("Proposal "+result.status+"\n"+result.proposal_id);
+      state.activeDatabaseRecord=null;
+      $("#database-staging").innerHTML='<div class="empty">Proposal staged. Select another database record to create a new change.</div>';
+      await loadDatabaseProposals();
+    }catch(error){alert(error.message);}
+    finally{button.disabled=false;}
+  });
+}
 
 
 function adminBadge(badge){
@@ -1437,7 +1558,7 @@ function switchView(name){
   if(name==="continuity")loadContinuity();
   if(name==="authority")loadAuthority();
   if(name==="access")loadAccess();
-  if(name==="database"){loadDatabaseSummary();loadDatabase();}
+  if(name==="database"){loadDatabaseSummary();loadDatabase();loadDatabaseProposals();}
   if(name==="codex")loadCodex();
   if(name==="support")loadSupport();
   if(name==="messages")loadMessages();
