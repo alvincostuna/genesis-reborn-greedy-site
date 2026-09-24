@@ -140,8 +140,55 @@ function initCodex(){
   loadCodex();
 }
 
+
+async function initHome(){
+  const countdown=document.querySelector("#cycle-countdown");
+  const label=document.querySelector("#cycle-next-time");
+  if(!countdown||!label)return;
+
+  let nextAt=null;
+  let timer=null;
+
+  const formatNext=(date)=>new Intl.DateTimeFormat("en-PH",{
+    timeZone:"Asia/Manila",hour:"numeric",minute:"2-digit",hour12:true,
+    month:"short",day:"numeric"
+  }).format(date)+" PHT";
+
+  const tick=()=>{
+    if(!nextAt)return;
+    const ms=nextAt.getTime()-Date.now();
+    if(ms<=0){
+      clearInterval(timer);
+      loadCycle();
+      return;
+    }
+    const total=Math.floor(ms/1000);
+    const h=String(Math.floor(total/3600)).padStart(2,"0");
+    const m=String(Math.floor((total%3600)/60)).padStart(2,"0");
+    const s=String(total%60).padStart(2,"0");
+    countdown.textContent=h+":"+m+":"+s;
+  };
+
+  const loadCycle=async()=>{
+    try{
+      const clock=firstRow(await rpc("api_release_clock"));
+      const raw=clock?.next_cycle_at;
+      if(!raw)throw new Error("No cycle");
+      nextAt=new Date(raw);
+      label.textContent="Next · "+formatNext(nextAt)+" · 8-hour cycle";
+      tick();
+      timer=setInterval(tick,1000);
+    }catch{
+      countdown.textContent="8 HOURS";
+      label.textContent="Genesis cycle · Asia/Manila";
+    }
+  };
+
+  await loadCycle();
+}
+
 const page=document.body.dataset.page;
-if(page==="read")await initRead();
+if(page==="home")await initHome();\nif(page==="read")await initRead();
 if(page==="world")initWorld();
 if(page==="codex")initCodex();
 if(page==="fan")await initFan();
