@@ -1,4 +1,4 @@
-const state={manuscripts:[],activePart:null,activeStage:"stage2"};
+const state={manuscripts:[],activePart:null,activeStage:"stage2",rbac:null};
 const $=(s)=>document.querySelector(s);
 const $$=(s)=>[...document.querySelectorAll(s)];
 
@@ -328,6 +328,181 @@ async function loadCommunity(){
 }
 
 
+
+function hasPermission(key){
+  return Boolean(state.rbac?.is_owner||(state.rbac?.permissions||[]).includes(key));
+}
+
+function permissionOptions(){
+  const rows=state.rbac?.permission_catalog||[];
+  return rows.map(p=>'<option value="'+escapeHtml(p.permission_key)+'">'+escapeHtml(p.category+" · "+p.permission_key+" · "+p.risk_level)+'</option>').join("");
+}
+
+async function loadAccess(){
+  const cards=$("#access-summary");
+  const bootstrap=$("#access-bootstrap");
+  const management=$("#access-management");
+  const principals=$("#access-principals");
+  const controls=$("#access-controls");
+  const audit=$("#access-audit");
+
+  cards.innerHTML='<div class="card"><span>RBAC</span><strong>Loading…</strong></div>';
+  bootstrap.classList.add("hidden");
+  management.classList.add("hidden");
+  principals.innerHTML="";
+  controls.innerHTML="";
+  audit.innerHTML='<div class="empty">Loading Admin security state…</div>';
+
+  try{
+    const rbac=await api("/admin/api/rbac");
+    state.rbac=rbac;
+    const perms=rbac.permissions||[];
+    cards.innerHTML=
+      '<div class="card"><span>Actor</span><strong class="small-strong">'+escapeHtml(rbac.actor||"—")+'</strong></div>'+
+      '<div class="card"><span>Principal</span><strong>'+escapeHtml(rbac.principal_status||"—")+'</strong></div>'+
+      '<div class="card"><span>Owner</span><strong>'+escapeHtml(rbac.is_owner?"YES":"NO")+'</strong></div>'+
+      '<div class="card"><span>Permissions</span><strong>'+escapeHtml(perms.length)+'</strong></div>';
+
+    if(rbac.bootstrap_required){
+      bootstrap.classList.remove("hidden");
+      bootstrap.innerHTML=
+        '<strong>One-time Owner bootstrap required</strong>'+
+        '<p>Your Cloudflare Access identity is authenticated, but Supabase RBAC has no enabled Admin principal yet. Bootstrap can succeed only once.</p>'+
+        '<button id="bootstrap-owner" class="danger-action">Initialize this Access identity as GENESIS Owner</button>'+
+        '<p class="muted">You will be required to type: <code>BOOTSTRAP GENESIS OWNER</code></p>';
+      $("#bootstrap-owner").addEventListener("click",async()=>{
+        const confirmation=prompt('Type exactly: BOOTSTRAP GENESIS OWNER')||"";
+        if(confirmation!=="BOOTSTRAP GENESIS OWNER")return;
+        const button=$("#bootstrap-owner");
+        button.disabled=true;
+        try{
+          await apiPost("/admin/api/rbac/bootstrap",{confirmation});
+          await loadAccess();
+          switchView("production");
+        }catch(error){
+          alert(error.message);
+          button.disabled=false;
+        }
+      });
+      audit.innerHTML='<div class="empty">Audit history starts when the Owner bootstrap succeeds.</div>';
+      $("#release-badge").textContent="RBAC SETUP";
+      $("#release-badge").className="badge danger";
+      return;
+    }
+
+    if(!rbac.principal_exists||rbac.principal_status!=="ENABLED"){
+      bootstrap.classList.remove("hidden");
+      bootstrap.innerHTML=
+        '<strong>Access not provisioned</strong>'+
+        '<p>This Cloudflare Access identity is not an enabled Supabase Admin principal. An Owner must add or enable this email.</p>';
+      audit.innerHTML='<div class="empty">Audit visibility requires ADMIN_ACCESS_VIEW.</div>';
+      $("#release-badge").textContent="RBAC DENIED";
+      $("#release-badge").className="badge danger";
+      return;
+    }
+
+    if(hasPermission("ADMIN_ACCESS_VIEW")){
+      const [principalData,auditData]=await Promise.all([
+        api("/admin/api/rbac/principals"),
+        api("/admin/api/rbac/audit?limit=100")
+      ]);
+      management.classList.remove("hidden");
+      const rows=principalData.principals||[];
+      principals.innerHTML=rows.length
+        ?'<div class="table-scroll"><table><thead><tr><th>Email</th><th>Status</th><th>Owner</th><th>Permissions</th></tr></thead><tbody>'+
+          rows.map(p=>'<tr><td>'+escapeHtml(p.email)+'</td><td>'+escapeHtml(p.status)+'</td><td>'+escapeHtml(p.is_owner?"YES":"NO")+'</td><td class="meta-text">'+escapeHtml(p.is_owner?"ALL (implicit)":(p.permissions||[]).join(", ")||"—")+'</td></tr>').join("")+
+          '</tbody></table></div>'
+        :'<div class="empty">No Admin principals.</div>';
+
+      const auditRows=auditData.rows||[];
+      audit.innerHTML=auditRows.length
+        ?'<div class="table-scroll"><table><thead><tr><th>Time</th><th>Actor</th><th>Action</th><th>Permission</th><th>Target</th><th>Reason</th></tr></thead><tbody>'+
+          auditRows.map(a=>'<tr><td>'+escapeHtml(a.created_at||"—")+'</td><td>'+escapeHtml(a.actor_email||"—")+'</td><td>'+escapeHtml(a.action_key||"—")+'</td><td><code>'+escapeHtml(a.permission_key||"—")+'</code></td><td>'+escapeHtml((a.target_type||"—")+(a.target_id?" · "+a.target_id:""))+'</td><td class="meta-text">'+escapeHtml(a.reason||"—")+'</td></tr>').join("")+
+          '</tbody></table></div>'
+        :'<div class="empty">No Admin mutation audit rows yet.</div>';
+
+      if(hasPermission("ADMIN_ACCESS_MANAGE")){
+        controls.innerHTML=
+          '<form id="principal-form" class="admin-control-form">'+
+            '<strong>Add / update non-owner Admin</strong>'+
+            '<input name="email" type="email" placeholder="admin@example.com" required>'+
+            '<input name="display_name" placeholder="Display name">'+
+            '<select name="enabled"><option value="true">Enabled</option><option value="false">Disabled</option></select>'+
+            '<input name="reason" placeholder="Reason" required>'+
+            '<button type="submit">Save Admin</button>'+
+          '</form>'+
+          '<form id="permission-form" class="admin-control-form">'+
+            '<strong>Grant / revoke permission</strong>'+
+            '<input name="email" type="email" placeholder="admin@example.com" required>'+
+            '<select name="permission">'+permissionOptions()+'</select>'+
+            '<select name="granted"><option value="true">Grant</option><option value="false">Revoke</option></select>'+
+            '<input name="reason" placeholder="Reason" required>'+
+            '<button type="submit">Apply Permission</button>'+
+          '</form>';
+
+        $("#principal-form").addEventListener("submit",async(e)=>{
+          e.preventDefault();
+          const form=e.currentTarget;
+          const fd=new FormData(form);
+          const button=form.querySelector("button");
+          button.disabled=true;
+          try{
+            await apiPost("/admin/api/rbac/principals",{
+              email:String(fd.get("email")||""),
+              display_name:String(fd.get("display_name")||""),
+              enabled:String(fd.get("enabled"))==="true",
+              reason:String(fd.get("reason")||"")
+            });
+            form.reset();
+            await loadAccess();
+          }catch(error){alert(error.message);}
+          finally{button.disabled=false;}
+        });
+
+        $("#permission-form").addEventListener("submit",async(e)=>{
+          e.preventDefault();
+          const form=e.currentTarget;
+          const fd=new FormData(form);
+          const button=form.querySelector("button");
+          button.disabled=true;
+          try{
+            await apiPost("/admin/api/rbac/permissions",{
+              email:String(fd.get("email")||""),
+              permission:String(fd.get("permission")||""),
+              granted:String(fd.get("granted"))==="true",
+              reason:String(fd.get("reason")||"")
+            });
+            await loadAccess();
+          }catch(error){alert(error.message);}
+          finally{button.disabled=false;}
+        });
+      }else{
+        controls.innerHTML='<div class="empty">You can view Admin access, but ADMIN_ACCESS_MANAGE is required to change it.</div>';
+      }
+    }else{
+      management.classList.add("hidden");
+      audit.innerHTML='<div class="empty">ADMIN_ACCESS_VIEW is required to view principals or the audit trail.</div>';
+    }
+  }catch(error){
+    cards.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+    audit.innerHTML="";
+  }
+}
+
+async function initializeAdmin(){
+  try{
+    const rbac=await api("/admin/api/rbac");
+    state.rbac=rbac;
+    if(rbac.bootstrap_required||!rbac.principal_exists||rbac.principal_status!=="ENABLED"){
+      switchView("access");
+      return;
+    }
+    loadProduction();
+  }catch(error){
+    $("#production-view").innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+  }
+}
+
 function gateCard(label,gate){
   const status=gate?.status||"UNKNOWN";
   return '<div class="card"><span>'+escapeHtml(label)+'</span><strong class="'+(status==="PASS"?"good-text":"danger-text")+'">'+escapeHtml(status)+'</strong></div>';
@@ -499,13 +674,14 @@ function switchView(name){
   $$(".view").forEach((x)=>x.classList.add("hidden"));
   $$(".nav").forEach((x)=>x.classList.toggle("active",x.dataset.view===name));
   $("#"+name+"-view").classList.remove("hidden");
-  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",database:"Game Database",support:"Support",messages:"Reader Messages",community:"Community"};
+  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database",support:"Support",messages:"Reader Messages",community:"Community"};
   $("#page-title").textContent=titles[name]||"Control Center";
   if(name==="manuscripts")loadManuscripts();
   if(name==="releases")loadReleases();
   if(name==="roadmap")loadRoadmap();
   if(name==="continuity")loadContinuity();
   if(name==="authority")loadAuthority();
+  if(name==="access")loadAccess();
   if(name==="database"){loadDatabaseSummary();loadDatabase();}
   if(name==="support")loadSupport();
   if(name==="messages")loadMessages();
@@ -525,4 +701,4 @@ $("#refresh-database").addEventListener("click",loadDatabase);
 $("#database-domain").addEventListener("change",loadDatabase);
 $("#database-search").addEventListener("keydown",(e)=>{if(e.key==="Enter")loadDatabase();});
 
-loadProduction();
+initializeAdmin();
