@@ -617,32 +617,125 @@ async function loadCommunity(){
   const fan=$("#pending-fan-posts");
   const reports=$("#community-reports");
   const summary=$("#community-summary");
-  fan.innerHTML='<div class="empty">Loading fan moderation queue…</div>';
+  fan.innerHTML='<div class="empty">Loading Fan Page moderation…</div>';
   reports.innerHTML='<div class="empty">Loading reports…</div>';
   try{
-    const [queue,support]=await Promise.all([api("/admin/api/community"),api("/admin/api/support/summary")]);
-    summary.innerHTML=
-      '<div class="card"><span>Pending fan posts</span><strong>'+escapeHtml(support.pending_fan_posts??0)+'</strong></div>'+
-      '<div class="card"><span>Open reports</span><strong>'+escapeHtml(support.open_reports??0)+'</strong></div>'+
-      '<div class="card"><span>Comments</span><strong>ENABLED</strong></div>'+
-      '<div class="card"><span>Reader uploads</span><strong>'+escapeHtml(support.fan_posting_enabled?"ENABLED":"OFF")+'</strong></div>';
+    const queue=await api("/admin/api/community?limit=200");
+    const counts=queue.counts||{};
+    const canModerate=hasPermission("COMMUNITY_MODERATE");
 
-    const posts=queue.pending_fan_posts||[];
-    fan.innerHTML=posts.length?posts.map(p=>
-      '<div class="moderation-row"><div><strong>'+escapeHtml(p.display_name||"Reader")+'</strong>'+adminBadge(p.badge)+'<p>'+escapeHtml(p.caption||"No caption")+'</p></div><code>'+escapeHtml(p.media_object_path||"")+'</code></div>'
-    ).join(""):'<div class="empty">No pending Fan Page posts.</div>';
+    summary.innerHTML=
+      '<div class="card"><span>Pending fan posts</span><strong>'+escapeHtml(counts.pending_fan_posts??0)+'</strong></div>'+
+      '<div class="card"><span>Visible fan posts</span><strong>'+escapeHtml(counts.visible_fan_posts??0)+'</strong></div>'+
+      '<div class="card"><span>Open reports</span><strong>'+escapeHtml(counts.open_reports??0)+'</strong></div>'+
+      '<div class="card"><span>Hidden comments</span><strong>'+escapeHtml((counts.hidden_part_comments??0)+(counts.hidden_fan_comments??0))+'</strong></div>';
+
+    const posts=queue.fan_posts||[];
+    fan.innerHTML=
+      '<div class="database-head"><span>Fan Page Posts</span><small>'+escapeHtml(posts.length)+' shown</small></div>'+
+      (posts.length?posts.map(p=>{
+        const actions=[];
+        if(canModerate){
+          if(p.status==="PENDING")actions.push('<button data-fan-action="approve" data-id="'+escapeHtml(p.id)+'">Approve</button>');
+          if(p.status==="VISIBLE")actions.push('<button data-fan-action="hide" data-id="'+escapeHtml(p.id)+'">Hide</button>');
+          if(["HIDDEN","REMOVED"].includes(p.status))actions.push('<button data-fan-action="restore" data-id="'+escapeHtml(p.id)+'">Restore</button>');
+          if(p.status!=="REMOVED")actions.push('<button data-fan-action="remove" data-id="'+escapeHtml(p.id)+'" class="danger-mini">Remove</button>');
+          actions.push('<button data-fan-lock="'+(p.comments_locked?"unlock":"lock")+'" data-id="'+escapeHtml(p.id)+'">'+(p.comments_locked?"Unlock comments":"Lock comments")+'</button>');
+        }
+        return '<div class="moderation-card">'+
+          '<div class="moderation-card-head"><div><strong>'+escapeHtml(p.author_label||"Reader")+'</strong>'+adminBadge(p.badge)+'<small>'+escapeHtml(p.created_at||"")+'</small></div><span class="status '+(p.status==="VISIBLE"?"final":"review")+'">'+escapeHtml(p.status||"—")+'</span></div>'+
+          '<p>'+escapeHtml(p.caption||"No caption")+'</p>'+
+          '<code>'+escapeHtml(p.media_object_path||"")+'</code>'+
+          '<div class="moderation-meta"><span>Comments: '+escapeHtml(p.comments_locked?"LOCKED":"OPEN")+'</span>'+(p.spoiler_part_id?'<span>Spoiler-tagged</span>':'')+'</div>'+
+          '<div class="release-row-actions">'+(actions.join("")||'<span class="muted">No moderation permission</span>')+'</div>'+
+        '</div>';
+      }).join(""):'<div class="empty">No Fan Page posts yet.</div>');
 
     const rs=queue.reports||[];
-    reports.innerHTML=rs.length?rs.map(r=>
-      '<div class="moderation-row"><div><strong>'+escapeHtml(r.target_type)+'</strong><p>'+escapeHtml(r.reason||"")+'</p></div><code>'+escapeHtml(r.target_id)+'</code></div>'
-    ).join(""):'<div class="empty">No open community reports.</div>';
+    reports.innerHTML=
+      '<div class="database-head"><span>Community Reports</span><small>'+escapeHtml(rs.length)+' shown</small></div>'+
+      (rs.length?rs.map(r=>{
+        const target=r.target_snapshot||{};
+        const targetActions=[];
+        if(canModerate&&r.status==="OPEN"){
+          if(r.target_type==="FAN_POST"){
+            if(target.status==="VISIBLE")targetActions.push('<button data-report-target-action="hide" data-report-target-type="fan-post" data-target-id="'+escapeHtml(r.target_id)+'">Hide target</button>');
+            if(["HIDDEN","REMOVED"].includes(target.status))targetActions.push('<button data-report-target-action="restore" data-report-target-type="fan-post" data-target-id="'+escapeHtml(r.target_id)+'">Restore target</button>');
+            if(target.status!=="REMOVED")targetActions.push('<button data-report-target-action="remove" data-report-target-type="fan-post" data-target-id="'+escapeHtml(r.target_id)+'" class="danger-mini">Remove target</button>');
+          }else if(r.target_type==="PART_COMMENT"||r.target_type==="FAN_COMMENT"){
+            const type=r.target_type==="PART_COMMENT"?"part":"fan";
+            if(target.status==="VISIBLE")targetActions.push('<button data-report-target-action="hide" data-report-target-type="'+type+'" data-target-id="'+escapeHtml(r.target_id)+'">Hide comment</button>');
+            if(["HIDDEN","REMOVED"].includes(target.status))targetActions.push('<button data-report-target-action="restore" data-report-target-type="'+type+'" data-target-id="'+escapeHtml(r.target_id)+'">Restore comment</button>');
+            if(target.status!=="REMOVED")targetActions.push('<button data-report-target-action="remove" data-report-target-type="'+type+'" data-target-id="'+escapeHtml(r.target_id)+'" class="danger-mini">Remove comment</button>');
+          }
+        }
+        return '<div class="moderation-card report-card">'+
+          '<div class="moderation-card-head"><div><strong>'+escapeHtml(r.target_type||"REPORT")+'</strong><small>'+escapeHtml(r.created_at||"")+'</small></div><span class="status '+(r.status==="OPEN"?"review":"final")+'">'+escapeHtml(r.status||"—")+'</span></div>'+
+          '<p><strong>Report:</strong> '+escapeHtml(r.reason||"")+'</p>'+
+          '<p class="target-preview"><strong>Target:</strong> '+escapeHtml(target.body||target.caption||"No text preview")+'</p>'+
+          '<code>'+escapeHtml(r.target_id||"")+'</code>'+
+          '<div class="release-row-actions">'+targetActions.join("")+
+            (canModerate&&r.status==="OPEN"
+              ?'<button data-report-action="resolve" data-id="'+escapeHtml(r.id)+'">Resolve report</button><button data-report-action="dismiss" data-id="'+escapeHtml(r.id)+'">Dismiss report</button>'
+              :'')+
+          '</div>'+
+        '</div>';
+      }).join(""):'<div class="empty">No community reports.</div>');
+
+    fan.querySelectorAll("[data-fan-action]").forEach(button=>button.addEventListener("click",async()=>{
+      const action=button.dataset.fanAction;
+      const reason=prompt("Reason to "+action+" this Fan Page post:")||"";
+      if(reason.trim().length<4)return;
+      button.disabled=true;
+      try{
+        await apiPost("/admin/api/community/fan-posts/"+button.dataset.id+"/"+action,{reason});
+        await loadCommunity();
+      }catch(error){alert(error.message);button.disabled=false;}
+    }));
+
+    fan.querySelectorAll("[data-fan-lock]").forEach(button=>button.addEventListener("click",async()=>{
+      const action=button.dataset.fanLock;
+      const reason=prompt("Reason to "+action+" comments on this Fan Page post:")||"";
+      if(reason.trim().length<4)return;
+      button.disabled=true;
+      try{
+        await apiPost("/admin/api/community/fan-posts/"+button.dataset.id+"/comments-"+action,{reason});
+        await loadCommunity();
+      }catch(error){alert(error.message);button.disabled=false;}
+    }));
+
+    reports.querySelectorAll("[data-report-action]").forEach(button=>button.addEventListener("click",async()=>{
+      const action=button.dataset.reportAction;
+      const reason=prompt("Reason to "+action+" this report:")||"";
+      if(reason.trim().length<4)return;
+      button.disabled=true;
+      try{
+        await apiPost("/admin/api/community/reports/"+button.dataset.id+"/"+action,{reason});
+        await loadCommunity();
+      }catch(error){alert(error.message);button.disabled=false;}
+    }));
+
+    reports.querySelectorAll("[data-report-target-action]").forEach(button=>button.addEventListener("click",async()=>{
+      const action=button.dataset.reportTargetAction;
+      const type=button.dataset.reportTargetType;
+      const reason=prompt("Reason to "+action+" this reported target:")||"";
+      if(reason.trim().length<4)return;
+      button.disabled=true;
+      try{
+        if(type==="fan-post"){
+          await apiPost("/admin/api/community/fan-posts/"+button.dataset.targetId+"/"+action,{reason});
+        }else{
+          await apiPost("/admin/api/community/comments/"+type+"/"+button.dataset.targetId+"/"+action,{reason});
+        }
+        await loadCommunity();
+      }catch(error){alert(error.message);button.disabled=false;}
+    }));
   }catch(error){
     summary.innerHTML='';
     fan.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
     reports.innerHTML='';
   }
 }
-
 
 
 function hasPermission(key){
