@@ -11,7 +11,7 @@ Brand-locked, Supabase-native website alignment and pre-launch preparation.
 - Ongoing cadence: **1 Part every 8 hours / 3 Parts per real day**
 - Timezone: **Asia/Manila**
 - Releases: **PAUSED**
-- Roadmap V2: **DRAFT / NOT ACTIVE**
+- Roadmap V1: **ACTIVE / historical production authority**\n- Roadmap V2: **DRAFT / preserved prior synchronization draft**\n- Roadmap V3: **DRAFT / current full-system realignment target; NOT ACTIVE**
 - Public/Admin database: **one existing GENESIS Supabase backend**
 
 ## Locked brand identity
@@ -36,10 +36,10 @@ See `docs/BRAND_LOCK_036.md`.
 
 - This repository is separate from the Academic Record System and TeacherHub projects.
 - Never store Supabase secret/service keys, Postgres credentials, Cloudflare API tokens, or other secrets in Git.
-- Unreleased Stage 1, Stage 2, Final Canon, V2 roadmap, and hidden game-database truth remain private.
+- Unreleased Stage 1, Stage 2, Final Canon, draft roadmaps (V2/V3), and hidden game-database truth remain private.
 - Public endpoints expose only release-gated reader-safe content.
 - Supabase is operational truth; Drive remains mirror/provenance/archive where applicable.
-- Do not activate Roadmap V2 or run the stale E006–E010 AI2 router from website work.
+- Do not activate Roadmap V3, activate any roadmap, or run the stale E006–E010 AI2 router from website work.
 - Website development never grants runtime Class, Profession, Skill, or Temporal ownership.
 
 ## Admin target modules
@@ -53,4 +53,4 @@ See `docs/BRAND_LOCK_036.md`.
 - Continuity
 - Authority
 
-Development uses feature branches and preview validation before live deployment.
+Production alignment: Roadmap V3 is the current audited draft target for readiness/gating, while Roadmap V1 remains ACTIVE until an explicit cutover. Website work must never activate V3.\n\nCanonical flow: `Roadmap draft → 202 preflight → 203 Stage 1 → 103 Stage 2/finalization → 102 saga audit when due → FINAL_CANON → release queue → public release`.\n\nDevelopment uses feature branches and preview validation before live deployment.
