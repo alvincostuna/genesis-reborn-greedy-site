@@ -3,7 +3,7 @@ const $=(s)=>document.querySelector(s);
 const $$=(s)=>[...document.querySelectorAll(s)];
 
 async function api(path){
-  const response=await fetch(path,{credentials:"same-origin",headers:{Accept:"application/json"}});
+  const response=await fetch(path,{credentials:"same-origin",cache:"no-store",headers:{Accept:"application/json","Cache-Control":"no-cache","Pragma":"no-cache"}});
   const payload=await response.json().catch(()=>null);
   if(!response.ok||!payload?.ok){
     throw new Error(payload?.error?.message||("Request failed ("+response.status+")"));
@@ -154,6 +154,8 @@ async function loadManuscripts(){
   const episode=$("#episode-filter").value;
   if(search)q.set("q",search);
   if(episode)q.set("episode",episode);
+  q.set("limit","200");
+  q.set("_ts",String(Date.now()));
 
   try{
     const data=await api("/admin/api/manuscripts?"+q.toString());
@@ -163,6 +165,7 @@ async function loadManuscripts(){
       return;
     }
     table.innerHTML=
+      '<div class="database-head"><span>Active V3 manuscript products</span><small>'+escapeHtml(state.manuscripts.length)+' visible · '+escapeHtml(data.total??state.manuscripts.length)+' total</small></div>'+
       '<table><thead><tr>'+
       '<th>Part</th><th>Title</th><th>Status</th><th>AI-2 Stage 1</th><th>AI-1 Final</th><th>Compare</th>'+
       '</tr></thead><tbody>'+
