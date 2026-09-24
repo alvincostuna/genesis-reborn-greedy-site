@@ -25,6 +25,7 @@
         <button class="nav" data-view="roadmap">Roadmap</button>
         <button class="nav" data-view="continuity">Continuity</button>
         <button class="nav" data-view="authority">Authority</button>
+        <button class="nav" data-view="access">Access & Audit</button>
         <button class="nav" data-view="database">Game Database</button>
         <button class="nav" data-view="support">Support</button>
         <button class="nav" data-view="messages">Messages</button>
@@ -85,6 +86,25 @@
           <span>Read-only active law/version/hash index. Content bodies are not exposed to the browser.</span>
         </div>
         <div id="authority-table" class="panel"></div>
+      </section>
+
+      <section id="access-view" class="view hidden">
+        <div id="access-summary" class="cards"></div>
+        <div id="access-bootstrap" class="panel admin-note hidden"></div>
+        <div id="access-management" class="access-grid hidden">
+          <div class="panel access-panel">
+            <div class="database-head"><span>Admin Principals</span><small>Cloudflare Access + Supabase RBAC</small></div>
+            <div id="access-principals"></div>
+          </div>
+          <div class="panel access-panel">
+            <div class="database-head"><span>Manage Access</span><small>Owner / ADMIN_ACCESS_MANAGE</small></div>
+            <div id="access-controls" class="access-controls"></div>
+          </div>
+        </div>
+        <div class="panel access-panel">
+          <div class="database-head"><span>Immutable Audit</span><small>Latest Admin commands</small></div>
+          <div id="access-audit"></div>
+        </div>
       </section>
 
       <section id="database-view" class="view hidden">
