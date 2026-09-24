@@ -108,6 +108,13 @@ async function rpc(env: Env, fn: string, params: Record<string, unknown> = {}): 
   return payload;
 }
 
+async function requirePermission(email: string, env: Env, permission: string): Promise<any> {
+  return rpc(env, "genesis_admin_authorize", {
+    p_actor: email,
+    p_permission: permission
+  });
+}
+
 function intParam(value: string | null, fallback: number, min: number, max: number): number {
   const n = Number(value);
   if (!Number.isFinite(n)) return fallback;
@@ -132,8 +139,48 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   const path = url.pathname;
 
   if (request.method === "POST") {
+    if (path === "/admin/api/rbac/bootstrap") {
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const confirmation = String(body?.confirmation || "");
+      const data = await rpc(env, "genesis_admin_bootstrap_owner", {
+        p_actor: email,
+        p_confirmation: confirmation
+      });
+      return json({ ok: true, data });
+    }
+
+    if (path === "/admin/api/rbac/principals") {
+      await requirePermission(email, env, "ADMIN_ACCESS_MANAGE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_principal_upsert", {
+        p_actor: email,
+        p_email: String(body?.email || ""),
+        p_display_name: String(body?.display_name || ""),
+        p_enabled: Boolean(body?.enabled),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
+    if (path === "/admin/api/rbac/permissions") {
+      await requirePermission(email, env, "ADMIN_ACCESS_MANAGE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const data = await rpc(env, "genesis_admin_permission_set", {
+        p_actor: email,
+        p_email: String(body?.email || ""),
+        p_permission: String(body?.permission || ""),
+        p_granted: Boolean(body?.granted),
+        p_reason: String(body?.reason || "")
+      });
+      return json({ ok: true, data });
+    }
+
     const replyMatch = path.match(/^\/admin\/api\/messages\/([0-9a-f-]+)\/reply$/i);
     if (replyMatch) {
+      await requirePermission(email, env, "MESSAGES_REPLY");
       let body: any = null;
       try { body = await request.json(); } catch {}
       const message = String(body?.body || "").trim();
@@ -159,12 +206,35 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     throw new HttpError(405, "METHOD_NOT_ALLOWED", "Method not allowed.");
   }
 
+  if (path === "/admin/api/rbac") {
+    const data = await rpc(env, "genesis_admin_rbac_status", { p_actor: email });
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/rbac/principals") {
+    await requirePermission(email, env, "ADMIN_ACCESS_VIEW");
+    const data = await rpc(env, "genesis_admin_principal_index", { p_actor: email });
+    return json({ ok: true, data });
+  }
+
+  if (path === "/admin/api/rbac/audit") {
+    await requirePermission(email, env, "ADMIN_ACCESS_VIEW");
+    const data = await rpc(env, "genesis_admin_audit_index", {
+      p_actor: email,
+      p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
+      p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
+    });
+    return json({ ok: true, data });
+  }
+
   if (path === "/admin/api/production") {
+    await requirePermission(email, env, "DASHBOARD_VIEW");
     const data = await rpc(env, "genesis_admin_dashboard", { p_limit: 100 });
     return json({ ok: true, actor: email, data });
   }
 
   if (path === "/admin/api/manuscripts") {
+    await requirePermission(email, env, "MANUSCRIPTS_VIEW");
     const data = await rpc(env, "genesis_admin_manuscript_index", {
       p_saga_number: url.searchParams.get("saga")
         ? intParam(url.searchParams.get("saga"), 1, 1, 99)
@@ -181,6 +251,7 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   }
 
   if (path === "/admin/api/releases") {
+    await requirePermission(email, env, "RELEASE_VIEW");
     const data = await rpc(env, "genesis_admin_release_queue", {
       p_release_status: url.searchParams.get("status") || null,
       p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
@@ -190,6 +261,7 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   }
 
   if (path === "/admin/api/release-policy") {
+    await requirePermission(email, env, "RELEASE_VIEW");
     const [policy, clock] = await Promise.all([
       rpc(env, "api_release_policy"),
       rpc(env, "api_release_clock")
@@ -201,26 +273,31 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   }
 
   if (path === "/admin/api/roadmap") {
+    await requirePermission(email, env, "ROADMAP_VIEW");
     const data = await rpc(env, "genesis_admin_roadmap_summary");
     return json({ ok: true, data });
   }
 
   if (path === "/admin/api/continuity") {
+    await requirePermission(email, env, "CONTINUITY_VIEW");
     const data = await rpc(env, "genesis_admin_continuity_summary");
     return json({ ok: true, data });
   }
 
   if (path === "/admin/api/authority") {
+    await requirePermission(email, env, "AUTHORITY_VIEW");
     const data = await rpc(env, "genesis_admin_authority_index");
     return json({ ok: true, data });
   }
 
   if (path === "/admin/api/database/summary") {
+    await requirePermission(email, env, "DATABASE_VIEW");
     const data = await rpc(env, "genesis_admin_game_database_summary");
     return json({ ok: true, data });
   }
 
   if (path === "/admin/api/database") {
+    await requirePermission(email, env, "DATABASE_VIEW");
     const domain = String(url.searchParams.get("domain") || "").trim().toLowerCase();
     const allowed = new Set(["monsters","classes","professions","skills","loot","maps","items","npcs","quests","crafting","companions"]);
     if (!allowed.has(domain)) {
@@ -236,11 +313,13 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   }
 
   if (path === "/admin/api/support/summary") {
+    await requirePermission(email, env, "SUPPORT_VIEW");
     const data = await rpc(env, "genesis_admin_support_summary");
     return json({ ok: true, data });
   }
 
   if (path === "/admin/api/messages") {
+    await requirePermission(email, env, "MESSAGES_VIEW");
     const data = await rpc(env, "genesis_admin_message_inbox", {
       p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
       p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
@@ -249,6 +328,7 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   }
 
   if (path === "/admin/api/community") {
+    await requirePermission(email, env, "COMMUNITY_VIEW");
     const data = await rpc(env, "genesis_admin_community_queue", {
       p_limit: intParam(url.searchParams.get("limit"), 100, 1, 200),
       p_offset: intParam(url.searchParams.get("offset"), 0, 0, 100000)
@@ -258,6 +338,7 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
 
   let match = path.match(/^\/admin\/api\/manuscripts\/([0-9a-f-]+)\/versions\/([a-z0-9_]+)$/i);
   if (match) {
+    await requirePermission(email, env, "MANUSCRIPTS_VIEW");
     const data = await rpc(env, "genesis_admin_manuscript_version", {
       p_part_id: match[1],
       p_stage: stageName(match[2])
@@ -267,6 +348,7 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
 
   match = path.match(/^\/admin\/api\/manuscripts\/([0-9a-f-]+)\/compare$/i);
   if (match) {
+    await requirePermission(email, env, "MANUSCRIPTS_VIEW");
     const data = await rpc(env, "genesis_admin_manuscript_compare", {
       p_part_id: match[1],
       p_from_stage: stageName(url.searchParams.get("from") || ""),
@@ -277,6 +359,7 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
 
   match = path.match(/^\/admin\/api\/manuscripts\/([0-9a-f-]+)\/preview$/i);
   if (match) {
+    await requirePermission(email, env, "MANUSCRIPTS_VIEW");
     const data = await rpc(env, "genesis_admin_manuscript_version", {
       p_part_id: match[1],
       p_stage: stageName(url.searchParams.get("stage") || "stage2")
@@ -286,6 +369,7 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
 
   match = path.match(/^\/admin\/api\/manuscripts\/([0-9a-f-]+)$/i);
   if (match) {
+    await requirePermission(email, env, "MANUSCRIPTS_VIEW");
     const data = await rpc(env, "genesis_admin_manuscript_detail", {
       p_part_id: match[1]
     });
