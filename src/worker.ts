@@ -6,7 +6,6 @@ interface Env {
   SUPABASE_SERVICE_ROLE_KEY: string;
   CF_ACCESS_TEAM_DOMAIN: string;
   CF_ACCESS_AUD: string;
-  ADMIN_EMAILS: string;
 }
 
 const jwksCache = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
@@ -40,14 +39,8 @@ function normalizeDomain(value: string): string {
 async function requireAdmin(request: Request, env: Env): Promise<string> {
   const domain = normalizeDomain(env.CF_ACCESS_TEAM_DOMAIN);
   const audience = env.CF_ACCESS_AUD || "";
-  const allowed = new Set(
-    String(env.ADMIN_EMAILS || "")
-      .split(",")
-      .map((v) => v.trim().toLowerCase())
-      .filter(Boolean)
-  );
 
-  if (!domain || !audience || allowed.size === 0) {
+  if (!domain || !audience) {
     throw new HttpError(503, "ADMIN_AUTH_NOT_CONFIGURED", "Admin authentication is not configured.");
   }
 
@@ -68,8 +61,8 @@ async function requireAdmin(request: Request, env: Env): Promise<string> {
       audience
     });
     const email = String(result.payload.email || "").trim().toLowerCase();
-    if (!email || !allowed.has(email)) {
-      throw new HttpError(403, "ADMIN_FORBIDDEN", "Admin access denied.");
+    if (!email) {
+      throw new HttpError(403, "ADMIN_IDENTITY_EMAIL_MISSING", "Cloudflare Access identity has no email claim.");
     }
     return email;
   } catch (error) {
