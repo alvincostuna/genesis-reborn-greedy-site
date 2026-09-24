@@ -85,6 +85,24 @@ function textParagraphs(v){
   const parts=String(v||"").trim().split(/\n\s*\n/).filter(Boolean);
   return parts.map(p=>"<p>"+esc(p).replace(/\n/g,"<br>")+"</p>").join("");
 }
+async function edgeFunction(name,body,accessToken){
+  const r=await fetch(SUPABASE_URL+"/functions/v1/"+name,{
+    method:"POST",
+    headers:{
+      "apikey":SUPABASE_PUBLISHABLE_KEY,
+      "Authorization":"Bearer "+accessToken,
+      "Content-Type":"application/json",
+      "Accept":"application/json"
+    },
+    body:JSON.stringify(body||{})
+  });
+  const text=await r.text();
+  let data={};
+  try{data=text?JSON.parse(text):{}}catch{data={message:text}}
+  if(!r.ok)throw new Error(data.detail||data.error||data.message||"Request failed");
+  return data;
+}
+
 function entityCard(x,kind="codex"){
   const fields=x?.revealed_fields&&typeof x.revealed_fields==="object"?Object.keys(x.revealed_fields):[];
   return '<article class="'+kind+'-card"><small>'+esc(x.entity_type||"CODEX")+'</small><h2>'+esc(x.public_name||x.entity_code||"Revealed entry")+'</h2><p>'+esc(x.short_description||"Revealed GENESIS knowledge.")+'</p>'+(fields.length?'<div class="reveal-fields">Revealed fields: '+esc(fields.slice(0,6).join(", "))+'</div>':"")+'</article>';
@@ -492,14 +510,83 @@ async function initFan(){
 async function initSupport(){
   const notice=document.querySelector("#support-status");
   await activateSupportContact();
+
+  const params=new URLSearchParams(location.search);
+  const paymentReturn=params.get("payment");
+  if(paymentReturn==="success"&&notice){
+    notice.innerHTML='<strong>Payment submitted</strong><span>PayMongo returned you to GENESIS. Advance access is granted only after the signed payment webhook is confirmed.</span>';
+  }else if(paymentReturn==="cancelled"&&notice){
+    notice.innerHTML='<strong>Checkout cancelled</strong><span>No reward is granted for an incomplete PayMongo checkout.</span>';
+  }
+
   try{
     const data=await rpc("api_support_catalog");
     const s=data?.settings||{};
-    if(notice){
-      const enabled=!!s.payments_enabled||!!s.pure_support_enabled||!!s.share_rewards_enabled;
-      notice.innerHTML='<strong>'+(enabled?'Support services active':'Preview mode')+'</strong><span>'+
-        (enabled?'Available support features follow the limits shown below.':'Payments, pure support, and share rewards are intentionally disabled until final testing and provider setup.')+
+    const providerReady=!!s.payment_provider_enabled;
+    const session=await getSession();
+    const user=session?await getAuthUser(session):null;
+
+    if(notice&&!paymentReturn){
+      const enabled=providerReady&&(!!s.payments_enabled||!!s.pure_support_enabled||!!s.share_rewards_enabled);
+      notice.innerHTML='<strong>'+(enabled?'Secure PayMongo checkout ready':'PayMongo preparation mode')+'</strong><span>'+
+        (enabled
+          ?'Payments are verified server-side before credits, VIP, or Supporter eligibility are granted.'
+          :'PayMongo is selected and wired, but collection remains disabled until merchant keys, webhook signing, and test-mode verification pass.')+
         '</span>';
     }
-  }catch{}
+
+    const startCheckout=async(button,ruleKey,amountPhp=null)=>{
+      if(!user||!session){
+        location.href=accountPath()+"?next=support";
+        return;
+      }
+      const original=button.textContent;
+      button.disabled=true;
+      button.textContent="Opening secure checkout…";
+      try{
+        const result=await edgeFunction("paymongo-create-checkout",{
+          rule_key:ruleKey,
+          amount_php:amountPhp
+        },session.access_token);
+        if(!result?.checkout_url)throw new Error("Checkout URL missing");
+        location.href=result.checkout_url;
+      }catch(e){
+        button.disabled=false;
+        button.textContent=original;
+        if(notice)notice.innerHTML='<strong>Checkout unavailable</strong><span>'+esc(String(e.message||e))+'</span>';
+      }
+    };
+
+    document.querySelectorAll("[data-paymongo-rule]").forEach(button=>{
+      const ruleKey=button.dataset.paymongoRule;
+      const pure=ruleKey==="PURE_SUPPORT_ANY";
+      const featureEnabled=pure?!!s.pure_support_enabled:!!s.payments_enabled;
+      const ready=providerReady&&featureEnabled;
+
+      button.disabled=!ready;
+      button.textContent=ready
+        ?(user?(pure?"Give through PayMongo":"Pay with PayMongo"):"Sign in to continue")
+        :"PayMongo not live yet";
+
+      if(pure){
+        const amount=document.querySelector("#pure-support-amount");
+        if(amount)amount.disabled=!ready;
+      }
+
+      if(ready){
+        button.addEventListener("click",()=>{
+          const amount=pure?Number(document.querySelector("#pure-support-amount")?.value||0):null;
+          if(pure&&(!Number.isFinite(amount)||amount<1)){
+            if(notice)notice.innerHTML='<strong>Enter an amount</strong><span>Pure support starts at ₱1 and grants no Advance Parts or VIP.</span>';
+            return;
+          }
+          startCheckout(button,ruleKey,amount);
+        });
+      }
+    });
+  }catch(e){
+    if(notice&&!paymentReturn){
+      notice.innerHTML='<strong>Support status unavailable</strong><span>Payment collection remains closed.</span>';
+    }
+  }
 }
