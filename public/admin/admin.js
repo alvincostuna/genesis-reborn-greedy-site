@@ -511,10 +511,15 @@ function gateCard(label,gate){
 async function loadRoadmap(){
   const cards=$("#roadmap-summary");
   const details=$("#roadmap-details");
+  const cutover=$("#cutover-control");
   cards.innerHTML='<div class="card"><span>Roadmap</span><strong>Loading…</strong></div>';
   details.innerHTML='<div class="empty">Loading roadmap authority…</div>';
+  cutover.innerHTML='<div class="empty">Loading V2 cutover preflight…</div>';
   try{
-    const d=await api("/admin/api/roadmap");
+    const [d,preflight]=await Promise.all([
+      api("/admin/api/roadmap"),
+      api("/admin/api/roadmap/cutover-preview")
+    ]);
     const roads=d.roadmaps||[];
     const gates=d.gates||{};
     cards.innerHTML=
@@ -523,17 +528,91 @@ async function loadRoadmap(){
       gateCard("Title gate",gates.titles)+
       gateCard("Registry consistency",gates.registry_consistency)+
       gateCard("First-use gate",gates.first_use);
+
     const snap=d.latest_pre_cutover_snapshot||{};
     details.innerHTML=
       '<div class="runtime">'+
         '<div><small>Target roadmap</small><strong>'+escapeHtml(d.target_roadmap_version_id||"—")+'</strong></div>'+
         '<div><small>Episode range</small><strong>'+escapeHtml((d.target_episode_range?.start??"—")+"–"+(d.target_episode_range?.end??"—"))+'</strong></div>'+
-        '<div><small>Pre-cutover snapshot</small><strong>'+escapeHtml(snap.status||"—")+'</strong></div>'+
+        '<div><small>Latest stored snapshot</small><strong>'+escapeHtml(snap.status||"—")+'</strong></div>'+
         '<div><small>Snapshot hash</small><strong><code>'+escapeHtml(snap.payload_hash?String(snap.payload_hash).slice(0,18)+"…":"—")+'</code></strong></div>'+
       '</div>';
+
+    const blockers=preflight.blockers||[];
+    const latest=preflight.latest_snapshot||{};
+    const ready=preflight.status==="READY"&&(preflight.blocking_requirements||0)===0;
+    const canActivate=hasPermission("ROADMAP_ACTIVATE");
+
+    cutover.innerHTML=
+      '<div class="database-head"><span>V2 Clean-Restart Cutover</span><small>'+escapeHtml(preflight.contract_version||"")+'</small></div>'+
+      '<div class="cutover-body">'+
+        '<div class="cutover-status '+(ready?"ready":"blocked")+'">'+
+          '<strong>'+escapeHtml(ready?"READY":"BLOCKED")+'</strong>'+
+          '<span>'+escapeHtml((preflight.blocking_requirements??0)+" blocker(s)")+'</span>'+
+        '</div>'+
+        '<div class="runtime">'+
+          '<div><small>Source</small><strong>V'+escapeHtml(preflight.source_roadmap?.version??"—")+' · '+escapeHtml(preflight.source_roadmap?.status||"—")+'</strong></div>'+
+          '<div><small>Target</small><strong>V'+escapeHtml(preflight.target_roadmap?.version??"—")+' · '+escapeHtml(preflight.target_roadmap?.status||"—")+'</strong></div>'+
+          '<div><small>Snapshot</small><strong>'+escapeHtml(latest.status||"MISSING")+'</strong></div>'+
+          '<div><small>Authority current</small><strong>'+escapeHtml(latest.authority_current?"YES":"NO")+'</strong></div>'+
+          '<div><small>Historical V1 release items</small><strong>'+escapeHtml(preflight.historical_v1_release_items??0)+'</strong></div>'+
+          '<div><small>Execute permission</small><strong>'+escapeHtml(canActivate?"ROADMAP_ACTIVATE":"NOT GRANTED")+'</strong></div>'+
+        '</div>'+
+        (blockers.length
+          ?'<div class="cutover-blockers"><strong>Blocking conditions</strong><ul>'+blockers.map(b=>'<li><code>'+escapeHtml(b.code||"UNKNOWN")+'</code>'+(b.detail?' — '+escapeHtml(b.detail):'')+(b.batch_key?' — '+escapeHtml(b.batch_key):'')+'</li>').join("")+'</ul></div>'
+          :'<div class="admin-note compact"><strong>All cutover preconditions pass.</strong><p>Execution will supersede V1 production authority, withdraw historical V1 release items, invalidate stale runtime packets, create fresh V2 E001–E005, and reset 014 to READY_FOR_AI2 / 202. It will not start AI2 and will not unpause releases.</p></div>')+
+        (canActivate
+          ?'<div class="cutover-actions">'+
+             '<button id="refresh-cutover-snapshot">Create fresh pre-cutover snapshot</button>'+
+             '<button id="activate-v2-cutover" class="danger-action" '+(ready?"":"disabled")+'>Activate V2 and restart E001</button>'+
+           '</div>'
+          :'<div class="empty">ROADMAP_ACTIVATE is required for snapshot creation and activation.</div>')+
+      '</div>';
+
+    if(canActivate){
+      const refresh=$("#refresh-cutover-snapshot");
+      if(refresh)refresh.addEventListener("click",async()=>{
+        const reason=prompt("Reason for creating a fresh pre-cutover snapshot:")||"";
+        if(!reason.trim())return;
+        refresh.disabled=true;
+        try{
+          const result=await apiPost("/admin/api/roadmap/cutover-snapshot",{reason});
+          alert("Snapshot "+result.status+"\n"+result.snapshot_id+"\n"+result.payload_hash);
+          await loadRoadmap();
+        }catch(error){alert(error.message);}
+        finally{refresh.disabled=false;}
+      });
+
+      const activate=$("#activate-v2-cutover");
+      if(activate)activate.addEventListener("click",async()=>{
+        if(!ready)return;
+        const confirmation=prompt("Type exactly:\nACTIVATE V2 AND RESTART E001")||"";
+        if(confirmation!=="ACTIVATE V2 AND RESTART E001")return;
+        const reason=prompt("Reason for activating Roadmap V2:")||"";
+        if(!reason.trim())return;
+        if(!latest.id||!latest.hash){
+          alert("A current PASS pre-cutover snapshot is required.");
+          return;
+        }
+        activate.disabled=true;
+        try{
+          const result=await apiPost("/admin/api/roadmap/activate-v2",{
+            snapshot_id:latest.id,
+            snapshot_hash:latest.hash,
+            confirmation,
+            reason
+          });
+          alert("V2 CUTOVER PASS\nBatch: "+(result.new_batch_key||"—")+"\nNext: "+(result.next_action_code||"—"));
+          await loadRoadmap();
+          await loadProduction();
+        }catch(error){alert(error.message);}
+        finally{activate.disabled=false;}
+      });
+    }
   }catch(error){
     cards.innerHTML="";
     details.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    cutover.innerHTML="";
   }
 }
 
