@@ -153,3 +153,13 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
 .inline-controls{margin:0 16px 16px}
 @media(max-width:900px){.settings-payment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.feature-row{align-items:flex-start;flex-wrap:wrap}.feature-row button{width:100%}.settings-payment-grid{grid-template-columns:1fr}}
+
+
+.codex-panel{margin-top:18px}
+.codex-form{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.codex-form textarea,.codex-form input,.codex-form select,.codex-form button{background:#0b1724;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:10px 12px}
+.codex-form textarea,.codex-form [name="reason"],.codex-form button{grid-column:1/-1}
+.codex-form button{background:#d6ad55;color:#07101b;border:0;font-weight:800;cursor:pointer}
+.codex-allowlist{padding:0 16px 16px}
+.json-cell{white-space:pre-wrap;word-break:break-word;font-size:11px}
+@media(max-width:700px){.codex-form{grid-template-columns:1fr}.codex-form textarea,.codex-form [name="reason"],.codex-form button{grid-column:auto}}
