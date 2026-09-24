@@ -100,12 +100,15 @@ It must remain visually secondary to the approved key art and must not become a 
 
 ## LIVE HERO FIX — 2026-09-24
 
-**Status:** DEPLOYED SOURCE FIX / LOCKED-ASSET PRESERVATION
+**Status:** CORRECTED / COMMANDER-APPROVED SOURCE / LOCKED-ASSET PRESERVATION
 
 The approved split-world key art is mounted as a real static binary asset instead of relying on an embedded data URI:
 
 - Path: `public/assets/master-key-art-split-world-v1.webp`
-- Source: exact previously embedded approved preview derivative
+- Source: exact Commander-approved `flavio(2).png`
+- Web derivative dimensions: 960 × 540
+- Web derivative size: 80,224 bytes
+- Web derivative SHA-256: `64c2fa7b46053c8ba468be5dbd7f58795624be92cdf71e0e53334f1d501dba25`
 - No regeneration or reinterpretation
 - Live reader build must copy this asset into `.live-assets/assets/`
 - Home must reference `/assets/master-key-art-split-world-v1.webp`

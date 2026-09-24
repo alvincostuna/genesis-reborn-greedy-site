@@ -60,6 +60,14 @@ jobs:
           js.write_text(text,encoding='utf-8')
           PY
 
+      - name: Verify locked hero asset hash
+        run: |
+          set -euo pipefail
+          EXPECTED_HERO_SHA="64c2fa7b46053c8ba468be5dbd7f58795624be92cdf71e0e53334f1d501dba25"
+          ACTUAL_HERO_SHA="$(sha256sum .live-assets/assets/master-key-art-split-world-v1.webp | awk '{print $1}')"
+          echo "Hero SHA-256: $ACTUAL_HERO_SHA"
+          test "$ACTUAL_HERO_SHA" = "$EXPECTED_HERO_SHA"
+
       - name: Snapshot current live deployment
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -142,6 +150,8 @@ jobs:
           grep -q '/assets/genesis-official-logo.png' /tmp/candidate-home.html
           grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/candidate-home.html
           ! grep -q '/site-preview/' /tmp/candidate-home.html
+          curl -fsS "$CANDIDATE_URL/assets/master-key-art-split-world-v1.webp" -o /tmp/candidate-hero.webp
+          test "$(sha256sum /tmp/candidate-hero.webp | awk '{print $1}')" = "64c2fa7b46053c8ba468be5dbd7f58795624be92cdf71e0e53334f1d501dba25"
           test "$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/admin/")" = "404"
 
       - name: Promote verified candidate
@@ -168,10 +178,28 @@ jobs:
             done
             test "$STATUS" = "200"
           done
-          curl -fsS "$BASE/" -o /tmp/home.html
-          grep -q 'data-page="home"' /tmp/home.html
-          grep -q 'GENESIS CYCLE' /tmp/home.html
-          grep -q '/assets/genesis-official-logo.png' /tmp/home.html
-          grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/home.html
-          test "$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/admin/")" = "404"
+          CONTENT_OK=0
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            curl -fsS "$BASE/" -o /tmp/home.html || true
+            if grep -q 'data-page="home"' /tmp/home.html \
+              && grep -q 'GENESIS CYCLE' /tmp/home.html \
+              && grep -q '/assets/genesis-official-logo.png' /tmp/home.html \
+              && grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/home.html; then
+              CONTENT_OK=1
+              break
+            fi
+            echo "Live content propagation attempt $attempt not complete yet."
+            sleep 2
+          done
+          test "$CONTENT_OK" = "1"
+          curl -fsS "$BASE/assets/master-key-art-split-world-v1.webp" -o /tmp/live-hero.webp
+          test "$(sha256sum /tmp/live-hero.webp | awk '{print $1}')" = "64c2fa7b46053c8ba468be5dbd7f58795624be92cdf71e0e53334f1d501dba25"
+
+          ADMIN_STATUS="000"
+          for attempt in 1 2 3 4 5; do
+            ADMIN_STATUS="$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/admin/" || true)"
+            if [ "$ADMIN_STATUS" = "404" ]; then break; fi
+            sleep 2
+          done
+          test "$ADMIN_STATUS" = "404"
           echo "GENESIS live reader verified."
