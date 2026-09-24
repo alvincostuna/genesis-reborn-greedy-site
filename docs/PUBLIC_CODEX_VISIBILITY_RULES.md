@@ -81,9 +81,9 @@ Default to ADMIN_ONLY or late gated:
 
 ## 6. Roadmap safety
 
-Roadmap V2 is DRAFT and must never be used as direct public-reveal proof.
+Draft roadmaps (currently V2 and V3) must never be used as direct public-reveal proof. V3 may define planned reveal gates, but a plan is not publication.
 
-Public reveal proof comes from **released Final Canon**, not planned future Parts.
+Public reveal proof comes from **released Final Canon**, not planned future Parts. The public site must filter against actual released Parts even when Supabase contains complete future mechanics.
 
 ## 7. Public search
 
@@ -103,7 +103,7 @@ If a relation points to a hidden entity, omit the relation rather than displayin
 ## 9. Revision rule
 
 If canon changes before release, public Codex follows the final released truth.
-Historical Draft/V2 planning data never becomes public merely because it once had a reveal binding.
+Historical or draft planning data (including V2/V3) never becomes public merely because it has a reveal binding.
 
 ## 10. Admin difference
 
