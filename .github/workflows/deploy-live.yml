@@ -47,6 +47,7 @@ jobs:
           cp -R public/site-preview/support .live-assets/support
           cp public/assets/genesis-official-logo.png .live-assets/assets/genesis-official-logo.png
           cp public/assets/genesis-official-logo-64.png .live-assets/assets/genesis-official-logo-64.png
+          cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
           python - <<'PY'
           from pathlib import Path
           for p in Path('.live-assets').rglob('*.html'):
@@ -139,6 +140,7 @@ jobs:
           grep -q 'data-page="home"' /tmp/candidate-home.html
           grep -q 'GENESIS CYCLE' /tmp/candidate-home.html
           grep -q '/assets/genesis-official-logo.png' /tmp/candidate-home.html
+          grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/candidate-home.html
           ! grep -q '/site-preview/' /tmp/candidate-home.html
           test "$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/admin/")" = "404"
 
@@ -170,5 +172,6 @@ jobs:
           grep -q 'data-page="home"' /tmp/home.html
           grep -q 'GENESIS CYCLE' /tmp/home.html
           grep -q '/assets/genesis-official-logo.png' /tmp/home.html
+          grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/home.html
           test "$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/admin/")" = "404"
           echo "GENESIS live reader verified."
