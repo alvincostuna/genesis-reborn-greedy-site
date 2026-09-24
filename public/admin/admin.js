@@ -171,10 +171,9 @@ async function loadManuscripts(){
         '<td>'+escapeHtml(p.part_key)+'</td>'+
         '<td>'+escapeHtml(p.title)+'</td>'+
         '<td><span class="status '+statusClass(p.dashboard_state)+'">'+escapeHtml(p.dashboard_state)+'</span></td>'+
-        '<td>'+(p.stage1_available?"✓":"—")+'</td>'+
-        '<td>'+(p.stage2_available?"✓":"—")+'</td>'+
-        '<td>'+(p.final_canon_available?"✓":"—")+'</td>'+
-        '<td>'+escapeHtml(p.stage2_word_count??"—")+'</td>'+
+        '<td>'+(p.stage1_available?("View · "+escapeHtml(p.stage1_word_count??"—")+" words"):"—")+'</td>'+
+        '<td>'+(p.stage2_available?("View · "+escapeHtml(p.stage2_word_count??"—")+" words"+(p.final_canon_available?" · Final Canon":"")):"Waiting")+'</td>'+
+        '<td>'+(p.stage1_available&&p.stage2_available?"Compare":"—")+'</td>'+
         '</tr>'
       ).join("")+
       '</tbody></table>';
