@@ -1,0 +1,52 @@
+name: Verify GENESIS Live Hotfix
+
+on:
+  push:
+    branches:
+      - feat/admin-manuscript-viewer
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify live branding, hero asset, and cycle script
+        run: |
+          set -euo pipefail
+          BASE="https://genesis-reborn-greedy.hirangnalupa.workers.dev"
+          curl -fsS "$BASE/" -o /tmp/home.html
+          curl -fsS "$BASE/site.js" -o /tmp/site.js
+
+          echo "HOME_STATUS=200"
+          echo "FULL_BRAND=$(grep -q 'GENESIS: REBORN GREEDY' /tmp/home.html && echo PASS || echo FAIL)"
+          echo "HERO_REF=$(grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/home.html && echo PASS || echo FAIL)"
+          echo "LOGO_REF=$(grep -q '/assets/genesis-official-logo.png' /tmp/home.html && echo PASS || echo FAIL)"
+          echo "CYCLE_MARKUP=$(grep -q 'GENESIS CYCLE' /tmp/home.html && echo PASS || echo FAIL)"
+          echo "JS_BAD_LITERAL=$(grep -Fq 'await initHome();\\nif(page==="read")' /tmp/site.js && echo FAIL || echo PASS)"
+
+          HERO_STATUS="$(curl -sS -o /tmp/hero.webp -w '%{http_code}' "$BASE/assets/master-key-art-split-world-v1.webp")"
+          HERO_TYPE="$(curl -sSI "$BASE/assets/master-key-art-split-world-v1.webp" | awk -F': ' 'tolower($1)=="content-type"{print $2}' | tr -d '\r')"
+          HERO_SIZE="$(wc -c < /tmp/hero.webp | tr -d ' ')"
+          echo "HERO_STATUS=$HERO_STATUS"
+          echo "HERO_TYPE=$HERO_TYPE"
+          echo "HERO_SIZE=$HERO_SIZE"
+
+          LOGO_STATUS="$(curl -sS -o /tmp/logo.png -w '%{http_code}' "$BASE/assets/genesis-official-logo.png")"
+          LOGO_TYPE="$(curl -sSI "$BASE/assets/genesis-official-logo.png" | awk -F': ' 'tolower($1)=="content-type"{print $2}' | tr -d '\r')"
+          LOGO_SIZE="$(wc -c < /tmp/logo.png | tr -d ' ')"
+          echo "LOGO_STATUS=$LOGO_STATUS"
+          echo "LOGO_TYPE=$LOGO_TYPE"
+          echo "LOGO_SIZE=$LOGO_SIZE"
+
+          ADMIN_STATUS="$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/admin/")"
+          echo "ADMIN_STATUS=$ADMIN_STATUS"
+
+          test "$HERO_STATUS" = "200"
+          test "$LOGO_STATUS" = "200"
+          grep -q 'GENESIS: REBORN GREEDY' /tmp/home.html
+          grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/home.html
+          grep -q 'GENESIS CYCLE' /tmp/home.html
+          ! grep -Fq 'await initHome();\\nif(page==="read")' /tmp/site.js
