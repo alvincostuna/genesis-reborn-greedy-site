@@ -163,3 +163,13 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
 .codex-allowlist{padding:0 16px 16px}
 .json-cell{white-space:pre-wrap;word-break:break-word;font-size:11px}
 @media(max-width:700px){.codex-form{grid-template-columns:1fr}.codex-form textarea,.codex-form [name="reason"],.codex-form button{grid-column:auto}}
+
+
+.moderation-card{padding:14px 16px;border-top:1px solid var(--line);display:grid;gap:10px}
+.moderation-card:first-of-type{border-top:0}
+.moderation-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.moderation-card-head>div{display:grid;gap:4px}
+.moderation-card-head small,.moderation-meta,.target-preview{color:var(--muted)}
+.moderation-card code{word-break:break-all}
+.moderation-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px}
+.report-card{background:#08131f}
