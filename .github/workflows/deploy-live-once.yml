@@ -85,9 +85,13 @@ jobs:
         run: |
           set -euo pipefail
           VERSION_ID="$(printf '%s\n' "$WRANGLER_OUTPUT" | sed -n 's/.*Worker Version ID: //p' | tail -n 1)"
-          VERSION_URL="$(printf '%s\n' "$WRANGLER_OUTPUT" | grep -Eo 'https://[A-Za-z0-9.-]+workers\.dev' | tail -n 1)"
+          VERSION_URL="$(printf '%s\n' "$WRANGLER_OUTPUT" | grep -Eo 'https://[A-Za-z0-9.-]+workers\.dev' | tail -n 1 || true)"
           test -n "$VERSION_ID"
-          test -n "$VERSION_URL"
+          if [ -z "$VERSION_URL" ]; then
+            VERSION_PREFIX="$(printf '%s' "$VERSION_ID" | cut -c1-8)"
+            VERSION_URL="https://${VERSION_PREFIX}-genesis-reborn-greedy.hirangnalupa.workers.dev"
+            echo "Derived candidate preview URL: $VERSION_URL"
+          fi
 
           npx wrangler versions view "$VERSION_ID" --config wrangler.live.toml --json > /tmp/live-version.json
           python - <<'PY'
