@@ -1,0 +1,62 @@
+name: Deploy GENESIS Admin Preview
+
+on:
+  push:
+    branches:
+      - feat/admin-manuscript-viewer
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: genesis-admin-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy-preview:
+    environment: genesis-admin-preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout preview source
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Type-check
+        run: npm run types
+
+      - name: Check Admin JavaScript
+        run: node --check public/admin/admin.js
+
+      - name: Deploy preview Worker
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env preview --strict
+
+      - name: Verify preview deployment
+        run: |
+          set -euo pipefail
+          BASE="https://genesis-reborn-greedy-site-preview.hirangnalupa.workers.dev"
+          for path in /admin/ /admin/admin.js; do
+            STATUS="000"
+            for attempt in 1 2 3 4 5 6 7 8 9 10; do
+              STATUS="$(curl -sS -o /tmp/preview.out -w '%{http_code}' "$BASE$path" || true)"
+              echo "Preview $path attempt $attempt -> HTTP $STATUS"
+              if [ "$STATUS" = "200" ] || [ "$STATUS" = "302" ] || [ "$STATUS" = "403" ]; then
+                break
+              fi
+              sleep 2
+            done
+            test "$STATUS" = "200" -o "$STATUS" = "302" -o "$STATUS" = "403"
+          done
