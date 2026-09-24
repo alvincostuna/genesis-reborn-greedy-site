@@ -428,6 +428,118 @@ function adminBadge(badge){
   return '<span class="status '+(badge==="VIP"?"final":"review")+'">'+escapeHtml(badge)+'</span>';
 }
 
+
+async function loadCodex(){
+  const summary=$("#codex-summary");
+  const create=$("#codex-create");
+  const root=$("#codex-reveals");
+  summary.innerHTML='<div class="card"><span>Codex reveals</span><strong>Loading…</strong></div>';
+  create.innerHTML='<div class="empty">Loading reveal editor…</div>';
+  root.innerHTML='<div class="empty">Loading reveal plans…</div>';
+  try{
+    const d=await api("/admin/api/codex/reveals?limit=200");
+    const items=d.items||[];
+    const counts={};
+    for(const x of items)counts[x.status]=(counts[x.status]||0)+1;
+    summary.innerHTML=
+      '<div class="card"><span>Total plans</span><strong>'+escapeHtml(d.total??items.length)+'</strong></div>'+
+      '<div class="card"><span>Approved</span><strong>'+escapeHtml(counts.APPROVED??0)+'</strong></div>'+
+      '<div class="card"><span>Draft</span><strong>'+escapeHtml(counts.DRAFT??0)+'</strong></div>'+
+      '<div class="card"><span>Retired</span><strong>'+escapeHtml(counts.RETIRED??0)+'</strong></div>';
+
+    if(hasPermission("CODEX_EDIT")){
+      create.innerHTML=
+        '<div class="database-head"><span>Create reveal draft</span><small>No direct public DB write</small></div>'+
+        '<form id="codex-create-form" class="codex-form">'+
+          '<input name="entity_code" placeholder="Entity code, e.g. MON-000001" required>'+
+          '<input name="part_key" placeholder="Part key, e.g. E003-P04" required>'+
+          '<select name="reveal_kind"><option value="FIRST_PUBLIC">FIRST_PUBLIC</option><option value="EXPAND_FIELDS">EXPAND_FIELDS</option></select>'+
+          '<textarea name="public_fields" rows="4" placeholder=\'JSON public fields, e.g. {"rank":"Common"}\'>{}</textarea>'+
+          '<input name="notes" placeholder="Notes">'+
+          '<input name="reason" placeholder="Change reason" required>'+
+          '<button type="submit">Create Draft</button>'+
+        '</form>'+
+        '<p class="muted codex-allowlist">Allowed public field keys: '+escapeHtml((d.allowed_public_fields||[]).join(", "))+'</p>';
+      $("#codex-create-form").addEventListener("submit",async(e)=>{
+        e.preventDefault();
+        const form=e.currentTarget;
+        const fd=new FormData(form);
+        let public_fields={};
+        try{public_fields=JSON.parse(String(fd.get("public_fields")||"{}"));}catch{alert("public_fields must be valid JSON.");return;}
+        const button=form.querySelector("button");
+        button.disabled=true;
+        try{
+          await apiPost("/admin/api/codex/reveals",{
+            entity_code:String(fd.get("entity_code")||""),
+            part_key:String(fd.get("part_key")||""),
+            reveal_kind:String(fd.get("reveal_kind")||""),
+            public_fields,
+            notes:String(fd.get("notes")||""),
+            reason:String(fd.get("reason")||"")
+          });
+          form.reset();
+          form.querySelector("[name=public_fields]").value="{}";
+          await loadCodex();
+        }catch(error){alert(error.message);}
+        finally{button.disabled=false;}
+      });
+    }else{
+      create.innerHTML='<div class="empty">CODEX_EDIT is required to create reveal drafts.</div>';
+    }
+
+    root.innerHTML=
+      '<div class="database-head"><span>Reveal Plans</span><small>'+escapeHtml(items.length)+' shown</small></div>'+
+      (items.length
+        ?'<div class="table-scroll"><table><thead><tr><th>Entity</th><th>Part</th><th>Kind</th><th>Status</th><th>Public fields</th><th>First-use evidence</th><th>Actions</th></tr></thead><tbody>'+
+          items.map(x=>{
+            const first=x.first_use||{};
+            const actions=[];
+            if(x.status==="DRAFT"&&hasPermission("CODEX_EDIT"))actions.push('<button data-codex="update" data-id="'+escapeHtml(x.id)+'">Edit</button>');
+            if(x.status==="DRAFT"&&hasPermission("CODEX_APPROVE"))actions.push('<button data-codex="approve" data-id="'+escapeHtml(x.id)+'">Approve</button>');
+            if(["DRAFT","APPROVED"].includes(x.status)&&hasPermission("CODEX_APPROVE")&&!x.executed)actions.push('<button data-codex="retire" data-id="'+escapeHtml(x.id)+'" class="danger-mini">Retire</button>');
+            return '<tr>'+
+              '<td><strong>'+escapeHtml(x.public_name||x.canonical_name||"—")+'</strong><br><code>'+escapeHtml(x.entity_code||"—")+'</code></td>'+
+              '<td><code>'+escapeHtml(x.part_key||"—")+'</code><br><small>'+escapeHtml(x.part_title||"")+'</small></td>'+
+              '<td>'+escapeHtml(x.reveal_kind||"—")+'</td>'+
+              '<td><span class="status '+(x.status==="APPROVED"?"final":"review")+'">'+escapeHtml(x.status||"—")+'</span>'+(x.executed?'<br><small>EXECUTED</small>':'')+'</td>'+
+              '<td><code class="json-cell">'+escapeHtml(JSON.stringify(x.public_fields||{}))+'</code></td>'+
+              '<td>'+escapeHtml((first.reveal_mode||"—")+" · "+(first.kind||"—"))+'<br><small>'+escapeHtml(first.part_key||"")+'</small></td>'+
+              '<td><div class="release-row-actions">'+(actions.join("")||'<span class="muted">No action</span>')+'</div></td>'+
+              '</tr>';
+          }).join("")+
+          '</tbody></table></div>'
+        :'<div class="empty">No reveal plans.</div>');
+
+    root.querySelectorAll("[data-codex]").forEach(button=>button.addEventListener("click",async()=>{
+      const id=button.dataset.id;
+      const action=button.dataset.codex;
+      let payload={};
+      if(action==="update"){
+        const row=items.find(x=>x.id===id);
+        const raw=prompt("Public fields JSON:",JSON.stringify(row?.public_fields||{}));
+        if(raw===null)return;
+        let public_fields={};
+        try{public_fields=JSON.parse(raw);}catch{alert("Invalid JSON.");return;}
+        const notes=prompt("Notes:",row?.notes||"")??row?.notes??"";
+        const reason=prompt("Reason for editing this reveal draft:")||"";
+        if(reason.trim().length<6)return;
+        payload={public_fields,notes,reason};
+      }else{
+        const reason=prompt("Reason to "+action+" this reveal plan:")||"";
+        if(reason.trim().length<8)return;
+        payload={reason};
+      }
+      button.disabled=true;
+      try{await apiPost("/admin/api/codex/reveals/"+id+"/"+action,payload);await loadCodex();}
+      catch(error){alert(error.message);button.disabled=false;}
+    }));
+  }catch(error){
+    summary.innerHTML="";
+    create.innerHTML="";
+    root.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+  }
+}
+
 async function loadSupport(){
   const root=$("#support-summary");
   root.innerHTML='<div class="card"><span>Support</span><strong>Loading…</strong></div>';
@@ -1050,7 +1162,7 @@ function switchView(name){
   $$(".view").forEach((x)=>x.classList.add("hidden"));
   $$(".nav").forEach((x)=>x.classList.toggle("active",x.dataset.view===name));
   $("#"+name+"-view").classList.remove("hidden");
-  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database",support:"Support",messages:"Reader Messages",community:"Community",settings:"Settings"};
+  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database",codex:"Codex",support:"Support",messages:"Reader Messages",community:"Community",settings:"Settings"};
   $("#page-title").textContent=titles[name]||"Control Center";
   if(name==="manuscripts")loadManuscripts();
   if(name==="releases")loadReleases();
@@ -1059,6 +1171,7 @@ function switchView(name){
   if(name==="authority")loadAuthority();
   if(name==="access")loadAccess();
   if(name==="database"){loadDatabaseSummary();loadDatabase();}
+  if(name==="codex")loadCodex();
   if(name==="support")loadSupport();
   if(name==="messages")loadMessages();
   if(name==="community")loadCommunity();
