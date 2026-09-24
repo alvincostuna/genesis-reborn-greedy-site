@@ -131,3 +131,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
 .packet-row button{background:#0b1724;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 11px;cursor:pointer}
 .packet-row button:disabled{opacity:.5;cursor:wait}
 @media(max-width:700px){.packet-row{align-items:flex-start;flex-direction:column}.packet-row button{width:100%}}
+
+
+.release-control-panel{margin-bottom:18px}
+.release-control-body{padding:16px;display:grid;gap:16px}
+.release-row-actions{display:flex;gap:6px;flex-wrap:wrap}
+.release-row-actions button{background:#0b1724;border:1px solid var(--line);color:var(--text);border-radius:7px;padding:6px 8px;cursor:pointer;font-size:12px}
+.release-row-actions .danger-mini{border-color:#71343b;background:#241217;color:#ffd7d7}
+.release-row-actions button:disabled{opacity:.5;cursor:wait}
