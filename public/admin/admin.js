@@ -1580,3 +1580,5 @@ $("#database-domain").addEventListener("change",loadDatabase);
 $("#database-search").addEventListener("keydown",(e)=>{if(e.key==="Enter")loadDatabase();});
 
 initializeAdmin();
+
+// V3 manuscript preview deployment sync
