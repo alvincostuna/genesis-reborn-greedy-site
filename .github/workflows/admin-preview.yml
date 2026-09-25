@@ -1,4 +1,4 @@
-name: Deploy GENESIS Admin Preview
+name: LEGACY — GENESIS Admin Preview (manual only)
 
 on:
   # Legacy protected-preview workflow is manual-only.
