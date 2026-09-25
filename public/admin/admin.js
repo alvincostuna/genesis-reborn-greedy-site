@@ -1662,3 +1662,36 @@ initializeAdmin();
     originalShow();
   };
 })();
+
+
+// genesis-true-mobile-reader-v4
+(function(){
+  const viewer=document.querySelector("#viewer");
+  const options=document.querySelector("#mobile-reader-options");
+  const close=document.querySelector("#close-viewer");
+  if(!viewer)return;
+
+  options?.addEventListener("click",()=>{
+    viewer.classList.toggle("mobile-options-open");
+  });
+
+  const reset=()=>viewer.classList.remove("mobile-options-open");
+  close?.addEventListener("click",reset);
+  viewer.addEventListener("close",reset);
+  viewer.addEventListener("cancel",reset);
+
+  // Force exact visual viewport dimensions on mobile browsers/PWA shells.
+  const size=()=>{
+    if(innerWidth>900)return;
+    const vv=window.visualViewport;
+    const w=Math.round(vv?.width||innerWidth);
+    const h=Math.round(vv?.height||innerHeight);
+    viewer.style.setProperty("width",w+"px","important");
+    viewer.style.setProperty("height",h+"px","important");
+    viewer.style.setProperty("max-width",w+"px","important");
+    viewer.style.setProperty("max-height",h+"px","important");
+  };
+  window.addEventListener("resize",size);
+  window.visualViewport?.addEventListener("resize",size);
+  viewer.addEventListener("toggle",()=>{if(viewer.open)requestAnimationFrame(size);});
+})();
