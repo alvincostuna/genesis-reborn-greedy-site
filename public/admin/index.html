@@ -6,6 +6,12 @@
   <meta name="robots" content="noindex,nofollow">
   <title>GENESIS Admin — Control Center</title>\n  <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
   <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="manifest" href="/admin/manifest.webmanifest">
+  <meta name="theme-color" content="#07101b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GENESIS Admin">
+  <link rel="apple-touch-icon" href="/assets/genesis-official-logo.png">
 </head>
 <body>
   <div class="shell">
@@ -41,7 +47,7 @@
     </aside>
 
     <main>
-      <header class="topbar">
+      <header class="topbar"><button id="mobile-menu-button" class="mobile-menu-button" type="button" aria-label="Open admin navigation" aria-expanded="false">☰</button>
         <div>
           <p class="eyebrow">GENESIS: REBORN GREEDY</p>
           <h1 id="page-title">Production Dashboard</h1>
@@ -61,6 +67,11 @@
             <option value="3">E003</option>
             <option value="4">E004</option>
             <option value="5">E005</option>
+            <option value="6">E006</option>
+            <option value="7">E007</option>
+            <option value="8">E008</option>
+            <option value="9">E009</option>
+            <option value="10">E010</option>
           </select>
           <button id="refresh-manuscripts">Refresh</button>
         </div>
