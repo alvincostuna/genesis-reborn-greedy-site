@@ -198,3 +198,47 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
 .db-stage-button{background:#0b1724;border:1px solid var(--line);color:var(--text);border-radius:7px;padding:7px 9px;cursor:pointer}
 .db-stage-button:hover{border-color:var(--gold)}
 .database-staging textarea{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+
+
+/* GENESIS mobile admin PWA */
+.mobile-menu-button{display:none;background:#0b1724;border:1px solid var(--line);color:var(--text);border-radius:9px;width:42px;height:42px;font-size:22px;cursor:pointer;flex:0 0 auto}
+#manuscript-table{overflow-x:auto}
+@media(max-width:900px){
+  body{overflow-x:hidden}
+  .shell{display:block;min-height:100dvh}
+  .sidebar{
+    display:flex;position:fixed;inset:0 auto 0 0;width:min(84vw,320px);z-index:50;
+    transform:translateX(-105%);transition:transform .2s ease;box-shadow:18px 0 42px rgba(0,0,0,.45);
+    overflow-y:auto
+  }
+  .sidebar.mobile-open{transform:translateX(0)}
+  main{padding:14px 12px 88px}
+  .topbar{
+    position:sticky;top:0;z-index:30;margin:-14px -12px 18px;padding:12px;
+    background:rgba(7,16,27,.96);backdrop-filter:blur(10px);gap:10px
+  }
+  .topbar>div:first-of-type{flex:1;min-width:0}
+  .topbar h1{font-size:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mobile-menu-button{display:inline-grid;place-items:center}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .card{padding:14px}.card strong{font-size:19px}
+  .toolbar{flex-wrap:wrap}
+  .toolbar input{flex:1 1 100%}
+  .toolbar select,.toolbar button{flex:1 1 auto}
+  #manuscript-table table{min-width:760px}
+  dialog{
+    width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;border:0;border-radius:0
+  }
+  .viewer-head{padding:14px 16px;position:sticky;top:0;background:#08131f;z-index:3}
+  .tabs{overflow-x:auto;flex-wrap:nowrap;padding:10px 12px}
+  .tabs button{white-space:nowrap}
+  .meta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .manuscript{height:calc(100dvh - 205px);padding:22px 18px 70px;font-size:18px;line-height:1.82}
+  .reader-preview{padding:72px 18px 90px;font-size:18px;line-height:1.82}
+  .preview-close{right:12px;top:12px}
+}
+@media(max-width:520px){
+  .cards{grid-template-columns:1fr 1fr}
+  .badge{font-size:10px;padding:6px 8px}
+  .eyebrow{font-size:9px}
+}
