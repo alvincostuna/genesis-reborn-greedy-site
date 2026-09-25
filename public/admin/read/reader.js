@@ -14,9 +14,9 @@ async function api(path){
   if(!r.ok||!p?.ok)throw new Error(p?.error?.message||("Request failed ("+r.status+")"));
   return p.data;
 }
-function clamp(n){return Math.max(22,Math.min(42,n))}
+function clamp(n){return Math.max(26,Math.min(48,n))}
 function setFont(n){
-  n=clamp(Number(n)||30);
+  n=clamp(Number(n)||36);
   body.style.fontSize=n+"px";
   fontLabel.textContent=n+"px";
   try{localStorage.setItem(KEY,String(n))}catch{}
@@ -68,6 +68,6 @@ document.querySelector("#stage-button").addEventListener("click",async()=>{
     try{await loadStage(next);break}catch{}
   }
 });
-try{setFont(Number(localStorage.getItem(KEY)||30))}catch{setFont(30)}
+try{setFont(Number(localStorage.getItem(KEY)||36))}catch{setFont(36)}
 if("serviceWorker" in navigator){navigator.serviceWorker.register("/admin/sw.js",{scope:"/admin/"}).catch(()=>{})}
 init();
