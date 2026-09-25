@@ -34,40 +34,31 @@ jobs:
       - name: Check Admin JavaScript
         run: node --check public/admin/admin.js
 
-      - name: Upload protected preview version
-        id: upload-preview
+      - name: Deploy protected preview Worker
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: versions upload --env preview --keep-vars
-
-      - name: Promote uploaded version to preview
-        env:
-          WRANGLER_OUTPUT: ${{ steps.upload-preview.outputs.command-output }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          set -euo pipefail
-          VERSION_ID="$(printf '%s\n' "$WRANGLER_OUTPUT" | sed -n 's/.*Worker Version ID: //p' | tail -n 1)"
-          if [ -z "$VERSION_ID" ]; then
-            echo "Could not resolve uploaded preview Worker Version ID."
-            printf '%s\n' "$WRANGLER_OUTPUT"
-            exit 1
-          fi
-          npx wrangler versions deploy "$VERSION_ID" --env preview --yes
-          echo "Preview Worker promoted: $VERSION_ID"
+          command: deploy --env preview --keep-vars
 
       - name: Verify protected preview
         run: |
           set -euo pipefail
           BASE="https://genesis-reborn-greedy-site-preview.hirangnalupa.workers.dev"
+          sleep 3
           for path in /admin/ /admin/admin.js /admin/admin.css; do
-            STATUS="$(curl -sS -o /tmp/preview.out -w '%{http_code}' "$BASE$path" || true)"
-            echo "Preview $path -> HTTP $STATUS"
+            STATUS="000"
+            for attempt in 1 2 3 4 5; do
+              STATUS="$(curl -sS -o /tmp/preview.out -w '%{http_code}' "$BASE$path" || true)"
+              echo "Preview $path attempt $attempt -> HTTP $STATUS"
+              case "$STATUS" in
+                200|302|401|403) break ;;
+              esac
+              sleep 2
+            done
             case "$STATUS" in
               200|302|401|403) ;;
-              *) exit 1 ;;
+              *) echo "Preview verification failed for $path"; cat /tmp/preview.out || true; exit 1 ;;
             esac
           done
 
