@@ -9,11 +9,11 @@
     "types": "tsc --noEmit"
   },
   "dependencies": {
-    "jose": "^6.1.0"
+    "jose": "^6.2.12"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "5.20260922.1",
+    "@cloudflare/workers-types": "5.20260925.1",
     "typescript": "^5.9.2",
-    "wrangler": "^4.38.0"
+    "wrangler": "^4.139.0"
   }
 }
