@@ -2,6 +2,9 @@ name: Deploy GENESIS Live Reader
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - release/mobile-official-ui
 
 permissions:
   contents: read
@@ -18,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout live source
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Node
         uses: actions/setup-node@v4
