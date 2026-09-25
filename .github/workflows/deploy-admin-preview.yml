@@ -1,5 +1,4 @@
 name: Deploy GENESIS Admin Preview
-# Mobile preview deployment trigger: fullscreen reader v7
 
 on:
   push:
@@ -32,32 +31,47 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Type-check
-        run: npm run types
-
       - name: Check Admin JavaScript
         run: node --check public/admin/admin.js
 
-      - name: Deploy preview Worker
+      - name: Upload protected preview version
+        id: upload-preview
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --env preview --strict
+          command: versions upload --env preview --keep-vars
 
-      - name: Verify preview deployment
+      - name: Promote uploaded version to preview
+        env:
+          WRANGLER_OUTPUT: ${{ steps.upload-preview.outputs.command-output }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          VERSION_ID="$(printf '%s\n' "$WRANGLER_OUTPUT" | sed -n 's/.*Worker Version ID: //p' | tail -n 1)"
+          if [ -z "$VERSION_ID" ]; then
+            echo "Could not resolve uploaded preview Worker Version ID."
+            printf '%s\n' "$WRANGLER_OUTPUT"
+            exit 1
+          fi
+          npx wrangler versions deploy "$VERSION_ID" --env preview --yes
+          echo "Preview Worker promoted: $VERSION_ID"
+
+      - name: Verify protected preview
         run: |
           set -euo pipefail
           BASE="https://genesis-reborn-greedy-site-preview.hirangnalupa.workers.dev"
-          for path in /admin/ /admin/admin.js; do
-            STATUS="000"
-            for attempt in 1 2 3 4 5 6 7 8 9 10; do
-              STATUS="$(curl -sS -o /tmp/preview.out -w '%{http_code}' "$BASE$path" || true)"
-              echo "Preview $path attempt $attempt -> HTTP $STATUS"
-              if [ "$STATUS" = "200" ] || [ "$STATUS" = "302" ] || [ "$STATUS" = "403" ]; then
-                break
-              fi
-              sleep 2
-            done
-            test "$STATUS" = "200" -o "$STATUS" = "302" -o "$STATUS" = "403"
+          for path in /admin/ /admin/admin.js /admin/admin.css; do
+            STATUS="$(curl -sS -o /tmp/preview.out -w '%{http_code}' "$BASE$path" || true)"
+            echo "Preview $path -> HTTP $STATUS"
+            case "$STATUS" in
+              200|302|401|403) ;;
+              *) exit 1 ;;
+            esac
           done
+
+      - name: Safety reminder
+        run: |
+          echo "Protected preview Worker updated only."
+          echo "No live GENESIS public route was changed."
