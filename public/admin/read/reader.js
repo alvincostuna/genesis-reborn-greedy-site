@@ -1,4 +1,4 @@
-const KEY="genesis_admin_mobile_font_px_v2";
+const KEY="genesis_admin_mobile_font_px_v3";
 const q=new URLSearchParams(location.search);
 const partId=q.get("part");
 const requested=q.get("stage")||"best";
@@ -14,9 +14,9 @@ async function api(path){
   if(!r.ok||!p?.ok)throw new Error(p?.error?.message||("Request failed ("+r.status+")"));
   return p.data;
 }
-function clamp(n){return Math.max(18,Math.min(34,n))}
+function clamp(n){return Math.max(22,Math.min(42,n))}
 function setFont(n){
-  n=clamp(Number(n)||24);
+  n=clamp(Number(n)||30);
   body.style.fontSize=n+"px";
   fontLabel.textContent=n+"px";
   try{localStorage.setItem(KEY,String(n))}catch{}
@@ -68,6 +68,6 @@ document.querySelector("#stage-button").addEventListener("click",async()=>{
     try{await loadStage(next);break}catch{}
   }
 });
-try{setFont(Number(localStorage.getItem(KEY)||24))}catch{setFont(24)}
+try{setFont(Number(localStorage.getItem(KEY)||30))}catch{setFont(30)}
 if("serviceWorker" in navigator){navigator.serviceWorker.register("/admin/sw.js",{scope:"/admin/"}).catch(()=>{})}
 init();
