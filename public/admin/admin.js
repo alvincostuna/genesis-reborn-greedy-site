@@ -1604,3 +1604,31 @@ $("#database-search").addEventListener("keydown",(e)=>{if(e.key==="Enter")loadDa
 initializeAdmin();
 
 // V3 manuscript preview deployment sync
+
+
+// GENESIS mobile admin nav v1
+(function(){
+  const menu=document.querySelector("#mobile-menu-button");
+  const backdrop=document.querySelector("#mobile-nav-backdrop");
+  const closeMenu=()=>{
+    document.body.classList.remove("mobile-nav-open");
+    menu?.setAttribute("aria-expanded","false");
+  };
+  const openMenu=()=>{
+    document.body.classList.add("mobile-nav-open");
+    menu?.setAttribute("aria-expanded","true");
+  };
+
+  menu?.addEventListener("click",()=>{
+    document.body.classList.contains("mobile-nav-open")?closeMenu():openMenu();
+  });
+  backdrop?.addEventListener("click",closeMenu);
+
+  document.querySelectorAll(".sidebar .nav").forEach(button=>{
+    button.addEventListener("click",closeMenu);
+  });
+
+  window.addEventListener("keydown",e=>{
+    if(e.key==="Escape")closeMenu();
+  });
+})();
