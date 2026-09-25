@@ -1,4 +1,5 @@
 name: Deploy GENESIS Admin Preview
+# Mobile preview deployment trigger: fullscreen reader v7
 
 on:
   push:
