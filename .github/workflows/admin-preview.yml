@@ -1,17 +1,17 @@
 name: Deploy GENESIS Admin Preview
 
 on:
+  # Legacy protected-preview workflow is manual-only.
+  # Automatic preview deployment is owned by deploy-admin-preview.yml
+  # to prevent older queued commits from overwriting newer mobile builds.
   workflow_dispatch:
-  push:
-    branches:
-      - feat/admin-manuscript-viewer
 
 permissions:
   contents: read
 
 concurrency:
-  group: genesis-site-control-center-preview
-  cancel-in-progress: false
+  group: genesis-admin-preview-legacy-manual
+  cancel-in-progress: true
 
 jobs:
   preview:
