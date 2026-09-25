@@ -597,3 +597,9 @@ async function initSupport(){
     }
   }
 }
+
+
+// genesis-reader-pwa-init
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("/site-preview/sw.js",{scope:"/site-preview/"}).catch(()=>{}));
+}
