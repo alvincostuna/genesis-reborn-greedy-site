@@ -1637,3 +1637,28 @@ initializeAdmin();
     toggle.textContent=collapsed?"Show details":"Details";
   });
 })();
+
+
+// genesis-mobile-fullscreen-viewer-v3
+(function(){
+  const viewer=document.querySelector("#viewer");
+  const close=document.querySelector("#close-viewer");
+  if(!viewer||!close)return;
+
+  viewer.addEventListener("close",()=>{
+    document.documentElement.classList.remove("manuscript-open");
+    document.body.classList.remove("manuscript-open");
+  });
+
+  viewer.addEventListener("cancel",()=>{
+    document.documentElement.classList.remove("manuscript-open");
+    document.body.classList.remove("manuscript-open");
+  });
+
+  const originalShow=viewer.showModal.bind(viewer);
+  viewer.showModal=function(){
+    document.documentElement.classList.add("manuscript-open");
+    document.body.classList.add("manuscript-open");
+    originalShow();
+  };
+})();
