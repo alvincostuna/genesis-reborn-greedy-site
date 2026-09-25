@@ -181,7 +181,7 @@ async function loadManuscripts(){
       ).join("")+
       '</tbody></table>';
 
-    document.querySelectorAll("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>openPart(row.dataset.part)));
+    document.querySelectorAll("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>{if(window.matchMedia("(max-width: 900px)").matches){location.href="/admin/read/?part="+encodeURIComponent(row.dataset.part)+"&stage=best";}else{openPart(row.dataset.part);}}));
   }catch(error){
     table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
   }
