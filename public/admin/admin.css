@@ -242,3 +242,94 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
   .badge{font-size:10px;padding:6px 8px}
   .eyebrow{font-size:9px}
 }
+
+
+/* GENESIS mobile manuscript readability v2 */
+.mobile-reading-controls{display:none}
+@media(max-width:900px){
+  #viewer{
+    background:#07101b;
+  }
+  #viewer .viewer-head{
+    min-height:64px;
+    padding:10px 14px;
+  }
+  #viewer .viewer-head .eyebrow{margin:0 0 2px}
+  #viewer .viewer-head h2{
+    font-size:20px;
+    line-height:1.15;
+    max-width:78vw;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  #viewer .tabs{
+    padding:8px 10px;
+    gap:5px;
+  }
+  #viewer .tabs button{
+    padding:8px 10px;
+    font-size:12px;
+  }
+  .mobile-reading-controls{
+    display:flex;
+    position:sticky;
+    top:64px;
+    z-index:4;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:8px 10px;
+    background:#091522;
+    border-bottom:1px solid var(--line);
+  }
+  .mobile-reading-controls button{
+    min-width:48px;
+    min-height:40px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#0f1d2d;
+    color:var(--text);
+    font-weight:800;
+    font-size:16px;
+  }
+  .mobile-reading-controls span{
+    min-width:52px;
+    text-align:center;
+    color:var(--gold);
+    font-weight:800;
+    font-variant-numeric:tabular-nums;
+  }
+  #toggle-reader-meta{min-width:74px;font-size:13px}
+  #viewer-meta.mobile-collapsed{display:none}
+  #viewer .meta-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    font-size:12px;
+  }
+  #viewer .meta-grid div{padding:7px 10px}
+  #viewer .manuscript{
+    height:auto;
+    min-height:calc(100dvh - 190px);
+    max-height:none;
+    overflow:visible;
+    padding:24px 18px 110px;
+    font-size:22px;
+    line-height:1.9;
+    letter-spacing:.005em;
+    max-width:760px;
+    margin:0 auto;
+    white-space:pre-wrap;
+  }
+}
+@media(max-width:430px){
+  #viewer .manuscript{
+    padding-left:16px;
+    padding-right:16px;
+    font-size:22px;
+    line-height:1.92;
+  }
+  #viewer .tabs{
+    scrollbar-width:none;
+  }
+  #viewer .tabs::-webkit-scrollbar{display:none}
+}
