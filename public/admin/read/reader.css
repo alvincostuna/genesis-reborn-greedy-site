@@ -42,7 +42,7 @@ body.controls-open #reader-scroll{top:116px}
 .reader-body{
   width:100%;max-width:820px;margin:0 auto;
   padding:28px max(18px,5vw) calc(120px + env(safe-area-inset-bottom));
-  font:36px/1.68 Georgia,"Times New Roman",serif;
+  font:18px/1.78 Georgia,"Times New Roman",serif;
   white-space:pre-wrap;word-break:normal;overflow-wrap:break-word
 }
 .reader-status{color:var(--muted)}
