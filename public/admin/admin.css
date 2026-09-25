@@ -404,3 +404,16 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
     padding:24px 18px 120px;
   }
 }
+
+
+@media(max-width:900px){
+  html.manuscript-open,
+  body.manuscript-open{
+    overflow:hidden!important;
+    height:100%;
+    touch-action:none;
+  }
+  #viewer .manuscript{
+    touch-action:pan-y;
+  }
+}
