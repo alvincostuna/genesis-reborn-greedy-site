@@ -470,3 +470,124 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
     padding-right:16px!important;
   }
 }
+
+
+/* GENESIS mobile admin navigation v1 */
+.mobile-menu-button,
+.mobile-nav-backdrop{display:none}
+
+@media(max-width:900px){
+  .shell{display:block;min-height:100dvh}
+
+  .sidebar{
+    display:flex!important;
+    position:fixed!important;
+    top:0!important;
+    bottom:0!important;
+    left:0!important;
+    width:min(84vw,320px)!important;
+    height:100dvh!important;
+    z-index:100!important;
+    transform:translateX(-105%);
+    transition:transform .2s ease;
+    overflow-y:auto!important;
+    padding:20px 16px calc(28px + env(safe-area-inset-bottom))!important;
+    box-shadow:18px 0 44px rgba(0,0,0,.48);
+  }
+
+  body.mobile-nav-open .sidebar{
+    transform:translateX(0);
+  }
+
+  .mobile-nav-backdrop{
+    display:block;
+    position:fixed;
+    inset:0;
+    z-index:90;
+    border:0;
+    padding:0;
+    margin:0;
+    background:rgba(0,0,0,.62);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease;
+  }
+
+  body.mobile-nav-open .mobile-nav-backdrop{
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  .mobile-menu-button{
+    display:grid;
+    place-items:center;
+    width:46px;
+    height:46px;
+    flex:0 0 46px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#0c1826;
+    color:var(--text);
+    font-size:24px;
+    line-height:1;
+    cursor:pointer;
+  }
+
+  main{padding:14px 14px 88px!important}
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:70;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:-14px -14px 20px!important;
+    padding:12px 14px;
+    background:rgba(7,16,27,.96);
+    border-bottom:1px solid var(--line);
+    backdrop-filter:blur(10px);
+  }
+
+  .topbar>div:nth-of-type(1){
+    flex:1;
+    min-width:0;
+  }
+
+  .topbar h1{
+    font-size:26px;
+    line-height:1.08;
+  }
+
+  .topbar .badge{
+    flex:0 0 auto;
+  }
+
+  .sidebar nav{
+    gap:6px;
+  }
+
+  .sidebar .nav{
+    width:100%;
+    min-height:46px;
+    font-size:15px;
+  }
+
+  body.mobile-nav-open{
+    overflow:hidden;
+  }
+
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .runtime{grid-template-columns:1fr}
+  .toolbar{flex-wrap:wrap}
+  .toolbar input{flex:1 1 100%}
+  .toolbar select,.toolbar button{flex:1 1 auto}
+  .panel{max-width:100%}
+  .table-scroll,#manuscript-table{overflow-x:auto}
+  table{min-width:720px}
+}
+
+@media(max-width:520px){
+  .topbar h1{font-size:23px}
+  .badge{font-size:10px;padding:6px 8px}
+}
