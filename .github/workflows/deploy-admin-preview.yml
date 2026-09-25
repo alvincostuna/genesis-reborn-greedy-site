@@ -14,11 +14,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy-preview:
-    environment: genesis-admin-preview
+  diagnose-install:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 8
     steps:
       - name: Checkout preview source
         uses: actions/checkout@v4
@@ -32,37 +30,6 @@ jobs:
         run: npm install --no-audit --no-fund
 
       - name: Check Admin JavaScript
-        run: node --check public/admin/admin.js
-
-      - name: Deploy protected preview Worker
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --env preview --keep-vars
-
-      - name: Verify protected preview
         run: |
-          set -euo pipefail
-          BASE="https://genesis-reborn-greedy-site-preview.hirangnalupa.workers.dev"
-          sleep 3
-          for path in /admin/ /admin/admin.js /admin/admin.css; do
-            STATUS="000"
-            for attempt in 1 2 3 4 5; do
-              STATUS="$(curl -sS -o /tmp/preview.out -w '%{http_code}' "$BASE$path" || true)"
-              echo "Preview $path attempt $attempt -> HTTP $STATUS"
-              case "$STATUS" in
-                200|302|401|403) break ;;
-              esac
-              sleep 2
-            done
-            case "$STATUS" in
-              200|302|401|403) ;;
-              *) echo "Preview verification failed for $path"; cat /tmp/preview.out || true; exit 1 ;;
-            esac
-          done
-
-      - name: Safety reminder
-        run: |
-          echo "Protected preview Worker updated only."
-          echo "No live GENESIS public route was changed."
+          node --check public/admin/admin.js
+          echo "INSTALL_AND_JS_PASS"
