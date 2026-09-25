@@ -14,38 +14,61 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  audit-admin-js:
-    name: Audit Admin JavaScript
+  deploy-preview:
+    environment: genesis-admin-preview
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - name: Checkout preview source
         uses: actions/checkout@v4
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Syntax-check Admin JavaScript
-        run: |
-          set -euo pipefail
-          node --check public/admin/admin.js
-          echo "ADMIN_JS_SYNTAX_PASS"
 
-  audit-npm-install:
-    name: Audit NPM install
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout preview source
-        uses: actions/checkout@v4
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
+
       - name: Install dependencies
         run: |
           set -euo pipefail
-          npm install --no-audit --no-fund --loglevel verbose
+          npm install --no-audit --no-fund
           npm ls --depth=0
-          echo "NPM_INSTALL_PASS"
+
+      - name: Check Admin JavaScript
+        run: |
+          set -euo pipefail
+          node --check public/admin/admin.js
+          echo "ADMIN_JS_PASS"
+
+      - name: Deploy protected preview Worker
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env preview --keep-vars
+
+      - name: Verify protected preview
+        run: |
+          set -euo pipefail
+          BASE="https://genesis-reborn-greedy-site-preview.hirangnalupa.workers.dev"
+          sleep 4
+          for path in /admin/ /admin/admin.js /admin/admin.css /admin/read/; do
+            STATUS="000"
+            for attempt in 1 2 3 4 5; do
+              STATUS="$(curl -sS -o /tmp/preview.out -w '%{http_code}' "$BASE$path" || true)"
+              echo "Preview $path attempt $attempt -> HTTP $STATUS"
+              case "$STATUS" in
+                200|302|401|403) break ;;
+              esac
+              sleep 2
+            done
+            case "$STATUS" in
+              200|302|401|403) ;;
+              *) echo "Preview verification failed for $path"; cat /tmp/preview.out || true; exit 1 ;;
+            esac
+          done
+
+      - name: Safety reminder
+        run: |
+          echo "Protected preview Worker updated only."
+          echo "No live GENESIS public route was changed."
