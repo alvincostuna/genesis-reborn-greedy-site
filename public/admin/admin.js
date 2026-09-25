@@ -1547,7 +1547,13 @@ async function previewCurrent(){
     const data=await api("/admin/api/manuscripts/"+state.activePart.production_part_id+"/preview?stage="+state.activeStage);
     if(data.status&&data.status!=="OK")throw new Error("This version is not available for preview.");
     $("#preview-body").textContent=data.body_text||"";
-    $("#preview").showModal();
+    const preview=$("#preview");
+    if(window.matchMedia("(max-width: 900px)").matches){
+      preview.classList.add("mobile-force-fullscreen");
+      document.documentElement.classList.add("preview-open-mobile");
+      document.body.classList.add("preview-open-mobile");
+    }
+    preview.showModal();
   }catch(error){
     alert(error.message);
   }
@@ -1579,7 +1585,7 @@ $("#refresh-manuscripts").addEventListener("click",loadManuscripts);
 $("#search").addEventListener("keydown",(e)=>{if(e.key==="Enter")loadManuscripts();});
 $("#episode-filter").addEventListener("change",loadManuscripts);
 $("#close-viewer").addEventListener("click",()=>$("#viewer").close());
-$("#close-preview").addEventListener("click",()=>$("#preview").close());
+$("#close-preview").addEventListener("click",()=>{$("#preview").close();$("#preview").classList.remove("mobile-force-fullscreen");document.documentElement.classList.remove("preview-open-mobile");document.body.classList.remove("preview-open-mobile");});
 $$(".tabs [data-stage]").forEach((b)=>b.addEventListener("click",()=>showVersion(b.dataset.stage)));
 $("#compare-button").addEventListener("click",compareCurrent);
 $("#preview-button").addEventListener("click",previewCurrent);
