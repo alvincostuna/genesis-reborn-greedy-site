@@ -1606,3 +1606,34 @@ initializeAdmin();
     window.addEventListener("load",()=>navigator.serviceWorker.register("/admin/sw.js",{scope:"/admin/"}).catch(()=>{}));
   }
 })();
+
+
+// genesis-mobile-reader-font-controls
+(function(){
+  const KEY="genesis_admin_mobile_font_px_v1";
+  const body=document.querySelector("#manuscript-body");
+  const label=document.querySelector("#font-size-label");
+  const meta=document.querySelector("#viewer-meta");
+  const smaller=document.querySelector("#font-smaller");
+  const larger=document.querySelector("#font-larger");
+  const toggle=document.querySelector("#toggle-reader-meta");
+  if(!body||!label)return;
+
+  const clamp=n=>Math.max(18,Math.min(32,n));
+  const apply=n=>{
+    const px=clamp(Number(n)||22);
+    body.style.fontSize=px+"px";
+    label.textContent=px+"px";
+    try{localStorage.setItem(KEY,String(px));}catch{}
+  };
+  let initial=22;
+  try{initial=Number(localStorage.getItem(KEY)||22);}catch{}
+  apply(initial);
+
+  smaller?.addEventListener("click",()=>apply(parseInt(label.textContent,10)-2));
+  larger?.addEventListener("click",()=>apply(parseInt(label.textContent,10)+2));
+  toggle?.addEventListener("click",()=>{
+    const collapsed=meta.classList.toggle("mobile-collapsed");
+    toggle.textContent=collapsed?"Show details":"Details";
+  });
+})();
