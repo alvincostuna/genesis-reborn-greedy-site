@@ -1538,6 +1538,11 @@ async function compareCurrent(){
 
 async function previewCurrent(){
   if(!state.activePart)return;
+  if(window.matchMedia("(max-width: 900px)").matches){
+    const stage=state.activeStage==="stage1"?"stage1":state.activeStage==="stage2"?"stage2":"best";
+    location.href="/admin/read/?part="+encodeURIComponent(state.activePart.production_part_id)+"&stage="+encodeURIComponent(stage);
+    return;
+  }
   try{
     const data=await api("/admin/api/manuscripts/"+state.activePart.production_part_id+"/preview?stage="+state.activeStage);
     if(data.status&&data.status!=="OK")throw new Error("This version is not available for preview.");
