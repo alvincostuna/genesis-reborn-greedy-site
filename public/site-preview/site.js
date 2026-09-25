@@ -1,3 +1,100 @@
+function isTouchReaderDevice(){
+  return Boolean(
+    navigator.maxTouchPoints>0 ||
+    window.matchMedia?.("(pointer: coarse)").matches ||
+    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"")
+  );
+}
+
+function initPublicMobileChrome(){
+  if(!isTouchReaderDevice())return;
+  document.body.classList.add("touch-reader-device");
+  const header=document.querySelector(".reader-nav");
+  const nav=header?.querySelector("nav");
+  if(!header||!nav||document.querySelector("#public-menu-button"))return;
+
+  const menu=document.createElement("button");
+  menu.id="public-menu-button";
+  menu.className="public-menu-button";
+  menu.type="button";
+  menu.setAttribute("aria-label","Open navigation");
+  menu.setAttribute("aria-expanded","false");
+  menu.textContent="☰";
+  header.insertBefore(menu,header.firstChild);
+
+  const backdrop=document.createElement("button");
+  backdrop.id="public-nav-backdrop";
+  backdrop.className="public-nav-backdrop";
+  backdrop.type="button";
+  backdrop.setAttribute("aria-label","Close navigation");
+  document.body.appendChild(backdrop);
+
+  const close=()=>{
+    document.body.classList.remove("public-nav-open");
+    menu.setAttribute("aria-expanded","false");
+  };
+  menu.addEventListener("click",()=>{
+    const open=document.body.classList.toggle("public-nav-open");
+    menu.setAttribute("aria-expanded",open?"true":"false");
+  });
+  backdrop.addEventListener("click",close);
+  nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",close));
+}
+
+function ensurePublicReaderOverlay(){
+  let overlay=document.querySelector("#public-reader-overlay");
+  if(overlay)return overlay;
+  overlay=document.createElement("section");
+  overlay.id="public-reader-overlay";
+  overlay.className="public-reader-overlay";
+  overlay.innerHTML=
+    '<header class="public-reader-topbar">'+
+      '<div class="public-reader-title"><small id="public-reader-kicker">GENESIS READER</small><strong id="public-reader-title">Story Part</strong></div>'+
+      '<button id="public-reader-close" class="public-reader-control public-reader-close" type="button" aria-label="Close reader">×</button>'+
+    '</header>'+
+    '<div class="public-reader-tools">'+
+      '<button id="public-font-down" type="button">A−</button>'+
+      '<span id="public-font-label">14px</span>'+
+      '<button id="public-font-up" type="button">A+</button>'+
+    '</div>'+
+    '<div class="public-reader-scroll"><article id="public-reader-body" class="public-reader-body"></article></div>';
+  document.body.appendChild(overlay);
+
+  const body=overlay.querySelector("#public-reader-body");
+  const label=overlay.querySelector("#public-font-label");
+  const KEY="genesis_public_reader_font_px_v1";
+  const clamp=n=>Math.max(10,Math.min(24,Number(n)||14));
+  const setFont=n=>{
+    const px=clamp(n);
+    body.style.fontSize=px+"px";
+    label.textContent=px+"px";
+    try{localStorage.setItem(KEY,String(px))}catch{}
+  };
+  try{setFont(Number(localStorage.getItem(KEY)||14))}catch{setFont(14)}
+
+  overlay.querySelector("#public-font-down").addEventListener("click",()=>setFont(parseInt(label.textContent,10)-2));
+  overlay.querySelector("#public-font-up").addEventListener("click",()=>setFont(parseInt(label.textContent,10)+2));
+  overlay.querySelector("#public-reader-close").addEventListener("click",()=>{
+    overlay.classList.remove("open");
+    document.body.classList.remove("public-reader-open");
+  });
+  return overlay;
+}
+
+function openPublicReader(part,episode){
+  if(!isTouchReaderDevice())return false;
+  const overlay=ensurePublicReaderOverlay();
+  overlay.querySelector("#public-reader-kicker").textContent="EPISODE "+String(episode||"")+" · PART "+String(part.part_number||"");
+  overlay.querySelector("#public-reader-title").textContent=part.title||"GENESIS";
+  overlay.querySelector("#public-reader-body").textContent=part.body_text||"";
+  overlay.querySelector(".public-reader-scroll").scrollTop=0;
+  overlay.classList.add("open");
+  document.body.classList.add("public-reader-open");
+  return true;
+}
+
+initPublicMobileChrome();
+
 const SUPABASE_URL="https://lyhrwymhzhhxszquxnke.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_rCJL18_zLNtWH-ON1DTnDA_3quoGH3Q";
 
@@ -347,6 +444,7 @@ async function initRead(){
       tabs.querySelectorAll("button").forEach((b,i)=>b.classList.toggle("active",i===idx));
       const access=part.access_mode&&part.access_mode!=="PUBLIC"?' · '+part.access_mode+' EARLY ACCESS':'';
       body.innerHTML='<div class="status-chip">Part '+esc(part.part_number)+' · '+esc(part.title||"")+esc(access)+'</div>'+textParagraphs(part.body_text||"");
+      openPublicReader(part,number);
       const panel=document.querySelector("#comments-panel");
       const list=document.querySelector("#part-comments");
       panel?.classList.remove("hidden");
