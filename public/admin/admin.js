@@ -31,6 +31,14 @@ function escapeHtml(value){
   })[ch]);
 }
 
+function isMobileReaderDevice(){
+  return Boolean(
+    navigator.maxTouchPoints>0 ||
+    window.matchMedia?.("(pointer: coarse)").matches ||
+    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"")
+  );
+}
+
 function statusClass(value){
   if(value==="Final Canon")return"final";
   if(value==="Published")return"published";
@@ -181,7 +189,7 @@ async function loadManuscripts(){
       ).join("")+
       '</tbody></table>';
 
-    document.querySelectorAll("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>{if(window.matchMedia("(max-width: 900px)").matches){location.href="/admin/read/?part="+encodeURIComponent(row.dataset.part)+"&stage=best";}else{openPart(row.dataset.part);}}));
+    document.querySelectorAll("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>{if(isMobileReaderDevice()){location.href="/admin/read/?part="+encodeURIComponent(row.dataset.part)+"&stage=best";}else{openPart(row.dataset.part);}}));
   }catch(error){
     table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
   }
@@ -1538,7 +1546,7 @@ async function compareCurrent(){
 
 async function previewCurrent(){
   if(!state.activePart)return;
-  if(window.matchMedia("(max-width: 900px)").matches){
+  if(isMobileReaderDevice()){
     const stage=state.activeStage==="stage1"?"stage1":state.activeStage==="stage2"?"stage2":"best";
     location.href="/admin/read/?part="+encodeURIComponent(state.activePart.production_part_id)+"&stage="+encodeURIComponent(stage);
     return;
@@ -1548,7 +1556,7 @@ async function previewCurrent(){
     if(data.status&&data.status!=="OK")throw new Error("This version is not available for preview.");
     $("#preview-body").textContent=data.body_text||"";
     const preview=$("#preview");
-    if(window.matchMedia("(max-width: 900px)").matches){
+    if(isMobileReaderDevice()){
       preview.classList.add("mobile-force-fullscreen");
       document.documentElement.classList.add("preview-open-mobile");
       document.body.classList.add("preview-open-mobile");
