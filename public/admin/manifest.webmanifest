@@ -1,0 +1,37 @@
+{
+  "id": "/admin/",
+  "name": "GENESIS Admin",
+  "short_name": "GENESIS Admin",
+  "description": "Secure GENESIS production control center and manuscript reader.",
+  "start_url": "/admin/?source=pwa",
+  "scope": "/admin/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07101b",
+  "theme_color": "#07101b",
+  "icons": [
+    {
+      "src": "/assets/genesis-official-logo-64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/genesis-official-logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Manuscripts",
+      "short_name": "Manuscripts",
+      "url": "/admin/?view=manuscripts"
+    },
+    {
+      "name": "Production",
+      "short_name": "Production",
+      "url": "/admin/?view=production"
+    }
+  ]
+}
