@@ -333,3 +333,74 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8d
   }
   #viewer .tabs::-webkit-scrollbar{display:none}
 }
+
+
+/* GENESIS mobile manuscript fullscreen overlay v3 */
+@media(max-width:900px){
+  #viewer{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100dvh;
+    max-width:none;
+    max-height:none;
+    margin:0;
+    padding:0;
+    border:0;
+    border-radius:0;
+    background:#07101b;
+    overflow:hidden;
+  }
+  #viewer[open]{
+    display:flex;
+    flex-direction:column;
+  }
+  #viewer::backdrop{
+    background:rgba(0,0,0,.92);
+  }
+  #viewer .viewer-head{
+    position:relative;
+    flex:0 0 auto;
+    padding:12px 60px 10px 14px;
+    border-bottom:1px solid var(--line);
+    background:#08131f;
+    z-index:6;
+  }
+  #viewer .mobile-viewer-close{
+    position:absolute;
+    top:8px;
+    right:10px;
+    width:44px;
+    height:44px;
+    display:grid;
+    place-items:center;
+    border:1px solid var(--line);
+    border-radius:50%;
+    background:#101d2c;
+    color:#fff;
+    font-size:30px;
+    line-height:1;
+    z-index:10;
+  }
+  #viewer .tabs{
+    flex:0 0 auto;
+  }
+  #viewer .mobile-reading-controls{
+    position:static;
+    flex:0 0 auto;
+  }
+  #viewer #viewer-meta{
+    flex:0 0 auto;
+  }
+  #viewer .manuscript{
+    flex:1 1 auto;
+    min-height:0;
+    width:100%;
+    max-width:none;
+    margin:0;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    padding:24px 18px 120px;
+  }
+}
