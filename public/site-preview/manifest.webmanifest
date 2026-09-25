@@ -1,0 +1,37 @@
+{
+  "id": "/site-preview/",
+  "name": "GENESIS: REBORN GREEDY",
+  "short_name": "GENESIS",
+  "description": "Official GENESIS: REBORN GREEDY light novel reader.",
+  "start_url": "/site-preview/?source=pwa",
+  "scope": "/site-preview/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07101b",
+  "theme_color": "#07101b",
+  "icons": [
+    {
+      "src": "/assets/genesis-official-logo-64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/genesis-official-logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Read",
+      "short_name": "Read",
+      "url": "/site-preview/read/"
+    },
+    {
+      "name": "Account",
+      "short_name": "Account",
+      "url": "/site-preview/account/"
+    }
+  ]
+}
