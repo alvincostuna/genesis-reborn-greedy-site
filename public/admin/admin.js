@@ -179,7 +179,7 @@ async function loadManuscripts(){
       ).join("")+
       '</tbody></table>';
 
-    $("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>openPart(row.dataset.part)));
+    $("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>{location.href="/admin/read/?part="+encodeURIComponent(row.dataset.part)+"&stage=best";}));
   }catch(error){
     table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
   }
@@ -1503,7 +1503,7 @@ async function openPart(partId){
   $("#viewer-key").textContent=p.part_key;
   $("#viewer-title").textContent=p.title;
   $("#viewer").showModal();
-  await showVersion("stage2");
+  await showVersion(p.final_canon_available?"final":(p.stage2_available?"stage2":"stage1"));
 }
 
 async function compareCurrent(){
@@ -1581,3 +1581,117 @@ $("#database-domain").addEventListener("change",loadDatabase);
 $("#database-search").addEventListener("keydown",(e)=>{if(e.key==="Enter")loadDatabase();});
 
 initializeAdmin();
+
+
+// genesis-admin-mobile-pwa-init
+(function(){
+  const menu=document.querySelector("#mobile-menu-button");
+  const sidebar=document.querySelector(".sidebar");
+  if(menu&&sidebar){
+    const close=()=>{sidebar.classList.remove("mobile-open");menu.setAttribute("aria-expanded","false");};
+    menu.addEventListener("click",()=>{
+      const open=sidebar.classList.toggle("mobile-open");
+      menu.setAttribute("aria-expanded",open?"true":"false");
+    });
+    document.querySelectorAll(".sidebar .nav").forEach(button=>button.addEventListener("click",close));
+    window.addEventListener("resize",()=>{if(innerWidth>900)close();});
+  }
+
+  const requested=new URLSearchParams(location.search).get("view");
+  if(requested && document.querySelector("#"+requested+"-view")){
+    try{switchView(requested);}catch{}
+  }
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load",()=>navigator.serviceWorker.register("/admin/sw.js",{scope:"/admin/"}).catch(()=>{}));
+  }
+})();
+
+
+// genesis-mobile-reader-font-controls
+(function(){
+  const KEY="genesis_admin_mobile_font_px_v1";
+  const body=document.querySelector("#manuscript-body");
+  const label=document.querySelector("#font-size-label");
+  const meta=document.querySelector("#viewer-meta");
+  const smaller=document.querySelector("#font-smaller");
+  const larger=document.querySelector("#font-larger");
+  const toggle=document.querySelector("#toggle-reader-meta");
+  if(!body||!label)return;
+
+  const clamp=n=>Math.max(18,Math.min(32,n));
+  const apply=n=>{
+    const px=clamp(Number(n)||22);
+    body.style.fontSize=px+"px";
+    label.textContent=px+"px";
+    try{localStorage.setItem(KEY,String(px));}catch{}
+  };
+  let initial=22;
+  try{initial=Number(localStorage.getItem(KEY)||22);}catch{}
+  apply(initial);
+
+  smaller?.addEventListener("click",()=>apply(parseInt(label.textContent,10)-2));
+  larger?.addEventListener("click",()=>apply(parseInt(label.textContent,10)+2));
+  toggle?.addEventListener("click",()=>{
+    const collapsed=meta.classList.toggle("mobile-collapsed");
+    toggle.textContent=collapsed?"Show details":"Details";
+  });
+})();
+
+
+// genesis-mobile-fullscreen-viewer-v3
+(function(){
+  const viewer=document.querySelector("#viewer");
+  const close=document.querySelector("#close-viewer");
+  if(!viewer||!close)return;
+
+  viewer.addEventListener("close",()=>{
+    document.documentElement.classList.remove("manuscript-open");
+    document.body.classList.remove("manuscript-open");
+  });
+
+  viewer.addEventListener("cancel",()=>{
+    document.documentElement.classList.remove("manuscript-open");
+    document.body.classList.remove("manuscript-open");
+  });
+
+  const originalShow=viewer.showModal.bind(viewer);
+  viewer.showModal=function(){
+    document.documentElement.classList.add("manuscript-open");
+    document.body.classList.add("manuscript-open");
+    originalShow();
+  };
+})();
+
+
+// genesis-true-mobile-reader-v4
+(function(){
+  const viewer=document.querySelector("#viewer");
+  const options=document.querySelector("#mobile-reader-options");
+  const close=document.querySelector("#close-viewer");
+  if(!viewer)return;
+
+  options?.addEventListener("click",()=>{
+    viewer.classList.toggle("mobile-options-open");
+  });
+
+  const reset=()=>viewer.classList.remove("mobile-options-open");
+  close?.addEventListener("click",reset);
+  viewer.addEventListener("close",reset);
+  viewer.addEventListener("cancel",reset);
+
+  // Force exact visual viewport dimensions on mobile browsers/PWA shells.
+  const size=()=>{
+    if(innerWidth>900)return;
+    const vv=window.visualViewport;
+    const w=Math.round(vv?.width||innerWidth);
+    const h=Math.round(vv?.height||innerHeight);
+    viewer.style.setProperty("width",w+"px","important");
+    viewer.style.setProperty("height",h+"px","important");
+    viewer.style.setProperty("max-width",w+"px","important");
+    viewer.style.setProperty("max-height",h+"px","important");
+  };
+  window.addEventListener("resize",size);
+  window.visualViewport?.addEventListener("resize",size);
+  viewer.addEventListener("toggle",()=>{if(viewer.open)requestAnimationFrame(size);});
+})();

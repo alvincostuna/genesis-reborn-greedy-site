@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - feat/admin-manuscript-viewer
+      - feat/mobile-pwa-reader-admin
 
 permissions:
   contents: read
@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   preview:
-    if: github.ref == 'refs/heads/feat/admin-manuscript-viewer'
+    if: github.ref == 'refs/heads/feat/mobile-pwa-reader-admin'
     environment: genesis-admin-preview
     runs-on: ubuntu-latest
     timeout-minutes: 15

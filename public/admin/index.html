@@ -6,6 +6,12 @@
   <meta name="robots" content="noindex,nofollow">
   <title>GENESIS Admin — Control Center</title>\n  <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
   <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="manifest" href="/admin/manifest.webmanifest">
+  <meta name="theme-color" content="#07101b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GENESIS Admin">
+  <link rel="apple-touch-icon" href="/assets/genesis-official-logo.png">
 </head>
 <body>
   <div class="shell">
@@ -41,7 +47,7 @@
     </aside>
 
     <main>
-      <header class="topbar">
+      <header class="topbar"><button id="mobile-menu-button" class="mobile-menu-button" type="button" aria-label="Open admin navigation" aria-expanded="false">☰</button>
         <div>
           <p class="eyebrow">GENESIS: REBORN GREEDY</p>
           <h1 id="page-title">Production Dashboard</h1>
@@ -61,6 +67,11 @@
             <option value="3">E003</option>
             <option value="4">E004</option>
             <option value="5">E005</option>
+            <option value="6">E006</option>
+            <option value="7">E007</option>
+            <option value="8">E008</option>
+            <option value="9">E009</option>
+            <option value="10">E010</option>
           </select>
           <button id="refresh-manuscripts">Refresh</button>
         </div>
@@ -199,7 +210,7 @@
         <p id="viewer-key" class="eyebrow"></p>
         <h2 id="viewer-title"></h2>
       </div>
-      <button id="close-viewer" class="icon-button" aria-label="Close">×</button>
+      <button id="mobile-reader-options" class="mobile-reader-options" type="button" aria-label="Reading options">Aa</button><button id="close-viewer" class="icon-button mobile-viewer-close" aria-label="Close manuscript">×</button>
     </div>
 
     <div class="tabs">
@@ -210,6 +221,12 @@
       <button id="preview-button">Preview as Reader</button>
     </div>
 
+    <div id="mobile-reading-controls" class="mobile-reading-controls" aria-label="Mobile reading controls">
+      <button id="font-smaller" type="button" aria-label="Decrease font size">A−</button>
+      <span id="font-size-label">22px</span>
+      <button id="font-larger" type="button" aria-label="Increase font size">A+</button>
+      <button id="toggle-reader-meta" type="button">Details</button>
+    </div>
     <div id="viewer-meta" class="meta-grid"></div>
     <article id="manuscript-body" class="manuscript"></article>
   </dialog>
