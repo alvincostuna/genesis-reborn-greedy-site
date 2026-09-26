@@ -1,578 +1,511 @@
 E003-P02 — The World Loads Around Him
 
-The field beyond Hiraya looked calm from the gate.
+Hiraya Arrival Plaza grew larger once Flavio had to cross it.
 
-That impression lasted until Flavio watched a player miss a rabbit-sized creature, stumble forward, and get bitten on the ankle hard enough to scream.
+From the center, it had looked simple enough: stone, buildings, paths, people. Walking through it turned that impression into something less tidy. Players stopped without warning. Others followed strangers who looked confident. New arrivals appeared in waves, some careful, some loud, some already running as though the first hour would close permanently if they did not move fast enough.
 
-Nico winced.
+Flavio kept to the edge of the crowd.
 
-“So much for calm.”
+That gave him room to stop without becoming someone else’s problem.
 
-Flavio looked across the grass again.
+He wanted a picture of the place, not a perfect map.
 
-The starter zone was not dangerous in the way people used that word for cliffs, storms, or armed men. It was dangerous in the simpler way: enough moving pieces existed that carelessness could become pain quickly.
+There was a difference.
 
-Players spread across the verge in uneven groups. Some ran after anything that moved. Others stood together comparing interfaces. A few had already learned to wait.
+A perfect map would take time he did not need to spend.
 
-Flavio preferred those.
+A useful picture meant knowing where he had arrived, which direction the city opened, where he could return, and what kinds of information were actually available.
 
-He and Nico stayed near the road at first.
+The stone beneath his feet had a faint unevenness. The satchel brushed his hip as he moved. The sword stayed secured.
 
-The eastern verge rolled outward in low grass, scattered stones, shallow ditches, and patches of brush thick enough to hide something knee-high. Beyond that, the land rose gently toward a line of trees.
+Flavio liked that last part.
 
-No glowing arrows marked the perfect route.
+The more convincing Genesis became, the less interested he was in testing a blade around strangers.
 
-No secret landmark appeared for Flavio.
+A knot of players near one path argued loudly.
 
-The official map showed only what it had promised.
+“East first!”
 
-Road.
+“Why east?”
 
-Gate.
+“Because everyone’s going east!”
 
-Starter field.
+“That’s not a reason!”
 
-Quest boundary.
+“It means something is there!”
 
-That was reassuring.
+Flavio kept walking.
 
-Nico pointed toward a cluster of players.
+Nico would have enjoyed that conversation.
 
-“Should we follow them?”
+Flavio did not.
 
-“Why?”
+Following a crowd could be useful.
 
-“They look like they know where they’re going.”
+Following it because it was a crowd was different.
 
-Flavio watched the group split in three directions.
-
-“They do not.”
-
-“Fair.”
-
-They moved farther from the gate.
-
-The city noise weakened behind them. Wind moved through the grass. Flavio heard insects, distant voices, metal striking something, and once, a player shouting triumphantly before another voice yelled that the monster was not dead yet.
-
-Nico laughed.
-
-“That one learned quickly.”
-
-Flavio adjusted his sword.
-
-“Hopefully.”
-
-The official quest remained at the edge of his interface.
-
-Outer Verge Pest Clearing
-
-Progress:
-0 / 3
-
-Reward:
-60 EXP
-8 Copper
-
-He looked at it once, then dismissed it.
-
-Three kills sounded simple.
-
-Simple objectives had already taught him not to confuse simple wording with simple execution.
-
-A movement flickered near the ditch.
-
-Flavio stopped.
-
-Nico stopped a step later.
-
-“What?”
-
-Flavio raised one hand.
-
-The grass moved again.
-
-Low.
-
-Quick.
-
-Then still.
-
-A creature emerged halfway from cover and disappeared again.
-
-Nico whispered, “Gnawer?”
-
-“Probably.”
-
-“You say probably too much.”
-
-“It prevents embarrassment.”
-
-“Does it?”
-
-“No.”
-
-Nico grinned.
-
-Flavio moved closer to the roadside where the ground was firmer.
-
-They watched.
-
-The creature surfaced again several meters away.
-
-Genesis identified it after Flavio focused long enough.
-
-[TARGET IDENTIFIED]
-
-Verge Gnawer
-
-Level: 2
-
-Rank: Common
-
-The panel folded aside.
-
-Nico breathed out.
-
-“Level two.”
-
-“We are level one.”
-
-“That sounded like concern.”
-
-“It was information.”
-
-“That is your favorite disguise.”
-
-Flavio ignored him.
-
-The Gnawer was ugly in a practical way. Coarse fur. Long body. Front teeth large enough to justify the name. It moved low to the ground, stopping often before changing direction.
-
-Flavio watched the legs.
-
-Nico watched Flavio.
-
-“Are we attacking?”
-
-“Not yet.”
-
-“Why?”
-
-“I want to see how it moves.”
-
-“It moves like a rat that hates us.”
-
-“That is useful only emotionally.”
-
-“I contribute morale.”
-
-The Gnawer darted sideways.
-
-Flavio tracked it.
-
-Pause.
-
-Shift.
-
-Another pause.
-
-It did not attack.
-
-He frowned.
-
-The pattern was not obvious.
+He stopped near a low stone marker where he could still see the arrival point behind him.
 
 Good.
 
-Obvious patterns were easy to invent when people wanted one.
+He could return without opening a map.
 
-Another player approached from the far side.
+That was enough orientation for now.
 
-The Gnawer turned toward him.
+A player nearby took three careful steps, bent both knees, then jumped.
 
-The player rushed.
-
-The creature moved left, paused, then launched from the right.
-
-The player blocked badly and still stayed upright.
-
-Flavio watched the hind legs compress.
-
-There.
-
-Maybe.
-
-He did not trust one example.
-
-The other player chased the Gnawer away.
-
-Nico looked at Flavio.
-
-“You saw something.”
-
-“I saw it jump.”
-
-“That is not what your face says.”
-
-“What does my face say?”
-
-“That you are filing paperwork internally.”
-
-Flavio sighed.
-
-They kept moving.
-
-The field itself became a lesson.
-
-Low grass hid holes.
-
-Packed earth offered better footing.
-
-Players clustered near visible spawns, which meant any monster there attracted multiple swords immediately.
-
-The quieter edges had fewer people but more blind spots.
-
-Flavio chose neither extreme.
-
-They walked along a middle route where visibility remained good.
-
-Nico looked around.
-
-“You planned this.”
-
-“I selected ground.”
-
-“That is planning.”
-
-“Yes.”
-
-“Good. We are making progress.”
-
-Flavio stopped near a marker stone.
-
-A public sign identified the local route and warned players not to chase targets beyond the starter boundary.
-
-Nico read it.
-
-“Do people actually obey these?”
-
-A shout came from farther ahead.
-
-Someone had crossed the marked edge and was running back with two larger creatures behind him.
-
-Flavio looked at Nico.
-
-“Some learn.”
-
-They moved away before the problem reached them.
-
-The creatures stopped near the boundary and turned back.
-
-Nico watched.
-
-“So the warning was real.”
-
-“Most useful warnings are.”
-
-“That is suspiciously responsible.”
-
-“I died responsible.”
-
-Nico blinked.
-
-Flavio felt the words leave his mouth.
-
-He looked away.
-
-Nico frowned.
-
-“What?”
-
-“Nothing.”
-
-“That did not sound like nothing.”
-
-Flavio checked the field.
-
-The private interface had not appeared since entering Genesis.
-
-Good.
-
-He did not want to explain his dead first life beside a starter quest.
-
-Nico let the subject go.
-
-That kindness mattered.
-
-Another Gnawer surfaced.
-
-This one was alone.
-
-Flavio and Nico approached carefully.
-
-The creature noticed them.
-
-Its head turned.
-
-Its body lowered.
-
-Flavio’s grip tightened.
-
-Too much.
-
-He relaxed his hand.
-
-Don’t fight the tool.
-
-Rogelio’s lesson fit a sword better than Flavio liked.
-
-Nico drew his own weapon.
-
-“Together?”
-
-“Not yet.”
-
-Nico looked at him.
-
-“You want first contact.”
-
-“Yes.”
-
-“That sounds worse when you say it calmly.”
-
-Flavio smiled faintly.
-
-“I need to know what one hit feels like.”
-
-“And if it bites you?”
-
-“Then I learn what that feels like too.”
-
-“That is not comforting.”
-
-“You can step in if it gets bad.”
-
-Nico’s expression changed.
-
-“You mean that?”
-
-“Yes.”
-
-There had been a time when Flavio would rather collapse than ask someone else to carry part of the work.
-
-Death had made that habit look stupid.
-
-Nico nodded.
-
-“Fine.”
-
-The Gnawer moved sideways.
-
-Flavio followed with his eyes, not his sword.
-
-Its body paused.
-
-Rear legs shifted.
-
-He almost moved.
-
-Then the creature only changed direction.
-
-Flavio stayed.
-
-Good.
-
-No need to react to every twitch.
-
-The creature circled.
-
-Flavio adjusted his stance.
-
-His body felt better inside Genesis than he expected, not stronger, just familiar enough that balance came naturally. A year of walking, jogging, lifting, catching, and stopping when tired had built something boring and useful.
-
-Nico whispered, “It’s going to jump.”
-
-“Maybe.”
-
-“There. See?”
-
-The Gnawer paused.
-
-Flavio braced.
-
-Nothing happened.
-
-It moved left.
-
-Then its rear legs compressed.
-
-Flavio saw it half a second too late.
-
-The creature launched.
-
-He shifted.
-
-Not enough.
-
-Impact struck his thigh.
-
-Pain flashed bright.
-
-Flavio staggered.
-
-His HP dropped.
-
-Nico shouted.
-
-“Flavio!”
-
-“I’m fine.”
-
-“You got hit!”
-
-“I noticed.”
-
-The Gnawer landed and turned.
-
-Flavio backed away.
-
-The pain was controlled, but real enough to force respect.
-
-Good.
-
-The thought surprised him.
-
-Not because pain was good.
-
-Because feedback was honest.
-
-He had read the wrong cue.
-
-That mattered more than being embarrassed.
-
-Nico moved closer.
-
-“Want me in?”
-
-“Wait.”
-
-The Gnawer circled again.
-
-Flavio watched the body.
-
-Not the pause.
-
-Not the head.
-
-Rear legs.
-
-The creature shifted left.
-
-Paused.
-
-Nothing.
-
-Moved right.
-
-Rear legs compressed.
-
-There!
-
-Flavio stepped outside the line.
-
-The Gnawer passed close enough that he felt fur brush his tunic.
-
-He swung.
-
-The beginner sword connected along the flank.
-
-The creature rolled through the grass.
-
-Nico shouted.
-
-“Yes!”
-
-Flavio almost answered.
-
-Then the Gnawer scrambled up.
-
-Still alive.
-
-Flavio raised the sword again.
-
-Nico lowered his voice.
-
-“Right. No celebration.”
-
-“Later.”
-
-“If we live?”
-
-“We have three lives per real day.”
-
-“That was not permission to waste one.”
+When nothing dramatic happened, the player laughed.
 
 Flavio smiled.
 
-“Good.”
+A year ago, he had tested a private objective in his bedroom with the same mixture of fear and embarrassment.
 
-The wounded Gnawer moved differently now.
+Here, everyone was awkward together.
 
-Less testing.
+That made Genesis feel almost kind.
 
-More direct.
+The official interface opened when he asked for the local map.
 
-Flavio noticed because it rushed.
+It showed the immediate plaza and recognized public routes.
 
-He angled away.
+No secret roads.
 
-The creature missed.
+No private markers.
 
-He did not swing.
+No hidden icons that belonged only to him.
 
-Nico groaned.
+Good.
 
-“You had it!”
+He had worried, somewhere in the back of his mind, that reincarnation would come with knowledge he did not earn.
 
-“I had an opening.”
+It had not.
 
-“That is what I said!”
+Flavio remembered Genesis as a cultural event from his first life, not as a solved game. He knew the name. He knew it became enormous. He knew people made money, lost money, formed guilds, built reputations, and spent years inside it.
 
-“No. An opening is not the same as a safe hit.”
+That knowledge was broad enough to be dangerous if he pretended it was specific.
 
-Nico looked offended.
+He closed the map.
 
-“You are going to make combat sound like appliance repair.”
+A vendor shouted from farther down the street.
 
-“Appliance repair has fewer teeth.”
+Another voice answered.
 
-The Gnawer circled again.
+An NPC guard redirected a cluster of players away from a loading lane.
 
-Flavio’s thigh still hurt.
+The crowd reacted naturally enough that Flavio almost forgot he was supposed to distinguish player from NPC.
 
-His pulse was too fast.
+He watched one man step into the road while staring at a menu.
 
-His grip wanted to tighten every time the creature moved.
+A cart driver stopped sharply.
 
-He let it loosen.
+“Move!”
 
-He was inexperienced.
+The player jumped aside.
 
-That was all.
+“Sorry!”
 
-Not helpless.
+The driver muttered and continued.
 
-Not skilled.
+Flavio looked after him.
 
-Just new.
+Persistent schedules.
 
-The creature compressed its rear legs.
+Adaptive responses.
 
-Flavio moved.
+Nico had practically shouted those phrases into Flavio’s face months earlier.
 
-This time, before it left the ground.
+Seeing them move through a crowded street made the words smaller and more believable.
 
-The world narrowed to distance, footing, angle, and one ugly monster trying to bite him.
+Genesis did not need to announce that it was alive.
 
-For the first time since entering Genesis, the game stopped feeling like something happening around him.
+People were already getting in its way.
 
-It became something he could learn.
+Flavio moved farther from the arrival point.
+
+He passed an official information board.
+
+Starter directions.
+
+Local services.
+
+Basic safety notes.
+
+Public request access.
+
+Market district arrows.
+
+Nothing mysterious.
+
+Flavio read them anyway.
+
+A player beside him glanced over.
+
+“First time?”
+
+Flavio looked at him.
+
+“Yes.”
+
+The player laughed.
+
+“Obviously. Me too.”
+
+That was fair.
+
+The stranger pointed toward one route.
+
+“Someone said the best quests are that way.”
+
+“Who?”
+
+The player paused.
+
+“I don’t know.”
+
+Flavio nodded.
+
+“Good luck.”
+
+He walked the other direction.
+
+Not because the information was wrong.
+
+Because it was not information yet.
+
+He reached a quieter section of the plaza.
+
+The buildings felt closer here.
+
+Signs hung from wooden brackets.
+
+Smoke drifted from somewhere that smelled like grilled meat.
+
+Flavio’s stomach reacted immediately.
+
+He laughed under his breath.
+
+A virtual smell had just reminded his real body that lunch existed later.
+
+Teresa would appreciate the betrayal.
+
+He checked the alarm indicator.
+
+Still plenty of time.
+
+Good.
+
+He continued.
+
+The starting equipment sat differently as he moved longer distances.
+
+The satchel strap pulled slightly across one shoulder.
+
+The boots felt firm but not uncomfortable.
+
+The sword’s presence altered how he turned.
+
+Small things.
+
+Useful things.
+
+Flavio filed them away without turning each one into a theory.
+
+He had spent a year learning not to do that.
+
+The private interface had not returned.
+
+He checked once.
+
+Nothing.
+
+That absence remained strange.
+
+But Genesis itself was giving him enough to pay attention to.
+
+He did not need to force the mystery into every corner.
+
+A boyish voice called his name.
+
+“Flavio!”
+
+He turned.
+
+Nobody nearby was looking at him.
+
+The voice came again through the official communication system.
+
+Nico.
+
+Flavio opened it.
+
+“You alive?”
+
+Nico’s face appeared in the call window.
+
+Flavio looked around.
+
+“Yes.”
+
+“Where are you?”
+
+“Hiraya Arrival Plaza.”
+
+Nico stared.
+
+“Yes, I know that. Which part?”
+
+Flavio looked at a nearby marker.
+
+“East side. Near an information board.”
+
+Nico turned his own view.
+
+“I see three information boards.”
+
+“Then your problem is now better defined.”
+
+“Do not start.”
+
+Flavio smiled.
+
+Nico continued.
+
+“I’m near a statue.”
+
+Flavio looked around.
+
+“There are two.”
+
+Silence.
+
+Then Nico laughed.
+
+“This is going well.”
+
+“Stay where you are.”
+
+“Why me?”
+
+“Because you are more likely to move while explaining where you are.”
+
+“That is offensive.”
+
+“Is it wrong?”
+
+Another pause.
+
+“No.”
+
+Flavio opened the map.
+
+This time, he used it with a purpose.
+
+Statue.
+
+Two possible locations.
+
+Nico described the nearby buildings.
+
+Flavio matched them.
+
+“Wait there.”
+
+“I said that first.”
+
+“You did not.”
+
+“I was about to.”
+
+Flavio closed the call.
+
+He walked.
+
+The map helped.
+
+So did having already oriented himself.
+
+Several minutes later, he found Nico leaning against the base of a stone monument with the expression of a man who had been waiting several hours instead of several minutes.
+
+“You took forever.”
+
+“You were twelve minutes from me.”
+
+“I could have walked.”
+
+“And become twenty minutes from me.”
+
+Nico pushed away from the monument.
+
+“Maybe.”
+
+Flavio looked at him.
+
+Nico’s Genesis avatar resembled him enough to be recognizable, though a little cleaner than real life had any right to make him.
+
+Nico noticed the inspection.
+
+“What?”
+
+“You look expensive.”
+
+“That is the nicest thing you have ever said.”
+
+“It was not a compliment.”
+
+“Still counts.”
+
+They started walking together.
+
+Nico immediately began talking about everything he had seen.
+
+The sensory calibration.
+
+The interface.
+
+The crowd.
+
+The NPCs.
+
+The weapons.
+
+A player who had tried to climb a market stall and been chased away by the owner.
+
+Flavio listened.
+
+That was part of why Nico was useful.
+
+He experienced the world outwardly.
+
+Flavio tended to fold everything inward until it became a problem to solve.
+
+Together, they noticed more.
+
+They passed a small vendor row.
+
+Nico slowed.
+
+“Food.”
+
+“We have starter supplies.”
+
+“I can still look.”
+
+“You can look.”
+
+“That sounded like permission.”
+
+“It was not.”
+
+Nico laughed.
+
+Flavio checked prices.
+
+One stall charged slightly more for a basic ration than another farther from the busiest path.
+
+He noticed.
+
+Did not write it down.
+
+Did not stop.
+
+Just remembered.
+
+Convenience cost money.
+
+Even in Genesis.
+
+Some laws survived worlds.
+
+They reached another official board.
+
+This one included public requests.
+
+Nico brightened immediately.
+
+“Now we are doing something.”
+
+Flavio read the headings.
+
+“Reading is doing something.”
+
+“No. Reading is what you do before doing something.”
+
+“That sounds dangerous.”
+
+“Everything sounds dangerous when you say it.”
+
+Flavio smiled.
+
+The first quest list opened.
+
+Simple errands.
+
+Deliveries.
+
+Local collection.
+
+Pest control.
+
+A few routes farther from the plaza.
+
+Nico leaned closer.
+
+“There.”
+
+He pointed toward one with a higher reward.
+
+Flavio read it.
+
+Longer route.
+
+Less familiar area.
+
+More travel.
+
+Unknown competition.
+
+He closed it.
+
+Nico stared.
+
+“That pays more.”
+
+“Yes.”
+
+“So?”
+
+“So we do not know what the extra pay is buying.”
+
+Nico rubbed his face.
+
+“Sometimes I miss being alone.”
+
+“You called me.”
+
+“That was before I remembered this.”
+
+Flavio opened a simpler task.
+
+Pest control.
+
+Nearby.
+
+Clear count.
+
+Starter range.
+
+No mystery.
+
+He did not accept it yet.
+
+He read it.
+
+Then read it again.
+
+Nico waited.
+
+Flavio looked toward the route leading away from the plaza.
+
+The world had finished loading around him.
+
+Now he needed to decide what he was willing to do inside it.
