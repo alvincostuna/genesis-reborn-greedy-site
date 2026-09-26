@@ -1,98 +1,64 @@
 E003-P01 — Genesis Is Live
 
-Wind touched Flavio’s face.
+The words CONNECTING TO GENESIS vanished.
 
-Not simulated air from a fan.
+For one breath, Flavio saw nothing.
 
-Not the flat cooling flow from the access unit.
+His hand tightened around the edge of the chair in his real room, or at least he thought it did. The sensation disappeared almost immediately, replaced by the unmistakable feeling of standing upright. Air moved against his face. Something solid supported his weight. When he shifted one foot, the ground pushed back.
 
-Wind.
+Flavio kept his eyes closed.
 
-It carried the smell of stone, smoke, cooking oil, leather, wet wood, and too many people packed into one place.
+He had expected a loading screen, a warning, maybe one final agreement nobody read carefully enough. Instead, the room had simply fallen away.
 
-Flavio opened his eyes.
+He took one slow breath.
 
-Hiraya Arrival Plaza spread around him.
+Then opened his eyes.
 
-For several seconds, he forgot every question he had prepared.
+Daylight spread across a broad stone plaza.
 
-Buildings rose in uneven rows beyond the plaza, tiled roofs and hanging signs layered beneath a wide morning sky. Players appeared in brief flashes of light and immediately began moving in every direction. Some shouted names. Some laughed. Someone nearby turned in a slow circle with both hands raised, apparently overwhelmed by the existence of fingers.
+Flavio squinted.
 
-A bell rang somewhere deeper in the city.
+The sky looked too clear to be trusted.
 
-Flavio stood still.
+That was his first thought.
 
-The ground beneath his boots had texture.
+His second was that this was a stupid first thought.
 
-Not just visual texture.
+People surrounded him, all of them new arrivals by the look of it. Some stared at their hands. One man bent his knees twice, then laughed loudly when the ground did not vanish under him. A woman several steps away turned in a slow circle, eyes wide, while someone beside her kept repeating, “This is insane,” like the sentence might eventually become enough.
 
-He could feel the slight unevenness of stone through the soles.
+Flavio understood the problem.
 
-He moved one foot.
+The place felt present.
 
-Weight shifted naturally.
+Not realistic.
 
-His body inside Genesis was not identical to his real one, but it responded closely enough that a year of conditioning suddenly felt less excessive.
+Present.
 
-Nico appeared several meters away.
+Warm air touched his skin. The stone beneath his boots had small irregularities he could feel when he shifted weight. Voices came from different directions instead of flattening into sound. Somewhere beyond the crowd, a bell rang once, then again.
 
-He materialized facing the wrong direction.
+He looked down at himself.
 
-“Flavio!”
+Plain tunic.
 
-Flavio looked at his back.
+Plain trousers.
 
-“Nico.”
+Boots.
 
-Nico spun around.
+A small satchel.
 
-“Oh.”
+A short sword at his side.
 
-“You were shouting at a wall.”
+The sword caught his attention first, which annoyed him.
 
-“I was checking acoustics.”
+He had entered a world no one had ever stood inside before, and his mind immediately asked whether the starter weapon could be repaired cheaply.
 
-“You were lost for four seconds.”
+Typical.
 
-“That is not enough time to be lost.”
+Flavio touched the satchel strap instead.
 
-“It was enough.”
+It moved under his fingers.
 
-Nico ignored him and looked around.
-
-His face changed.
-
-The joking disappeared.
-
-For a moment, he simply stared.
-
-Flavio understood.
-
-Genesis was beautiful.
-
-Annoyingly beautiful.
-
-The promotional videos had made it look polished. The real thing felt occupied.
-
-NPCs moved through the square without waiting for players to finish being impressed. A porter pushed a cart around a group blocking the path and complained loudly. Vendors opened shutters. A woman carrying bread stepped aside when two new players nearly collided with her, muttered something under her breath, and kept walking.
-
-The city did not feel like a stage waiting for them.
-
-It felt busy without them.
-
-Nico whispered, “This is insane.”
-
-Flavio nodded.
-
-“Yes.”
-
-Nico looked at him.
-
-“That was almost emotion.”
-
-“Don’t ruin it.”
-
-The official interface appeared when Flavio focused.
+The official Genesis interface appeared when he focused on it.
 
 [GENESIS]
 
@@ -110,17 +76,17 @@ SP: 100%
 
 Inventory available.
 
-Flavio read every line.
+Flavio read every line twice.
 
-Then he looked away.
+No hidden bonus.
 
-The interface folded naturally to the edge of his vision.
+No strange title.
 
-Different.
+No secret class.
 
-That was his first useful observation.
+No message thanking him for dying correctly.
 
-Genesis menus had a visual weight the private interface did not. They carried icons, borders, depth, and clear system hierarchy. The private messages had always looked almost too simple.
+Good.
 
 He opened the inventory.
 
@@ -134,493 +100,268 @@ Starter Satchel.
 
 Beginner Sword.
 
-A few basic items.
+Basic starting supplies.
 
-Nothing unexpected.
-
-Nico opened his own interface.
-
-“Oh, this is clean.”
-
-Flavio looked at him.
-
-“You have been inside for less than a minute.”
-
-“I can appreciate design quickly.”
-
-“Apparently.”
-
-Nico equipped his weapon with unnecessary enthusiasm.
-
-Flavio inspected his.
-
-The beginner sword felt light.
-
-Too light, almost.
-
-Not because it lacked weight, but because the balance was cleaner than the improvised tools Flavio had spent years handling in real life. He adjusted his grip.
-
-The blade followed smoothly.
-
-He loosened his hand.
-
-Better.
-
-Rogelio’s old lesson returned.
-
-Don’t fight the tool.
-
-Flavio smiled faintly.
-
-Nico noticed.
-
-“What?”
-
-“Nothing.”
-
-“You smiled at the sword.”
-
-“I adjusted my grip.”
-
-“That is somehow worse.”
-
-Flavio ignored him.
-
-The private interface had not appeared.
-
-He checked without meaning to.
-
-Nothing.
-
-Genesis was live.
-
-Official menus surrounded him.
-
-The mysterious system that had followed him for a year was silent.
-
-That should have separated the two cleanly.
-
-It did not.
-
-Flavio walked toward the edge of the plaza.
-
-The city responded around him.
-
-A child NPC ran between two stalls and was scolded by a merchant.
-
-A guard redirected arriving players away from a loading zone.
-
-A player tried to jump onto a cart and was shouted down by the owner.
-
-Nico laughed.
-
-“He got yelled at.”
-
-“He climbed onto someone’s property.”
-
-“It’s an NPC.”
-
-The cart owner turned.
-
-“What did you call me?”
-
-Nico froze.
-
-Flavio looked at him.
-
-The owner pointed at the road.
-
-“Move.”
-
-Nico moved.
-
-Flavio waited until they were several steps away.
-
-“Persistent NPC responses.”
-
-“Do not.”
-
-“You wanted wonder.”
-
-“I do not want this version of wonder.”
-
-Flavio laughed.
-
-They reached a quieter side of the plaza where several public information boards stood.
-
-Official maps.
-
-Starter notices.
-
-Safety rules.
-
-Quest postings.
-
-Market directions.
-
-Flavio studied them.
-
-Nico groaned.
-
-“We just arrived.”
-
-“Yes.”
-
-“Can we walk around first?”
-
-“We are walking around.”
-
-“You are reading municipal notices.”
-
-“They are part of the city.”
-
-“No normal person enters the greatest virtual world ever made and reads posted regulations first.”
-
-Flavio looked at him.
-
-“Then normal people will learn them later.”
-
-Nico pointed toward a group already sprinting out of the plaza.
-
-“Those people are going adventuring.”
-
-“One of them has no weapon equipped.”
-
-The group reached the street.
-
-A guard stopped the unarmed player and sent him back.
-
-Nico looked away.
-
-Flavio smiled.
-
-The public map showed Hiraya’s central districts, starter routes, gate locations, and several marked service areas.
-
-No hidden locations.
-
-No secret route glowing for him.
-
-Good.
-
-He had worried about that.
-
-Not because secret knowledge would be useless.
-
-Because he did not have any.
-
-Flavio’s memories of Genesis came from a life in which he mostly watched advertisements, heard other people talk about it, and ignored opportunities to play.
-
-He knew broad history.
-
-Not detailed mechanics.
-
-He was not walking into a solved world.
-
-That made the city more interesting.
-
-Nico leaned over the map.
-
-“East gate?”
-
-“Maybe.”
-
-“Why maybe?”
-
-“I want to see the request board first.”
-
-Nico sighed.
-
-“Of course you do.”
-
-They moved through the plaza.
-
-Flavio checked prices as they passed stalls.
-
-Not because he planned to buy anything.
-
-They had almost nothing.
-
-That made prices more important.
-
-Water.
-
-Basic food.
-
-Repair items.
-
-Cheap consumables.
-
-Starter gear.
-
-The numbers were small.
-
-The differences were not.
-
-A stall near the plaza charged more for the same ration sold farther down the road.
-
-Convenience.
-
-Traffic.
-
-Urgency.
-
-Flavio remembered.
-
-Nico caught him looking.
-
-“You’re comparing prices.”
-
-“Yes.”
-
-“We have no money.”
-
-“Exactly.”
-
-Nico rubbed his face.
-
-They reached the request board.
-
-Players crowded around it.
-
-Some chose the highest reward immediately.
-
-Others argued over which quest had the best experience.
-
-Flavio waited until he could actually read.
-
-The official interface responded.
-
-Public requests opened.
-
-Starter deliveries.
-
-Local errands.
-
-Low-risk collection work.
-
-Pest clearing.
-
-A marsh request with a reward large enough to attract half the nearby players.
-
-Flavio read the route description.
-
-Longer travel.
-
-Unfamiliar ground.
-
-Higher consumable risk.
-
-More competition.
+That was all.
 
 He closed it.
 
-Nico pointed.
+The official interface had borders, icons, depth, a polished structure that made it feel designed by people who expected millions of users to complain if one button was misplaced.
 
-“That one pays more.”
+The private interface from the previous year had never looked like this.
 
-“Yes.”
+That mattered.
 
-“So why close it?”
+Flavio searched the edge of his vision anyway.
 
-“Because it pays more.”
+No pale objective.
 
-Nico stared.
+No condition.
 
-“That sentence is illegal.”
+No quiet instruction.
 
-“It attracts more people.”
+Nothing.
 
-“So?”
+He did not know whether to feel relieved.
 
-“More people means more competition. Longer travel means more time. Unknown terrain means more ways to make mistakes.”
+That irritated him more than fear would have.
 
-Nico looked at the reward again.
+A player materialized beside him and immediately stepped into Flavio’s space.
 
-“It still pays more.”
+Both of them moved aside at the same time.
 
-“The number is not the whole cost.”
+“Sorry,” the stranger said.
 
-Nico sighed.
+“It’s fine.”
 
-“I missed the version of you who made bad decisions casually.”
+They nearly moved into each other again.
 
-“You never met that version.”
+The stranger laughed awkwardly and went left.
 
-“That is unfortunately true.”
+Flavio went right.
 
-Flavio opened another request.
+That tiny collision made the world feel more convincing than the sky.
 
-[PUBLIC REQUEST]
+Other people occupied space here.
 
-Outer Verge Pest Clearing
+His position mattered.
 
-Type: Starter Field Request
+He stepped away from the arrival point before someone else loaded into the same crowd.
 
-Objective:
-Defeat 3 registered Common pests in the eastern verge.
+The plaza had a name.
 
-Recommended Range:
-New players / low-risk field zone
+Hiraya Arrival Plaza.
 
-Completion:
-Return after objective confirmation.
+The words appeared naturally when he focused on the location.
 
-Reward:
-60 EXP
-8 Copper
+Flavio let the name settle without pretending it told him anything useful beyond where he stood.
 
-Flavio read it twice.
+He looked around.
 
-Three targets.
+Stone paths left the plaza in several directions. Buildings rose beyond the outer edge, layered with signs, awnings, balconies, smoke, and movement. New players spread outward like water finding cracks.
 
-Nearby field.
+A few ran immediately.
 
-Starter zone.
+Flavio watched one of them trip.
 
-Fixed reward.
+Not badly.
 
-Enough exposure to test combat without pretending he was ready for anything impressive.
+Enough.
 
-Nico leaned closer.
+The player stood up quickly and looked around to see who had noticed.
 
-“That one?”
+Flavio looked away.
 
-“Probably.”
+He had spent too much of the last year learning not to confuse speed with progress.
 
-“Probably?”
+That lesson apparently applied here too.
 
-“Close. Clear objective. Known beginner zone.”
+His first impulse was still to hurry.
 
-“And only eight copper.”
+Opening hour.
 
-“We currently have zero.”
+First day.
 
-“That is a depressing argument.”
+Millions of players entering at once.
 
-“It is accurate.”
+Somewhere, surely, there were opportunities that could disappear if someone else reached them first.
 
-Flavio accepted.
+Flavio could feel that old hunger forming before he had any idea what he was hungry for.
 
-[QUEST ACCEPTED]
+Scarcity without an object.
 
-Outer Verge Pest Clearing
+That was dangerous.
 
-Objective:
-Defeat 3 registered Common pests.
+He stayed where he was long enough to breathe.
 
-Progress:
-0 / 3
+Teresa had told him before login not to skip lunch because of a game.
 
-Reward:
-60 EXP
-8 Copper
+Isabel had told him to bring back something interesting.
 
-The official window folded away.
+Nico had told him they would contact each other after entering.
 
-Flavio waited.
+Three different instructions.
 
-Half a second.
+Only one of them had sounded like a command.
 
-One second.
-
-Nothing private appeared.
-
-Nico noticed.
-
-“What?”
-
-“Nothing.”
-
-“That is the second time today you said nothing like it has history.”
-
-Flavio started toward the eastern route.
-
-“It doesn’t.”
-
-“That answer definitely has history.”
-
-They passed the first line of vendors.
-
-Flavio slowed near field rations.
-
-Nico noticed again.
-
-“You’re memorizing prices.”
-
-“Yes.”
-
-“You cannot buy anything.”
-
-“That makes prices more relevant, not less.”
-
-“You are exhausting.”
-
-“So I’ve been told.”
-
-At the outer gate, Flavio stopped.
-
-He adjusted the satchel so it would not swing across his hip.
-
-Checked the sword.
-
-Looked at the ground.
-
-Packed earth replaced stone beyond the gate. Grass grew along a drainage line. Rocks broke the surface near the road.
-
-Promotional material had promised realistic movement.
-
-Realistic movement meant realistic ways to trip.
-
-Flavio stepped outside Hiraya.
-
-The field opened wide.
-
-Wind moved through waist-high grass.
-
-The road curved around a low rise.
-
-Beginners chased small creatures with varying levels of competence.
-
-One swung too early and missed.
-
-Another ran downhill after a target, lost footing, and rolled.
-
-Nico inhaled deeply.
-
-“Adventure.”
-
-Flavio watched the fallen player stand and check whether anyone had seen him.
-
-“Gravity.”
-
-“That is your response to a fantasy world?”
-
-“It appears operational.”
-
-Nico laughed.
+Teresa’s.
 
 Flavio smiled.
 
-Something moved in the grass ahead.
+He had set an alarm in the real world.
 
-Both of them stopped.
+He would obey it.
 
-Low body.
+That decision made the plaza easier to look at.
 
-Fast lateral motion.
+He tested his balance.
 
-A pause.
+Bent his knees slightly.
 
-Then another shift.
+Turned.
 
-Nico reached for his weapon.
+The satchel shifted against his hip.
 
-Flavio drew his sword more slowly.
+Everything felt natural enough that his real-world conditioning mattered, but not so familiar that he could assume the rules were identical.
 
-“Finally,” Nico whispered.
+He reached toward the sword.
 
-Flavio kept his eyes on the grass.
+Then stopped.
 
-“Watch before running.”
+There were too many people nearby.
 
-This time, Nico listened.
+Drawing a weapon in a crowd just to see how it felt seemed like the kind of mistake someone would later describe as “obvious.”
+
+Flavio left it where it was.
+
+A player nearby was doing exactly the opposite.
+
+The man drew his sword, swung once, nearly clipped another newcomer, then apologized repeatedly while everyone around him created a larger circle.
+
+Flavio watched.
+
+Then quietly added one rule to memory.
+
+Open space first.
+
+He did not need a notebook for that.
+
+Not yet.
+
+The private interface had trained him to record facts instead of performing intelligence for himself.
+
+That habit remained.
+
+He knew what he had.
+
+He knew where he stood.
+
+He knew the official Genesis system was visually different from the private one.
+
+He had not accepted a quest.
+
+He had not earned experience.
+
+He had not received any reward.
+
+He had not discovered anything special.
+
+That was the truth of his first minute inside Genesis.
+
+It was enough.
+
+He looked toward the paths leaving the plaza.
+
+Nico was nowhere obvious in the crowd.
+
+Flavio could have searched.
+
+Instead he remembered the actual agreement.
+
+Talk after entering.
+
+Not meet at a place neither of them had known in advance.
+
+Nico would contact him.
+
+Or Flavio would contact Nico.
+
+There was no emergency.
+
+He opened the communication interface, confirmed it existed, then closed it again.
+
+The world around him kept moving.
+
+An NPC porter pushed a cart through the edge of the plaza and complained when two players blocked the route. The players moved quickly.
+
+Flavio watched the cart pass.
+
+NPC.
+
+Probably.
+
+The man looked annoyed enough to be real.
+
+Flavio almost laughed.
+
+He had read public announcements about persistent schedules and adaptive responses. Standing in front of a working person who wanted the road cleared felt different from reading those words on paper.
+
+A group nearby began arguing over which exit was best.
+
+One player said the north route had better early rewards.
+
+Another asked where he had read that.
+
+The first player said, “Everyone knows.”
+
+Flavio walked away.
+
+That answer had ruined enough lives outside games.
+
+He moved toward the open side of the plaza, slowly enough to notice where he had come from and quickly enough not to turn caution into paralysis.
+
+The stone underfoot changed slightly near the edge.
+
+The crowd thinned.
+
+For the first time, he could hear the wider city beneath the noise of new arrivals.
+
+Metal.
+
+Footsteps.
+
+Vendors.
+
+A distant hammer.
+
+Someone laughing.
+
+A door closing.
+
+He stopped once and looked back.
+
+The place where he had spawned was already occupied by new players.
+
+His beginning had lasted less than a minute before the world used the space for someone else.
+
+That felt right.
+
+Genesis had not paused for him.
+
+Flavio adjusted the satchel strap.
+
+He looked forward again.
+
+No private message appeared.
+
+No destiny announcement.
+
+No secret path opened.
+
+Good.
+
+He had entered Genesis with a starter set, a level of one, no class, no profession, and more questions than answers.
+
+For once, that did not feel like being behind.
+
+It felt like beginning.
