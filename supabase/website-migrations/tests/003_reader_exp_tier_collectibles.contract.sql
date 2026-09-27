@@ -35,11 +35,18 @@ begin
   select public.reader_total_exp(v_user) into v_total;
   if v_total<>100 then raise exception 'T3_READ_EXP_IDEMPOTENCY_FAIL %',v_total; end if;
 
-  perform public.award_reader_exp_v1(v_user,'ADMIN','QA-TIER',1900,null,'{}'::jsonb);
+  perform public.award_reader_exp_v1(v_user,'ADMIN','QA-TIER',900,null,'{}'::jsonb);
   if public.reader_tier(v_user)<>2 then raise exception 'T3_TIER_FAIL %',public.reader_tier(v_user); end if;
 
-  insert into public.reader_collectible_catalog(collectible_key,title,rarity,min_episode,active)
-  values('QA-COLLECTIBLE','QA Collectible','COMMON',1,true);
+  if public.reader_tier(v_user)<>floor(public.reader_total_exp(v_user)/1000.0)::integer+1 then raise exception 'T3_TIER_THRESHOLD_FAIL'; end if;
+
+  insert into public.reader_collectible_catalog(collectible_key,title,asset_type,rarity,min_episode,active)
+  values('QA-COLLECTIBLE','QA Collectible','PICTURE_CARD','COMMON',1,true);
+
+  if not exists(
+    select 1 from public.reader_collectible_catalog
+    where collectible_key='QA-COLLECTIBLE' and asset_type='PICTURE_CARD'
+  ) then raise exception 'T3_ASSET_TYPE_FAIL'; end if;
 
   -- Inventory/draw tables exist and duplicate-capable quantity is modeled.
   if not exists(select 1 from information_schema.tables where table_schema='public' and table_name='reader_collectible_inventory') then
