@@ -54,7 +54,7 @@ jobs:
       - name: Render desktop and mobile screenshots
         run: |
           mkdir -p visual-qa
-          cat > /tmp/visual-qa.mjs <<'JS'
+          cat > visual-qa-runner.mjs <<'JS'
           import { chromium } from 'playwright';
           import fs from 'node:fs';
 
@@ -101,7 +101,7 @@ jobs:
             process.exit(1);
           }
           JS
-          node /tmp/visual-qa.mjs
+          node visual-qa-runner.mjs
 
       - name: Upload rendered QA screenshots
         if: always()
