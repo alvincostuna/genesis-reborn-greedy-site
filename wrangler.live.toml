@@ -7,3 +7,4 @@ preview_urls = true
 [assets]
 directory = "./.live-assets"
 binding = "ASSETS"
+run_worker_first = true
