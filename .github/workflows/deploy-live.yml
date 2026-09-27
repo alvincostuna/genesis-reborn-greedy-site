@@ -2,6 +2,9 @@ name: Deploy GENESIS Live Reader
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -12,6 +15,7 @@ concurrency:
 
 jobs:
   deploy-live:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[deploy-live]')
     environment: genesis-admin-preview
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -49,6 +53,7 @@ jobs:
           cp -R public/site-preview/manga .live-assets/manga
           cp -R public/site-preview/support .live-assets/support
           cp -R public/site-preview/account .live-assets/account
+          cp -R public/site-preview/quests .live-assets/quests
           cp public/assets/genesis-official-logo.png .live-assets/assets/genesis-official-logo.png
           cp public/assets/genesis-official-logo-64.png .live-assets/assets/genesis-official-logo-64.png
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
@@ -137,7 +142,7 @@ jobs:
           npx wrangler deploy --config wrangler.candidate.toml
           CANDIDATE_URL="https://${CANDIDATE_NAME}.hirangnalupa.workers.dev"
 
-          for path in / /read/ /world/ /codex/ /fan-page/ /manga/ /support/ /account/; do
+          for path in / /read/ /world/ /codex/ /fan-page/ /manga/ /support/ /account/ /quests/; do
             STATUS="000"
             for attempt in 1 2 3 4 5 6 7 8 9 10; do
               STATUS="$(curl -sS -o /tmp/candidate-page.html -w '%{http_code}' "$CANDIDATE_URL$path" || true)"
@@ -150,7 +155,7 @@ jobs:
 
           curl -fsS "$CANDIDATE_URL/" -o /tmp/candidate-home.html
           grep -q 'data-page="home"' /tmp/candidate-home.html
-          grep -q 'GENESIS CYCLE' /tmp/candidate-home.html
+          grep -q 'NEXT RELEASE' /tmp/candidate-home.html
           grep -q '/assets/genesis-official-logo.png' /tmp/candidate-home.html
           grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/candidate-home.html
           ! grep -q '/site-preview/' /tmp/candidate-home.html
@@ -178,7 +183,7 @@ jobs:
         run: |
           set -euo pipefail
           BASE="https://genesis-reborn-greedy.hirangnalupa.workers.dev"
-          for path in / /read/ /world/ /codex/ /fan-page/ /manga/ /support/ /account/; do
+          for path in / /read/ /world/ /codex/ /fan-page/ /manga/ /support/ /account/ /quests/; do
             STATUS="000"
             for attempt in 1 2 3 4 5 6 7 8 9 10; do
               STATUS="$(curl -sS -o /tmp/page.html -w '%{http_code}' "$BASE$path" || true)"
@@ -192,7 +197,7 @@ jobs:
           for attempt in 1 2 3 4 5 6 7 8 9 10; do
             curl -fsS "$BASE/" -o /tmp/home.html || true
             if grep -q 'data-page="home"' /tmp/home.html \
-              && grep -q 'GENESIS CYCLE' /tmp/home.html \
+              && grep -q 'NEXT RELEASE' /tmp/home.html \
               && grep -q '/assets/genesis-official-logo.png' /tmp/home.html \
               && grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/home.html; then
               CONTENT_OK=1

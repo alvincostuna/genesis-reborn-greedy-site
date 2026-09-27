@@ -1,98 +1,130 @@
 <!doctype html>
 <html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>Account — GENESIS: REBORN GREEDY</title>
-<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
-<link rel="stylesheet" href="/site-preview/site.css">
-</head><body data-page="account">
-<header class="reader-nav">
-  <a class="reader-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
-    <img src="/assets/genesis-official-logo.png" alt="" aria-hidden="true">
-    <span>GENESIS: REBORN GREEDY</span>
-  </a>
-  <nav aria-label="Primary">
-    <a href="/site-preview/">Home</a>
-    <a href="/site-preview/read/">Read</a>
-    <a href="/site-preview/world/">World</a>
-    <a href="/site-preview/codex/">Codex</a>
-    <a href="/site-preview/fan-page/">Fan Page</a>
-    <a href="/site-preview/manga/">Manga</a>
-    <a href="/site-preview/support/">Support</a>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#06101b"><title>Adventurer Profile — GENESIS: REBORN GREEDY</title>
+<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png"><link rel="stylesheet" href="/site-preview/site.css">
+</head><body data-page="account" class="game-profile-page">
+<header class="game-nav compact">
+  <a class="game-brand" href="/site-preview/"><img src="/assets/genesis-official-logo.png" alt=""><span>GENESIS<br><small>REBORN GREEDY</small></span></a>
+  <nav class="desktop-nav" aria-label="Primary">
+    <a href="/site-preview/"><span>⌂</span>Home</a><a href="/site-preview/read/"><span>▤</span>Read</a>
+    <a href="/site-preview/world/"><span>◎</span>World</a><a href="/site-preview/codex/"><span>▣</span>Codex</a>
+    <a href="/site-preview/fan-page/"><span>♟</span>Fan Page</a><a href="/site-preview/support/"><span>♡</span>Support</a>
   </nav>
-  <a class="auth-nav-link active" data-auth-link href="/site-preview/account/">Sign in</a>
+  <div class="game-nav-actions"><a class="profile-orb active" data-auth-link href="/site-preview/account/"><img src="/assets/genesis-official-logo-64.png" alt=""></a></div>
 </header>
 
-<main class="page-frame account-page">
-  <header class="page-title">
-    <div><p class="eyebrow">READER ACCOUNT</p><h1>Account</h1></div>
-    <p>Your reading progress, advance access, supporter badges, comments, and Admin messages stay linked to this account.</p>
-  </header>
-
+<main class="profile-shell">
   <section id="auth-message" class="account-message hidden" aria-live="polite"></section>
 
-  <section id="auth-guest" class="account-grid">
+  <section id="auth-guest" class="guest-gate">
     <article class="account-card">
-      <p class="eyebrow">WELCOME BACK</p>
-      <h2>Sign in</h2>
+      <p class="eyebrow">WELCOME BACK</p><h2>Sign in</h2>
       <form id="signin-form" class="account-form">
         <label>Email<input id="signin-email" type="email" autocomplete="email" required></label>
         <label>Password<input id="signin-password" type="password" autocomplete="current-password" minlength="6" required></label>
-        <button type="submit">Sign in</button>
+        <button type="submit">Enter GENESIS</button>
       </form>
       <button id="forgot-password" class="text-button" type="button">Forgot password?</button>
     </article>
-
     <article class="account-card">
-      <p class="eyebrow">NEW READER</p>
-      <h2>Create account</h2>
+      <p class="eyebrow">NEW ADVENTURER</p><h2>Create reader profile</h2>
       <form id="signup-form" class="account-form">
         <label>Display name<input id="signup-name" type="text" minlength="2" maxlength="40" autocomplete="nickname" required></label>
         <label>Email<input id="signup-email" type="email" autocomplete="email" required></label>
         <label>Password<input id="signup-password" type="password" minlength="8" autocomplete="new-password" required></label>
-        <button type="submit">Create account</button>
+        <button type="submit">Create Adventurer</button>
       </form>
-      <p class="account-hint">Email confirmation may be required before the first sign-in.</p>
+      <p class="account-hint">Your progress, EXP, tiers, access and collection remain linked to this account.</p>
     </article>
   </section>
 
-  <section id="auth-reader" class="account-grid hidden">
-    <article class="account-card account-summary">
-      <p class="eyebrow">SIGNED IN</p>
-      <h2 id="account-display-name">Reader</h2>
-      <p id="account-email" class="account-email"></p>
-      <div class="account-stats">
-        <div><small>Advance Credits</small><strong id="account-credits">0</strong></div>
-        <div><small>VIP</small><strong id="account-vip">Inactive</strong></div>
-        <div><small>Public Badge</small><strong id="account-badge">None</strong></div>
+  <section id="auth-reader" class="adventurer-dashboard hidden">
+    <article class="profile-hero-card">
+      <div class="profile-avatar large"><img src="/assets/genesis-official-logo-64.png" alt=""></div>
+      <div class="profile-identity">
+        <p class="eyebrow">ADVENTURER PROFILE</p>
+        <h1 id="account-display-name">Reader</h1>
+        <p id="account-email" class="account-email"></p>
+        <div class="profile-tags"><span id="profile-title-badge">GENESIS Adventurer</span><span id="profile-tier-badge">Tier 1</span></div>
       </div>
-      <button id="signout-button" class="secondary-button" type="button">Sign out</button>
-    </article>
-
-    <article class="account-card">
-      <p class="eyebrow">PROFILE</p>
-      <h2>Reader identity</h2>
-      <form id="profile-form" class="account-form">
-        <label>Display name<input id="profile-display-name" type="text" minlength="2" maxlength="40" required></label>
-        <button type="submit">Save display name</button>
-      </form>
-
-      <div class="badge-settings">
-        <label><input id="badge-supporter" type="checkbox"> Show Supporter badge when eligible</label>
-        <label><input id="badge-vip" type="checkbox"> Show VIP badge while active</label>
-        <button id="save-badges" type="button">Save badge settings</button>
+      <div class="profile-exp-block">
+        <div class="profile-exp-head"><strong id="profile-exp-total">0 EXP</strong><span id="profile-next-tier">2,000 to next Tier</span></div>
+        <div class="exp-track big"><span id="profile-exp-bar" style="width:0%"></span></div>
+        <small>Every 2,000 EXP = Tier Up + 1 random collectible draw</small>
       </div>
     </article>
+
+    <section class="profile-grid">
+      <article class="hud-card progress-card">
+        <div class="card-head"><span>READING PROGRESS</span><span>Verified</span></div>
+        <div class="profile-stat-grid">
+          <div><small>Latest Read</small><strong id="profile-latest-read">Not started</strong></div>
+          <div><small>Parts Read</small><strong id="profile-parts-read">0</strong></div>
+          <div><small>Episodes Complete</small><strong id="profile-episodes-complete">0</strong></div>
+          <div><small>Member Since</small><strong id="profile-joined">—</strong></div>
+        </div>
+      </article>
+
+      <article class="hud-card access-card">
+        <div class="card-head"><span>ADVANCE ACCESS</span><a href="/site-preview/support/">Support ›</a></div>
+        <div class="profile-stat-grid compact">
+          <div><small>Available Ahead</small><strong id="account-credits">0 Parts</strong></div>
+          <div><small>Support Status</small><strong id="account-vip">Inactive</strong></div>
+          <div><small>Public Badge</small><strong id="account-badge">None</strong></div>
+          <div><small>Next Public Drop</small><strong>08:00 / 20:00</strong></div>
+        </div>
+      </article>
+
+      <article class="hud-card collection-card">
+        <div class="card-head"><span>COLLECTION PORTFOLIO</span><span id="profile-collection-count">0 Unlocked</span></div>
+        <div class="collection-slots">
+          <div class="collection-slot locked">?</div><div class="collection-slot locked">?</div><div class="collection-slot locked">?</div><div class="collection-slot locked">?</div>
+        </div>
+        <p class="collection-note">Random picture rewards unlock every Tier. Duplicates are allowed and remain in your collection history.</p>
+      </article>
+
+      <article class="hud-card quest-card">
+        <div class="card-head"><span>QUEST LOG</span><a href="/site-preview/quests/">Open Quest Board ›</a></div>
+        <div class="quest-list">
+          <div><span>Read a Part</span><strong>+100 EXP</strong></div>
+          <div><span>Verified Share</span><strong>+200 EXP · +1 Part</strong></div>
+          <div><span>Support ₱9</span><strong>+100 EXP · +2 Parts</strong></div>
+          <div><span>Support ₱49</span><strong>+500 EXP · +14 Parts</strong></div>
+          <div><span>Support ₱189</span><strong>+2,000 EXP · +60 Parts</strong></div>
+        </div>
+      </article>
+
+      <article class="hud-card journey-card">
+        <div class="card-head"><span>JOURNEY HISTORY</span><span>Milestones</span></div>
+        <div id="profile-journey" class="journey-list"><div><span>Profile created</span><small>Your GENESIS journey begins here.</small></div></div>
+      </article>
+
+      <article class="account-card profile-settings">
+        <p class="eyebrow">PROFILE SETTINGS</p><h2>Reader identity</h2>
+        <form id="profile-form" class="account-form">
+          <label>Display name<input id="profile-display-name" type="text" minlength="2" maxlength="40" required></label>
+          <button type="submit">Save display name</button>
+        </form>
+        <div class="badge-settings">
+          <label><input id="badge-supporter" type="checkbox"> Show Supporter badge when eligible</label>
+          <label><input id="badge-vip" type="checkbox"> Show VIP badge while active</label>
+          <button id="save-badges" type="button">Save badge settings</button>
+        </div>
+        <button id="signout-button" class="secondary-button" type="button">Sign out</button>
+      </article>
+    </section>
   </section>
 
   <section id="recovery-panel" class="account-card recovery-card hidden">
-    <p class="eyebrow">PASSWORD RECOVERY</p>
-    <h2>Choose a new password</h2>
-    <form id="recovery-form" class="account-form">
-      <label>New password<input id="recovery-password" type="password" minlength="8" autocomplete="new-password" required></label>
-      <button type="submit">Update password</button>
-    </form>
+    <p class="eyebrow">PASSWORD RECOVERY</p><h2>Choose a new password</h2>
+    <form id="recovery-form" class="account-form"><label>New password<input id="recovery-password" type="password" minlength="8" autocomplete="new-password" required></label><button type="submit">Update password</button></form>
   </section>
 </main>
+
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <a href="/site-preview/"><span>⌂</span>Home</a><a href="/site-preview/read/"><span>▤</span>Read</a>
+  <a href="/site-preview/world/"><span>◎</span>World</a><a href="/site-preview/codex/"><span>▣</span>Codex</a><a class="active" href="/site-preview/account/"><span>♙</span>Profile</a>
+</nav>
 <script type="module" src="/site-preview/site.js"></script>
 </body></html>

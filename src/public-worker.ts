@@ -16,6 +16,8 @@ const PAGE_ROUTES: Record<string,string> = {
   "/manga/": "/manga/index.html",
   "/support": "/support/index.html",
   "/support/": "/support/index.html",
+  "/quests": "/quests/index.html",
+  "/quests/": "/quests/index.html",
   "/account": "/account/index.html",
   "/account/": "/account/index.html"
 };

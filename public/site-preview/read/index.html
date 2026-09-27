@@ -4,72 +4,92 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#06101b">
   <title>Read — GENESIS: REBORN GREEDY</title>
-<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
+  <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
   <link rel="stylesheet" href="/site-preview/site.css">
 </head>
-<body data-page="read">
-  
-<header class="reader-nav">
-  <a class="reader-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
-    <img src="/assets/genesis-official-logo.png" alt="" aria-hidden="true">
-    <span>GENESIS: REBORN GREEDY</span>
-  </a>
-  <nav aria-label="Primary">
-    <a href="/site-preview/">Home</a>
-    <a class="active" href="/site-preview/read/">Read</a>
-    <a href="/site-preview/world/">World</a>
-    <a href="/site-preview/codex/">Codex</a>
-    <a href="/site-preview/fan-page/">Fan Page</a>
-    <a href="/site-preview/manga/">Manga</a>
-    <a href="/site-preview/support/">Support</a>
+<body data-page="read" class="game-reader-page">
+<header class="game-nav compact">
+  <a class="game-brand" href="/site-preview/"><img src="/assets/genesis-official-logo.png" alt=""><span>GENESIS<br><small>REBORN GREEDY</small></span></a>
+  <nav class="desktop-nav" aria-label="Primary">
+    <a href="/site-preview/"><span>⌂</span>Home</a><a class="active" href="/site-preview/read/"><span>▤</span>Read</a>
+    <a href="/site-preview/world/"><span>◎</span>World</a><a href="/site-preview/codex/"><span>▣</span>Codex</a>
+    <a href="/site-preview/fan-page/"><span>♟</span>Fan Page</a><a href="/site-preview/manga/"><span>▧</span>Manga</a>
+    <a href="/site-preview/support/"><span>♡</span>Support</a>
   </nav>
-  <a class="auth-nav-link" data-auth-link href="/site-preview/account/">Sign in</a>
+  <div class="game-nav-actions"><a class="profile-orb" data-auth-link href="/site-preview/account/"><img src="/assets/genesis-official-logo-64.png" alt=""></a></div>
 </header>
-  <main class="page-frame read-page">
-    <header class="page-title">
-      <div>
-        <p class="eyebrow">OFFICIAL LIGHT NOVEL</p>
-        <h1>Read</h1>
+
+<main class="reader-shell">
+  <section class="reader-commandbar">
+    <div>
+      <p class="eyebrow">GENESIS READER</p>
+      <h1>Story Interface</h1>
+    </div>
+    <div class="reader-release-block">
+      <div id="release-mini" class="release-mini">2 Parts daily · 8:00 AM / 8:00 PM PHT</div>
+      <div id="reader-release-state" class="release-state-banner compact scheduled"><span class="state-dot"></span><strong>SCHEDULED</strong><small>Next canonical Part queued</small></div>
+    </div>
+    <div class="reader-quick-controls">
+      <button id="reader-library-toggle" type="button">☰ Library</button>
+      <button id="reader-tools-toggle" type="button">Aa Tools</button>
+      <button id="reader-fullscreen" type="button">⛶ Fullscreen</button>
+    </div>
+  </section>
+
+  <section class="reader-game-layout">
+    <aside id="reader-library" class="episode-rail game-rail">
+      <div class="rail-head"><span>EPISODE LIBRARY</span><small id="episode-count">Pre-launch</small></div>
+      <div id="episode-list" class="episode-list"><div class="empty-state">Released Final Canon Episodes will appear here.</div></div>
+    </aside>
+
+    <article id="novel-panel" class="novel-panel game-manuscript">
+      <div id="novel-head" class="novel-head">
+        <p class="eyebrow">GENESIS READER</p><h2>Select an Episode</h2><p>Only released Final Canon Parts are visible.</p>
       </div>
-      <div id="release-mini" class="release-mini">Launch preparation · Episodes 1–10 · then 1 Part every 8 hours</div>
-    </header>
+      <div id="part-tabs" class="part-tabs"></div>
+      <div class="reader-progress-line"><span id="reader-progress-fill"></span></div>
+      <div id="novel-body" class="novel-body"><div class="empty-state large">The reader is ready. No unreleased manuscript is exposed.</div></div>
+      <div class="reader-bottom-controls">
+        <button id="reader-prev" type="button">← Previous</button>
+        <span id="reader-position">Reading Progress</span>
+        <button id="reader-next" type="button">Next →</button>
+      </div>
 
-    <section class="reader-layout">
-      <aside class="episode-rail">
-        <div class="rail-head">
-          <span>Episodes</span>
-          <small id="episode-count">Pre-launch</small>
-        </div>
-        <div id="episode-list" class="episode-list">
-          <div class="empty-state">Episodes 1–10 will appear here when Final Canon is released.</div>
-        </div>
-      </aside>
+      <section id="comments-panel" class="comments-panel hidden">
+        <div class="comments-head"><div><p class="eyebrow">ADVENTURER DISCUSSION</p><h3>Comments & Predictions</h3></div><span class="status-chip">Spoiler-gated by Part access</span></div>
+        <div id="part-comments" class="comments-list"></div>
+        <div id="comment-composer" class="comment-composer disabled-box"><strong>Reader account required to comment</strong><span>Comments remain gated to readers who can access this Part.</span></div>
+      </section>
+    </article>
 
-      <article class="novel-panel">
-        <div id="novel-head" class="novel-head">
-          <p class="eyebrow">GENESIS READER</p>
-          <h2>Select an Episode</h2>
-          <p>The reading pane will contain only released Final Canon Parts.</p>
-        </div>
-        <div id="part-tabs" class="part-tabs"></div>
-        <div id="novel-body" class="novel-body">
-          <div class="empty-state large">The novel reader is ready. No unreleased manuscript is exposed in preview.</div>
-        </div>
-        <section id="comments-panel" class="comments-panel hidden">
-          <div class="comments-head">
-            <div><p class="eyebrow">READER DISCUSSION</p><h3>Comments & Predictions</h3></div>
-            <span class="status-chip">Spoiler-gated by Part access</span>
-          </div>
-          <div id="part-comments" class="comments-list"></div>
-          <div id="comment-composer" class="comment-composer disabled-box">
-            <strong>Reader account required to comment</strong>
-            <span>Comments will open at launch. Advance-Part comments stay hidden from readers who cannot access that Part.</span>
-          </div>
-        </section>
-      </article>
-    </section>
-  </main>
-  <script type="module" src="/site-preview/site.js"></script>
-</body>
-</html>
+    <aside id="reader-tools" class="reader-tools-panel">
+      <div class="card-head"><span>READER TOOLS</span><span>HUD</span></div>
+      <div class="tool-group">
+        <label>Font size <strong id="font-size-label">18px</strong></label>
+        <input id="font-size-range" type="range" min="10" max="24" value="18">
+      </div>
+      <div class="tool-group">
+        <label>Line spacing <strong id="line-height-label">1.90</strong></label>
+        <input id="line-height-range" type="range" min="1.4" max="2.2" step=".05" value="1.9">
+      </div>
+      <div class="tool-group">
+        <label>Reading width <strong id="reader-width-label">790px</strong></label>
+        <input id="reader-width-range" type="range" min="560" max="980" step="10" value="790">
+      </div>
+      <div class="tool-summary">
+        <div><span>Release Cycle</span><strong>08:00 / 20:00</strong></div>
+        <div><span>Read Reward</span><strong>+100 EXP / Part</strong></div>
+        <div><span>Tier Up</span><strong>Every 2,000 EXP</strong></div>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <a href="/site-preview/"><span>⌂</span>Home</a><a class="active" href="/site-preview/read/"><span>▤</span>Read</a>
+  <a href="/site-preview/world/"><span>◎</span>World</a><a href="/site-preview/codex/"><span>▣</span>Codex</a><a href="/site-preview/account/"><span>♙</span>Profile</a>
+</nav>
+<script type="module" src="/site-preview/site.js"></script>
+</body></html>

@@ -1,0 +1,83 @@
+-- WEB-RULES-V1 ALIGNMENT PROPOSAL
+-- NOT APPLIED TO LIVE SUPABASE.
+-- This file is a review artifact for the isolated website-redesign-v1 branch.
+-- Any future execution must be split into small rollback-safe migrations and re-audited
+-- against the live production state immediately before application.
+
+-- ============================================================
+-- A. RELEASE SCHEDULE TARGET
+-- ============================================================
+-- Target only:
+--   timezone = 'Asia/Manila'
+--   cycle_anchor_local = '08:00'
+--   cycle_hours = 12
+--
+-- Do not execute while using this proposal as documentation.
+
+-- ============================================================
+-- B. PUBLIC VISIBILITY CONTRACT TARGET
+-- ============================================================
+-- api_episode_library:
+--   * historical published content remains visible while releases are paused
+--   * only publication_status='published' can count as public
+--   * scheduled-but-overdue rows must not be treated as published
+--
+-- api_release_clock:
+--   * next_publish_at must be sourced from the authoritative private release queue
+--   * the API may expose timestamp/status only; never manuscript body or private metadata
+
+-- ============================================================
+-- C. CHRONOLOGY TARGET
+-- ============================================================
+-- publish_release_item must enforce assert_release_order_v1(...,'PUBLISH').
+-- process_due_releases must process the earliest canonical due item only.
+-- If earliest publication fails, later items stay held.
+-- No backlog/catch-up dumping.
+
+-- ============================================================
+-- D. SUPPORT / ADVANCE TARGET
+-- ============================================================
+-- New canonical rule keys:
+--   SUPPORT_9    amount 9,   credits 2,  EXP 100
+--   SUPPORT_49   amount 49,  credits 14, EXP 500
+--   SUPPORT_189  amount 189, credits 60, EXP 2000
+--   VERIFIED_SHARE credits 1, EXP 200, max 1/day, 5/week
+--
+-- Story access must use permanent advance_part_access grants.
+-- Remove VIP_200 as a story-access bypass.
+-- Remove hard-coded +21/+90 eligibility horizons.
+
+-- ============================================================
+-- E. READER PROGRESSION TARGET
+-- ============================================================
+-- Add append-only reader_exp_ledger:
+--   user_id, source_type, source_reference, delta, part_id,
+--   support_transaction_id/share_claim_id as relevant, created_at
+--   unique(source_type,source_reference) for idempotency.
+--
+-- Tier:
+--   floor(total_exp / 2000) + 1
+--
+-- Each crossed 2,000 EXP threshold:
+--   +1 unclaimed collectible draw entitlement.
+--
+-- Reading:
+--   completed eligible Part -> +100 EXP once.
+--
+-- Collectibles:
+--   spoiler-safe eligible pool
+--   duplicates allowed
+--   permanent ownership history
+--   duplicate quantity preserved
+--   profile showcase independent from verified reading progress.
+
+-- ============================================================
+-- F. CONTRACT VERSION TARGET
+-- ============================================================
+-- Introduce a new public contract version rather than silently changing V1/V2 behavior.
+-- Suggested:
+--   GENESIS-PUBLIC-API-V2
+--   GENESIS-READER-V3
+--   GENESIS-SUPPORT-V4
+--
+-- Update frontend only after backend contract tests pass.
