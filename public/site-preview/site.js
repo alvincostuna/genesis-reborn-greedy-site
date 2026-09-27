@@ -327,6 +327,10 @@ async function activateSupportContact(){
 async function initRead(){
   const releaseMini=document.querySelector("#release-mini");
   try{
+    const clock=firstRow(await rpc("api_release_clock"));
+    paintReleaseState(document.querySelector("#reader-release-state"),clock);
+  }catch{}
+  try{
     const p=firstRow(await rpc("api_release_policy"));
     releaseMini.textContent=(p?.releases_paused?"PAUSED · ":"")+"Episodes 1–"+(p?.launch_episode_count??10)+" · then 1 "+(p?.ongoing_release_unit??"Part")+" every "+(p?.cycle_hours??8)+" hours";
   }catch{}
@@ -455,6 +459,25 @@ function initCodex(){
 
 
 
+
+function releaseStateFromClock(clock){
+  const now=Date.now();
+  const paused=!!clock?.releases_paused;
+  const publishAt=clock?.next_publish_at?new Date(clock.next_publish_at):null;
+  const cycleAt=clock?.next_cycle_at?new Date(clock.next_cycle_at):null;
+  if(paused)return {code:"PAUSED",className:"paused",detail:"Public releases are temporarily paused"};
+  if(publishAt&&publishAt.getTime()<now-60000)return {code:"DELAYED",className:"delayed",detail:"Next canonical Part is delayed — later Parts will not skip it"};
+  if(!publishAt&&cycleAt)return {code:"AWAITING VERIFIED PART",className:"awaiting",detail:"Waiting for the next verified canonical Part"};
+  if(publishAt)return {code:"SCHEDULED",className:"scheduled",detail:"Next canonical Part is queued"};
+  return {code:"AWAITING",className:"awaiting",detail:"Release queue is waiting for verified content"};
+}
+function paintReleaseState(el,clock){
+  if(!el)return;
+  const state=releaseStateFromClock(clock);
+  el.className="release-state-banner"+(el.classList.contains("compact")?" compact":"")+" "+state.className;
+  el.innerHTML='<span class="state-dot"></span><strong>'+esc(state.code)+'</strong><small>'+esc(state.detail)+'</small>';
+}
+
 async function initHome(){
   const timeEl=document.querySelector("#home-release-time");
   const partEl=document.querySelector("#home-release-part");
@@ -485,6 +508,10 @@ async function initHome(){
     if(sEl)sEl.textContent=String(t%60).padStart(2,"0");
     if(ms<=0)setTimeout(()=>{const n=nextManilaSlot();nextAt=n.date;if(timeEl)timeEl.textContent=n.label},1100);
   }
+  try{
+    const clock=firstRow(await rpc("api_release_clock"));
+    paintReleaseState(document.querySelector("#home-release-state"),clock);
+  }catch{}
   const slot=nextManilaSlot(); nextAt=slot.date;
   if(timeEl)timeEl.textContent=slot.label;
   tick(); setInterval(tick,1000);
