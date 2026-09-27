@@ -52,6 +52,7 @@ jobs:
           exit 1
 
       - name: Render desktop and mobile screenshots
+        # Render authenticated profile shell for QA without using a real reader account.
         run: |
           mkdir -p visual-qa
           cat > visual-qa-runner.mjs <<'JS'
@@ -82,6 +83,19 @@ jobs:
               page.on('pageerror',e=>errors.push('pageerror: '+e.message));
               page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())});
               const response=await page.goto(base+path,{waitUntil:'networkidle',timeout:30000});
+              if(name==='profile'){
+                await page.evaluate(()=>{
+                  document.querySelector('#auth-guest')?.classList.add('hidden');
+                  document.querySelector('#auth-reader')?.classList.remove('hidden');
+                  const tier=document.querySelector('#profile-tier-badge'); if(tier)tier.textContent='Tier 10';
+                  const exp=document.querySelector('#profile-exp-total'); if(exp)exp.textContent='18,650 EXP';
+                  const next=document.querySelector('#profile-next-tier'); if(next)next.textContent='1,350 to next Tier';
+                  const bar=document.querySelector('#profile-exp-bar'); if(bar)bar.style.width='32.5%';
+                  const latest=document.querySelector('#profile-latest-read'); if(latest)latest.textContent='Episode 024 — Part 003';
+                  const parts=document.querySelector('#profile-parts-read'); if(parts)parts.textContent='142';
+                  const episodes=document.querySelector('#profile-episodes-complete'); if(episodes)episodes.textContent='23';
+                });
+              }
               await page.screenshot({path:`visual-qa/${name}-${mode}.png`,fullPage:true});
               const body=await page.locator('body').boundingBox();
               const viewportWidth=viewport.width;
