@@ -441,9 +441,15 @@ async function loadCodex(){
   }
 }
 function initCodex(){
-  document.querySelector("#codex-search-button").addEventListener("click",loadCodex);
-  document.querySelector("#codex-type").addEventListener("change",loadCodex);
-  document.querySelector("#codex-search").addEventListener("keydown",e=>{if(e.key==="Enter")loadCodex()});
+  document.querySelector("#codex-search-button")?.addEventListener("click",loadCodex);
+  document.querySelector("#codex-type")?.addEventListener("change",loadCodex);
+  document.querySelector("#codex-search")?.addEventListener("keydown",e=>{if(e.key==="Enter")loadCodex()});
+  document.querySelectorAll("[data-codex-chip]").forEach(button=>button.addEventListener("click",()=>{
+    document.querySelectorAll("[data-codex-chip]").forEach(x=>x.classList.toggle("active",x===button));
+    const select=document.querySelector("#codex-type"); if(select)select.value=button.dataset.codexChip||"";
+    loadCodex();
+  }));
+  document.querySelector("[data-codex-chip='']")?.classList.add("active");
   loadCodex();
 }
 
