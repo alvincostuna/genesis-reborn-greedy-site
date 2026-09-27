@@ -1,64 +1,45 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Codex — GENESIS: REBORN GREEDY</title>
-<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
-  <link rel="stylesheet" href="/site-preview/site.css">
-</head>
-<body data-page="codex">
-  
-<header class="reader-nav">
-  <a class="reader-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
-    <img src="/assets/genesis-official-logo.png" alt="" aria-hidden="true">
-    <span>GENESIS: REBORN GREEDY</span>
-  </a>
-  <nav aria-label="Primary">
-    <a href="/site-preview/">Home</a>
-    <a href="/site-preview/read/">Read</a>
-    <a href="/site-preview/world/">World</a>
-    <a class="active" href="/site-preview/codex/">Codex</a>
-    <a href="/site-preview/fan-page/">Fan Page</a>
-    <a href="/site-preview/manga/">Manga</a>
-    <a href="/site-preview/support/">Support</a>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#06101b"><title>Codex — GENESIS: REBORN GREEDY</title>
+<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png"><link rel="stylesheet" href="/site-preview/site.css">
+</head><body data-page="codex" class="game-codex-page">
+<header class="game-nav compact">
+  <a class="game-brand" href="/site-preview/"><img src="/assets/genesis-official-logo.png" alt=""><span>GENESIS<br><small>REBORN GREEDY</small></span></a>
+  <nav class="desktop-nav" aria-label="Primary">
+    <a href="/site-preview/"><span>⌂</span>Home</a>
+    <a href="/site-preview/read/"><span>▤</span>Read</a>
+    <a href="/site-preview/world/"><span>◎</span>World</a>
+    <a class="active" href="/site-preview/codex/"><span>▣</span>Codex</a>
+    <a href="/site-preview/fan-page/"><span>♟</span>Fan Page</a>
+    <a href="/site-preview/manga/"><span>▧</span>Manga</a>
+    <a href="/site-preview/support/"><span>♡</span>Support</a>
   </nav>
-  <a class="auth-nav-link" data-auth-link href="/site-preview/account/">Sign in</a>
+  <div class="game-nav-actions"><a class="profile-orb" data-auth-link href="/site-preview/account/"><img src="/assets/genesis-official-logo-64.png" alt=""></a></div>
 </header>
-  <main class="page-frame">
-    <header class="page-title codex-title">
-      <div>
-        <p class="eyebrow">READER DATABASE</p>
-        <h1>Codex</h1>
-      </div>
-      <p>The Codex is the public database of knowledge already revealed by released Parts.</p>
-    </header>
-
-    <section class="codex-tools">
+<main class="codex-shell">
+  <section class="codex-header">
+    <div><p class="eyebrow">GENESIS DATABASE</p><h1>Codex</h1><p>Search knowledge unlocked by released story content. Hidden lore stays hidden.</p></div>
+    <div class="codex-status hud-card"><span>DATABASE MODE</span><strong>READER-SAFE</strong><small>Spoiler gating enabled</small></div>
+  </section>
+  <section class="codex-category-strip">
+    <button data-codex-chip="">All</button><button data-codex-chip="monster">Monsters</button><button data-codex-chip="map">Maps</button><button data-codex-chip="weapon">Weapons</button>
+    <button data-codex-chip="armor">Armor</button><button data-codex-chip="item">Items</button><button data-codex-chip="class">Classes</button><button data-codex-chip="profession">Professions</button><button data-codex-chip="skill">Skills</button><button data-codex-chip="quest">Quests</button>
+  </section>
+  <section class="codex-console hud-card">
+    <div class="codex-tools game-search">
       <select id="codex-type" aria-label="Codex category">
-        <option value="">All revealed records</option>
-        <option value="monster">Monsters</option>
-        <option value="map">Maps</option>
-        <option value="weapon">Weapons</option>
-        <option value="armor">Armor</option>
-        <option value="item">Items</option>
-        <option value="material">Materials</option>
-        <option value="class">Classes</option>
-        <option value="profession">Professions</option>
-        <option value="skill">Skills</option>
-        <option value="npc">NPCs</option>
-        <option value="quest">Quests</option>
-        <option value="shop">Shops</option>
+        <option value="">All revealed records</option><option value="monster">Monsters</option><option value="map">Maps</option><option value="weapon">Weapons</option><option value="armor">Armor</option><option value="item">Items</option><option value="material">Materials</option><option value="class">Classes</option><option value="profession">Professions</option><option value="skill">Skills</option><option value="npc">NPCs</option><option value="quest">Quests</option><option value="shop">Shops</option>
       </select>
-      <input id="codex-search" type="search" placeholder="Search the revealed database…" autocomplete="off">
-      <button id="codex-search-button">Search</button>
-    </section>
-
-    <section id="codex-results" class="codex-grid">
-      <div class="empty-state large">Loading revealed Codex records…</div>
-    </section>
-  </main>
-  <script type="module" src="/site-preview/site.js"></script>
-</body>
-</html>
+      <input id="codex-search" type="search" placeholder="Search revealed names, types or lore…" autocomplete="off"><button id="codex-search-button">Search Database</button>
+    </div>
+    <section id="codex-results" class="codex-grid game-grid"><div class="empty-state large">Loading revealed Codex records…</div></section>
+  </section>
+</main>
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <a href="/site-preview/"><span>⌂</span>Home</a>
+  <a href="/site-preview/read/"><span>▤</span>Read</a>
+  <a href="/site-preview/world/"><span>◎</span>World</a>
+  <a class="active" href="/site-preview/codex/"><span>▣</span>Codex</a>
+  <a href="/site-preview/support/"><span>♡</span>Support</a>
+</nav>
+<script type="module" src="/site-preview/site.js"></script></body></html>
