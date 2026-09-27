@@ -1,50 +1,54 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>World — GENESIS: REBORN GREEDY</title>
-<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
-  <link rel="stylesheet" href="/site-preview/site.css">
-</head>
-<body data-page="world">
-  
-<header class="reader-nav">
-  <a class="reader-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
-    <img src="/assets/genesis-official-logo.png" alt="" aria-hidden="true">
-    <span>GENESIS: REBORN GREEDY</span>
-  </a>
-  <nav aria-label="Primary">
-    <a href="/site-preview/">Home</a>
-    <a href="/site-preview/read/">Read</a>
-    <a class="active" href="/site-preview/world/">World</a>
-    <a href="/site-preview/codex/">Codex</a>
-    <a href="/site-preview/fan-page/">Fan Page</a>
-    <a href="/site-preview/manga/">Manga</a>
-    <a href="/site-preview/support/">Support</a>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#06101b"><title>World — GENESIS: REBORN GREEDY</title>
+<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png"><link rel="stylesheet" href="/site-preview/site.css">
+</head><body data-page="world" class="game-world-page">
+<header class="game-nav compact">
+  <a class="game-brand" href="/site-preview/"><img src="/assets/genesis-official-logo.png" alt=""><span>GENESIS<br><small>REBORN GREEDY</small></span></a>
+  <nav class="desktop-nav" aria-label="Primary">
+    <a href="/site-preview/"><span>⌂</span>Home</a>
+    <a href="/site-preview/read/"><span>▤</span>Read</a>
+    <a class="active" href="/site-preview/world/"><span>◎</span>World</a>
+    <a href="/site-preview/codex/"><span>▣</span>Codex</a>
+    <a href="/site-preview/fan-page/"><span>♟</span>Fan Page</a>
+    <a href="/site-preview/manga/"><span>▧</span>Manga</a>
+    <a href="/site-preview/support/"><span>♡</span>Support</a>
   </nav>
-  <a class="auth-nav-link" data-auth-link href="/site-preview/account/">Sign in</a>
+  <div class="game-nav-actions"><a class="profile-orb" data-auth-link href="/site-preview/account/"><img src="/assets/genesis-official-logo-64.png" alt=""></a></div>
 </header>
-  <main class="page-frame">
-    <header class="page-title">
-      <div>
-        <p class="eyebrow">EXPLORE GENESIS</p>
-        <h1>World</h1>
+<main class="world-shell">
+  <section class="world-hero hud-card">
+    <div class="world-hero-art"></div><div class="world-hero-shade"></div>
+    <div class="world-hero-copy"><p class="eyebrow">WORLD EXPLORATION</p><h1>Explore GENESIS</h1><p>Only places, creatures and equipment already revealed by released Final Canon appear here. Unknown territory remains under fog-of-war.</p></div>
+    <div class="discovery-meter"><span>READER DISCOVERY</span><strong id="world-discovery">Revealed knowledge only</strong><div><i style="width:32%"></i></div></div>
+  </section>
+
+  <section class="world-console">
+    <aside class="world-sidebar hud-card">
+      <div class="card-head"><span>WORLD FILTER</span><span>FOG SAFE</span></div>
+      <div class="world-tabs" role="tablist">
+        <button class="active" data-world-type="map">◎ Maps & Regions</button>
+        <button data-world-type="monster">♜ Monsters</button>
+        <button data-world-type="equipment">⚔ Equipment</button>
       </div>
-      <p>Reader-facing previews unlock only after the story reveals them.</p>
-    </header>
-
-    <div class="segmented" role="tablist" aria-label="World categories">
-      <button class="active" data-world-type="map">Maps</button>
-      <button data-world-type="monster">Monsters</button>
-      <button data-world-type="equipment">Equipment</button>
-    </div>
-
-    <section id="world-grid" class="world-grid">
-      <div class="empty-state large">Loading revealed world records…</div>
+      <div class="world-rule"><strong>Fog-of-War</strong><p>Unreleased locations and unrevealed information stay hidden even if they already exist in the production database.</p></div>
+    </aside>
+    <section class="world-map-stage hud-card">
+      <div class="card-head"><span>DISCOVERED WORLD</span><span>Public-safe data</span></div>
+      <div class="world-map-visual">
+        <div class="map-glow one"></div><div class="map-glow two"></div>
+        <span class="map-node n1">HIRAYA</span><span class="map-node n2">?</span><span class="map-node n3">?</span>
+        <div class="fog fog-a"></div><div class="fog fog-b"></div>
+      </div>
+      <div id="world-grid" class="world-grid game-grid"><div class="empty-state large">Loading revealed world records…</div></div>
     </section>
-  </main>
-  <script type="module" src="/site-preview/site.js"></script>
-</body>
-</html>
+  </section>
+</main>
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <a href="/site-preview/"><span>⌂</span>Home</a>
+  <a href="/site-preview/read/"><span>▤</span>Read</a>
+  <a class="active" href="/site-preview/world/"><span>◎</span>World</a>
+  <a href="/site-preview/codex/"><span>▣</span>Codex</a>
+  <a href="/site-preview/support/"><span>♡</span>Support</a>
+</nav>
+<script type="module" src="/site-preview/site.js"></script></body></html>
