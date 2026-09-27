@@ -5,6 +5,7 @@ on:
     branches:
       - website-redesign-v1
       - web-ds-v2-home
+      - web-ds-v2-2-scale
   workflow_dispatch:
 
 permissions:
