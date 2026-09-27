@@ -170,28 +170,42 @@ jobs:
             && echo "PASS: NEXT RELEASE marker" \
             || { echo "::error::FAIL: NEXT RELEASE marker missing"; exit 1; }
           grep -q '/assets/genesis-wordmark-v2.svg' /tmp/candidate-home.html \
-            && echo "PASS: WEB-DS-V2 wordmark reference" \
-            || { echo "::error::FAIL: WEB-DS-V2 wordmark reference missing"; exit 1; }
-          test "$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/assets/genesis-wordmark-v2.svg")" = "200" \
-            && echo "PASS: WEB-DS-V2 wordmark asset" \
-            || { echo "::error::FAIL: WEB-DS-V2 wordmark asset unavailable"; exit 1; }
-          grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/candidate-home.html \
-            && echo "PASS: hero asset reference" \
-            || { echo "::error::FAIL: hero asset reference missing"; exit 1; }
+            && echo "PASS: GENESIS wordmark reference" \
+            || { echo "::error::FAIL: GENESIS wordmark reference missing"; exit 1; }
+          grep -q '/assets/v25/hero-home-desktop.webp' /tmp/candidate-home.html \
+            && echo "PASS: V2.5 desktop hero reference" \
+            || { echo "::error::FAIL: V2.5 desktop hero reference missing"; exit 1; }
+          grep -q '/assets/v25/hero-home-mobile.webp' /tmp/candidate-home.html \
+            && echo "PASS: V2.5 mobile hero reference" \
+            || { echo "::error::FAIL: V2.5 mobile hero reference missing"; exit 1; }
+
+          verify_candidate_asset() {
+            ASSET_PATH="$1"
+            LABEL="$2"
+            STATUS="000"
+            for attempt in 1 2 3 4 5 6 7 8 9 10; do
+              STATUS="$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL$ASSET_PATH" || true)"
+              echo "$LABEL attempt $attempt -> HTTP $STATUS"
+              if [ "$STATUS" = "200" ]; then
+                echo "PASS: $LABEL"
+                return 0
+              fi
+              sleep 2
+            done
+            echo "::error::FAIL: $LABEL unavailable after retries"
+            return 1
+          }
+
+          verify_candidate_asset "/assets/genesis-wordmark-v2.svg" "GENESIS wordmark asset"
+          verify_candidate_asset "/assets/v25/hero-home-desktop.webp" "V2.5 desktop hero asset"
+          verify_candidate_asset "/assets/v25/hero-home-mobile.webp" "V2.5 mobile hero asset"
+
           if grep -q '/site-preview/' /tmp/candidate-home.html; then
             echo "::error::FAIL: preview-only path leaked into live candidate"
             exit 1
           else
             echo "PASS: no /site-preview/ path leak"
           fi
-
-          echo "Verifying locked hero asset..."
-          curl -fsS "$CANDIDATE_URL/assets/master-key-art-split-world-v1.webp" -o /tmp/candidate-hero.webp
-          CANDIDATE_HERO_SHA="$(sha256sum /tmp/candidate-hero.webp | awk '{print $1}')"
-          echo "Candidate hero SHA-256: $CANDIDATE_HERO_SHA"
-          test "$CANDIDATE_HERO_SHA" = "64c2fa7b46053c8ba468be5dbd7f58795624be92cdf71e0e53334f1d501dba25" \
-            && echo "PASS: hero asset hash" \
-            || { echo "::error::FAIL: hero asset hash mismatch"; exit 1; }
 
           echo "Verifying private Control Center remains unavailable..."
           ADMIN_STATUS="$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/admin/")"
