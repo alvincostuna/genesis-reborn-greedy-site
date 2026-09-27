@@ -75,7 +75,7 @@ jobs:
           const browser=await chromium.launch({headless:true});
           const report=[];
           for(const [mode,viewport] of viewports){
-            const context=await browser.newContext({viewportSize:viewport,deviceScaleFactor:1});
+            const context=await browser.newContext({viewport,deviceScaleFactor:1});
             for(const [name,path] of pages){
               const page=await context.newPage();
               const errors=[];
