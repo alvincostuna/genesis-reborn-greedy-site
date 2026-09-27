@@ -37,7 +37,7 @@ jobs:
 
       - name: Install Playwright Chromium
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --legacy-peer-deps --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
       - name: Start isolated static preview
