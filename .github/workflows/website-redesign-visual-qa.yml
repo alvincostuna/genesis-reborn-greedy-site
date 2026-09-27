@@ -136,6 +136,25 @@ jobs:
                   const latest=document.querySelector('#profile-latest-read'); if(latest)latest.textContent='Episode 024 — Part 003';
                   const parts=document.querySelector('#profile-parts-read'); if(parts)parts.textContent='142';
                   const episodes=document.querySelector('#profile-episodes-complete'); if(episodes)episodes.textContent='23';
+                  const count=document.querySelector('#profile-collection-count'); if(count)count.textContent='4 Unlocked';
+                  const pending=document.querySelector('#profile-pending-draws'); if(pending)pending.textContent='2 Reward Draws Ready';
+                  const grid=document.querySelector('#profile-collection-grid');
+                  if(grid){
+                    const rewards=[
+                      ['Genesis Awakening','genesis-awakening.webp','earned','COMMON · PICTURE CARD','Earned'],
+                      ['Flavio Reyes','flavio-reyes.webp','earned','COMMON · CHARACTER PICTURE','Earned'],
+                      ['Young Gnawer','young-gnawer.webp','earned','COMMON · MONSTER PICTURE','Earned ×2'],
+                      ['Early GENESIS World Panorama','early-genesis-world-panorama.webp','earned','RARE · DESKTOP WALLPAPER','Earned'],
+                      ['Beginner Hunt','beginner-hunt.webp','available','UNCOMMON · PICTURE CARD','Available in random draw'],
+                      ['Amihan “Maya” Villareal','maya-villareal.webp','locked','RARE · CHARACTER PICTURE','Locked by story progress']
+                    ];
+                    grid.innerHTML=rewards.map(([title,file,state,meta,label])=>
+                      '<article class="reward-state-card compact '+state+'">'+
+                      '<div class="reward-state-art"><img src="/assets/v27/rewards/'+file+'" alt="">'+
+                      (state==='earned'?'':'<span class="reward-lock">'+(state==='locked'?'🔒':'◇')+'</span>')+'</div>'+
+                      '<div class="reward-state-copy"><small>'+meta+'</small><strong>'+title+'</strong><span>'+label+'</span></div></article>'
+                    ).join('');
+                  }
                 });
               }
               await page.screenshot({path:`visual-qa/${name}-${mode}.png`,fullPage:true});
