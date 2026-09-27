@@ -2713,3 +2713,112 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     font-size:16px!important;
   }
 }
+
+
+/* ============================================================
+   WEB-DS-V2.5 — SVG ICON SYSTEM
+   CSS-mask delivery preserves currentColor state styling.
+   ============================================================ */
+.web-ds-v2 .v25-icon{
+  display:inline-block;
+  width:1.35em;
+  height:1.35em;
+  flex:0 0 auto;
+  vertical-align:-.22em;
+  background-color:currentColor;
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  mask-position:center;
+  -webkit-mask-size:contain;
+  mask-size:contain;
+}
+.web-ds-v2 .i-home{-webkit-mask-image:url("/assets/v25/icons/home.svg");mask-image:url("/assets/v25/icons/home.svg")}
+.web-ds-v2 .i-read{-webkit-mask-image:url("/assets/v25/icons/read.svg");mask-image:url("/assets/v25/icons/read.svg")}
+.web-ds-v2 .i-world{-webkit-mask-image:url("/assets/v25/icons/world.svg");mask-image:url("/assets/v25/icons/world.svg")}
+.web-ds-v2 .i-codex{-webkit-mask-image:url("/assets/v25/icons/codex.svg");mask-image:url("/assets/v25/icons/codex.svg")}
+.web-ds-v2 .i-fan{-webkit-mask-image:url("/assets/v25/icons/fan.svg");mask-image:url("/assets/v25/icons/fan.svg")}
+.web-ds-v2 .i-manga{-webkit-mask-image:url("/assets/v25/icons/manga.svg");mask-image:url("/assets/v25/icons/manga.svg")}
+.web-ds-v2 .i-support{-webkit-mask-image:url("/assets/v25/icons/support.svg");mask-image:url("/assets/v25/icons/support.svg")}
+.web-ds-v2 .i-search{-webkit-mask-image:url("/assets/v25/icons/search.svg");mask-image:url("/assets/v25/icons/search.svg")}
+.web-ds-v2 .i-bell{-webkit-mask-image:url("/assets/v25/icons/bell.svg");mask-image:url("/assets/v25/icons/bell.svg")}
+.web-ds-v2 .i-profile{-webkit-mask-image:url("/assets/v25/icons/profile.svg");mask-image:url("/assets/v25/icons/profile.svg")}
+.web-ds-v2 .i-release{-webkit-mask-image:url("/assets/v25/icons/release.svg");mask-image:url("/assets/v25/icons/release.svg")}
+.web-ds-v2 .i-sunrise{-webkit-mask-image:url("/assets/v25/icons/sunrise.svg");mask-image:url("/assets/v25/icons/sunrise.svg")}
+.web-ds-v2 .i-moon{-webkit-mask-image:url("/assets/v25/icons/moon.svg");mask-image:url("/assets/v25/icons/moon.svg")}
+.web-ds-v2 .i-access{-webkit-mask-image:url("/assets/v25/icons/access.svg");mask-image:url("/assets/v25/icons/access.svg")}
+.web-ds-v2 .i-support-unlock{-webkit-mask-image:url("/assets/v25/icons/support-unlock.svg");mask-image:url("/assets/v25/icons/support-unlock.svg")}
+.web-ds-v2 .i-social{-webkit-mask-image:url("/assets/v25/icons/social.svg");mask-image:url("/assets/v25/icons/social.svg")}
+.web-ds-v2 .i-quest{-webkit-mask-image:url("/assets/v25/icons/quest.svg");mask-image:url("/assets/v25/icons/quest.svg")}
+.web-ds-v2 .i-collectible{-webkit-mask-image:url("/assets/v25/icons/collectible.svg");mask-image:url("/assets/v25/icons/collectible.svg")}
+.web-ds-v2 .i-arrow-right{-webkit-mask-image:url("/assets/v25/icons/arrow-right.svg");mask-image:url("/assets/v25/icons/arrow-right.svg")}
+
+.web-ds-v2 .v2-primary-nav a .v25-icon{
+  width:24px;height:24px;
+  margin:0 auto 5px;
+  color:#d9e8f4;
+}
+.web-ds-v2 .v2-primary-nav a:hover .v25-icon{color:#8fd8ff}
+.web-ds-v2 .v2-primary-nav a.active .v25-icon{color:#e7bd63}
+.web-ds-v2 .v2-search>.v25-icon{
+  width:18px;height:18px;
+  color:#d9e8f4;
+}
+.web-ds-v2 .v2-bell .v25-icon{
+  width:19px;height:19px;
+  color:#f4e2b2;
+}
+.web-ds-v2 .v2-panel-rune .v25-icon{
+  width:25px;height:25px;
+  color:#ffe39a;
+}
+.web-ds-v2 .cycle-rule .v25-icon{
+  width:24px;height:24px;
+  margin-right:7px;
+  vertical-align:middle;
+}
+.web-ds-v2 .cycle-rule .sun{color:#ffd15e}
+.web-ds-v2 .cycle-rule .moon{color:#78cfff}
+.web-ds-v2 .genesis-btn .v25-icon{
+  width:17px;height:17px;
+  margin-right:6px;
+}
+.web-ds-v2 .access-list>div>span{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+}
+.web-ds-v2 .access-list .v25-icon{
+  width:15px;height:15px;
+  color:#d9e8f4;
+}
+.web-ds-v2 .notice-icon .v25-icon{
+  width:18px;height:18px;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile>i.v25-icon{
+  width:31px;height:31px;
+  color:#dff2ff;
+  align-self:end;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile>b{
+  display:grid;
+  place-items:center;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile>b .v25-icon{
+  width:22px;height:22px;
+  color:#eefaff;
+}
+.web-ds-v2 .v2-mobile-bottom a .v25-icon{
+  width:20px;height:20px;
+  margin-bottom:2px;
+  color:#9fb3c8;
+}
+.web-ds-v2 .v2-mobile-bottom a.active .v25-icon{
+  color:#7fd7ff;
+  filter:drop-shadow(0 0 8px rgba(65,185,255,.45));
+}
+@media(min-width:901px){
+  .web-ds-v2 .v2-primary-nav a .v25-icon{
+    width:25px;height:25px;
+  }
+}
