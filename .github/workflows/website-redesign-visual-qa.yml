@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - website-redesign-v1
+      - web-ds-v2-home
   workflow_dispatch:
 
 permissions:
