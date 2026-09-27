@@ -13,7 +13,8 @@ begin
          'qa-web-m003-'||gen_random_uuid()::text||'@example.invalid','',now(),now(),now())
   returning id into v_user;
 
-  insert into public.reader_profiles(user_id,display_name,highest_episode_read) values(v_user,'QA Reader',1);
+  insert into public.reader_profiles(user_id,display_name,highest_episode_read) values(v_user,'QA Reader',1)
+  on conflict(user_id) do update set display_name=excluded.display_name,highest_episode_read=excluded.highest_episode_read;
 
   insert into public.series(id,slug,title,status) values(v_series,'qa-m003-'||substr(v_series::text,1,8),'QA', 'active');
   insert into public.sagas(id,series_id,saga_number,slug,title,status,sort_order)
