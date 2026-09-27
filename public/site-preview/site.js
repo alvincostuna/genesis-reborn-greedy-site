@@ -174,6 +174,9 @@ async function initAccount(){
       document.querySelector("#profile-episodes-complete").textContent=String(data?.episodes_completed??data?.reading_progress?.episodes_completed??0);
       document.querySelector("#profile-joined").textContent=data?.created_at?new Date(data.created_at).toLocaleDateString("en-PH",{year:"numeric",month:"short",day:"numeric"}):"—";
       document.querySelector("#profile-collection-count").textContent=String(data?.collection_count??0)+" Unlocked";
+      const pendingDraws=Number(data?.pending_reward_draws??0);
+      const pendingEl=document.querySelector("#profile-pending-draws");
+      if(pendingEl)pendingEl.textContent=pendingDraws+" Reward Draw"+(pendingDraws===1?"":"s")+" Ready";
     }catch(e){
       showAuthMessage("Signed in, but account status could not be loaded yet.","error");
     }
@@ -584,6 +587,7 @@ if(page==="codex")initCodex();
 if(page==="fan")await initFan();
 if(page==="support")await initSupport();
 if(page==="account")await initAccount();
+if(page==="quests")await initQuests();
 
 async function initFan(){
   const feed=document.querySelector("#fan-feed");
@@ -597,6 +601,81 @@ async function initFan(){
   }catch{
     feed.innerHTML='<div class="empty-state large">Fan Page is temporarily unavailable.</div>';
   }
+}
+
+async function initQuests(){
+  const button=document.querySelector("#reward-draw-button");
+  const result=document.querySelector("#reward-draw-result");
+  if(!button)return;
+
+  const session=await getSession();
+  const user=session?await getAuthUser(session):null;
+  if(!user||!session){
+    button.disabled=false;
+    button.textContent="Sign in to check reward draws";
+    button.addEventListener("click",()=>{location.href=accountPath()+"?next=quests"});
+    return;
+  }
+
+  let pending=0;
+  try{
+    const data=await rpc("api_reader_account_v3",{},session.access_token);
+    pending=Number(data?.pending_reward_draws??0);
+  }catch{
+    try{
+      const data=await rpc("api_reader_account",{},session.access_token);
+      const totalExp=Number(data?.reader_exp??data?.total_exp??0);
+      const tier=Math.floor(totalExp/TIER_EXP_THRESHOLD)+1;
+      pending=Math.max(0,tier-1-Number(data?.collection_count??0));
+    }catch{}
+  }
+
+  const paint=()=>{
+    button.disabled=pending<=0;
+    button.textContent=pending>0
+      ?("Claim Random Reward · "+pending+" Ready")
+      :"No reward draw available yet";
+  };
+  paint();
+
+  button.addEventListener("click",async()=>{
+    if(pending<=0)return;
+    const original=button.textContent;
+    button.disabled=true;
+    button.textContent="Drawing reward…";
+    try{
+      const draw=await rpc("reader_draw_collectible_v1",{},session.access_token);
+      if(draw?.status==="DRAWN"){
+        pending=Math.max(0,pending-1);
+        if(result){
+          result.classList.remove("hidden");
+          result.innerHTML=
+            '<div class="reward-result-card">'+
+            (draw.preview_url||draw.image_url?'<img src="'+esc(draw.preview_url||draw.image_url)+'" alt="">':'')+
+            '<div><small>'+esc(draw.rarity||"REWARD")+'</small>'+
+            '<strong>'+esc(draw.title||"GENESIS Reward")+'</strong>'+
+            '<span>'+esc(String(draw.asset_type||"PICTURE_CARD").replaceAll("_"," "))+'</span></div></div>';
+        }
+        paint();
+      }else{
+        pending=0;
+        paint();
+        if(result){
+          result.classList.remove("hidden");
+          result.textContent=draw?.status==="NO_ELIGIBLE_COLLECTIBLE"
+            ?"Your draw is ready, but no spoiler-safe reward is eligible yet."
+            :"No reward draw is currently available.";
+        }
+      }
+    }catch{
+      button.disabled=false;
+      button.textContent=original;
+      if(result){
+        result.classList.remove("hidden");
+        result.textContent="Reward drawing is not enabled on the live backend yet.";
+      }
+    }
+  });
 }
 
 async function initSupport(){
