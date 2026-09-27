@@ -4,18 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <meta name="theme-color" content="#06101b">
+  <meta name="theme-color" content="#030913">
   <title>GENESIS: REBORN GREEDY — Official Light Novel</title>
   <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
   <link rel="stylesheet" href="/site-preview/site.css">
 </head>
-<body data-page="home" class="genesis-home">
-  <header class="game-nav">
-    <a class="game-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
-      <img src="/assets/genesis-official-logo.png" alt="">
+<body data-page="home" class="genesis-home web-ds-v2">
+  <header class="game-nav v2-nav">
+    <button class="v2-mobile-menu" type="button" aria-label="Open navigation">☰</button>
+    <a class="game-brand v2-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
+      <img src="/assets/genesis-wordmark-v2.svg" alt="GENESIS: REBORN GREEDY">
       <span>GENESIS<br><small>REBORN GREEDY</small></span>
     </a>
-    <nav class="desktop-nav" aria-label="Primary">
+    <nav class="desktop-nav v2-primary-nav" aria-label="Primary">
       <a class="active" href="/site-preview/"><span>⌂</span>Home</a>
       <a href="/site-preview/read/"><span>▤</span>Read</a>
       <a href="/site-preview/world/"><span>◎</span>World</a>
@@ -24,31 +25,39 @@
       <a href="/site-preview/manga/"><span>▧</span>Manga</a>
       <a href="/site-preview/support/"><span>♡</span>Support</a>
     </nav>
-    <div class="game-nav-actions">
-      <button class="icon-button" type="button" aria-label="Search">⌕</button>
+    <div class="game-nav-actions v2-nav-actions">
+      <label class="v2-search" aria-label="Search">
+        <span>⌕</span><input type="search" placeholder="Search stories, characters…" disabled>
+      </label>
+      <button class="icon-button v2-bell" type="button" aria-label="Notifications">♧</button>
       <a class="profile-orb" data-auth-link href="/site-preview/account/" aria-label="Reader account">
         <img src="/assets/genesis-official-logo-64.png" alt="">
       </a>
     </div>
   </header>
 
-  <main class="game-shell">
-    <section class="hero-panel">
+  <main class="game-shell v2-shell">
+    <section class="hero-panel v2-hero">
       <img class="hero-art" src="/assets/master-key-art-split-world-v1.webp" alt="GENESIS world key art">
       <div class="hero-shade"></div>
-      <div class="hero-copy">
-        <img class="hero-logo" src="/assets/genesis-official-logo.png" alt="GENESIS: REBORN GREEDY">
-        <p>A SECOND CHANCE. A GREEDIER PATH.</p>
+      <div class="v2-hero-glow" aria-hidden="true"></div>
+      <div class="hero-copy v2-hero-copy">
+        <img class="hero-logo" src="/assets/genesis-wordmark-v2.svg" alt="GENESIS: REBORN GREEDY">
+        <p>POWER WRITES A DIFFERENT ENDING.</p>
+        <small>SAME WORLD. NEW GREED. A DARKER PATH.</small>
         <div class="hero-actions">
-          <a class="genesis-btn primary" href="/site-preview/read/">Enter World</a>
+          <a class="genesis-btn primary" href="/site-preview/read/">▤ Enter World</a>
           <a class="genesis-btn ghost" href="/site-preview/read/">Continue Reading</a>
         </div>
       </div>
-      <blockquote>“Same world. A new beginning.<br>This time, I forge a different future.”</blockquote>
+      <blockquote>STORIES · CHARACTERS · WORLDS<br><strong>AND EVERYTHING IN BETWEEN.</strong></blockquote>
+      <div class="v2-corner v2-corner-tl"></div><div class="v2-corner v2-corner-tr"></div>
+      <div class="v2-corner v2-corner-bl"></div><div class="v2-corner v2-corner-br"></div>
     </section>
 
-    <section class="dashboard-grid">
-      <article class="hud-card release-hud ornate">
+    <section class="dashboard-grid v2-dashboard">
+      <article class="hud-card release-hud ornate v2-panel v2-release-panel">
+        <div class="v2-panel-rune">⌛</div>
         <div class="card-kicker">NEXT RELEASE</div>
         <div class="release-time" id="home-release-time">8:00 PM PHT</div>
         <div class="release-part" id="home-release-part">Next verified Part</div>
@@ -60,17 +69,18 @@
           <span>:</span>
           <div><strong id="cd-seconds">--</strong><small>SECONDS</small></div>
         </div>
+        <div class="v2-cycle-title">DAILY RELEASE CYCLE</div>
         <div class="cycle-rule">
-          <div><span class="sun">☀</span><strong>8:00 AM</strong><small>1st Part</small></div>
-          <div><span class="moon">☾</span><strong>8:00 PM</strong><small>2nd Part</small></div>
+          <div><span class="sun">☀</span><strong>8:00 AM</strong><small>1st Part of the Day</small></div>
+          <div><span class="moon">☾</span><strong>8:00 PM</strong><small>2nd Part of the Day</small></div>
         </div>
         <small class="timezone-note">2 Parts every day · Asia/Manila (PHT)</small>
       </article>
 
-      <article class="hud-card reading-hud">
-        <div class="card-head"><span>CURRENTLY READING</span><a href="/site-preview/read/">View Library ›</a></div>
+      <article class="hud-card reading-hud v2-panel v2-reading-panel">
+        <div class="card-head"><span>▣ CURRENTLY READING</span><a href="/site-preview/read/">View Library ›</a></div>
         <div class="reading-feature">
-          <div class="reading-art"></div>
+          <div class="reading-art v2-reading-art"><span>GENESIS</span></div>
           <div class="reading-copy">
             <small id="home-current-episode">GENESIS</small>
             <h1 id="home-current-title">Continue Your Journey</h1>
@@ -83,11 +93,11 @@
         </div>
       </article>
 
-      <article class="hud-card access-hud">
-        <div class="card-head"><span>YOUR ACCESS</span><a href="/site-preview/account/">View Details ›</a></div>
+      <article class="hud-card access-hud v2-panel v2-access-panel">
+        <div class="card-head"><span>✦ YOUR ACCESS</span><a href="/site-preview/account/">View Details ›</a></div>
         <div class="profile-row">
           <div class="profile-avatar"><img src="/assets/genesis-official-logo-64.png" alt=""></div>
-          <div>
+          <div class="v2-profile-copy">
             <strong id="home-reader-name">Reader</strong>
             <small id="home-reader-title">GENESIS Adventurer</small>
             <span class="tier-pill" id="home-reader-tier">Tier 1</span>
@@ -96,50 +106,50 @@
         <div class="exp-track"><span id="home-exp-bar" style="width:0%"></span></div>
         <div class="exp-copy"><span id="home-exp-progress">0 / 2,000 EXP</span><span id="home-exp-total">Total EXP: 0</span></div>
         <div class="access-list">
-          <div><span>♛ Advance Access</span><strong id="home-access-total">+0 Parts Ahead</strong></div>
-          <div><span>◈ Support Unlocks</span><strong id="home-support-unlocks">+0</strong></div>
-          <div><span>✦ Social Unlocks</span><strong id="home-social-unlocks">+0</strong></div>
+          <div><span>⌂ Advance Access</span><strong id="home-access-total">+0 Parts Ahead</strong></div>
+          <div><span>♨ Support Unlocks</span><strong id="home-support-unlocks">+0</strong></div>
+          <div><span>✺ Social Unlocks</span><strong id="home-social-unlocks">+0</strong></div>
           <div><span>⚔ Active Quests</span><strong id="home-active-quests">0 Ongoing</strong></div>
-          <div><span>◫ Collectible Rewards</span><strong id="home-collectibles">0</strong></div>
+          <div><span>⚜ Collectible Rewards</span><strong id="home-collectibles">0</strong></div>
         </div>
       </article>
     </section>
 
-    <section class="home-row">
-      <article class="hud-card latest-card">
-        <div class="card-head"><span>LATEST RELEASES</span><a href="/site-preview/read/">View All ›</a></div>
-        <div class="release-cards" id="home-latest-releases">
-          <div class="release-tile skeleton"></div>
-          <div class="release-tile skeleton"></div>
-          <div class="release-tile skeleton"></div>
+    <section class="home-row v2-home-row">
+      <article class="hud-card latest-card v2-panel">
+        <div class="card-head"><span>✦ LATEST RELEASES</span><a href="/site-preview/read/">View All ›</a></div>
+        <div class="release-cards v2-release-cards" id="home-latest-releases">
+          <div class="release-tile v2-release-tile skeleton art-one"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 01</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
+          <div class="release-tile v2-release-tile skeleton art-two"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 02</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
+          <div class="release-tile v2-release-tile skeleton art-three"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 03</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
         </div>
       </article>
 
-      <article class="hud-card notices-card">
-        <div class="card-head"><span>ANNOUNCEMENTS</span><span>System Notices</span></div>
+      <article class="hud-card notices-card v2-panel">
+        <div class="card-head"><span>⌂ ANNOUNCEMENTS</span><span>View All ›</span></div>
         <div class="notice-list">
-          <div><span class="notice-icon gold">⌂</span><p><strong>Two-Part Daily Cycle</strong><small>New Parts release at 8:00 AM and 8:00 PM PHT.</small></p></div>
-          <div><span class="notice-icon cyan">✦</span><p><strong>Reader Quest System</strong><small>Read, share, and support to earn EXP and Tier rewards.</small></p></div>
-          <div><span class="notice-icon violet">♡</span><p><strong>Support GENESIS</strong><small>Support can unlock advance access without changing public chronology.</small></p></div>
+          <div><span class="notice-icon gold">⌂</span><p><strong>Two-Part Daily Cycle</strong><small>New Parts release at 8:00 AM and 8:00 PM PHT.</small></p><time>NOW</time></div>
+          <div><span class="notice-icon cyan">✦</span><p><strong>Reader Quest System</strong><small>Read, share, and support to earn EXP and Tier rewards.</small></p><time>ACTIVE</time></div>
+          <div><span class="notice-icon violet">♡</span><p><strong>Support GENESIS</strong><small>Advance access never changes public chronology.</small></p><time>PREVIEW</time></div>
         </div>
       </article>
     </section>
 
-    <section class="feature-grid">
-      <a class="feature-tile world" href="/site-preview/world/"><div><strong>World</strong><span>Explore the lore and vast continents</span></div><b>›</b></a>
-      <a class="feature-tile codex" href="/site-preview/codex/"><div><strong>Codex</strong><span>Characters, items, monsters and more</span></div><b>›</b></a>
-      <a class="feature-tile fan" href="/site-preview/fan-page/"><div><strong>Fan Page</strong><span>Share, discuss and connect</span></div><b>›</b></a>
-      <a class="feature-tile manga" href="/site-preview/manga/"><div><strong>Manga</strong><span>Coming Soon</span></div><b>›</b></a>
-      <a class="feature-tile support" href="/site-preview/support/"><div><strong>Support</strong><span>Help the story continue</span></div><b>›</b></a>
+    <section class="feature-grid v2-feature-grid">
+      <a class="feature-tile world" href="/site-preview/world/"><i>◈</i><div><strong>World</strong><span>Explore the lore and vast continents</span></div><b>›</b></a>
+      <a class="feature-tile codex" href="/site-preview/codex/"><i>▣</i><div><strong>Codex</strong><span>Characters, factions, items and more</span></div><b>›</b></a>
+      <a class="feature-tile fan" href="/site-preview/fan-page/"><i>♟</i><div><strong>Fan Page</strong><span>Share, discuss and connect</span></div><b>›</b></a>
+      <a class="feature-tile manga" href="/site-preview/manga/"><i>⚔</i><div><strong>Manga</strong><span>Illustrations and side stories</span></div><b>›</b></a>
+      <a class="feature-tile support" href="/site-preview/support/"><i>♢</i><div><strong>Support</strong><span>Help the story continue</span></div><b>›</b></a>
     </section>
   </main>
 
-  <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <nav class="mobile-bottom-nav v2-mobile-bottom" aria-label="Mobile navigation">
     <a class="active" href="/site-preview/"><span>⌂</span>Home</a>
     <a href="/site-preview/read/"><span>▤</span>Read</a>
     <a href="/site-preview/world/"><span>◎</span>World</a>
     <a href="/site-preview/codex/"><span>▣</span>Codex</a>
-    <a href="/site-preview/support/"><span>♡</span>Support</a>
+    <a href="/site-preview/support/"><span>♙</span>Support</a>
   </nav>
 
   <script type="module" src="/site-preview/site.js"></script>
