@@ -171,7 +171,7 @@ jobs:
           grep -q '/assets/genesis-wordmark-v2.svg' /tmp/candidate-home.html \
             && echo "PASS: WEB-DS-V2 wordmark reference" \
             || { echo "::error::FAIL: WEB-DS-V2 wordmark reference missing"; exit 1; }
-          test "$(curl -sS -o /dev/null -w '%{http_code}' \"$CANDIDATE_URL/assets/genesis-wordmark-v2.svg\")" = "200" \
+          test "$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/assets/genesis-wordmark-v2.svg")" = "200" \
             && echo "PASS: WEB-DS-V2 wordmark asset" \
             || { echo "::error::FAIL: WEB-DS-V2 wordmark asset unavailable"; exit 1; }
           grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/candidate-home.html \
