@@ -2937,3 +2937,382 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   background-size:cover!important;
   background-position:center!important;
 }
+
+
+/* ============================================================
+   WEB-DS-V2.6 — DASHBOARD & CONTENT CARD RECONSTRUCTION
+   Priority: hierarchy, readability, premium HUD composition.
+   Visual-only. Existing IDs/routes/backend behavior preserved.
+   ============================================================ */
+
+/* Shared card hierarchy */
+.web-ds-v2 .v2-dashboard,
+.web-ds-v2 .v2-home-row,
+.web-ds-v2 .v2-feature-grid{
+  gap:12px;
+}
+.web-ds-v2 .v2-panel{
+  border-radius:10px;
+}
+.web-ds-v2 .v2-panel .card-head{
+  min-height:48px;
+  padding:0 16px;
+}
+.web-ds-v2 .v2-panel .card-head>span:first-child{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.web-ds-v2 .v2-panel .card-head .v25-icon{
+  width:18px;height:18px;
+  color:#f2d078;
+}
+.web-ds-v2 .v2-panel .card-head>a,
+.web-ds-v2 .v2-panel .card-head>span:last-child{
+  color:#83cdf7;
+  font-size:10px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+/* Next Release = primary utility HUD */
+.web-ds-v2 .v2-release-panel{
+  padding:18px 14px 16px;
+}
+.web-ds-v2 .v2-release-panel .v2-panel-rune{
+  margin-bottom:6px;
+}
+.web-ds-v2 .v2-release-panel .card-kicker{
+  font-size:16px;
+  letter-spacing:.08em;
+}
+.web-ds-v2 .release-time{
+  margin-top:3px;
+}
+.web-ds-v2 .release-part{
+  margin-top:3px;
+  font-size:11px;
+  color:#c9def0;
+}
+.web-ds-v2 .release-state-banner{
+  margin:12px 0 12px;
+}
+.web-ds-v2 .countdown-row{
+  margin-top:4px;
+}
+.web-ds-v2 .countdown-row>div{
+  min-height:76px;
+}
+.web-ds-v2 .v2-cycle-title{
+  margin-top:15px;
+  font-size:9px;
+  letter-spacing:.16em;
+}
+
+/* Currently Reading = strongest content card */
+.web-ds-v2 .v2-reading-panel{
+  min-height:100%;
+}
+.web-ds-v2 .reading-feature{
+  display:grid;
+  grid-template-columns:minmax(205px,34%) minmax(0,1fr);
+  min-height:300px;
+  gap:18px;
+  padding:14px;
+}
+.web-ds-v2 .v2-reading-art{
+  min-height:270px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:flex-start;
+  padding:17px;
+  background:
+    linear-gradient(180deg,transparent 38%,rgba(2,8,14,.92)),
+    url("/assets/v25/releases/release-city.png") center/cover no-repeat;
+}
+.web-ds-v2 .reading-art-label{
+  display:block;
+  margin-bottom:5px;
+  font-size:9px;
+  letter-spacing:.15em;
+  color:#8edcff;
+}
+.web-ds-v2 .reading-art-title{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:22px;
+  letter-spacing:.08em;
+  color:#ffe1a0;
+  text-shadow:0 2px 14px #000;
+}
+.web-ds-v2 .reading-copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:14px 8px 14px 0;
+}
+.web-ds-v2 .reading-copy>small{
+  font-size:10px;
+  margin-bottom:8px;
+}
+.web-ds-v2 .reading-copy h1{
+  margin:0 0 10px;
+  line-height:1.03;
+}
+.web-ds-v2 .reading-copy p{
+  max-width:48ch;
+  line-height:1.55;
+  color:#d6e0e8;
+}
+.web-ds-v2 .reading-actions{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:10px;
+}
+.web-ds-v2 .reading-actions .genesis-btn{
+  min-height:48px;
+}
+
+/* Your Access = compact character HUD */
+.web-ds-v2 .v2-access-panel{
+  display:flex;
+  flex-direction:column;
+}
+.web-ds-v2 .access-identity{
+  margin:12px 12px 8px;
+  padding:12px 12px 11px;
+  border:1px solid rgba(72,151,207,.34);
+  background:
+    radial-gradient(circle at 22% 18%,rgba(62,167,238,.12),transparent 35%),
+    linear-gradient(135deg,rgba(9,31,48,.88),rgba(4,13,22,.74));
+}
+.web-ds-v2 .access-kicker{
+  display:block;
+  margin-bottom:10px;
+  font-size:8px;
+  letter-spacing:.15em;
+  color:#75cfff;
+}
+.web-ds-v2 .profile-row{
+  padding:0;
+}
+.web-ds-v2 .profile-avatar{
+  width:62px;height:62px;
+}
+.web-ds-v2 .v2-profile-copy{
+  gap:3px;
+}
+.web-ds-v2 .v2-profile-copy small{
+  color:#9fb5c6;
+}
+.web-ds-v2 .access-progress-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin:2px 14px 5px;
+  font-size:8px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:#8198aa;
+}
+.web-ds-v2 .access-progress-head strong{
+  color:#ddc16f;
+  font-weight:600;
+}
+.web-ds-v2 .exp-track{
+  margin:0 14px;
+  height:9px;
+}
+.web-ds-v2 .exp-copy{
+  margin:5px 14px 9px;
+}
+.web-ds-v2 .access-list{
+  margin-top:auto;
+  border-top:1px solid rgba(79,148,195,.25);
+}
+.web-ds-v2 .access-list>div{
+  padding:0 14px;
+  min-height:39px;
+}
+.web-ds-v2 .access-list>div strong{
+  color:#f2d274;
+}
+
+/* Latest Releases = image-first cards */
+.web-ds-v2 .latest-card{
+  min-height:260px;
+}
+.web-ds-v2 .v2-release-cards{
+  gap:10px;
+  padding:12px;
+}
+.web-ds-v2 .v2-release-tile{
+  min-height:166px;
+  grid-template-columns:44% minmax(0,1fr);
+  border-color:rgba(231,189,99,.38);
+}
+.web-ds-v2 .release-thumb{
+  min-height:166px;
+  border-right:1px solid rgba(231,189,99,.24);
+}
+.web-ds-v2 .release-info{
+  padding:14px 12px;
+  justify-content:center;
+}
+.web-ds-v2 .release-info small{
+  font-size:8px;
+  letter-spacing:.13em;
+}
+.web-ds-v2 .release-info strong{
+  margin:5px 0 6px;
+  font-size:17px;
+  line-height:1.08;
+}
+.web-ds-v2 .release-info span{
+  font-size:9px;
+  line-height:1.45;
+  color:#afc1cf;
+}
+
+/* Announcements = concise quest log */
+.web-ds-v2 .notices-card{
+  min-height:260px;
+}
+.web-ds-v2 .notice-list{
+  padding:8px 12px 12px;
+}
+.web-ds-v2 .notice-list>div{
+  min-height:61px;
+  padding:9px 2px;
+  grid-template-columns:42px minmax(0,1fr) auto;
+  gap:10px;
+}
+.web-ds-v2 .notice-icon{
+  width:38px;height:38px;
+}
+.web-ds-v2 .notice-list p strong{
+  font-size:11px;
+}
+.web-ds-v2 .notice-list p small{
+  margin-top:3px;
+  font-size:8px;
+  line-height:1.4;
+}
+.web-ds-v2 .notice-list time{
+  font-size:7px;
+}
+
+/* Destination cards = cinematic navigation band */
+.web-ds-v2 .v2-feature-grid{
+  margin-top:12px;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile{
+  min-height:154px;
+  padding:17px;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile>i.v25-icon{
+  width:34px;height:34px;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile strong{
+  font-size:22px;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile span{
+  display:block;
+  margin-top:3px;
+  font-size:9px;
+  line-height:1.3;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile>b .v25-icon{
+  width:24px;height:24px;
+}
+
+/* Desktop proportions */
+@media(min-width:1100px){
+  .web-ds-v2 .v2-dashboard{
+    grid-template-columns:365px minmax(0,1.65fr) 390px;
+    align-items:stretch;
+  }
+  .web-ds-v2 .v2-home-row{
+    grid-template-columns:minmax(0,1.62fr) minmax(355px,.78fr);
+  }
+}
+
+/* Tablet/mobile: authored stacking, not compressed desktop */
+@media(max-width:900px){
+  .web-ds-v2 .v2-dashboard{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:9px!important;
+  }
+  .web-ds-v2 .v2-reading-panel{order:2}
+  .web-ds-v2 .v2-release-panel{order:1}
+  .web-ds-v2 .v2-access-panel{order:3}
+  .web-ds-v2 .reading-feature{
+    grid-template-columns:128px minmax(0,1fr);
+    min-height:210px;
+    gap:11px;
+    padding:10px;
+  }
+  .web-ds-v2 .v2-reading-art{
+    min-height:190px;
+    padding:11px;
+  }
+  .web-ds-v2 .reading-art-title{font-size:15px}
+  .web-ds-v2 .reading-copy{
+    padding:8px 2px 8px 0;
+  }
+  .web-ds-v2 .reading-copy p{
+    font-size:10px;
+    line-height:1.45;
+  }
+  .web-ds-v2 .reading-actions{
+    grid-template-columns:1fr;
+    margin-top:10px;
+    gap:7px;
+  }
+  .web-ds-v2 .reading-actions .genesis-btn{
+    min-height:41px;
+  }
+  .web-ds-v2 .v2-release-cards{
+    grid-template-columns:1fr!important;
+  }
+  .web-ds-v2 .v2-release-tile{
+    grid-template-columns:130px minmax(0,1fr)!important;
+    min-height:118px!important;
+  }
+  .web-ds-v2 .release-thumb{
+    min-height:118px!important;
+  }
+  .web-ds-v2 .v2-feature-grid{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .web-ds-v2 .v2-feature-grid .feature-tile{
+    min-height:128px;
+  }
+}
+@media(max-width:520px){
+  .web-ds-v2 .v2-panel .card-head{
+    min-height:43px;
+    padding:0 12px;
+  }
+  .web-ds-v2 .reading-feature{
+    grid-template-columns:108px minmax(0,1fr);
+  }
+  .web-ds-v2 .v2-reading-art{
+    min-height:175px;
+  }
+  .web-ds-v2 .reading-copy h1{
+    font-size:19px;
+  }
+  .web-ds-v2 .v2-release-tile{
+    grid-template-columns:112px minmax(0,1fr)!important;
+  }
+  .web-ds-v2 .v2-feature-grid{
+    grid-template-columns:1fr!important;
+  }
+  .web-ds-v2 .v2-feature-grid .feature-tile{
+    min-height:118px;
+  }
+}
