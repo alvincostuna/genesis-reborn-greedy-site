@@ -548,6 +548,8 @@ async function initHome(){
       document.querySelector("#home-exp-progress").textContent=within.toLocaleString()+" / "+TIER_EXP_THRESHOLD.toLocaleString()+" EXP";
       document.querySelector("#home-exp-total").textContent="Total EXP: "+totalExp.toLocaleString();
       document.querySelector("#home-exp-bar").style.width=Math.min(100,within/TIER_EXP_THRESHOLD*100)+"%";
+      const nextTierEl=document.querySelector("#home-tier-next");
+      if(nextTierEl)nextTierEl.textContent="Next reward in "+(TIER_EXP_THRESHOLD-within).toLocaleString()+" EXP";
       const support=Number(data?.support?.advance_parts??data?.support?.credit_balance??0);
       document.querySelector("#home-support-unlocks").textContent="+"+support;
       document.querySelector("#home-access-total").textContent="+"+support+" Parts Ahead";
