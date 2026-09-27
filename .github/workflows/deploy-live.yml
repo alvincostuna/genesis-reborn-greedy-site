@@ -150,7 +150,17 @@ jobs:
           done
 
           echo "Verifying candidate home content..."
-          curl -fsS "$CANDIDATE_URL/" -o /tmp/candidate-home.html
+          HOME_STATUS="000"
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            HOME_STATUS="$(curl -sS -o /tmp/candidate-home.html -w '%{http_code}' "$CANDIDATE_URL/" || true)"
+            echo "Candidate home-content attempt $attempt -> HTTP $HOME_STATUS"
+            if [ "$HOME_STATUS" = "200" ] && grep -q 'data-page="home"' /tmp/candidate-home.html; then
+              break
+            fi
+            sleep 2
+          done
+          test "$HOME_STATUS" = "200" \
+            || { echo "::error::FAIL: candidate home never stabilized at HTTP 200"; exit 1; }
           grep -q 'data-page="home"' /tmp/candidate-home.html \
             && echo "PASS: home data-page marker" \
             || { echo "::error::FAIL: home data-page marker missing"; exit 1; }
@@ -186,7 +196,15 @@ jobs:
             || { echo "::error::FAIL: /admin/ returned HTTP $ADMIN_STATUS instead of 404"; exit 1; }
 
           echo "Verifying security headers..."
-          curl -fsSI "$CANDIDATE_URL/" -o /tmp/candidate-headers.txt
+          HEADER_STATUS="000"
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            HEADER_STATUS="$(curl -sS -D /tmp/candidate-headers.txt -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/" || true)"
+            echo "Candidate header attempt $attempt -> HTTP $HEADER_STATUS"
+            if [ "$HEADER_STATUS" = "200" ]; then break; fi
+            sleep 2
+          done
+          test "$HEADER_STATUS" = "200" \
+            || { echo "::error::FAIL: candidate headers never stabilized at HTTP 200"; exit 1; }
           cat /tmp/candidate-headers.txt
           grep -Eiq '^content-security-policy:' /tmp/candidate-headers.txt \
             && echo "PASS: Content-Security-Policy" \
