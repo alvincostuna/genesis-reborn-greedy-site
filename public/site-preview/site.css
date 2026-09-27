@@ -2871,3 +2871,69 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     object-position:center 24%;
   }
 }
+
+
+/* ============================================================
+   WEB-DS-V2.5 — AUTHORED RELEASE + DESTINATION ARTWORK
+   ============================================================ */
+.web-ds-v2 .art-one .release-thumb,
+.web-ds-v2 .release-art-1 .release-thumb{
+  background-image:
+    linear-gradient(180deg,transparent 42%,rgba(2,8,15,.72)),
+    url("/assets/v25/releases/release-duel.png")!important;
+  background-size:cover!important;
+  background-position:center!important;
+}
+.web-ds-v2 .art-two .release-thumb,
+.web-ds-v2 .release-art-2 .release-thumb{
+  background-image:
+    linear-gradient(180deg,transparent 42%,rgba(2,8,15,.72)),
+    url("/assets/v25/releases/release-city.png")!important;
+  background-size:cover!important;
+  background-position:center!important;
+}
+.web-ds-v2 .art-three .release-thumb,
+.web-ds-v2 .release-art-3 .release-thumb{
+  background-image:
+    linear-gradient(180deg,transparent 42%,rgba(2,8,15,.72)),
+    url("/assets/v25/releases/release-mystery.png")!important;
+  background-size:cover!important;
+  background-position:center!important;
+}
+
+.web-ds-v2 .v2-feature-grid .feature-tile.world{
+  background-image:
+    linear-gradient(180deg,rgba(5,19,31,.04),rgba(2,8,14,.62)),
+    url("/assets/v25/destinations/destination-world.png")!important;
+  background-size:cover!important;
+  background-position:center!important;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile.codex{
+  background-image:
+    linear-gradient(180deg,rgba(5,19,31,.04),rgba(2,8,14,.64)),
+    url("/assets/v25/destinations/destination-codex.png")!important;
+  background-size:cover!important;
+  background-position:center!important;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile.fan{
+  background-image:
+    linear-gradient(180deg,rgba(5,19,31,.03),rgba(2,8,14,.64)),
+    url("/assets/v25/destinations/destination-fanpage.png")!important;
+  background-size:cover!important;
+  background-position:center!important;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile.manga{
+  background-image:
+    linear-gradient(180deg,rgba(5,19,31,.04),rgba(2,8,14,.68)),
+    url("/assets/v25/destinations/destination-manga.png")!important;
+  background-size:cover!important;
+  background-position:center!important;
+  filter:none!important;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile.support{
+  background-image:
+    linear-gradient(180deg,rgba(5,19,31,.03),rgba(2,8,14,.64)),
+    url("/assets/v25/destinations/destination-support.png")!important;
+  background-size:cover!important;
+  background-position:center!important;
+}
