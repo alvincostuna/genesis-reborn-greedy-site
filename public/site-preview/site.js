@@ -2,6 +2,7 @@ const SUPABASE_URL="https://lyhrwymhzhhxszquxnke.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_rCJL18_zLNtWH-ON1DTnDA_3quoGH3Q";
 
 const SESSION_KEY="genesis_reader_session_v1";
+const TIER_EXP_THRESHOLD=1000;
 
 function accountPath(){
   return location.pathname.startsWith("/site-preview/")?"/site-preview/account/":"/account/";
@@ -162,11 +163,11 @@ async function initAccount(){
       document.querySelector("#account-badge").textContent=data?.support?.public_badge||"None";
       document.querySelector("#badge-supporter").checked=!!data?.show_supporter_badge;
       document.querySelector("#badge-vip").checked=!!data?.show_vip_badge;
-      const totalExp=Number(data?.reader_exp??data?.total_exp??0),tier=Math.floor(totalExp/2000)+1,within=totalExp%2000;
+      const totalExp=Number(data?.reader_exp??data?.total_exp??0),tier=Math.floor(totalExp/TIER_EXP_THRESHOLD)+1,within=totalExp%TIER_EXP_THRESHOLD;
       document.querySelector("#profile-tier-badge").textContent="Tier "+tier;
       document.querySelector("#profile-exp-total").textContent=totalExp.toLocaleString()+" EXP";
-      document.querySelector("#profile-next-tier").textContent=(2000-within).toLocaleString()+" to next Tier";
-      document.querySelector("#profile-exp-bar").style.width=Math.min(100,within/2000*100)+"%";
+      document.querySelector("#profile-next-tier").textContent=(TIER_EXP_THRESHOLD-within).toLocaleString()+" to next Tier";
+      document.querySelector("#profile-exp-bar").style.width=Math.min(100,within/TIER_EXP_THRESHOLD*100)+"%";
       document.querySelector("#profile-title-badge").textContent=data?.reader_title||data?.support?.public_badge||"GENESIS Adventurer";
       document.querySelector("#profile-latest-read").textContent=data?.latest_read_label||data?.reading_progress?.latest_label||"Not started";
       document.querySelector("#profile-parts-read").textContent=String(data?.parts_read??data?.reading_progress?.parts_read??0);
@@ -541,12 +542,12 @@ async function initHome(){
       const name=data?.display_name||user?.user_metadata?.display_name||"Reader";
       document.querySelector("#home-reader-name").textContent=name;
       const totalExp=Number(data?.reader_exp??data?.total_exp??0);
-      const tier=Math.floor(totalExp/2000)+1;
-      const within=totalExp%2000;
+      const tier=Math.floor(totalExp/TIER_EXP_THRESHOLD)+1;
+      const within=totalExp%TIER_EXP_THRESHOLD;
       document.querySelector("#home-reader-tier").textContent="Tier "+tier;
-      document.querySelector("#home-exp-progress").textContent=within.toLocaleString()+" / 2,000 EXP";
+      document.querySelector("#home-exp-progress").textContent=within.toLocaleString()+" / "+TIER_EXP_THRESHOLD.toLocaleString()+" EXP";
       document.querySelector("#home-exp-total").textContent="Total EXP: "+totalExp.toLocaleString();
-      document.querySelector("#home-exp-bar").style.width=Math.min(100,within/2000*100)+"%";
+      document.querySelector("#home-exp-bar").style.width=Math.min(100,within/TIER_EXP_THRESHOLD*100)+"%";
       const support=Number(data?.support?.advance_parts??data?.support?.credit_balance??0);
       document.querySelector("#home-support-unlocks").textContent="+"+support;
       document.querySelector("#home-access-total").textContent="+"+support+" Parts Ahead";
