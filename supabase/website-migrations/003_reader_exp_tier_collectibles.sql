@@ -288,3 +288,61 @@ revoke all on function public.reader_draw_collectible_v1() from public;
 grant execute on function public.reader_draw_collectible_v1() to authenticated;
 revoke all on function public.api_reader_account_v3() from public;
 grant execute on function public.api_reader_account_v3() to authenticated,service_role;
+
+create or replace function public.api_reader_collectibles_v1()
+returns jsonb
+language sql stable security definer
+set search_path='pg_catalog','public','auth','pg_temp'
+as $
+  with me as (
+    select auth.uid() as user_id
+  ),
+  progress as (
+    select coalesce(rp.highest_episode_read,0) as highest_episode_read
+    from me
+    left join public.reader_profiles rp on rp.user_id=me.user_id
+  ),
+  rewards as (
+    select
+      c.collectible_key,
+      c.title,
+      c.asset_type,
+      c.rarity,
+      c.image_url,
+      c.preview_url,
+      c.download_url,
+      c.downloadable,
+      c.min_episode,
+      coalesce(i.quantity,0)::integer as quantity,
+      (coalesce(i.quantity,0)>0) as owned,
+      (c.min_episode<=coalesce((select highest_episode_read from progress),0)) as eligible
+    from public.reader_collectible_catalog c
+    cross join me
+    left join public.reader_collectible_inventory i
+      on i.user_id=me.user_id and i.collectible_id=c.id
+    where c.active
+    order by
+      case c.rarity
+        when 'LEGENDARY' then 5
+        when 'EPIC' then 4
+        when 'RARE' then 3
+        when 'UNCOMMON' then 2
+        else 1
+      end desc,
+      c.created_at asc
+  )
+  select case
+    when (select user_id from me) is null then
+      jsonb_build_object('status','AUTHENTICATION_REQUIRED','items','[]'::jsonb)
+    else
+      jsonb_build_object(
+        'status','OK',
+        'items',coalesce(jsonb_agg(to_jsonb(rewards)),'[]'::jsonb)
+      )
+  end
+  from rewards
+$;
+
+revoke all on function public.api_reader_collectibles_v1() from public;
+grant execute on function public.api_reader_collectibles_v1() to authenticated,service_role;
+
