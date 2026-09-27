@@ -3661,3 +3661,131 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     flex-direction:column;
   }
 }
+
+
+/* ============================================================
+   WEB-DS-V2.7 — EARNED / LOCKED REWARD STATES
+   ============================================================ */
+.vault-divider{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:18px 18px 10px;
+  color:#d9b15f;
+  font-size:9px;
+  letter-spacing:.14em;
+}
+.vault-divider:before,.vault-divider:after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(217,177,95,.35));
+}
+.vault-divider:after{background:linear-gradient(90deg,rgba(217,177,95,.35),transparent)}
+.reward-vault-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  padding:0 14px 6px;
+  text-align:left;
+}
+.reward-vault-empty{
+  grid-column:1/-1;
+  padding:14px;
+  border:1px dashed rgba(111,199,255,.22);
+  border-radius:8px;
+  color:#7990a4;
+  font-size:10px;
+  text-align:center;
+}
+.reward-state-card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(104,190,245,.22);
+  border-radius:8px;
+  background:linear-gradient(145deg,#0b2031,#06111b);
+  box-shadow:0 10px 22px rgba(0,0,0,.18);
+}
+.reward-state-card.earned{
+  border-color:rgba(232,193,103,.58);
+  box-shadow:0 0 0 1px rgba(232,193,103,.08),0 12px 25px rgba(0,0,0,.26);
+}
+.reward-state-card.locked{
+  border-color:rgba(80,101,122,.24);
+}
+.reward-state-art{
+  position:relative;
+  height:118px;
+  overflow:hidden;
+  background:#020812;
+}
+.reward-state-art img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.reward-state-card.locked .reward-state-art img{
+  filter:grayscale(.75) brightness(.43) blur(.5px);
+}
+.reward-state-card.available .reward-state-art img{
+  filter:saturate(.82) brightness(.7);
+}
+.reward-lock{
+  position:absolute;
+  inset:auto 8px 8px auto;
+  min-width:28px;
+  height:28px;
+  padding:0 7px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(221,196,129,.34);
+  border-radius:999px;
+  background:rgba(3,10,18,.82);
+  color:#f0d183;
+  font-size:12px;
+}
+.reward-state-copy{
+  padding:10px;
+}
+.reward-state-copy small{
+  display:block;
+  color:#78cfff;
+  font-size:7px;
+  letter-spacing:.11em;
+}
+.reward-state-copy strong{
+  display:block;
+  margin:4px 0 5px;
+  color:#f3e4c3;
+  font:600 14px Georgia,"Times New Roman",serif;
+  line-height:1.15;
+}
+.reward-state-copy span{
+  display:block;
+  color:#879bad;
+  font-size:8px;
+}
+.reward-state-card.earned .reward-state-copy span{color:#e2c879}
+.reward-state-card.locked .reward-state-copy span{color:#718292}
+.reward-portfolio-grid{
+  grid-template-columns:repeat(5,minmax(0,1fr));
+}
+.reward-portfolio-grid .reward-state-card.compact .reward-state-art{
+  height:126px;
+}
+.reward-portfolio-grid .reward-state-card.compact .reward-state-copy{
+  padding:8px;
+}
+.reward-portfolio-grid .reward-state-card.compact .reward-state-copy strong{
+  font-size:12px;
+}
+@media(max-width:980px){
+  .reward-portfolio-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .reward-vault-grid{grid-template-columns:1fr 1fr;padding:0 10px 4px}
+  .reward-state-art{height:108px}
+  .reward-portfolio-grid{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px}
+  .reward-portfolio-grid .reward-state-card.compact .reward-state-art{height:130px}
+}
