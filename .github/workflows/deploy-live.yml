@@ -149,21 +149,57 @@ jobs:
             test "$STATUS" = "200"
           done
 
+          echo "Verifying candidate home content..."
           curl -fsS "$CANDIDATE_URL/" -o /tmp/candidate-home.html
-          grep -q 'data-page="home"' /tmp/candidate-home.html
-          grep -q 'NEXT RELEASE' /tmp/candidate-home.html
-          grep -q '/assets/genesis-official-logo.png' /tmp/candidate-home.html
-          grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/candidate-home.html
-          ! grep -q '/site-preview/' /tmp/candidate-home.html
-          curl -fsS "$CANDIDATE_URL/assets/master-key-art-split-world-v1.webp" -o /tmp/candidate-hero.webp
-          test "$(sha256sum /tmp/candidate-hero.webp | awk '{print $1}')" = "64c2fa7b46053c8ba468be5dbd7f58795624be92cdf71e0e53334f1d501dba25"
-          test "$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/admin/")" = "404"
+          grep -q 'data-page="home"' /tmp/candidate-home.html \
+            && echo "PASS: home data-page marker" \
+            || { echo "::error::FAIL: home data-page marker missing"; exit 1; }
+          grep -q 'NEXT RELEASE' /tmp/candidate-home.html \
+            && echo "PASS: NEXT RELEASE marker" \
+            || { echo "::error::FAIL: NEXT RELEASE marker missing"; exit 1; }
+          grep -q '/assets/genesis-official-logo.png' /tmp/candidate-home.html \
+            && echo "PASS: official logo reference" \
+            || { echo "::error::FAIL: official logo reference missing"; exit 1; }
+          grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/candidate-home.html \
+            && echo "PASS: hero asset reference" \
+            || { echo "::error::FAIL: hero asset reference missing"; exit 1; }
+          if grep -q '/site-preview/' /tmp/candidate-home.html; then
+            echo "::error::FAIL: preview-only path leaked into live candidate"
+            exit 1
+          else
+            echo "PASS: no /site-preview/ path leak"
+          fi
 
+          echo "Verifying locked hero asset..."
+          curl -fsS "$CANDIDATE_URL/assets/master-key-art-split-world-v1.webp" -o /tmp/candidate-hero.webp
+          CANDIDATE_HERO_SHA="$(sha256sum /tmp/candidate-hero.webp | awk '{print $1}')"
+          echo "Candidate hero SHA-256: $CANDIDATE_HERO_SHA"
+          test "$CANDIDATE_HERO_SHA" = "64c2fa7b46053c8ba468be5dbd7f58795624be92cdf71e0e53334f1d501dba25" \
+            && echo "PASS: hero asset hash" \
+            || { echo "::error::FAIL: hero asset hash mismatch"; exit 1; }
+
+          echo "Verifying private Control Center remains unavailable..."
+          ADMIN_STATUS="$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/admin/")"
+          echo "Candidate /admin/ -> HTTP $ADMIN_STATUS"
+          test "$ADMIN_STATUS" = "404" \
+            && echo "PASS: /admin/ remains private" \
+            || { echo "::error::FAIL: /admin/ returned HTTP $ADMIN_STATUS instead of 404"; exit 1; }
+
+          echo "Verifying security headers..."
           curl -fsSI "$CANDIDATE_URL/" -o /tmp/candidate-headers.txt
-          grep -Eiq '^content-security-policy:' /tmp/candidate-headers.txt
-          grep -Eiq '^strict-transport-security:' /tmp/candidate-headers.txt
-          grep -Eiq '^x-content-type-options:[[:space:]]*nosniff' /tmp/candidate-headers.txt
-          grep -Eiq '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/candidate-headers.txt
+          cat /tmp/candidate-headers.txt
+          grep -Eiq '^content-security-policy:' /tmp/candidate-headers.txt \
+            && echo "PASS: Content-Security-Policy" \
+            || { echo "::error::FAIL: Content-Security-Policy missing"; exit 1; }
+          grep -Eiq '^strict-transport-security:' /tmp/candidate-headers.txt \
+            && echo "PASS: Strict-Transport-Security" \
+            || { echo "::error::FAIL: Strict-Transport-Security missing"; exit 1; }
+          grep -Eiq '^x-content-type-options:[[:space:]]*nosniff' /tmp/candidate-headers.txt \
+            && echo "PASS: X-Content-Type-Options" \
+            || { echo "::error::FAIL: X-Content-Type-Options missing/wrong"; exit 1; }
+          grep -Eiq '^referrer-policy:[[:space:]]*strict-origin-when-cross-origin' /tmp/candidate-headers.txt \
+            && echo "PASS: Referrer-Policy" \
+            || { echo "::error::FAIL: Referrer-Policy missing/wrong"; exit 1; }
 
       - name: Promote verified candidate
         env:
