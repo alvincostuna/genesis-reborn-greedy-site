@@ -8,3 +8,4 @@ preview_urls = true
 directory = "./.live-assets"
 binding = "ASSETS"
 run_worker_first = true
+html_handling = "none"
