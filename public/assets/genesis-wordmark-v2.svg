@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 150" role="img" aria-labelledby="t d">
+<title id="t">GENESIS REBORN GREEDY</title><desc id="d">Gold fantasy wordmark for GENESIS REBORN GREEDY.</desc>
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff1b8"/><stop offset=".38" stop-color="#e7bd66"/>
+    <stop offset=".72" stop-color="#9d6b25"/><stop offset="1" stop-color="#f4d887"/>
+  </linearGradient>
+  <filter id="glow" x="-30%" y="-50%" width="160%" height="200%">
+    <feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+<g fill="none" stroke="url(#g)" opacity=".88">
+  <path d="M14 69h48M498 69h48" stroke-width="2"/>
+  <path d="M53 69l18-18M507 69l-18-18M53 69l18 18M507 69l-18 18" stroke-width="1.4"/>
+  <path d="M280 8l8 12-8 12-8-12z" fill="url(#g)" stroke="none"/>
+</g>
+<text x="280" y="78" text-anchor="middle" fill="url(#g)" filter="url(#glow)"
+      font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" letter-spacing="3">GENESIS</text>
+<text x="280" y="111" text-anchor="middle" fill="#f1db9d"
+      font-family="Georgia, 'Times New Roman', serif" font-size="23" font-weight="700" letter-spacing="10">REBORN</text>
+<text x="280" y="139" text-anchor="middle" fill="#c99539"
+      font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="700" letter-spacing="8">GREEDY</text>
+</svg>
