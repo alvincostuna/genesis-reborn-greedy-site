@@ -86,6 +86,30 @@ function textParagraphs(v){
   const parts=String(v||"").trim().split(/\n\s*\n/).filter(Boolean);
   return parts.map(p=>"<p>"+esc(p).replace(/\n/g,"<br>")+"</p>").join("");
 }
+async function loadRewardManifest(){
+  try{
+    const r=await fetch("/assets/v27/rewards/reward-manifest.json",{cache:"no-store"});
+    if(!r.ok)throw new Error("manifest unavailable");
+    const data=await r.json();
+    return Array.isArray(data?.first_upload_batch)?data.first_upload_batch:[];
+  }catch{return []}
+}
+function rewardTypeLabel(v){return String(v||"PICTURE_CARD").replaceAll("_"," ")}
+function rewardCardHtml(item,{owned=false,quantity=0,eligible=true,compact=false}={}){
+  const file=item?.filename||(item?.image_url||item?.preview_url||"").split("/").pop();
+  const src=item?.preview_url||item?.image_url||(file?"/assets/v27/rewards/"+file:"");
+  const title=item?.title||"GENESIS Reward";
+  const rarity=item?.rarity||"REWARD";
+  const type=item?.type||item?.asset_type||"PICTURE_CARD";
+  const state=owned?"earned":(eligible?"available":"locked");
+  return '<article class="reward-state-card '+state+(compact?" compact":"")+'">'+
+    '<div class="reward-state-art">'+(src?'<img src="'+esc(src)+'" alt="'+esc(title)+'">':'')+
+    (!owned?'<span class="reward-lock">'+(eligible?"◇":"🔒")+'</span>':'')+'</div>'+
+    '<div class="reward-state-copy"><small>'+esc(rarity)+' · '+esc(rewardTypeLabel(type))+'</small>'+
+    '<strong>'+esc(title)+'</strong>'+
+    '<span>'+(owned?("Earned"+(quantity>1?" ×"+quantity:"")):(eligible?"Available in random draw":"Locked by story progress"))+'</span></div>'+
+    '</article>';
+}
 async function edgeFunction(name,body,accessToken){
   const r=await fetch(SUPABASE_URL+"/functions/v1/"+name,{
     method:"POST",
@@ -174,6 +198,24 @@ async function initAccount(){
       document.querySelector("#profile-episodes-complete").textContent=String(data?.episodes_completed??data?.reading_progress?.episodes_completed??0);
       document.querySelector("#profile-joined").textContent=data?.created_at?new Date(data.created_at).toLocaleDateString("en-PH",{year:"numeric",month:"short",day:"numeric"}):"—";
       document.querySelector("#profile-collection-count").textContent=String(data?.collection_count??0)+" Unlocked";
+      const collectionGrid=document.querySelector("#profile-collection-grid");
+      if(collectionGrid){
+        let rewards=[];
+        try{
+          const collection=await rpc("api_reader_collectibles_v1",{},session.access_token);
+          rewards=Array.isArray(collection)?collection:(Array.isArray(collection?.items)?collection.items:[]);
+        }catch{}
+        if(!rewards.length){
+          const manifest=await loadRewardManifest();
+          rewards=manifest.map((x,i)=>({...x,owned:i<Math.min(Number(data?.collection_count??0),manifest.length),quantity:i<Number(data?.collection_count??0)?1:0,eligible:true}));
+        }
+        collectionGrid.innerHTML=rewards.slice(0,10).map(x=>rewardCardHtml(x,{
+          owned:!!(x.owned||Number(x.quantity)>0),
+          quantity:Number(x.quantity||0),
+          eligible:x.eligible!==false,
+          compact:true
+        })).join("")||'<div class="reward-vault-empty">No collectible rewards available yet.</div>';
+      }
       const pendingDraws=Number(data?.pending_reward_draws??0);
       const pendingEl=document.querySelector("#profile-pending-draws");
       if(pendingEl)pendingEl.textContent=pendingDraws+" Reward Draw"+(pendingDraws===1?"":"s")+" Ready";
@@ -618,8 +660,10 @@ async function initQuests(){
   }
 
   let pending=0;
+  let accountData=null;
   try{
     const data=await rpc("api_reader_account_v3",{},session.access_token);
+    accountData=data;
     pending=Number(data?.pending_reward_draws??0);
   }catch{
     try{
@@ -628,6 +672,25 @@ async function initQuests(){
       const tier=Math.floor(totalExp/TIER_EXP_THRESHOLD)+1;
       pending=Math.max(0,tier-1-Number(data?.collection_count??0));
     }catch{}
+  }
+
+  const vaultGrid=document.querySelector("#reward-vault-grid");
+  if(vaultGrid){
+    let rewards=[];
+    try{
+      const collection=await rpc("api_reader_collectibles_v1",{},session.access_token);
+      rewards=Array.isArray(collection)?collection:(Array.isArray(collection?.items)?collection.items:[]);
+    }catch{}
+    if(!rewards.length){
+      const manifest=await loadRewardManifest();
+      const highest=Number(accountData?.highest_episode_read??999);
+      rewards=manifest.map(x=>({...x,owned:false,quantity:0,eligible:Number(x.min_episode??0)<=highest}));
+    }
+    vaultGrid.innerHTML=rewards.map(x=>rewardCardHtml(x,{
+      owned:!!(x.owned||Number(x.quantity)>0),
+      quantity:Number(x.quantity||0),
+      eligible:x.eligible!==false
+    })).join("")||'<div class="reward-vault-empty">Reward pool unavailable.</div>';
   }
 
   const paint=()=>{
