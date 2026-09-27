@@ -648,7 +648,13 @@ async function initFan(){
 async function initQuests(){
   const button=document.querySelector("#reward-draw-button");
   const result=document.querySelector("#reward-draw-result");
+  const vaultGrid=document.querySelector("#reward-vault-grid");
   if(!button)return;
+
+  const manifest=await loadRewardManifest();
+  if(vaultGrid&&manifest.length){
+    vaultGrid.innerHTML=manifest.map(x=>rewardCardHtml(x,{owned:false,quantity:0,eligible:true})).join("");
+  }
 
   const session=await getSession();
   const user=session?await getAuthUser(session):null;
@@ -674,7 +680,6 @@ async function initQuests(){
     }catch{}
   }
 
-  const vaultGrid=document.querySelector("#reward-vault-grid");
   if(vaultGrid){
     let rewards=[];
     try{
