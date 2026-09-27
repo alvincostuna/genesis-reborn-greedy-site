@@ -20,6 +20,10 @@ create table if not exists public.reader_collectible_catalog(
   collectible_key text not null unique,
   title text not null,
   image_url text,
+  asset_type text not null default 'PICTURE_CARD'
+    check(asset_type in ('PICTURE_CARD','CHARACTER_PICTURE','MONSTER_PICTURE','DESKTOP_WALLPAPER','MOBILE_WALLPAPER','BACKGROUND','SPECIAL_ART')),
+  preview_url text,
+  download_url text,
   rarity text not null default 'COMMON' check(rarity in ('COMMON','UNCOMMON','RARE','EPIC','LEGENDARY')),
   min_episode integer not null default 0 check(min_episode>=0),
   downloadable boolean not null default true,
@@ -65,7 +69,7 @@ as $$ select coalesce(sum(delta),0)::bigint from public.reader_exp_ledger where 
 create or replace function public.reader_tier(p_user_id uuid)
 returns integer language sql stable security definer
 set search_path='pg_catalog','public','pg_temp'
-as $$ select floor(public.reader_total_exp(p_user_id)/2000.0)::integer+1 $$;
+as $ select floor(public.reader_total_exp(p_user_id)/1000.0)::integer+1 $;
 
 create or replace function public.award_reader_exp_v1(
   p_user_id uuid,p_source_type text,p_source_reference text,p_delta integer,p_part_id uuid default null,p_metadata jsonb default '{}'::jsonb
