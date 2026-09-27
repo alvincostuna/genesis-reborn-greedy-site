@@ -1,90 +1,48 @@
-<!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>Support — GENESIS: REBORN GREEDY</title>
-<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
-<link rel="stylesheet" href="/site-preview/site.css">
-</head><body data-page="support">
-<header class="reader-nav">
-  <a class="reader-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
-    <img src="/assets/genesis-official-logo.png" alt="" aria-hidden="true">
-    <span>GENESIS: REBORN GREEDY</span>
-  </a>
-  <nav aria-label="Primary">
-    <a href="/site-preview/">Home</a>
-    <a href="/site-preview/read/">Read</a>
-    <a href="/site-preview/world/">World</a>
-    <a href="/site-preview/codex/">Codex</a>
-    <a href="/site-preview/fan-page/">Fan Page</a>
-    <a href="/site-preview/manga/">Manga</a>
-    <a class="active" href="/site-preview/support/">Support</a>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#06101b"><title>Support — GENESIS: REBORN GREEDY</title>
+<link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png"><link rel="stylesheet" href="/site-preview/site.css">
+</head><body data-page="support" class="game-support-page">
+<header class="game-nav compact">
+  <a class="game-brand" href="/site-preview/"><img src="/assets/genesis-official-logo.png" alt=""><span>GENESIS<br><small>REBORN GREEDY</small></span></a>
+  <nav class="desktop-nav" aria-label="Primary">
+    <a href="/site-preview/"><span>⌂</span>Home</a>
+    <a href="/site-preview/read/"><span>▤</span>Read</a>
+    <a href="/site-preview/world/"><span>◎</span>World</a>
+    <a href="/site-preview/codex/"><span>▣</span>Codex</a>
+    <a href="/site-preview/fan-page/"><span>♟</span>Fan Page</a>
+    <a href="/site-preview/manga/"><span>▧</span>Manga</a>
+    <a class="active" href="/site-preview/support/"><span>♡</span>Support</a>
   </nav>
-  <a class="auth-nav-link" data-auth-link href="/site-preview/account/">Sign in</a>
+  <div class="game-nav-actions"><a class="profile-orb" data-auth-link href="/site-preview/account/"><img src="/assets/genesis-official-logo-64.png" alt=""></a></div>
 </header>
-<main class="page-frame">
-  <header class="page-title">
-    <div><p class="eyebrow">SUPPORT GENESIS</p><h1>Support</h1></div>
-    <p>Support the novel, earn controlled early access, share GENESIS, or simply give because you love the story.</p>
-  </header>
+<main class="support-shell">
+  <section class="support-hero">
+    <div><p class="eyebrow">SUPPORT GENESIS</p><h1>Support the Journey</h1><p>Support is optional. Scheduled story Parts still become public normally at 8:00 AM and 8:00 PM PHT.</p></div>
+    <a class="quest-entry" href="/site-preview/quests/"><span>✦</span><div><strong>Quest & Rewards</strong><small>EXP · Tier rewards · collectible draws</small></div><b>›</b></a>
+  </section>
+  <section id="support-status" class="support-notice"><strong>Preview mode</strong><span>Payments and share rewards remain disabled until launch controls are explicitly enabled.</span></section>
 
-  <section id="support-status" class="support-notice">
-    <strong>Preview mode</strong>
-    <span>Payments and share rewards are not enabled yet.</span>
+  <section class="support-tier-grid">
+    <article class="support-game-card"><div class="support-tier-icon">Ⅰ</div><small>1-DAY ADVANCE</small><h2>₱9</h2><strong>+2 scheduled Parts</strong><div class="reward-line">+100 EXP</div><p>Unlock the next two verified scheduled Parts. Once legitimately unlocked, they stay readable on your account.</p><button class="paymongo-button" data-paymongo-rule="SUPPORT_9" disabled>Pay with PayMongo</button></article>
+    <article class="support-game-card featured"><div class="support-tier-icon">Ⅶ</div><small>7-DAY ADVANCE</small><h2>₱49</h2><strong>+14 scheduled Parts</strong><div class="reward-line">+500 EXP</div><p>Seven days of the two-Part daily release cycle, allocated only from verified scheduled Final Canon.</p><button class="paymongo-button" data-paymongo-rule="SUPPORT_49" disabled>Pay with PayMongo</button></article>
+    <article class="support-game-card legendary"><div class="support-tier-icon">XXX</div><small>30-DAY ADVANCE</small><h2>₱189</h2><strong>+60 scheduled Parts</strong><div class="reward-line">+2,000 EXP · Tier Up</div><p>Thirty days ahead at two Parts per day. Unused entitlement waits for future verified scheduled Parts.</p><button class="paymongo-button" data-paymongo-rule="SUPPORT_189" disabled>Pay with PayMongo</button></article>
   </section>
 
-  <section class="payment-provider-banner">
-    <div><p class="eyebrow">SECURE CHECKOUT</p><strong>PayMongo</strong></div>
-    <span>Initial channel: QR Ph — readers can pay from supported apps such as GCash, Maya, and participating banks including BPI once the merchant account is activated.</span>
+  <section class="support-secondary-grid">
+    <article class="hud-card support-system-card"><div class="card-head"><span>SHARE QUEST</span><span>Daily</span></div><div class="support-system-body"><h3>Share GENESIS</h3><strong>+200 EXP · +1 Part advance</strong><p>Maximum 1 rewarded share per day and 5 rewarded shares per week.</p><button disabled>Share rewards not enabled yet</button></div></article>
+    <article class="hud-card support-system-card"><div class="card-head"><span>PURE SUPPORT</span><span>Optional</span></div><div class="support-system-body"><h3>Give Any Amount</h3><strong>No advance reward required</strong><p>For readers who simply want to help the project continue.</p><label>Amount (PHP)<input id="pure-support-amount" class="support-amount-input" type="number" min="1" step="0.01" placeholder="100.00" disabled></label><button id="pure-support-button" class="paymongo-button" data-paymongo-rule="PURE_SUPPORT_ANY" disabled>Give through PayMongo</button></div></article>
+    <article class="hud-card support-system-card"><div class="card-head"><span>PROFILE RECOGNITION</span><span>Cosmetic</span></div><div class="support-system-body"><h3>Badges & Portfolio</h3><strong>Supporter status can be displayed</strong><p>Payment amount stays private. Reader Tier and verified story progress remain independent from supporter status.</p><a class="support-card-link" href="/site-preview/account/">Open Adventurer Profile</a></div></article>
   </section>
 
-  <section id="support-plans" class="support-grid">
-    <article class="support-card"><small>ADVANCE ACCESS</small><h2>₱10</h2><strong>1 Advance Part</strong><p>Normal supporters can never move more than one week / 21 scheduled Parts ahead.</p><button class="paymongo-button" data-paymongo-rule="SUPPORT_10" disabled>Pay with PayMongo</button></article>
-    <article class="support-card featured"><small>SUPPORTER BUNDLE</small><h2>₱50</h2><strong>15 Advance Parts</strong><p>Credits unlock sequentially and remain subject to the same 21-Part normal horizon.</p><button class="paymongo-button" data-paymongo-rule="SUPPORT_50" disabled>Pay with PayMongo</button></article>
-    <article class="support-card vip"><small>VIP</small><h2>₱200</h2><strong>Up to 1 month ahead</strong><p>Maximum rewarded tier. VIP can read up to 90 scheduled Final Canon Parts ahead while VIP is active.</p><button class="paymongo-button" data-paymongo-rule="VIP_200" disabled>Pay with PayMongo</button></article>
-  </section>
-
-  <section class="support-grid secondary">
-    <article class="support-card">
-      <small>GIVE WITHOUT REWARD</small>
-      <h2>Any Amount</h2>
-      <strong>No return expected</strong>
-      <p>For readers who simply want to support GENESIS. This does not grant Parts, credits, or VIP and is not limited by the ₱200 rewarded-support cap.</p>
-      <label class="support-amount-label">Amount (PHP)
-        <input id="pure-support-amount" class="support-amount-input" type="number" min="1" step="0.01" placeholder="100.00" disabled>
-      </label>
-      <button id="pure-support-button" class="paymongo-button" data-paymongo-rule="PURE_SUPPORT_ANY" disabled>Give through PayMongo</button>
-    </article>
-    <article class="support-card">
-      <small>SHARE & EARN</small>
-      <h2>1 Share = 1 Part</h2>
-      <strong>1 rewarded share/day · max 5/week</strong>
-      <p>Verified shares earn one Advance Credit, but can never push normal access beyond the 21-Part horizon.</p>
-      <button disabled>Share rewards not enabled yet</button>
-    </article>
-    <article class="support-card">
-      <small>PUBLIC RECOGNITION</small>
-      <h2>Badges</h2>
-      <strong>Supporter · VIP</strong>
-      <p>Confirmed supporters may opt in to display a badge beside comments and Fan Page posts. Donation amounts are never displayed.</p>
-      <a class="support-card-link" href="/site-preview/account/">Manage badge in Account</a>
-    </article>
-  </section>
-
-  <section class="contact-panel">
-    <div>
-      <p class="eyebrow">CONTACT US</p>
-      <h2>Message GENESIS Admin</h2>
-      <p>Questions about support, account access, shares, or the community can be sent directly to Admin.</p>
-    </div>
-    <form id="contact-form" class="contact-form">
-      <input id="contact-subject" placeholder="Subject" disabled>
-      <textarea id="contact-body" rows="6" placeholder="Your message…" disabled></textarea>
-      <button id="contact-submit" disabled>Reader sign-in required</button>
-    </form>
-  </section>
-
-  <p class="support-fineprint">Advance access never includes AI drafts, unfinished manuscripts, or unscheduled material. It is limited to release-ready Final Canon already placed in the protected release queue.</p>
+  <section class="contact-panel game-contact"><div><p class="eyebrow">CONTACT ADMIN</p><h2>Need help?</h2><p>Questions about reader accounts, support, advance access, or community features can be sent directly to GENESIS Admin.</p></div><form id="contact-form" class="contact-form"><input id="contact-subject" placeholder="Subject" disabled><textarea id="contact-body" rows="6" placeholder="Your message…" disabled></textarea><button id="contact-submit" disabled>Reader sign-in required</button></form></section>
+  <p class="support-fineprint">Advance access never exposes AI drafts, unfinished manuscripts, or unscheduled material. It only reveals verified Final Canon that is already eligible for protected release scheduling.</p>
 </main>
-<script type="module" src="/site-preview/site.js"></script>
-</body></html>
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <a href="/site-preview/"><span>⌂</span>Home</a>
+  <a href="/site-preview/read/"><span>▤</span>Read</a>
+  <a href="/site-preview/world/"><span>◎</span>World</a>
+  <a href="/site-preview/codex/"><span>▣</span>Codex</a>
+  <a class="active" href="/site-preview/support/"><span>♡</span>Support</a>
+</nav>
+<script type="module" src="/site-preview/site.js"></script></body></html>
