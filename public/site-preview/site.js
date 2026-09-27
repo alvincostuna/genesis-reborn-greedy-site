@@ -157,11 +157,22 @@ async function initAccount(){
       const data=await rpc("api_reader_account",{},session.access_token);
       document.querySelector("#account-display-name").textContent=data?.display_name||"Reader";
       document.querySelector("#profile-display-name").value=data?.display_name||"Reader";
-      document.querySelector("#account-credits").textContent=String(data?.support?.credit_balance??0);
+      document.querySelector("#account-credits").textContent=String(data?.support?.credit_balance??0)+" Parts";
       document.querySelector("#account-vip").textContent=data?.support?.vip_active?"Active":"Inactive";
       document.querySelector("#account-badge").textContent=data?.support?.public_badge||"None";
       document.querySelector("#badge-supporter").checked=!!data?.show_supporter_badge;
       document.querySelector("#badge-vip").checked=!!data?.show_vip_badge;
+      const totalExp=Number(data?.reader_exp??data?.total_exp??0),tier=Math.floor(totalExp/2000)+1,within=totalExp%2000;
+      document.querySelector("#profile-tier-badge").textContent="Tier "+tier;
+      document.querySelector("#profile-exp-total").textContent=totalExp.toLocaleString()+" EXP";
+      document.querySelector("#profile-next-tier").textContent=(2000-within).toLocaleString()+" to next Tier";
+      document.querySelector("#profile-exp-bar").style.width=Math.min(100,within/2000*100)+"%";
+      document.querySelector("#profile-title-badge").textContent=data?.reader_title||data?.support?.public_badge||"GENESIS Adventurer";
+      document.querySelector("#profile-latest-read").textContent=data?.latest_read_label||data?.reading_progress?.latest_label||"Not started";
+      document.querySelector("#profile-parts-read").textContent=String(data?.parts_read??data?.reading_progress?.parts_read??0);
+      document.querySelector("#profile-episodes-complete").textContent=String(data?.episodes_completed??data?.reading_progress?.episodes_completed??0);
+      document.querySelector("#profile-joined").textContent=data?.created_at?new Date(data.created_at).toLocaleDateString("en-PH",{year:"numeric",month:"short",day:"numeric"}):"—";
+      document.querySelector("#profile-collection-count").textContent=String(data?.collection_count??0)+" Unlocked";
     }catch(e){
       showAuthMessage("Signed in, but account status could not be loaded yet.","error");
     }
@@ -510,10 +521,27 @@ async function initHome(){
   }catch{}
 }
 
+
+function initReaderControls(){
+  const shell=document.querySelector(".reader-shell");
+  const body=document.querySelector("#novel-body");
+  if(!shell||!body)return;
+  const bind=(id,fn)=>document.querySelector(id)?.addEventListener("click",fn);
+  bind("#reader-library-toggle",()=>{ if(innerWidth<=820){shell.classList.toggle("mobile-library-open")}else shell.classList.toggle("library-collapsed") });
+  bind("#reader-tools-toggle",()=>{ if(innerWidth<=820){shell.classList.toggle("mobile-tools-open")}else shell.classList.toggle("tools-collapsed") });
+  bind("#reader-fullscreen",async()=>{ shell.classList.toggle("fullscreen-reader"); try{ if(shell.classList.contains("fullscreen-reader")) await document.documentElement.requestFullscreen?.(); else if(document.fullscreenElement) await document.exitFullscreen?.(); }catch{} });
+  const fs=document.querySelector("#font-size-range"), ls=document.querySelector("#line-height-range"), rw=document.querySelector("#reader-width-range");
+  fs?.addEventListener("input",()=>{body.style.fontSize=fs.value+"px";document.querySelector("#font-size-label").textContent=fs.value+"px"});
+  ls?.addEventListener("input",()=>{body.style.lineHeight=ls.value;document.querySelector("#line-height-label").textContent=Number(ls.value).toFixed(2)});
+  rw?.addEventListener("input",()=>{body.style.maxWidth=rw.value+"px";document.querySelector("#reader-width-label").textContent=rw.value+"px"});
+  const updateProgress=()=>{const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);const pct=Math.min(100,Math.max(0,scrollY/max*100));const fill=document.querySelector("#reader-progress-fill");if(fill)fill.style.width=pct+"%";const pos=document.querySelector("#reader-position");if(pos)pos.textContent=Math.round(pct)+"% read"};
+  addEventListener("scroll",updateProgress,{passive:true});updateProgress();
+}
+
 const page=document.body.dataset.page;
 await initAuthChrome();
 if(page==="home")await initHome();
-if(page==="read")await initRead();
+if(page==="read"){await initRead();initReaderControls();}
 if(page==="world")initWorld();
 if(page==="codex")initCodex();
 if(page==="fan")await initFan();
