@@ -40,6 +40,10 @@ begin
 
   if public.reader_tier(v_user)<>floor(public.reader_total_exp(v_user)/1000.0)::integer+1 then raise exception 'T3_TIER_THRESHOLD_FAIL'; end if;
 
+  perform public.award_reader_exp_v1(v_user,'ADMIN','QA-TIER-2000',1000,null,'{}'::jsonb);
+  if public.reader_total_exp(v_user)<>2000 then raise exception 'T3_TOTAL_2000_FAIL %',public.reader_total_exp(v_user); end if;
+  if public.reader_tier(v_user)<>3 then raise exception 'T3_TIER_2000_FAIL %',public.reader_tier(v_user); end if;
+
   insert into public.reader_collectible_catalog(collectible_key,title,asset_type,rarity,min_episode,active)
   values('QA-COLLECTIBLE','QA Collectible','PICTURE_CARD','COMMON',1,true);
 
