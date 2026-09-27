@@ -52,6 +52,7 @@ jobs:
           cp -R public/site-preview/quests .live-assets/quests
           cp public/assets/genesis-official-logo.png .live-assets/assets/genesis-official-logo.png
           cp public/assets/genesis-official-logo-64.png .live-assets/assets/genesis-official-logo-64.png
+          cp public/assets/genesis-wordmark-v2.svg .live-assets/assets/genesis-wordmark-v2.svg
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
           python - <<'PY'
           from pathlib import Path
@@ -167,9 +168,12 @@ jobs:
           grep -q 'NEXT RELEASE' /tmp/candidate-home.html \
             && echo "PASS: NEXT RELEASE marker" \
             || { echo "::error::FAIL: NEXT RELEASE marker missing"; exit 1; }
-          grep -Eq '/assets/(genesis-wordmark-v2\\.svg|genesis-official-logo\\.png)' /tmp/candidate-home.html \
-            && echo "PASS: GENESIS brand reference" \
-            || { echo "::error::FAIL: GENESIS brand reference missing"; exit 1; }
+          grep -q '/assets/genesis-wordmark-v2.svg' /tmp/candidate-home.html \
+            && echo "PASS: WEB-DS-V2 wordmark reference" \
+            || { echo "::error::FAIL: WEB-DS-V2 wordmark reference missing"; exit 1; }
+          test "$(curl -sS -o /dev/null -w '%{http_code}' \"$CANDIDATE_URL/assets/genesis-wordmark-v2.svg\")" = "200" \
+            && echo "PASS: WEB-DS-V2 wordmark asset" \
+            || { echo "::error::FAIL: WEB-DS-V2 wordmark asset unavailable"; exit 1; }
           grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/candidate-home.html \
             && echo "PASS: hero asset reference" \
             || { echo "::error::FAIL: hero asset reference missing"; exit 1; }
