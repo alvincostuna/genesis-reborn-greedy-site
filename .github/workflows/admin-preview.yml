@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - feat/admin-manuscript-viewer
+      - web-ds-v2-5-assets
 
 permissions:
   contents: read
@@ -15,7 +16,7 @@ concurrency:
 
 jobs:
   preview:
-    if: github.ref == 'refs/heads/feat/admin-manuscript-viewer'
+    if: github.ref == 'refs/heads/feat/admin-manuscript-viewer' || github.ref == 'refs/heads/web-ds-v2-5-assets'
     environment: genesis-admin-preview
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -137,5 +138,6 @@ jobs:
       - name: Safety reminder
         run: |
           echo "Protected preview Worker updated and verified."
+          echo "V2.5 visual branch may be previewed here before merge."
           echo "No live GENESIS reader route or custom domain was changed."
           echo "Do not attach the live GENESIS hostname to this Worker."
