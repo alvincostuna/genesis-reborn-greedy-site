@@ -332,7 +332,7 @@ async function initRead(){
   }catch{}
   try{
     const p=firstRow(await rpc("api_release_policy"));
-    releaseMini.textContent=(p?.releases_paused?"PAUSED · ":"")+"Episodes 1–"+(p?.launch_episode_count??10)+" · then 1 "+(p?.ongoing_release_unit??"Part")+" every "+(p?.cycle_hours??8)+" hours";
+    releaseMini.textContent=(p?.releases_paused?"PAUSED · ":"")+"2 Parts daily · 8:00 AM / 8:00 PM PHT";
   }catch{}
   let episodes=[];
   try{episodes=await rpc("api_episode_library")}catch{}
