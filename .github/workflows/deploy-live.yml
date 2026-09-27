@@ -53,6 +53,7 @@ jobs:
           cp public/assets/genesis-official-logo.png .live-assets/assets/genesis-official-logo.png
           cp public/assets/genesis-official-logo-64.png .live-assets/assets/genesis-official-logo-64.png
           cp public/assets/genesis-wordmark-v2.svg .live-assets/assets/genesis-wordmark-v2.svg
+          if [ -d public/assets/v25 ]; then cp -R public/assets/v25 .live-assets/assets/v25; fi
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
           python - <<'PY'
           from pathlib import Path
