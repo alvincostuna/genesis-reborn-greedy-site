@@ -212,7 +212,8 @@ begin
   return jsonb_build_object(
     'status','DRAWN','tier_number',v_next_tier,'collectible_key',v_collectible.collectible_key,
     'title',v_collectible.title,'rarity',v_collectible.rarity,'image_url',v_collectible.image_url,
-    'downloadable',v_collectible.downloadable
+    'asset_type',v_collectible.asset_type,'preview_url',v_collectible.preview_url,
+    'download_url',v_collectible.download_url,'downloadable',v_collectible.downloadable
   );
 end
 $$;
@@ -226,6 +227,8 @@ declare
   v_uid uuid:=auth.uid();
   v_profile public.reader_profiles%rowtype;
   v_total bigint;
+  v_tier integer;
+  v_drawn integer;
   v_parts integer;
   v_eps integer;
   v_collection integer;
@@ -237,6 +240,8 @@ begin
   end if;
 
   v_total:=public.reader_total_exp(v_uid);
+  v_tier:=public.reader_tier(v_uid);
+  select count(*) into v_drawn from public.reader_collectible_draws where user_id=v_uid;
   select count(*) filter(where completed) into v_parts from public.reader_progress where user_id=v_uid;
   select count(distinct e.id)
   into v_eps
@@ -265,7 +270,11 @@ begin
       'Episode '||lpad(v_profile.highest_episode_read::text,3,'0')||
       case when v_profile.highest_part_key is not null then ' — '||v_profile.highest_part_key else '' end
       else 'Not started' end,
-    'total_exp',v_total,'reader_exp',v_total,'tier',public.reader_tier(v_uid),
+    'total_exp',v_total,'reader_exp',v_total,'tier',v_tier,
+    'tier_exp_threshold',1000,
+    'exp_into_tier',(v_total % 1000),
+    'exp_to_next_tier',(1000-(v_total % 1000)),
+    'pending_reward_draws',greatest(v_tier-1-coalesce(v_drawn,0),0),
     'parts_read',coalesce(v_parts,0),'episodes_completed',coalesce(v_eps,0),
     'collection_count',coalesce(v_collection,0),
     'support',public.api_reader_support_status()
