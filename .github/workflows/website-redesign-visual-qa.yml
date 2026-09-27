@@ -6,6 +6,7 @@ on:
       - website-redesign-v1
       - web-ds-v2-home
       - web-ds-v2-6-dashboard
+      - web-ds-v2-7-rewards
   workflow_dispatch:
 
 permissions:
