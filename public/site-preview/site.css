@@ -1681,3 +1681,339 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2 .v2-brand img{width:158px;height:54px}
   .web-ds-v2 .v2-hero-copy .hero-logo{width:210px}
 }
+
+
+/* ============================================================
+   WEB-DS-V2.2 — SCALE & TYPOGRAPHY RECONSTRUCTION
+   Home-only visual scale pass. No behavior changes.
+   ============================================================ */
+@media(min-width:901px){
+  .web-ds-v2 .v2-nav{
+    width:min(1580px,calc(100% - 24px));
+    min-height:88px;
+    grid-template-columns:250px minmax(0,1fr) 338px;
+    padding:0 24px;
+  }
+  .web-ds-v2 .v2-brand{width:250px}
+  .web-ds-v2 .v2-brand img{
+    width:232px!important;
+    max-height:80px!important;
+  }
+  .web-ds-v2 .v2-primary-nav a{
+    width:82px;
+    flex-basis:82px;
+    padding:13px 8px 10px;
+    font-size:12px;
+  }
+  .web-ds-v2 .v2-primary-nav a span{
+    font-size:23px;
+    line-height:22px;
+    margin-bottom:6px;
+  }
+  .web-ds-v2 .v2-nav-actions{width:338px}
+  .web-ds-v2 .v2-search{
+    width:222px;
+    height:42px;
+  }
+  .web-ds-v2 .v2-search input{font-size:11px}
+  .web-ds-v2 .v2-bell{width:42px;height:42px;font-size:20px}
+  .web-ds-v2 .profile-orb{width:48px;height:48px}
+  .web-ds-v2 .profile-orb img{width:35px;height:35px}
+
+  .web-ds-v2 .v2-shell{
+    width:min(1580px,100%);
+    max-width:1580px;
+    padding-left:12px;
+    padding-right:12px;
+  }
+  .web-ds-v2 .v2-hero{
+    min-height:510px;
+  }
+  .web-ds-v2 .v2-hero-copy{
+    left:48px;
+    bottom:50px;
+    width:470px;
+  }
+  .web-ds-v2 .v2-hero-copy .hero-logo{
+    width:410px;
+    max-height:175px;
+  }
+  .web-ds-v2 .v2-hero-copy p{
+    font-size:16px;
+    letter-spacing:.15em;
+  }
+  .web-ds-v2 .v2-hero-copy small{
+    font-size:10px;
+  }
+  .web-ds-v2 .v2-hero blockquote{
+    width:300px;
+    right:44px;
+    bottom:58px;
+    font-size:13px;
+    line-height:1.65;
+  }
+  .web-ds-v2 .genesis-btn{
+    min-height:48px;
+    padding:0 22px;
+    font-size:13px;
+  }
+
+  .web-ds-v2 .v2-dashboard{
+    grid-template-columns:365px minmax(0,1.55fr) 385px;
+    gap:12px;
+    margin-top:12px;
+  }
+  .web-ds-v2 .v2-panel .card-head{
+    min-height:40px;
+    padding:10px 14px;
+    font-size:15px;
+  }
+  .web-ds-v2 .v2-panel .card-head a,
+  .web-ds-v2 .v2-panel .card-head>span:last-child{
+    font-size:10px;
+  }
+  .web-ds-v2 .v2-release-panel{
+    min-height:326px;
+    padding:20px 17px 16px;
+  }
+  .web-ds-v2 .v2-panel-rune{
+    left:20px;
+    top:17px;
+    font-size:31px;
+  }
+  .web-ds-v2 .card-kicker{
+    font-size:15px;
+  }
+  .web-ds-v2 .release-time{
+    margin-top:8px;
+    font-size:39px;
+  }
+  .web-ds-v2 .release-part{
+    font-size:13px;
+    margin-top:7px;
+  }
+  .web-ds-v2 .release-state-banner{
+    margin:12px 0;
+    min-height:29px;
+    font-size:10px;
+  }
+  .web-ds-v2 .release-state-banner strong{font-size:10px}
+  .web-ds-v2 .release-state-banner small{font-size:9px}
+  .web-ds-v2 .countdown-row{
+    gap:9px;
+    margin-top:10px;
+  }
+  .web-ds-v2 .countdown-row>div{
+    min-width:84px;
+    padding:11px 5px;
+  }
+  .web-ds-v2 .countdown-row strong{font-size:32px}
+  .web-ds-v2 .countdown-row small{font-size:8px}
+  .web-ds-v2 .v2-cycle-title{
+    margin-top:15px;
+    padding-top:9px;
+    font-size:10px;
+  }
+  .web-ds-v2 .cycle-rule>div{
+    padding:10px 9px;
+  }
+  .web-ds-v2 .cycle-rule strong{font-size:12px}
+  .web-ds-v2 .cycle-rule small{font-size:8px}
+  .web-ds-v2 .timezone-note{
+    font-size:8px;
+    margin-top:8px;
+  }
+
+  .web-ds-v2 .v2-reading-panel,
+  .web-ds-v2 .v2-access-panel{
+    min-height:326px;
+  }
+  .web-ds-v2 .reading-feature{
+    grid-template-columns:minmax(215px,39%) 1fr;
+    min-height:282px;
+    padding:12px;
+    gap:17px;
+  }
+  .web-ds-v2 .v2-reading-art{
+    min-height:255px;
+  }
+  .web-ds-v2 .v2-reading-art span{font-size:11px}
+  .web-ds-v2 .reading-copy>small{font-size:10px}
+  .web-ds-v2 .reading-copy h1{
+    margin:8px 0 11px;
+    font-size:31px;
+  }
+  .web-ds-v2 .reading-copy p{
+    min-height:62px;
+    margin-bottom:16px;
+    font-size:13px;
+    line-height:1.55;
+  }
+  .web-ds-v2 .reading-actions .genesis-btn{
+    min-width:158px;
+    font-size:11px;
+  }
+
+  .web-ds-v2 .profile-row{
+    padding:16px 16px 10px;
+    gap:13px;
+  }
+  .web-ds-v2 .profile-avatar{
+    width:68px;height:68px;
+  }
+  .web-ds-v2 .profile-avatar img{width:49px;height:49px}
+  .web-ds-v2 .v2-profile-copy strong{font-size:16px}
+  .web-ds-v2 .v2-profile-copy small{font-size:10px}
+  .web-ds-v2 .tier-pill{
+    margin-top:6px;
+    font-size:10px;
+    padding:4px 10px;
+  }
+  .web-ds-v2 .exp-track{
+    margin:0 16px;
+    height:8px;
+  }
+  .web-ds-v2 .exp-copy{
+    padding:6px 16px 9px;
+    font-size:9px;
+  }
+  .web-ds-v2 .access-list{margin:0 12px}
+  .web-ds-v2 .access-list>div{
+    min-height:34px;
+    padding:8px 6px;
+    font-size:10px;
+  }
+
+  .web-ds-v2 .v2-home-row{
+    grid-template-columns:minmax(0,1.68fr) minmax(360px,.9fr);
+    gap:12px;
+    margin-top:12px;
+  }
+  .web-ds-v2 .v2-release-cards{
+    gap:10px;
+    padding:11px;
+  }
+  .web-ds-v2 .v2-release-tile,
+  .web-ds-v2 .release-tile{
+    grid-template-columns:112px 1fr;
+    min-height:122px;
+  }
+  .web-ds-v2 .release-thumb{min-height:122px}
+  .web-ds-v2 .release-info{
+    padding:11px 12px;
+  }
+  .web-ds-v2 .release-info small{font-size:9px}
+  .web-ds-v2 .release-info strong{
+    margin:6px 0 7px;
+    font-size:16px;
+  }
+  .web-ds-v2 .release-info span{font-size:9px}
+
+  .web-ds-v2 .notice-list>div{
+    min-height:64px;
+    grid-template-columns:40px 1fr auto;
+    gap:10px;
+    padding:9px 5px;
+  }
+  .web-ds-v2 .notice-icon{
+    width:40px;height:40px;
+    font-size:18px;
+  }
+  .web-ds-v2 .notice-list strong{font-size:11px}
+  .web-ds-v2 .notice-list small{
+    font-size:9px;
+    line-height:1.35;
+  }
+  .web-ds-v2 .notice-list time{font-size:8px}
+
+  .web-ds-v2 .v2-feature-grid{
+    gap:11px;
+    margin-top:12px;
+  }
+  .web-ds-v2 .v2-feature-grid .feature-tile{
+    min-height:148px;
+    grid-template-columns:48px 1fr 22px;
+    padding:15px;
+  }
+  .web-ds-v2 .v2-feature-grid .feature-tile i{font-size:33px}
+  .web-ds-v2 .v2-feature-grid .feature-tile strong{font-size:22px}
+  .web-ds-v2 .v2-feature-grid .feature-tile span{
+    margin-top:5px;
+    font-size:9px;
+    line-height:1.35;
+  }
+  .web-ds-v2 .v2-feature-grid .feature-tile b{font-size:27px}
+}
+
+@media(max-width:900px){
+  .web-ds-v2 .v2-brand img{
+    width:205px!important;
+    max-height:64px!important;
+  }
+  .web-ds-v2 .v2-hero{
+    min-height:395px;
+  }
+  .web-ds-v2 .v2-hero-copy .hero-logo{
+    width:285px;
+  }
+  .web-ds-v2 .v2-hero-copy p{font-size:11px}
+  .web-ds-v2 .v2-hero-copy small{font-size:8px}
+  .web-ds-v2 .release-time{font-size:33px}
+  .web-ds-v2 .release-part{font-size:12px}
+  .web-ds-v2 .countdown-row strong{font-size:28px}
+  .web-ds-v2 .countdown-row small{font-size:8px}
+  .web-ds-v2 .cycle-rule strong{font-size:11px}
+  .web-ds-v2 .cycle-rule small{font-size:8px}
+  .web-ds-v2 .v2-panel .card-head{font-size:13px}
+  .web-ds-v2 .v2-panel .card-head a{font-size:9px}
+  .web-ds-v2 .v2-profile-copy strong{font-size:15px}
+  .web-ds-v2 .v2-profile-copy small{font-size:9px}
+  .web-ds-v2 .access-list>div{font-size:9px}
+  .web-ds-v2 .reading-copy h1{font-size:24px}
+  .web-ds-v2 .reading-copy>small{font-size:9px}
+  .web-ds-v2 .reading-copy p{font-size:10px}
+  .web-ds-v2 .release-info strong{font-size:15px}
+  .web-ds-v2 .release-info small{font-size:8px}
+  .web-ds-v2 .release-info span{font-size:8px}
+  .web-ds-v2 .notice-list strong{font-size:10px}
+  .web-ds-v2 .notice-list small{font-size:8px}
+  .web-ds-v2 .v2-feature-grid .feature-tile strong{font-size:18px}
+  .web-ds-v2 .v2-feature-grid .feature-tile span{font-size:8px}
+}
+
+@media(max-width:520px){
+  .web-ds-v2 .v2-nav{
+    min-height:72px;
+  }
+  .web-ds-v2 .v2-brand img{
+    width:180px!important;
+    max-height:62px!important;
+  }
+  .web-ds-v2 .v2-hero{
+    min-height:345px;
+  }
+  .web-ds-v2 .v2-hero-copy .hero-logo{width:240px}
+  .web-ds-v2 .release-time{font-size:31px}
+  .web-ds-v2 .card-kicker{font-size:14px}
+  .web-ds-v2 .release-part{font-size:11px}
+  .web-ds-v2 .countdown-row strong{font-size:27px}
+  .web-ds-v2 .cycle-rule strong{font-size:11px}
+  .web-ds-v2 .cycle-rule small{font-size:8px}
+  .web-ds-v2 .v2-panel .card-head{font-size:13px}
+  .web-ds-v2 .profile-row{padding:12px 13px 8px}
+  .web-ds-v2 .profile-avatar{width:62px;height:62px}
+  .web-ds-v2 .v2-profile-copy strong{font-size:15px}
+  .web-ds-v2 .v2-profile-copy small{font-size:9px}
+  .web-ds-v2 .exp-copy{font-size:8px}
+  .web-ds-v2 .access-list>div{font-size:9px}
+  .web-ds-v2 .reading-copy h1{font-size:21px}
+  .web-ds-v2 .reading-copy>small{font-size:9px}
+  .web-ds-v2 .reading-actions .genesis-btn{font-size:10px}
+  .web-ds-v2 .release-info strong{font-size:15px}
+  .web-ds-v2 .release-info small{font-size:8px}
+  .web-ds-v2 .release-info span{font-size:8px}
+  .web-ds-v2 .notice-list strong{font-size:10px}
+  .web-ds-v2 .notice-list small{font-size:8px}
+  .web-ds-v2 .v2-feature-grid .feature-tile strong{font-size:19px}
+  .web-ds-v2 .v2-feature-grid .feature-tile span{font-size:8px}
+}
