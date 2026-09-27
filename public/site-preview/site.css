@@ -788,3 +788,26 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+
+/* V1.1 QA polish — profile/settings action consistency */
+.profile-settings .account-form button,
+.profile-settings #save-badges{
+  border:1px solid rgba(71,167,235,.62);
+  background:linear-gradient(180deg,#178fe8,#0867c6);
+  color:#fff;
+  box-shadow:0 0 18px rgba(42,156,255,.14),inset 0 1px 0 rgba(255,255,255,.14);
+  font-weight:800;
+}
+.profile-settings .account-form button:hover,
+.profile-settings #save-badges:hover{
+  border-color:#79d0ff;
+  box-shadow:0 0 24px rgba(42,156,255,.24),inset 0 1px 0 rgba(255,255,255,.18);
+  transform:translateY(-1px)
+}
+.profile-settings .secondary-button{
+  border:1px solid rgba(79,113,140,.52);
+  background:#071522;
+  color:#aac7df;
+}
+.profile-settings input[type="checkbox"]{accent-color:#2a9cff}
