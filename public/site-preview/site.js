@@ -437,50 +437,77 @@ function initCodex(){
 }
 
 
+
 async function initHome(){
-  const countdown=document.querySelector("#cycle-countdown");
-  const label=document.querySelector("#cycle-next-time");
-  if(!countdown||!label)return;
-
+  const timeEl=document.querySelector("#home-release-time");
+  const partEl=document.querySelector("#home-release-part");
+  const hEl=document.querySelector("#cd-hours");
+  const mEl=document.querySelector("#cd-minutes");
+  const sEl=document.querySelector("#cd-seconds");
   let nextAt=null;
-  let timer=null;
 
-  const formatNext=(date)=>new Intl.DateTimeFormat("en-PH",{
-    timeZone:"Asia/Manila",hour:"numeric",minute:"2-digit",hour12:true,
-    month:"short",day:"numeric"
-  }).format(date)+" PHT";
-
-  const tick=()=>{
+  function nextManilaSlot(){
+    const now=new Date();
+    const parts=new Intl.DateTimeFormat("en-US",{
+      timeZone:"Asia/Manila",year:"numeric",month:"2-digit",day:"2-digit",
+      hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
+    }).formatToParts(now).reduce((o,p)=>(o[p.type]=p.value,o),{});
+    const ph=new Date(Date.UTC(Number(parts.year),Number(parts.month)-1,Number(parts.day),Number(parts.hour)-8,Number(parts.minute),Number(parts.second)));
+    const hour=Number(parts.hour);
+    const targetHour=hour<8?8:(hour<20?20:8);
+    const addDay=hour>=20?1:0;
+    const target=new Date(Date.UTC(Number(parts.year),Number(parts.month)-1,Number(parts.day)+addDay,targetHour-8,0,0));
+    return {date:target,label:targetHour===8?"8:00 AM PHT":"8:00 PM PHT"};
+  }
+  function tick(){
     if(!nextAt)return;
-    const ms=nextAt.getTime()-Date.now();
-    if(ms<=0){
-      clearInterval(timer);
-      loadCycle();
-      return;
-    }
-    const total=Math.floor(ms/1000);
-    const h=String(Math.floor(total/3600)).padStart(2,"0");
-    const m=String(Math.floor((total%3600)/60)).padStart(2,"0");
-    const s=String(total%60).padStart(2,"0");
-    countdown.textContent=h+":"+m+":"+s;
-  };
+    const ms=Math.max(0,nextAt.getTime()-Date.now());
+    const t=Math.floor(ms/1000);
+    if(hEl)hEl.textContent=String(Math.floor(t/3600)).padStart(2,"0");
+    if(mEl)mEl.textContent=String(Math.floor((t%3600)/60)).padStart(2,"0");
+    if(sEl)sEl.textContent=String(t%60).padStart(2,"0");
+    if(ms<=0)setTimeout(()=>{const n=nextManilaSlot();nextAt=n.date;if(timeEl)timeEl.textContent=n.label},1100);
+  }
+  const slot=nextManilaSlot(); nextAt=slot.date;
+  if(timeEl)timeEl.textContent=slot.label;
+  tick(); setInterval(tick,1000);
 
-  const loadCycle=async()=>{
-    try{
-      const clock=firstRow(await rpc("api_release_clock"));
-      const raw=clock?.next_cycle_at;
-      if(!raw)throw new Error("No cycle");
-      nextAt=new Date(raw);
-      label.textContent="Next · "+formatNext(nextAt)+" · 8-hour cycle";
-      tick();
-      timer=setInterval(tick,1000);
-    }catch{
-      countdown.textContent="8 HOURS";
-      label.textContent="Genesis cycle · Asia/Manila";
+  try{
+    const episodes=await rpc("api_episode_library");
+    if(Array.isArray(episodes)&&episodes.length){
+      const latest=episodes[0];
+      document.querySelector("#home-current-episode").textContent="Episode "+esc(latest.episode_number);
+      document.querySelector("#home-current-title").textContent=latest.title||"Continue Your Journey";
+      document.querySelector("#home-current-summary").textContent=latest.summary_public||"Continue the latest released Final Canon.";
+      let cards=[];
+      for(const ep of episodes.slice(0,3)){
+        cards.push('<a class="release-tile" href="/site-preview/read/"><div class="release-thumb"></div><div class="release-info"><small>EPISODE '+esc(ep.episode_number)+'</small><strong>'+esc(ep.title||"GENESIS")+'</strong><span>Released Final Canon</span></div></a>');
+      }
+      const box=document.querySelector("#home-latest-releases"); if(box)box.innerHTML=cards.join("");
+      if(partEl)partEl.textContent="Episode "+esc(latest.episode_number)+" · next scheduled Part";
     }
-  };
+  }catch{}
 
-  await loadCycle();
+  try{
+    const session=await getSession();
+    const user=session?await getAuthUser(session):null;
+    if(user){
+      const data=await rpc("api_reader_account",{},session.access_token);
+      const name=data?.display_name||user?.user_metadata?.display_name||"Reader";
+      document.querySelector("#home-reader-name").textContent=name;
+      const totalExp=Number(data?.reader_exp??data?.total_exp??0);
+      const tier=Math.floor(totalExp/2000)+1;
+      const within=totalExp%2000;
+      document.querySelector("#home-reader-tier").textContent="Tier "+tier;
+      document.querySelector("#home-exp-progress").textContent=within.toLocaleString()+" / 2,000 EXP";
+      document.querySelector("#home-exp-total").textContent="Total EXP: "+totalExp.toLocaleString();
+      document.querySelector("#home-exp-bar").style.width=Math.min(100,within/2000*100)+"%";
+      const support=Number(data?.support?.advance_parts??data?.support?.credit_balance??0);
+      document.querySelector("#home-support-unlocks").textContent="+"+support;
+      document.querySelector("#home-access-total").textContent="+"+support+" Parts Ahead";
+      document.querySelector("#home-reader-title").textContent=data?.reader_title||"GENESIS Adventurer";
+    }
+  }catch{}
 }
 
 const page=document.body.dataset.page;
