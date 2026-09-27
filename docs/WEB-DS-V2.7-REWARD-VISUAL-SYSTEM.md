@@ -62,13 +62,13 @@ Reward art must not reveal:
 
 ## Asset production folders
 
-public/assets/v27/rewards/cards/
-public/assets/v27/rewards/characters/
-public/assets/v27/rewards/monsters/
-public/assets/v27/rewards/wallpapers/desktop/
-public/assets/v27/rewards/wallpapers/mobile/
-public/assets/v27/rewards/backgrounds/
-public/assets/v27/rewards/special/
+public/assets/v27/rewards/
+public/assets/v27/rewards/
+public/assets/v27/rewards/
+public/assets/v27/rewards/
+public/assets/v27/rewards/
+public/assets/v27/rewards/
+public/assets/v27/rewards/
 
 ## Recommended production dimensions
 
