@@ -21,16 +21,16 @@ The batch deliberately mixes:
 
 | Key | Type | Title | Rarity | Min Episode | Asset path |
 | --- | --- | --- | --- | ---: | --- |
-| RG-B001-CARD-001 | PICTURE_CARD | A Second Chance | COMMON | 1 | /assets/v27/rewards/a-second-chance.webp |
-| RG-B001-CARD-002 | PICTURE_CARD | The Life He Never Lived | UNCOMMON | 1 | /assets/v27/rewards/the-life-he-never-lived.webp |
-| RG-B001-CARD-003 | PICTURE_CARD | Enter GENESIS | COMMON | 1 | /assets/v27/rewards/enter-genesis.webp |
-| RG-B001-CARD-004 | PICTURE_CARD | The First Grind | UNCOMMON | 3 | /assets/v27/rewards/the-first-grind.webp |
-| RG-B001-CHAR-001 | CHARACTER_PICTURE | Flavio Reyes — Beginning | COMMON | 1 | /assets/v27/rewards/flavio-beginning.webp |
-| RG-B001-CHAR-002 | CHARACTER_PICTURE | Maya — Stay With Me | RARE | 1 | /assets/v27/rewards/maya-stay-with-me.webp |
-| RG-B001-CHAR-003 | CHARACTER_PICTURE | Nico — First Companion | UNCOMMON | 3 | /assets/v27/rewards/nico-first-companion.webp |
-| RG-B001-MON-001 | MONSTER_PICTURE | Gnawer — Field Study | COMMON | 3 | /assets/v27/rewards/gnawer-field-study.webp |
-| RG-B001-DESK-001 | DESKTOP_WALLPAPER | Moonlit GENESIS | RARE | 0 | /assets/v27/rewards/moonlit-genesis.webp |
-| RG-B001-DESK-002 | DESKTOP_WALLPAPER | City Beyond the Falls | EPIC | 1 | /assets/v27/rewards/city-beyond-the-falls.webp |
+| RG-B001-CARD-001 | PICTURE_CARD | Genesis Awakening | COMMON | 1 | /assets/v27/rewards/genesis-awakening.webp |
+| RG-B001-CARD-002 | PICTURE_CARD | Flavio & Nico — Early Party | UNCOMMON | 1 | /assets/v27/rewards/flavio-nico-early-party.webp |
+| RG-B001-CARD-003 | PICTURE_CARD | Starter Town — Safe Zone | COMMON | 1 | /assets/v27/rewards/starter-town-safe-zone.webp |
+| RG-B001-CARD-004 | PICTURE_CARD | Beginner Hunt | UNCOMMON | 3 | /assets/v27/rewards/beginner-hunt.webp |
+| RG-B001-CHAR-001 | CHARACTER_PICTURE | Flavio Reyes | COMMON | 1 | /assets/v27/rewards/flavio-reyes.webp |
+| RG-B001-CHAR-002 | CHARACTER_PICTURE | Amihan “Maya” Villareal | RARE | 1 | /assets/v27/rewards/maya-villareal.webp |
+| RG-B001-CHAR-003 | CHARACTER_PICTURE | Nico Salazar | UNCOMMON | 3 | /assets/v27/rewards/nico-salazar.webp |
+| RG-B001-MON-001 | MONSTER_PICTURE | Young Gnawer | COMMON | 3 | /assets/v27/rewards/young-gnawer.webp |
+| RG-B001-DESK-001 | DESKTOP_WALLPAPER | Early GENESIS World Panorama | RARE | 0 | /assets/v27/rewards/early-genesis-world-panorama.webp |
+| RG-B001-DESK-002 | DESKTOP_WALLPAPER | Flavio & Early Cast | EPIC | 1 | /assets/v27/rewards/flavio-early-cast-wallpaper.webp |
 | RG-B001-MOB-001 | MOBILE_WALLPAPER | Reborn Under Moonlight | RARE | 0 | /assets/v27/rewards/reborn-under-moonlight.webp |
 | RG-B001-MOB-002 | MOBILE_WALLPAPER | The Road Ahead | UNCOMMON | 1 | /assets/v27/rewards/the-road-ahead.webp |
 | RG-B001-BG-001 | BACKGROUND | Genesis Blue — Astral Hall | COMMON | 0 | /assets/v27/rewards/genesis-blue-astral-hall.webp |
