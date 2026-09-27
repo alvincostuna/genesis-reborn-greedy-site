@@ -160,3 +160,26 @@ V2.5 is successful when:
 - World/Codex/Fan/Manga/Support each have distinct artwork
 - mobile composition looks authored, not merely responsive
 - visual QA passes on desktop and mobile
+
+
+## Asset intake — 2026-09-27
+
+Accepted for V2.5:
+- hero-home-desktop.webp — user-supplied, 2048 × 768, correct ~2.66:1 ratio, composition accepted
+- hero-home-mobile.webp — user-supplied, 1080 × 1440, exact mobile target, composition accepted
+- 19-icon SVG family — imported into public/assets/v25/icons/ and wired into the Home UI
+
+Hero visual acceptance:
+- central dark-haired protagonist is dominant
+- two supporting characters provide ensemble balance
+- castle/city depth is strong
+- dark left-side desktop negative space supports wordmark/CTA overlay
+- mobile crop retains protagonist and supporting cast
+- no baked website text or watermark
+
+Current repository state:
+- SVG icon set: INTEGRATED
+- icon CSS mask/currentColor states: INTEGRATED
+- guarded live asset packaging for public/assets/v25: PREPARED
+- hero binary artwork: ACCEPTED, PENDING REPOSITORY BINARY IMPORT
+- rendered QA for icon integration: RUNNING
