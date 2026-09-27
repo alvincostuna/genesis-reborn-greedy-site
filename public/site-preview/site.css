@@ -2017,3 +2017,56 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2 .v2-feature-grid .feature-tile strong{font-size:19px}
   .web-ds-v2 .v2-feature-grid .feature-tile span{font-size:8px}
 }
+
+
+/* ============================================================
+   WEB-DS-V2.2.1 — MOBILE RELEASE LAYOUT CORRECTION
+   Prevent legacy horizontal release strip from overriding V2.
+   ============================================================ */
+@media(max-width:900px){
+  .web-ds-v2 .latest-card{
+    width:100%;
+    min-width:0;
+  }
+  .web-ds-v2 .v2-release-cards,
+  .web-ds-v2 .release-cards{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    width:100%!important;
+    min-width:0!important;
+    overflow:visible!important;
+    gap:8px!important;
+    padding:9px!important;
+  }
+  .web-ds-v2 .v2-release-tile,
+  .web-ds-v2 .release-tile{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    grid-template-columns:104px minmax(0,1fr)!important;
+    min-height:104px!important;
+  }
+  .web-ds-v2 .release-thumb{
+    width:auto!important;
+    min-width:0!important;
+    min-height:104px!important;
+  }
+  .web-ds-v2 .release-info{
+    min-width:0!important;
+    width:auto!important;
+  }
+}
+@media(max-width:520px){
+  .web-ds-v2 .v2-release-tile,
+  .web-ds-v2 .release-tile{
+    grid-template-columns:96px minmax(0,1fr)!important;
+  }
+  .web-ds-v2 .release-info strong{
+    font-size:16px!important;
+    line-height:1.15!important;
+  }
+  .web-ds-v2 .release-info small,
+  .web-ds-v2 .release-info span{
+    font-size:9px!important;
+  }
+}
