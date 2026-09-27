@@ -43,6 +43,45 @@ jobs:
           npm install --legacy-peer-deps --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
+      - name: Detect V2.7 reward asset package
+        id: reward_assets
+        shell: bash
+        run: |
+          expected=(
+            genesis-awakening.webp
+            beginner-hunt.webp
+            flavio-nico-early-party.webp
+            starter-town-safe-zone.webp
+            flavio-reyes.webp
+            nico-salazar.webp
+            maya-villareal.webp
+            young-gnawer.webp
+            early-genesis-world-panorama.webp
+            flavio-early-cast-wallpaper.webp
+          )
+          root="public/assets/v27/rewards"
+          found=0
+          missing=()
+          for file in "${expected[@]}"; do
+            if [ -f "$root/$file" ]; then
+              found=$((found+1))
+            else
+              missing+=("$file")
+            fi
+          done
+          echo "Found $found/${#expected[@]} V2.7 reward images."
+          if [ "$found" -eq 0 ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::V2.7 reward images have not been uploaded yet; real-image QA is deferred."
+          elif [ "$found" -ne "${#expected[@]}" ]; then
+            printf 'Missing reward image: %s\n' "${missing[@]}"
+            echo "::error::Partial V2.7 reward upload detected. Upload all 10 images together."
+            exit 1
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "PASS: all 10 V2.7 reward images are present."
+          fi
+
       - name: Start isolated static preview
         run: |
           python3 -m http.server 4173 --directory public >/tmp/genesis-http.log 2>&1 &
@@ -119,6 +158,67 @@ jobs:
           }
           JS
           node visual-qa-runner.mjs
+
+
+      - name: Render V2.7 real reward asset QA
+        if: steps.reward_assets.outputs.ready == 'true'
+        run: |
+          cat > reward-assets-qa.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+
+          const files=[
+            'genesis-awakening.webp',
+            'beginner-hunt.webp',
+            'flavio-nico-early-party.webp',
+            'starter-town-safe-zone.webp',
+            'flavio-reyes.webp',
+            'nico-salazar.webp',
+            'maya-villareal.webp',
+            'young-gnawer.webp',
+            'early-genesis-world-panorama.webp',
+            'flavio-early-cast-wallpaper.webp'
+          ];
+          const base='http://127.0.0.1:4173/assets/v27/rewards/';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:1440,height:1200}});
+          const results=[];
+          for(const file of files){
+            const response=await page.goto(base+file,{waitUntil:'load',timeout:30000});
+            const status=response?.status()??0;
+            const meta=await page.evaluate(()=>{
+              const img=document.querySelector('img');
+              return img?{width:img.naturalWidth,height:img.naturalHeight}:{width:0,height:0};
+            });
+            results.push({file,status,...meta});
+          }
+          const bad=results.filter(x=>x.status!==200||x.width<800||x.height<800);
+          fs.writeFileSync('visual-qa/reward-assets-report.json',JSON.stringify(results,null,2));
+
+          await page.setContent(`
+            <style>
+              body{margin:0;background:#030912;color:#f5df9a;font:16px system-ui;padding:24px}
+              h1{font:700 28px Georgia,serif;margin:0 0 18px}
+              .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+              figure{margin:0;background:#071522;border:1px solid #8c7139;padding:10px}
+              img{width:100%;height:320px;object-fit:cover;display:block;background:#02070c}
+              figcaption{padding:10px 2px 2px;color:#cbd9e4;font-size:13px}
+            </style>
+            <h1>GENESIS V2.7 — Reward Asset QA</h1>
+            <div class="grid">
+              ${files.map(f=>`<figure><img src="${base+f}"><figcaption>${f}</figcaption></figure>`).join('')}
+            </div>`);
+          await page.waitForLoadState('networkidle');
+          await page.screenshot({path:'visual-qa/reward-assets-desktop.png',fullPage:true});
+          await browser.close();
+
+          console.log(JSON.stringify(results,null,2));
+          if(bad.length){
+            console.error('Blocking V2.7 reward asset defects:',bad);
+            process.exit(1);
+          }
+          JS
+          node reward-assets-qa.mjs
 
       - name: Upload rendered QA screenshots
         if: always()
