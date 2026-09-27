@@ -524,8 +524,9 @@ async function initHome(){
       document.querySelector("#home-current-title").textContent=latest.title||"Continue Your Journey";
       document.querySelector("#home-current-summary").textContent=latest.summary_public||"Continue the latest released Final Canon.";
       let cards=[];
-      for(const ep of episodes.slice(0,3)){
-        cards.push('<a class="release-tile" href="/site-preview/read/"><div class="release-thumb"></div><div class="release-info"><small>EPISODE '+esc(ep.episode_number)+'</small><strong>'+esc(ep.title||"GENESIS")+'</strong><span>Released Final Canon</span></div></a>');
+      for(const [index,ep] of episodes.slice(0,3).entries()){
+        const artClass="release-art-"+(index+1);
+        cards.push('<a class="release-tile v2-release-tile '+artClass+'" href="/site-preview/read/"><div class="release-thumb"></div><div class="release-info"><small>EPISODE '+esc(ep.episode_number)+'</small><strong>'+esc(ep.title||"GENESIS")+'</strong><span>Released Final Canon</span></div></a>');
       }
       const box=document.querySelector("#home-latest-releases"); if(box)box.innerHTML=cards.join("");
       if(partEl)partEl.textContent="Episode "+esc(latest.episode_number)+" · next scheduled Part";
