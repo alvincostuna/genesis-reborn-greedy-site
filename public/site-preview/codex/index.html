@@ -17,9 +17,19 @@
   <div class="game-nav-actions"><a class="profile-orb" data-auth-link href="/site-preview/account/"><img src="/assets/genesis-official-logo-64.png" alt=""></a></div>
 </header>
 <main class="codex-shell">
-  <section class="codex-header">
-    <div><p class="eyebrow">GENESIS DATABASE</p><h1>Codex</h1><p>Search knowledge unlocked by released story content. Hidden lore stays hidden.</p></div>
-    <div class="codex-status hud-card"><span>DATABASE MODE</span><strong>READER-SAFE</strong><small>Spoiler gating enabled</small></div>
+  <section class="codex-header v28-codex-hero hud-card">
+    <div class="codex-hero-art"></div><div class="codex-hero-shade"></div>
+    <div class="codex-hero-copy"><p class="eyebrow">GENESIS DATABASE</p><h1>Codex</h1><p>Search knowledge unlocked by released story content. Hidden lore stays hidden.</p>
+      <div class="codex-hero-meta"><span>Reader-safe records</span><span>Fog-gated lore</span><span>Searchable archive</span></div>
+    </div>
+    <div class="codex-status"><span>DATABASE MODE</span><strong>READER-SAFE</strong><small>Spoiler gating enabled</small></div>
+  </section>
+  <section class="codex-discovery-strip">
+    <button data-codex-jump="monster"><b>BESTIARY</b><small>Creatures</small></button>
+    <button data-codex-jump="map"><b>ATLAS</b><small>Places</small></button>
+    <button data-codex-jump="weapon"><b>ARMORY</b><small>Weapons</small></button>
+    <button data-codex-jump="item"><b>ARCHIVE</b><small>Items</small></button>
+    <button data-codex-jump="class"><b>PATHS</b><small>Classes</small></button>
   </section>
   <section class="codex-category-strip">
     <button data-codex-chip="">All</button><button data-codex-chip="monster">Monsters</button><button data-codex-chip="map">Maps</button><button data-codex-chip="weapon">Weapons</button>
@@ -32,7 +42,8 @@
       </select>
       <input id="codex-search" type="search" placeholder="Search revealed names, types or lore…" autocomplete="off"><button id="codex-search-button">Search Database</button>
     </div>
-    <section id="codex-results" class="codex-grid game-grid"><div class="empty-state large">Loading revealed Codex records…</div></section>
+    <div class="codex-results-head"><div><small>REVEALED INDEX</small><strong>Public Knowledge Archive</strong></div><span id="codex-result-count">Reader-safe results</span></div>
+    <section id="codex-results" class="codex-grid game-grid v28-codex-grid"><div class="empty-state large">Loading revealed Codex records…</div></section>
   </section>
 </main>
 <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
