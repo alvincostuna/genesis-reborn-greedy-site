@@ -401,7 +401,7 @@ async function initRead(){
   }catch{}
   try{
     const p=firstRow(await rpc("api_release_policy"));
-    releaseMini.textContent=(p?.releases_paused?"PAUSED · ":"")+"3 Parts · every 8 hours · Mon–Sat · Sunday rest · PHT";
+    releaseMini.textContent=(p?.releases_paused?"PAUSED · ":"")+"3 Parts · 8:00 AM / 2:00 PM / 8:00 PM · Mon–Sat · Sunday rest";
   }catch{}
   let episodes=[];
   try{episodes=await rpc("api_episode_library")}catch{}
@@ -580,7 +580,7 @@ async function initHome(){
     }).formatToParts(now).reduce((o,p)=>(o[p.type]=p.value,o),{});
     const y=Number(parts.year),m=Number(parts.month)-1,d=Number(parts.day);
     const nowLocalSeconds=Number(parts.hour)*3600+Number(parts.minute)*60+Number(parts.second);
-    const slots=[0,8,16];
+    const slots=[8,14,20];
     for(let dayOffset=0;dayOffset<8;dayOffset++){
       const localDate=new Date(Date.UTC(y,m,d+dayOffset));
       if(localDate.getUTCDay()===0)continue; // Sunday rest day.
@@ -590,7 +590,7 @@ async function initHome(){
         const target=new Date(Date.UTC(
           localDate.getUTCFullYear(),localDate.getUTCMonth(),localDate.getUTCDate(),hour-8,0,0
         ));
-        const label=hour===0?"12:00 AM PHT":hour===8?"8:00 AM PHT":"4:00 PM PHT";
+        const label=hour===8?"8:00 AM PHT":hour===14?"2:00 PM PHT":"8:00 PM PHT";
         return {date:target,label};
       }
     }
