@@ -2,7 +2,7 @@ const SUPABASE_URL="https://lyhrwymhzhhxszquxnke.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_rCJL18_zLNtWH-ON1DTnDA_3quoGH3Q";
 
 const SESSION_KEY="genesis_reader_session_v1";
-const TIER_EXP_THRESHOLD=1000;
+const TIER_EXP_THRESHOLD=2000;
 
 function accountPath(){
   return location.pathname.startsWith("/site-preview/")?"/site-preview/account/":"/account/";
@@ -401,7 +401,7 @@ async function initRead(){
   }catch{}
   try{
     const p=firstRow(await rpc("api_release_policy"));
-    releaseMini.textContent=(p?.releases_paused?"PAUSED · ":"")+"2 Parts daily · 8:00 AM / 8:00 PM PHT";
+    releaseMini.textContent=(p?.releases_paused?"PAUSED · ":"")+"3 Parts · every 8 hours · Mon–Sat · Sunday rest · PHT";
   }catch{}
   let episodes=[];
   try{episodes=await rpc("api_episode_library")}catch{}
@@ -578,12 +578,24 @@ async function initHome(){
       timeZone:"Asia/Manila",year:"numeric",month:"2-digit",day:"2-digit",
       hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
     }).formatToParts(now).reduce((o,p)=>(o[p.type]=p.value,o),{});
-    const ph=new Date(Date.UTC(Number(parts.year),Number(parts.month)-1,Number(parts.day),Number(parts.hour)-8,Number(parts.minute),Number(parts.second)));
-    const hour=Number(parts.hour);
-    const targetHour=hour<8?8:(hour<20?20:8);
-    const addDay=hour>=20?1:0;
-    const target=new Date(Date.UTC(Number(parts.year),Number(parts.month)-1,Number(parts.day)+addDay,targetHour-8,0,0));
-    return {date:target,label:targetHour===8?"8:00 AM PHT":"8:00 PM PHT"};
+    const y=Number(parts.year),m=Number(parts.month)-1,d=Number(parts.day);
+    const nowLocalSeconds=Number(parts.hour)*3600+Number(parts.minute)*60+Number(parts.second);
+    const slots=[0,8,16];
+    for(let dayOffset=0;dayOffset<8;dayOffset++){
+      const localDate=new Date(Date.UTC(y,m,d+dayOffset));
+      if(localDate.getUTCDay()===0)continue; // Sunday rest day.
+      for(const hour of slots){
+        const slotSeconds=hour*3600;
+        if(dayOffset===0&&slotSeconds<=nowLocalSeconds)continue;
+        const target=new Date(Date.UTC(
+          localDate.getUTCFullYear(),localDate.getUTCMonth(),localDate.getUTCDate(),hour-8,0,0
+        ));
+        const label=hour===0?"12:00 AM PHT":hour===8?"8:00 AM PHT":"4:00 PM PHT";
+        return {date:target,label};
+      }
+    }
+    const fallback=new Date(now.getTime()+8*3600*1000);
+    return {date:fallback,label:"Next scheduled Part"};
   }
   function tick(){
     if(!nextAt)return;
