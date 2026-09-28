@@ -49,9 +49,9 @@
         <div class="profile-tags"><span id="profile-title-badge">GENESIS Adventurer</span><span id="profile-tier-badge">Tier 1</span></div>
       </div>
       <div class="profile-exp-block">
-        <div class="profile-exp-head"><strong id="profile-exp-total">0 EXP</strong><span id="profile-next-tier">1,000 to next Tier</span></div>
+        <div class="profile-exp-head"><strong id="profile-exp-total">0 EXP</strong><span id="profile-next-tier">2,000 to next Tier</span></div>
         <div class="exp-track big"><span id="profile-exp-bar" style="width:0%"></span></div>
-        <small>Every 1,000 EXP = Tier Up + 1 random collectible draw</small>
+        <small>Every 2,000 EXP = Tier Up + 1 random collectible draw</small>
       </div>
     </article>
 
@@ -72,7 +72,7 @@
           <div><small>Available Ahead</small><strong id="account-credits">0 Parts</strong></div>
           <div><small>Support Status</small><strong id="account-vip">Inactive</strong></div>
           <div><small>Public Badge</small><strong id="account-badge">None</strong></div>
-          <div><small>Next Public Drop</small><strong>08:00 / 20:00</strong></div>
+          <div><small>Next Public Drop</small><strong>08:00 / 14:00 / 20:00 · Mon–Sat</strong></div>
         </div>
       </article>
 
@@ -115,6 +115,23 @@
           <label><input id="badge-vip" type="checkbox"> Show VIP badge while active</label>
           <button id="save-badges" type="button">Save badge settings</button>
         </div>
+
+        <div class="account-security-panel">
+          <div class="security-section-head"><div><p class="eyebrow">ACCOUNT SECURITY</p><h3>Email verification</h3></div><span id="email-verification-badge" class="security-status pending">Checking…</span></div>
+          <p id="email-verification-copy" class="security-copy">Checking your email verification status.</p>
+          <button id="resend-verification" class="secondary-button hidden" type="button">Resend verification email</button>
+        </div>
+
+        <div class="account-security-panel">
+          <div class="security-section-head"><div><p class="eyebrow">PASSWORD</p><h3>Change password</h3></div><span class="security-status">Protected</span></div>
+          <form id="change-password-form" class="account-form security-form">
+            <label>New password<input id="change-password" type="password" minlength="8" autocomplete="new-password" required></label>
+            <label>Confirm new password<input id="change-password-confirm" type="password" minlength="8" autocomplete="new-password" required></label>
+            <button type="submit">Update password</button>
+          </form>
+          <p class="account-hint">Use at least 8 characters. Your active reader profile, EXP, rewards and reading history stay unchanged.</p>
+        </div>
+
         <button id="signout-button" class="secondary-button" type="button">Sign out</button>
       </article>
     </section>
