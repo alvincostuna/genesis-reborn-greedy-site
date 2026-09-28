@@ -11,6 +11,7 @@ on:
       - web-ds-v2-8-world-codex
       - web-ds-v2-9-final-ui
       - web-ds-v3-release-reward-rules
+      - web-ds-v3-auth-security-v2
   workflow_dispatch:
 
 permissions:

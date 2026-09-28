@@ -5216,3 +5216,75 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2 .cycle-rule strong{font-size:8px}
   .web-ds-v2 .cycle-rule small{font-size:6px}
 }
+
+
+/* ============================================================
+   WEB-DS-V3 — ACCOUNT SECURITY
+   ============================================================ */
+.account-security-panel{
+  margin-top:16px;
+  padding:16px;
+  border:1px solid rgba(75,142,188,.28);
+  border-radius:9px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(86,190,248,.06),transparent 42%),
+    linear-gradient(145deg,#081a29,#06111c);
+}
+.security-section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:9px;
+}
+.security-section-head .eyebrow{margin:0 0 3px}
+.security-section-head h3{
+  margin:0;
+  color:#f1dfb8;
+  font:600 18px Georgia,"Times New Roman",serif;
+}
+.security-status{
+  flex:0 0 auto;
+  padding:5px 8px;
+  border:1px solid rgba(89,164,214,.30);
+  border-radius:999px;
+  background:#071827;
+  color:#9ec5dd;
+  font-size:8px;
+  letter-spacing:.07em;
+}
+.security-status.verified{
+  border-color:rgba(86,207,148,.42);
+  color:#8de0ae;
+  background:rgba(13,49,37,.62);
+}
+.security-status.pending{
+  border-color:rgba(224,180,84,.44);
+  color:#f0cf77;
+  background:rgba(50,37,10,.48);
+}
+.security-copy{
+  margin:0 0 10px;
+  color:#91a6b6;
+  font-size:10px;
+  line-height:1.5;
+}
+.security-form{
+  margin-top:8px;
+}
+.security-form label{
+  font-size:10px;
+}
+.account-security-panel>.secondary-button{
+  width:100%;
+}
+@media(max-width:620px){
+  .security-section-head{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:7px;
+  }
+  .account-security-panel{
+    padding:14px;
+  }
+}
