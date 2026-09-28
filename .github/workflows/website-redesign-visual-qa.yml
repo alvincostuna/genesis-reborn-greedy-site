@@ -8,6 +8,7 @@ on:
       - web-ds-v2-6-dashboard
       - web-ds-v2-7-rewards
       - web-ds-v2-7-1-reward-polish
+      - web-ds-v2-8-world-codex
   workflow_dispatch:
 
 permissions:
