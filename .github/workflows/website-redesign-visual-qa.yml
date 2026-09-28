@@ -111,7 +111,9 @@ jobs:
             ['world','/world/'],
             ['codex','/codex/'],
             ['support','/support/'],
-            ['quests','/quests/']
+            ['quests','/quests/'],
+            ['fan','/fan-page/'],
+            ['manga','/manga/']
           ];
           const viewports=[
             ['desktop',{width:1440,height:1100}],
@@ -127,6 +129,22 @@ jobs:
               page.on('pageerror',e=>errors.push('pageerror: '+e.message));
               page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())});
               const response=await page.goto(base+path,{waitUntil:'networkidle',timeout:30000});
+              if(name==='fan'){
+                await page.evaluate(()=>{
+                  const feed=document.querySelector('#fan-feed');
+                  if(feed){
+                    const sample=[
+                      ['Reader Artwork','/assets/v27/rewards/flavio-early-cast-wallpaper.webp','Community image prepared for moderation.'],
+                      ['Official Visual','/assets/v27/rewards/genesis-awakening.webp','Official reader-safe visual post.'],
+                      ['Community Gallery','/assets/v27/rewards/early-genesis-world-panorama.webp','Reader-safe community discovery card.']
+                    ];
+                    feed.innerHTML=sample.map(([name,art,caption],i)=>
+                      '<article class="fan-post"><div class="fan-media" style="background-image:linear-gradient(180deg,transparent,rgba(2,8,14,.45)),url(\''+art+'\')"></div>'+
+                      '<div class="fan-copy"><div class="fan-author"><strong>'+name+'</strong>'+(i===1?'<span class="reader-badge">OFFICIAL</span>':'')+'</div><p>'+caption+'</p></div></article>'
+                    ).join('');
+                  }
+                });
+              }
               if(name==='world'){
                 await page.evaluate(()=>{
                   const grid=document.querySelector('#world-grid');
