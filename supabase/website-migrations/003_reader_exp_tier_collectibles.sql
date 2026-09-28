@@ -116,7 +116,12 @@ as $$
 declare v_exp integer;
 begin
   if new.status='CONFIRMED' and (tg_op='INSERT' or old.status is distinct from 'CONFIRMED') then
-    select coalesce(exp_reward,0) into v_exp from public.support_reward_rules where rule_key=new.rule_key;
+    v_exp:=case
+      when new.rule_key='SUPPORT_10' or new.amount_php between 9 and 10 then 100
+      when new.rule_key='SUPPORT_50' or new.amount_php between 49 and 50 then 500
+      when new.rule_key='VIP_200' or new.amount_php between 189 and 200 then 2000
+      else 0
+    end;
     if coalesce(v_exp,0)>0 then
       perform public.award_reader_exp_v1(
         new.user_id,'SUPPORT','SUPPORT:'||new.id::text,v_exp,null,
@@ -220,7 +225,7 @@ $$;
 
 create or replace function public.api_reader_account_v3()
 returns jsonb
-language plpgsql stable security definer
+language plpgsql security definer
 set search_path='pg_catalog','public','auth','pg_temp'
 as $$
 declare
