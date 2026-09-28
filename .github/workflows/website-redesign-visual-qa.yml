@@ -125,6 +125,22 @@ jobs:
               page.on('pageerror',e=>errors.push('pageerror: '+e.message));
               page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())});
               const response=await page.goto(base+path,{waitUntil:'networkidle',timeout:30000});
+              if(name==='quests'){
+                await page.evaluate(()=>{
+                  const button=document.querySelector('#reward-draw-button');
+                  if(button){button.disabled=false;button.textContent='Claim Random Reward · 2 Ready';}
+                  const cards=[...document.querySelectorAll('#reward-vault-grid .reward-state-card')];
+                  cards.forEach((card,i)=>{
+                    card.classList.remove('earned','available','locked');
+                    card.classList.add(i<3?'earned':(i===6?'locked':'available'));
+                    const label=card.querySelector('.reward-state-copy span');
+                    if(label)label.textContent=i<3?(i===2?'Earned ×2':'Earned'):(i===6?'Locked by story progress':'Available in random draw');
+                    const lock=card.querySelector('.reward-lock');
+                    if(i<3&&lock)lock.remove();
+                    else if(lock)lock.textContent=i===6?'🔒':'◇';
+                  });
+                });
+              }
               if(name==='profile'){
                 await page.evaluate(()=>{
                   document.querySelector('#auth-guest')?.classList.add('hidden');
