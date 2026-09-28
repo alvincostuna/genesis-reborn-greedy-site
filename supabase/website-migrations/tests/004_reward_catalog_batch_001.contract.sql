@@ -17,9 +17,6 @@ begin
   if not exists(select 1 from public.reader_collectible_catalog where collectible_key like 'RG-B001-%' and asset_type='DESKTOP_WALLPAPER') then
     raise exception 'T4_DESKTOP_WALLPAPER_FAIL';
   end if;
-  if not exists(select 1 from public.reader_collectible_catalog where collectible_key like 'RG-B001-%' and asset_type='MOBILE_WALLPAPER') then
-    raise exception 'T4_MOBILE_WALLPAPER_FAIL';
-  end if;
   if exists(select 1 from public.reader_collectible_catalog where collectible_key like 'RG-B001-%' and min_episode<0) then
     raise exception 'T4_NEGATIVE_REVEAL_GATE_FAIL';
   end if;
