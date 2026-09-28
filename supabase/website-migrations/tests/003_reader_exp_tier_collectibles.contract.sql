@@ -35,14 +35,14 @@ begin
   select public.reader_total_exp(v_user) into v_total;
   if v_total<>100 then raise exception 'T3_READ_EXP_IDEMPOTENCY_FAIL %',v_total; end if;
 
-  perform public.award_reader_exp_v1(v_user,'ADMIN','QA-TIER',900,null,'{}'::jsonb);
+  perform public.award_reader_exp_v1(v_user,'ADMIN','QA-TIER',1900,null,'{}'::jsonb);
   if public.reader_tier(v_user)<>2 then raise exception 'T3_TIER_FAIL %',public.reader_tier(v_user); end if;
 
-  if public.reader_tier(v_user)<>floor(public.reader_total_exp(v_user)/1000.0)::integer+1 then raise exception 'T3_TIER_THRESHOLD_FAIL'; end if;
+  if public.reader_tier(v_user)<>floor(public.reader_total_exp(v_user)/2000.0)::integer+1 then raise exception 'T3_TIER_THRESHOLD_FAIL'; end if;
 
-  perform public.award_reader_exp_v1(v_user,'ADMIN','QA-TIER-2000',1000,null,'{}'::jsonb);
-  if public.reader_total_exp(v_user)<>2000 then raise exception 'T3_TOTAL_2000_FAIL %',public.reader_total_exp(v_user); end if;
-  if public.reader_tier(v_user)<>3 then raise exception 'T3_TIER_2000_FAIL %',public.reader_tier(v_user); end if;
+  perform public.award_reader_exp_v1(v_user,'ADMIN','QA-TIER-4000',2000,null,'{}'::jsonb);
+  if public.reader_total_exp(v_user)<>4000 then raise exception 'T3_TOTAL_4000_FAIL %',public.reader_total_exp(v_user); end if;
+  if public.reader_tier(v_user)<>3 then raise exception 'T3_TIER_4000_FAIL %',public.reader_tier(v_user); end if;
 
   insert into public.reader_collectible_catalog(collectible_key,title,asset_type,rarity,min_episode,active)
   values('QA-COLLECTIBLE','QA Collectible','PICTURE_CARD','COMMON',1,true);
