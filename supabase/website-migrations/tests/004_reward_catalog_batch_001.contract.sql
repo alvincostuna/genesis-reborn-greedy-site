@@ -1,7 +1,7 @@
--- CONTRACT TEST 004: Reward Catalog Batch 001
+-- CONTRACT TEST 004: Reward Catalog Batch 001 — verified 10-asset pack
 do $$
 begin
-  if (select count(*) from public.reader_collectible_catalog where collectible_key like 'RG-B001-%')<>15 then
+  if (select count(*) from public.reader_collectible_catalog where collectible_key like 'RG-B001-%')<>10 then
     raise exception 'T4_BATCH_COUNT_FAIL';
   end if;
 
