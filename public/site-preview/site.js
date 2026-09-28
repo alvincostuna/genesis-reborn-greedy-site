@@ -102,7 +102,8 @@ function rewardCardHtml(item,{owned=false,quantity=0,eligible=true,compact=false
   const rarity=item?.rarity||"REWARD";
   const type=item?.type||item?.asset_type||"PICTURE_CARD";
   const state=owned?"earned":(eligible?"available":"locked");
-  return '<article class="reward-state-card '+state+(compact?" compact":"")+'">'+
+  const portrait=/CHARACTER_PICTURE|MOBILE_WALLPAPER/.test(String(type||""));
+  return '<article class="reward-state-card '+state+(portrait?" portrait":"")+(compact?" compact":"")+'">'+
     '<div class="reward-state-art">'+(src?'<img src="'+esc(src)+'" alt="'+esc(title)+'">':'')+
     (!owned?'<span class="reward-lock">'+(eligible?"◇":"🔒")+'</span>':'')+'</div>'+
     '<div class="reward-state-copy"><small>'+esc(rarity)+' · '+esc(rewardTypeLabel(type))+'</small>'+
@@ -659,8 +660,10 @@ async function initQuests(){
   const session=await getSession();
   const user=session?await getAuthUser(session):null;
   if(!user||!session){
+    const cta=document.querySelector("#reward-cta");
+    if(cta)cta.classList.add("signed-out");
     button.disabled=false;
-    button.textContent="Sign in to check reward draws";
+    button.textContent="Sign In & Open Reward Vault";
     button.addEventListener("click",()=>{location.href=accountPath()+"?next=quests"});
     return;
   }
