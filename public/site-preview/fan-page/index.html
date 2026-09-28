@@ -1,46 +1,51 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#06101b">
 <title>Fan Page — GENESIS: REBORN GREEDY</title>
 <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
 <link rel="stylesheet" href="/site-preview/site.css">
-</head><body data-page="fan">
-<header class="reader-nav">
-  <a class="reader-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
-    <img src="/assets/genesis-official-logo.png" alt="" aria-hidden="true">
-    <span>GENESIS: REBORN GREEDY</span>
-  </a>
-  <nav aria-label="Primary">
-    <a href="/site-preview/">Home</a>
-    <a href="/site-preview/read/">Read</a>
-    <a href="/site-preview/world/">World</a>
-    <a href="/site-preview/codex/">Codex</a>
-    <a class="active" href="/site-preview/fan-page/">Fan Page</a>
-    <a href="/site-preview/manga/">Manga</a>
-    <a href="/site-preview/support/">Support</a>
+</head><body data-page="fan" class="game-fan-page">
+<header class="game-nav compact">
+  <a class="game-brand" href="/site-preview/"><img src="/assets/genesis-official-logo.png" alt=""><span>GENESIS<br><small>REBORN GREEDY</small></span></a>
+  <nav class="desktop-nav" aria-label="Primary">
+    <a href="/site-preview/"><span>⌂</span>Home</a>
+    <a href="/site-preview/read/"><span>▤</span>Read</a>
+    <a href="/site-preview/world/"><span>◎</span>World</a>
+    <a href="/site-preview/codex/"><span>▣</span>Codex</a>
+    <a class="active" href="/site-preview/fan-page/"><span>♟</span>Fan Page</a>
+    <a href="/site-preview/manga/"><span>▧</span>Manga</a>
+    <a href="/site-preview/support/"><span>♡</span>Support</a>
   </nav>
-  <a class="auth-nav-link" data-auth-link href="/site-preview/account/">Sign in</a>
+  <div class="game-nav-actions"><a class="profile-orb" data-auth-link href="/site-preview/account/"><img src="/assets/genesis-official-logo-64.png" alt=""></a></div>
 </header>
-<main class="page-frame">
-  <header class="page-title">
-    <div><p class="eyebrow">GENESIS COMMUNITY</p><h1>Fan Page</h1></div>
-    <p>Fan art, reader images, reactions, and community posts. Spoiler-sensitive posts follow each reader's story access.</p>
-  </header>
-  <section class="fan-actions">
-    <div class="feature-card">
-      <span class="feature-kicker">SHARE YOUR WORK</span>
-      <h2>Post a picture</h2>
-      <p>Reader image uploads are prepared but disabled during preview. At launch, signed-in readers can submit images for moderation.</p>
-      <button disabled>Upload image — preview disabled</button>
+<main class="fan-shell">
+  <section class="fan-hero hud-card">
+    <div class="fan-hero-art"></div><div class="fan-hero-shade"></div>
+    <div class="fan-hero-copy"><p class="eyebrow">GENESIS COMMUNITY</p><h1>Fan Page</h1><p>A reader-safe gallery for fan art, reactions, community images, and official posts. Spoiler-sensitive content follows each reader's story access.</p>
+      <div class="fan-hero-meta"><span>Moderated uploads</span><span>Spoiler-aware feed</span><span>Official posts</span></div>
     </div>
-    <div class="feature-card">
-      <span class="feature-kicker">OFFICIAL POSTS</span>
-      <h2>From GENESIS Admin</h2>
-      <p>Official artwork, announcements, and community images can also appear in the same feed.</p>
-    </div>
+    <div class="fan-status-card"><small>COMMUNITY MODE</small><strong>READER-SAFE</strong><span>Uploads open only when moderation is enabled</span></div>
   </section>
-  <section id="fan-feed" class="fan-feed"><div class="empty-state large">Loading Fan Page…</div></section>
+
+  <section class="fan-actions v28-fan-actions">
+    <article class="fan-action-card primary"><div class="fan-action-icon">✦</div><div><small>SHARE YOUR WORK</small><h2>Post a picture</h2><p>Signed-in readers can submit artwork and images when uploads are enabled. Every submission enters moderation first.</p></div><button disabled>Uploads currently closed</button></article>
+    <article class="fan-action-card"><div class="fan-action-icon">◇</div><div><small>OFFICIAL FEED</small><h2>GENESIS Posts</h2><p>Official artwork, visual updates, and community notices appear alongside reader posts.</p></div><span class="fan-action-state">Public-safe only</span></article>
+    <article class="fan-action-card"><div class="fan-action-icon">◈</div><div><small>SPOILER SHIELD</small><h2>Access-aware</h2><p>Posts can remain hidden when they reveal content beyond a reader's verified progress.</p></div><span class="fan-action-state">Protection active</span></article>
+  </section>
+
+  <section class="fan-feed-shell hud-card">
+    <div class="card-head"><span>COMMUNITY GALLERY</span><span>Moderated Feed</span></div>
+    <div class="fan-feed-toolbar"><div><small>DISCOVERY</small><strong>Latest Reader-Safe Posts</strong></div><span>Images · Reactions · Official posts</span></div>
+    <section id="fan-feed" class="fan-feed v28-fan-feed"><div class="empty-state large">Loading Fan Page…</div></section>
+  </section>
 </main>
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <a href="/site-preview/"><span>⌂</span>Home</a>
+  <a href="/site-preview/read/"><span>▤</span>Read</a>
+  <a href="/site-preview/world/"><span>◎</span>World</a>
+  <a href="/site-preview/codex/"><span>▣</span>Codex</a>
+  <a class="active" href="/site-preview/fan-page/"><span>♟</span>Fan</a>
+</nav>
 <script type="module" src="/site-preview/site.js"></script>
 </body></html>

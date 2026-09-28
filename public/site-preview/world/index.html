@@ -17,10 +17,18 @@
   <div class="game-nav-actions"><a class="profile-orb" data-auth-link href="/site-preview/account/"><img src="/assets/genesis-official-logo-64.png" alt=""></a></div>
 </header>
 <main class="world-shell">
-  <section class="world-hero hud-card">
+  <section class="world-hero hud-card v28-world-hero">
     <div class="world-hero-art"></div><div class="world-hero-shade"></div>
-    <div class="world-hero-copy"><p class="eyebrow">WORLD EXPLORATION</p><h1>Explore GENESIS</h1><p>Only places, creatures and equipment already revealed by released Final Canon appear here. Unknown territory remains under fog-of-war.</p></div>
-    <div class="discovery-meter"><span>READER DISCOVERY</span><strong id="world-discovery">Revealed knowledge only</strong><div><i style="width:32%"></i></div></div>
+    <div class="world-hero-copy"><p class="eyebrow">WORLD EXPLORATION</p><h1>Explore GENESIS</h1><p>Only places, creatures and equipment already revealed by released Final Canon appear here. Unknown territory remains under fog-of-war.</p>
+      <div class="world-hero-actions"><button data-world-jump="map">Open Atlas</button><button data-world-jump="monster">View Bestiary</button></div>
+    </div>
+    <div class="discovery-meter"><span>READER DISCOVERY</span><strong id="world-discovery">Revealed knowledge only</strong><div><i style="width:32%"></i></div><small>Unrevealed records stay obscured</small></div>
+  </section>
+  <section class="world-discovery-strip" aria-label="World discovery categories">
+    <button class="world-discovery-tile active" data-world-jump="map"><span>01</span><strong>Atlas</strong><small>Maps & regions</small></button>
+    <button class="world-discovery-tile" data-world-jump="monster"><span>02</span><strong>Bestiary</strong><small>Revealed creatures</small></button>
+    <button class="world-discovery-tile" data-world-jump="equipment"><span>03</span><strong>Armory</strong><small>Weapons & armor</small></button>
+    <div class="world-discovery-tile locked"><span>?</span><strong>Unknown</strong><small>Fog-of-war protected</small></div>
   </section>
 
   <section class="world-console">
@@ -36,9 +44,12 @@
     <section class="world-map-stage hud-card">
       <div class="card-head"><span>DISCOVERED WORLD</span><span>Public-safe data</span></div>
       <div class="world-map-visual">
+        <div class="world-map-art"></div>
+        <div class="map-grid-overlay"></div>
         <div class="map-glow one"></div><div class="map-glow two"></div>
-        <span class="map-node n1">HIRAYA</span><span class="map-node n2">?</span><span class="map-node n3">?</span>
+        <span class="map-node n1"><b>DISCOVERED</b><em>Public Atlas</em></span><span class="map-node n2">?</span><span class="map-node n3">?</span>
         <div class="fog fog-a"></div><div class="fog fog-b"></div>
+        <div class="world-map-legend"><span><i class="revealed"></i> Revealed</span><span><i class="hidden"></i> Fogged</span></div>
       </div>
       <div id="world-grid" class="world-grid game-grid"><div class="empty-state large">Loading revealed world records…</div></div>
     </section>

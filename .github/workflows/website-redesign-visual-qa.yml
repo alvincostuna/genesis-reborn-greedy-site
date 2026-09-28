@@ -8,6 +8,7 @@ on:
       - web-ds-v2-6-dashboard
       - web-ds-v2-7-rewards
       - web-ds-v2-7-1-reward-polish
+      - web-ds-v2-8-world-codex
   workflow_dispatch:
 
 permissions:
@@ -110,7 +111,9 @@ jobs:
             ['world','/world/'],
             ['codex','/codex/'],
             ['support','/support/'],
-            ['quests','/quests/']
+            ['quests','/quests/'],
+            ['fan','/fan-page/'],
+            ['manga','/manga/']
           ];
           const viewports=[
             ['desktop',{width:1440,height:1100}],
@@ -126,6 +129,90 @@ jobs:
               page.on('pageerror',e=>errors.push('pageerror: '+e.message));
               page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())});
               const response=await page.goto(base+path,{waitUntil:'networkidle',timeout:30000});
+              if(name==='reader'){
+                await page.evaluate(()=>{
+                  const head=document.querySelector('#novel-head');
+                  const body=document.querySelector('#novel-body');
+                  const tabs=document.querySelector('#part-tabs');
+                  const list=document.querySelector('#episode-list');
+                  const count=document.querySelector('#episode-count');
+                  if(count)count.textContent='QA · 3 Episodes';
+                  if(list)list.innerHTML=
+                    '<button class="episode-button active"><small>EPISODE 001</small><strong>Released Episode</strong></button>'+
+                    '<button class="episode-button"><small>EPISODE 002</small><strong>Released Episode</strong></button>'+
+                    '<button class="episode-button"><small>EPISODE 003</small><strong>Released Episode</strong></button>';
+                  if(head)head.innerHTML='<p class="eyebrow">EPISODE 001 · PART 001</p><h2>Reader Typography QA</h2><p>Representative released-reader layout only. No story manuscript is used in this fixture.</p>';
+                  if(tabs)tabs.innerHTML='<button class="active">Part 001</button><button>Part 002</button><button>Part 003</button>';
+                  if(body)body.innerHTML=
+                    '<p>The Reader is designed for long-form fiction with comfortable line length, generous spacing, and clear paragraph rhythm.</p>'+
+                    '<p>This representative text exists only for visual QA. It checks typography, mobile width, navigation controls, and reading comfort without using unreleased story material.</p>'+
+                    '<p>Desktop readers keep the Episode Library and Reader Tools visible. On smaller screens those controls move into drawers so the manuscript remains the focus.</p>'+
+                    '<p>Every released Part should remain readable from beginning to end without horizontal scrolling or clipped text.</p>';
+                  const pos=document.querySelector('#reader-position');if(pos)pos.textContent='42% read';
+                  const fill=document.querySelector('#reader-progress-fill');if(fill)fill.style.width='42%';
+                });
+              }
+              if(name==='fan'){
+                await page.evaluate(()=>{
+                  const feed=document.querySelector('#fan-feed');
+                  if(feed){
+                    const sample=[
+                      ['Reader Artwork','/assets/v27/rewards/flavio-early-cast-wallpaper.webp','Community image prepared for moderation.'],
+                      ['Official Visual','/assets/v27/rewards/genesis-awakening.webp','Official reader-safe visual post.'],
+                      ['Community Gallery','/assets/v27/rewards/early-genesis-world-panorama.webp','Reader-safe community discovery card.']
+                    ];
+                    feed.innerHTML=sample.map(([name,art,caption],i)=>
+                      '<article class="fan-post"><div class="fan-media" style="background-image:linear-gradient(180deg,transparent,rgba(2,8,14,.45)),url(\''+art+'\')"></div>'+
+                      '<div class="fan-copy"><div class="fan-author"><strong>'+name+'</strong>'+(i===1?'<span class="reader-badge">OFFICIAL</span>':'')+'</div><p>'+caption+'</p></div></article>'
+                    ).join('');
+                  }
+                });
+              }
+              if(name==='world'){
+                await page.evaluate(()=>{
+                  const grid=document.querySelector('#world-grid');
+                  if(grid){
+                    const sample=[
+                      ['ATLAS','map','Discovered Region','Reader-safe public map record.','/assets/v27/rewards/early-genesis-world-panorama.webp','◎'],
+                      ['BESTIARY','monster','Field Creature','Reader-safe creature record.','/assets/v27/rewards/young-gnawer.webp','✦'],
+                      ['ARMORY','weapon','Revealed Equipment','Reader-safe equipment record.','/assets/v25/releases/release-duel.png','⚔']
+                    ];
+                    grid.innerHTML=sample.map(([label,type,title,desc,art,icon])=>
+                      '<article class="world-card v28-entity-card" data-entity-type="'+type+'">'+
+                      '<div class="entity-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.04),rgba(2,8,14,.82)),url(\''+art+'\')">'+
+                      '<span class="entity-symbol">'+icon+'</span><span class="entity-category">'+label+'</span></div>'+
+                      '<div class="entity-copy"><small>'+type.toUpperCase()+'</small><h2>'+title+'</h2><p>'+desc+'</p>'+
+                      '<div class="reveal-fields"><span>public name</span><span>category</span><span>summary</span></div></div></article>'
+                    ).join('');
+                  }
+                });
+              }
+              if(name==='codex'){
+                await page.evaluate(()=>{
+                  const grid=document.querySelector('#codex-results');
+                  const count=document.querySelector('#codex-result-count');
+                  if(count)count.textContent='8 reader-safe results';
+                  if(grid){
+                    const sample=[
+                      ['BESTIARY','monster','Creature Record','/assets/v27/rewards/young-gnawer.webp','✦'],
+                      ['ATLAS','map','Region Record','/assets/v27/rewards/early-genesis-world-panorama.webp','◎'],
+                      ['ARMORY','weapon','Weapon Record','/assets/v25/releases/release-duel.png','⚔'],
+                      ['ARMORY','armor','Armor Record','/assets/v25/releases/release-duel.png','⚔'],
+                      ['ARCHIVE','item','Item Record','/assets/v27/rewards/genesis-awakening.webp','▣'],
+                      ['PATH','class','Class Record','/assets/v25/destinations/destination-codex.png','✧'],
+                      ['PATH','profession','Profession Record','/assets/v25/destinations/destination-codex.png','✧'],
+                      ['QUEST','quest','Quest Record','/assets/v25/releases/release-city.png','◇']
+                    ];
+                    grid.innerHTML=sample.map(([label,type,title,art,icon])=>
+                      '<article class="codex-card v28-entity-card" data-entity-type="'+type+'">'+
+                      '<div class="entity-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.04),rgba(2,8,14,.82)),url(\''+art+'\')">'+
+                      '<span class="entity-symbol">'+icon+'</span><span class="entity-category">'+label+'</span></div>'+
+                      '<div class="entity-copy"><small>'+type.toUpperCase()+'</small><h2>'+title+'</h2><p>Representative reader-safe database record for visual QA.</p>'+
+                      '<div class="reveal-fields"><span>public name</span><span>summary</span><span>type</span></div></div></article>'
+                    ).join('');
+                  }
+                });
+              }
               if(name==='quests'){
                 await page.evaluate(()=>{
                   const button=document.querySelector('#reward-draw-button');
