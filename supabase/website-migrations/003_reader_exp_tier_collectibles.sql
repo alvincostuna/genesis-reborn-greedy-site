@@ -69,7 +69,7 @@ as $$ select coalesce(sum(delta),0)::bigint from public.reader_exp_ledger where 
 create or replace function public.reader_tier(p_user_id uuid)
 returns integer language sql stable security definer
 set search_path='pg_catalog','public','pg_temp'
-as $$ select floor(public.reader_total_exp(p_user_id)/1000.0)::integer+1 $$;
+as $$ select floor(public.reader_total_exp(p_user_id)/2000.0)::integer+1 $$;
 
 create or replace function public.award_reader_exp_v1(
   p_user_id uuid,p_source_type text,p_source_reference text,p_delta integer,p_part_id uuid default null,p_metadata jsonb default '{}'::jsonb
@@ -276,9 +276,9 @@ begin
       case when v_profile.highest_part_key is not null then ' — '||v_profile.highest_part_key else '' end
       else 'Not started' end,
     'total_exp',v_total,'reader_exp',v_total,'tier',v_tier,
-    'tier_exp_threshold',1000,
-    'exp_into_tier',(v_total % 1000),
-    'exp_to_next_tier',(1000-(v_total % 1000)),
+    'tier_exp_threshold',2000,
+    'exp_into_tier',(v_total % 2000),
+    'exp_to_next_tier',(2000-(v_total % 2000)),
     'pending_reward_draws',greatest(v_tier-1-coalesce(v_drawn,0),0),
     'parts_read',coalesce(v_parts,0),'episodes_completed',coalesce(v_eps,0),
     'collection_count',coalesce(v_collection,0),
