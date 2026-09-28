@@ -4776,3 +4776,430 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .fan-feed-toolbar{align-items:flex-start;flex-direction:column;gap:3px}
   .manga-actions{display:grid;grid-template-columns:1fr 1fr}
 }
+
+
+/* ============================================================
+   WEB-DS-V2.9 — FINAL DESKTOP + MOBILE UI COMPLETION PASS
+   Website presentation only.
+   ============================================================ */
+
+/* Global readability floor for game-interface copy */
+.game-reader-page,
+.game-profile-page,
+.game-support-page,
+.game-quests-page{
+  color:#f4ecdd;
+}
+.card-head{
+  min-height:38px;
+}
+.card-head>span:first-child,
+.rail-head>span{
+  font-size:10px;
+  letter-spacing:.10em;
+}
+.card-head>span:last-child,
+.card-head>a,
+.rail-head small{
+  font-size:9px;
+}
+.eyebrow{
+  font-size:10px;
+}
+
+/* Reader — premium manuscript hierarchy */
+.reader-commandbar{
+  position:relative;
+  overflow:hidden;
+  min-height:118px;
+  padding:20px 22px;
+  border:1px solid rgba(217,177,95,.34);
+  border-radius:10px;
+  background:
+    linear-gradient(90deg,rgba(3,11,18,.96),rgba(6,23,37,.88)),
+    url("/assets/v27/rewards/genesis-awakening.webp") center 42%/cover;
+  box-shadow:0 18px 45px rgba(0,0,0,.24);
+}
+.reader-commandbar:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(2,8,14,.96),rgba(2,8,14,.70) 52%,rgba(2,8,14,.30));
+  pointer-events:none;
+}
+.reader-commandbar>*{
+  position:relative;
+  z-index:1;
+}
+.reader-commandbar h1{
+  color:#f6e5be;
+  font-size:38px;
+}
+.reader-release-block{
+  align-self:center;
+}
+.reader-quick-controls{
+  align-self:center;
+}
+.reader-quick-controls button,
+.reader-bottom-controls button{
+  min-height:42px;
+  border-color:rgba(87,160,210,.38);
+  background:linear-gradient(180deg,#0d2437,#071522);
+  color:#ddecf8;
+}
+.game-rail,
+.reader-tools-panel,
+.game-manuscript{
+  border-color:rgba(74,139,184,.34);
+  box-shadow:0 20px 45px rgba(0,0,0,.20);
+}
+.episode-button{
+  padding:14px 12px;
+}
+.episode-button small{
+  font-size:10px;
+}
+.episode-button strong{
+  font-size:17px;
+}
+.game-manuscript .novel-head{
+  padding:28px 34px 20px;
+  background:
+    linear-gradient(180deg,rgba(12,31,47,.82),rgba(6,16,26,.92));
+}
+.game-manuscript .novel-head h2{
+  color:#f4e6c6;
+}
+.game-manuscript .novel-head p:last-child{
+  color:#9fb1c0;
+  font-size:12px;
+}
+.game-manuscript .novel-body{
+  max-width:820px;
+  padding-top:46px;
+  font-size:18px;
+  line-height:1.92;
+  color:#e9e5dd;
+}
+.tool-group label{
+  font-size:12px;
+}
+.tool-summary>div{
+  font-size:11px;
+}
+.reader-bottom-controls{
+  min-height:58px;
+}
+
+/* Profile — stronger card hierarchy and reward emphasis */
+.profile-hero-card{
+  position:relative;
+  overflow:hidden;
+  min-height:170px;
+  padding:26px;
+  border-color:rgba(217,177,95,.52);
+  background:
+    linear-gradient(90deg,rgba(5,18,29,.98),rgba(7,27,43,.92));
+  box-shadow:0 22px 50px rgba(0,0,0,.25),inset 0 0 55px rgba(217,177,95,.035);
+}
+.profile-hero-card:before{
+  content:"";
+  position:absolute;
+  inset:0 0 0 52%;
+  background:
+    linear-gradient(90deg,rgba(5,18,29,.96),rgba(5,18,29,.38)),
+    url("/assets/v27/rewards/flavio-early-cast-wallpaper.webp") center 42%/cover;
+  opacity:.24;
+}
+.profile-hero-card>*{
+  position:relative;
+  z-index:1;
+}
+.profile-avatar.large{
+  width:96px;
+  height:96px;
+  border-color:#62c8ff;
+  box-shadow:0 0 26px rgba(62,172,255,.25);
+}
+.profile-identity h1{
+  color:#f6e5be;
+  font-size:36px;
+}
+.profile-exp-head{
+  font-size:12px;
+}
+.profile-grid{
+  gap:16px;
+}
+.profile-grid>.hud-card,
+.profile-settings{
+  border-color:rgba(66,128,170,.33);
+  box-shadow:0 15px 38px rgba(0,0,0,.18);
+}
+.profile-stat-grid>div{
+  min-height:82px;
+  padding:15px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(71,169,230,.06),transparent 40%),
+    #081725;
+}
+.profile-stat-grid small{
+  font-size:10px;
+}
+.profile-stat-grid strong{
+  font-size:15px;
+}
+.quest-list>div{
+  padding:12px 0;
+  font-size:12px;
+}
+.journey-list span{
+  font-size:12px;
+}
+.journey-list small{
+  font-size:10px;
+}
+.collection-note{
+  font-size:11px;
+}
+.collection-action-row{
+  padding:12px 15px;
+}
+.collection-action-row strong,
+.collection-action-row a{
+  font-size:10px;
+}
+
+/* Support — turn plain heading into premium hero and stronger pricing cards */
+.support-hero{
+  position:relative;
+  min-height:260px;
+  overflow:hidden;
+  align-items:center;
+  padding:36px 34px;
+  border:1px solid rgba(217,177,95,.38);
+  border-radius:10px;
+  background:
+    linear-gradient(90deg,rgba(2,9,15,.95),rgba(4,18,29,.72) 55%,rgba(3,12,20,.48)),
+    url("/assets/v27/rewards/genesis-awakening.webp") center 43%/cover;
+  box-shadow:0 22px 50px rgba(0,0,0,.25);
+}
+.support-hero>div,
+.support-hero>.quest-entry{
+  position:relative;
+  z-index:1;
+}
+.support-hero>div{
+  max-width:760px;
+}
+.support-hero h1{
+  color:#f6e6c2;
+  font-size:clamp(46px,5vw,72px);
+}
+.support-hero>div>p:last-child{
+  color:#c3d0da;
+  font-size:13px;
+}
+.quest-entry{
+  min-width:340px;
+  border-color:rgba(217,177,95,.58);
+  background:rgba(5,17,28,.87);
+  backdrop-filter:blur(8px);
+}
+.quest-entry strong{
+  font-size:15px;
+}
+.quest-entry small{
+  font-size:9px;
+}
+.support-notice{
+  margin-top:12px;
+  border-color:rgba(85,150,194,.32);
+  background:#081724;
+}
+.support-tier-grid{
+  gap:16px;
+}
+.support-game-card{
+  min-height:330px;
+  padding:26px;
+  display:flex;
+  flex-direction:column;
+  border-color:rgba(71,135,178,.32);
+  box-shadow:0 18px 42px rgba(0,0,0,.18);
+}
+.support-game-card.featured{
+  transform:translateY(-5px);
+  border-color:rgba(217,177,95,.58);
+  box-shadow:0 22px 52px rgba(0,0,0,.24),inset 0 0 40px rgba(217,177,95,.05);
+}
+.support-game-card.legendary{
+  border-color:rgba(166,119,222,.54);
+}
+.support-game-card h2{
+  color:#f4e1b8;
+  font-size:42px;
+}
+.support-game-card>strong{
+  font-size:14px;
+}
+.support-game-card p{
+  font-size:12px;
+}
+.reward-line{
+  font-size:12px;
+}
+.support-game-card button{
+  margin-top:auto;
+  min-height:44px;
+}
+.support-secondary-grid{
+  gap:14px;
+}
+.support-system-body{
+  padding:18px;
+}
+.support-system-body h3{
+  font-size:21px;
+}
+.support-system-body strong{
+  font-size:12px;
+}
+.support-system-body p,
+.support-fineprint{
+  font-size:11px;
+}
+
+/* Quest/reward readability */
+.quest-hero>div:first-child p:last-child{
+  font-size:13px;
+}
+.quest-task-copy strong{
+  font-size:14px;
+}
+.quest-task-copy span{
+  font-size:10px;
+}
+.reward-state-copy strong{
+  font-size:12px;
+}
+.reward-state-copy span,
+.reward-state-copy small{
+  font-size:8px;
+}
+
+/* Mobile completion */
+@media(max-width:820px){
+  .reader-commandbar{
+    min-height:104px;
+    padding:16px;
+    grid-template-columns:1fr auto;
+  }
+  .reader-commandbar h1{
+    font-size:30px;
+  }
+  .reader-commandbar .reader-release-block{
+    display:none;
+  }
+  .reader-quick-controls{
+    gap:6px;
+  }
+  .game-manuscript .novel-head{
+    padding:20px 18px 17px;
+  }
+  .game-manuscript .novel-head h2{
+    font-size:30px;
+  }
+  .game-manuscript .novel-body{
+    max-width:none;
+    padding:30px 20px 54px;
+    font-size:18px;
+    line-height:1.84;
+  }
+  .reader-bottom-controls button{
+    min-width:84px;
+  }
+
+  .profile-hero-card{
+    min-height:0;
+    padding:18px;
+  }
+  .profile-hero-card:before{
+    inset:0;
+    opacity:.11;
+  }
+  .profile-avatar.large{
+    width:74px;
+    height:74px;
+  }
+  .profile-identity h1{
+    font-size:27px;
+  }
+  .profile-grid{
+    gap:12px;
+  }
+  .profile-stat-grid>div{
+    min-height:76px;
+  }
+
+  .support-shell{
+    padding:10px 10px 84px;
+  }
+  .support-hero{
+    min-height:420px;
+    display:block;
+    padding:32px 20px 120px;
+    background-position:58% center;
+  }
+  .support-hero h1{
+    font-size:48px;
+  }
+  .support-hero>.quest-entry{
+    position:absolute;
+    left:18px;
+    right:18px;
+    bottom:18px;
+    min-width:0;
+  }
+  .support-tier-grid,
+  .support-secondary-grid{
+    grid-template-columns:1fr;
+  }
+  .support-game-card,
+  .support-game-card.featured{
+    min-height:0;
+    transform:none;
+  }
+}
+@media(max-width:560px){
+  .game-manuscript .novel-body{
+    padding-left:18px;
+    padding-right:18px;
+    font-size:18px;
+  }
+  .reader-bottom-controls{
+    gap:6px;
+  }
+  .reader-bottom-controls span{
+    font-size:9px;
+  }
+  .profile-hero-card{
+    text-align:left;
+  }
+  .profile-avatar.large{
+    margin:0;
+  }
+  .profile-tags{
+    justify-content:flex-start;
+  }
+  .profile-stat-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  .support-hero{
+    min-height:440px;
+  }
+  .support-hero h1{
+    font-size:44px;
+  }
+}
