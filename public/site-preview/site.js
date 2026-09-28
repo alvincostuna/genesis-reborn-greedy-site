@@ -129,9 +129,31 @@ async function edgeFunction(name,body,accessToken){
   return data;
 }
 
+function entityVisual(type){
+  const t=String(type||"").toLowerCase();
+  if(t==="monster")return {label:"BESTIARY",art:"/assets/v27/rewards/young-gnawer.webp",icon:"✦"};
+  if(t==="map"||t==="region"||t==="location")return {label:"ATLAS",art:"/assets/v27/rewards/early-genesis-world-panorama.webp",icon:"◎"};
+  if(t==="weapon"||t==="armor"||t==="equipment")return {label:"ARMORY",art:"/assets/v25/releases/release-duel.png",icon:"⚔"};
+  if(t==="class"||t==="profession"||t==="skill")return {label:"PATH",art:"/assets/v25/destinations/destination-codex.png",icon:"✧"};
+  if(t==="quest")return {label:"QUEST",art:"/assets/v25/releases/release-city.png",icon:"◇"};
+  if(t==="npc")return {label:"PEOPLE",art:"/assets/v25/destinations/destination-fanpage.png",icon:"♙"};
+  if(t==="shop")return {label:"TRADE",art:"/assets/v25/destinations/destination-support.png",icon:"¤"};
+  return {label:"ARCHIVE",art:"/assets/v27/rewards/genesis-awakening.webp",icon:"▣"};
+}
 function entityCard(x,kind="codex"){
   const fields=x?.revealed_fields&&typeof x.revealed_fields==="object"?Object.keys(x.revealed_fields):[];
-  return '<article class="'+kind+'-card"><small>'+esc(x.entity_type||"CODEX")+'</small><h2>'+esc(x.public_name||x.entity_code||"Revealed entry")+'</h2><p>'+esc(x.short_description||"Revealed GENESIS knowledge.")+'</p>'+(fields.length?'<div class="reveal-fields">Revealed fields: '+esc(fields.slice(0,6).join(", "))+'</div>':"")+'</article>';
+  const type=String(x?.entity_type||"codex");
+  const v=entityVisual(type);
+  const title=x?.public_name||x?.entity_code||"Revealed entry";
+  const desc=x?.short_description||"Revealed GENESIS knowledge.";
+  const fieldChips=fields.slice(0,4).map(f=>'<span>'+esc(f.replaceAll("_"," "))+'</span>').join("");
+  return '<article class="'+kind+'-card v28-entity-card" data-entity-type="'+esc(type.toLowerCase())+'">'+
+    '<div class="entity-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.04),rgba(2,8,14,.82)),url(\''+esc(v.art)+'\')">'+
+      '<span class="entity-symbol">'+esc(v.icon)+'</span><span class="entity-category">'+esc(v.label)+'</span>'+
+    '</div>'+
+    '<div class="entity-copy"><small>'+esc(type.toUpperCase())+'</small><h2>'+esc(title)+'</h2><p>'+esc(desc)+'</p>'+
+    (fieldChips?'<div class="reveal-fields">'+fieldChips+'</div>':'<div class="entity-safe-note">Reader-safe revealed record</div>')+
+    '</div></article>';
 }
 
 
@@ -458,7 +480,8 @@ async function loadWorld(type){
       rows=await rpc("api_entity_search",{p_type:type,p_query:null,p_limit:18});
     }
     if(!Array.isArray(rows)||!rows.length){
-      grid.innerHTML='<div class="empty-state large">No '+esc(type)+' records have been revealed by released Parts yet.</div>';
+      const v=entityVisual(type);
+      grid.innerHTML='<div class="v28-empty-discovery"><div class="empty-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.08),rgba(2,8,14,.92)),url(\''+esc(v.art)+'\')"></div><div><small>'+esc(v.label)+'</small><strong>Nothing reader-safe has been revealed here yet.</strong><p>Production knowledge remains hidden until a released Part makes it public.</p></div></div>';
       return;
     }
     grid.innerHTML=rows.map(x=>entityCard(x,"world")).join("");
@@ -468,10 +491,15 @@ async function loadWorld(type){
 }
 function initWorld(){
   const buttons=[...document.querySelectorAll("[data-world-type]")];
-  buttons.forEach(b=>b.addEventListener("click",()=>{
-    buttons.forEach(x=>x.classList.toggle("active",x===b));
-    loadWorld(b.dataset.worldType);
-  }));
+  const jumpButtons=[...document.querySelectorAll("[data-world-jump]")];
+  const activate=type=>{
+    buttons.forEach(x=>x.classList.toggle("active",x.dataset.worldType===type));
+    jumpButtons.forEach(x=>x.classList.toggle("active",x.dataset.worldJump===type));
+    loadWorld(type);
+    document.querySelector(".world-map-stage")?.scrollIntoView({behavior:"smooth",block:"start"});
+  };
+  buttons.forEach(b=>b.addEventListener("click",()=>activate(b.dataset.worldType)));
+  jumpButtons.forEach(b=>b.addEventListener("click",()=>activate(b.dataset.worldJump)));
   loadWorld("map");
 }
 
@@ -482,10 +510,14 @@ async function loadCodex(){
   results.innerHTML='<div class="empty-state large">Searching revealed database…</div>';
   try{
     const rows=await rpc("api_entity_search",{p_type:type,p_query:query,p_limit:60});
+    const count=document.querySelector("#codex-result-count");
     if(!Array.isArray(rows)||!rows.length){
-      results.innerHTML='<div class="empty-state large">No revealed Codex records match this search.</div>';
+      if(count)count.textContent="0 reader-safe results";
+      const v=entityVisual(type||"codex");
+      results.innerHTML='<div class="v28-empty-discovery codex-empty"><div class="empty-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.12),rgba(2,8,14,.94)),url(\''+esc(v.art)+'\')"></div><div><small>READER-SAFE INDEX</small><strong>No revealed Codex records match this search.</strong><p>Try another category or return after more released story content becomes public.</p></div></div>';
       return;
     }
+    if(count)count.textContent=rows.length+" reader-safe result"+(rows.length===1?"":"s");
     results.innerHTML=rows.map(x=>entityCard(x,"codex")).join("");
   }catch{
     results.innerHTML='<div class="empty-state large">Codex is temporarily unavailable.</div>';
@@ -499,6 +531,13 @@ function initCodex(){
     document.querySelectorAll("[data-codex-chip]").forEach(x=>x.classList.toggle("active",x===button));
     const select=document.querySelector("#codex-type"); if(select)select.value=button.dataset.codexChip||"";
     loadCodex();
+  }));
+  document.querySelectorAll("[data-codex-jump]").forEach(button=>button.addEventListener("click",()=>{
+    const value=button.dataset.codexJump||"";
+    const select=document.querySelector("#codex-type"); if(select)select.value=value;
+    document.querySelectorAll("[data-codex-chip]").forEach(x=>x.classList.toggle("active",x.dataset.codexChip===value));
+    loadCodex();
+    document.querySelector(".codex-console")?.scrollIntoView({behavior:"smooth",block:"start"});
   }));
   document.querySelector("[data-codex-chip='']")?.classList.add("active");
   loadCodex();
