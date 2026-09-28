@@ -1,5 +1,5 @@
--- WEB MIGRATION 004: Reward Catalog Batch 001
--- PREPARED ONLY. Do not apply until Migration 003 is applied and all referenced assets exist.
+-- WEB MIGRATION 004: Reward Catalog Batch 001 — 10 verified assets
+-- PREPARED ONLY. Do not apply until Migration 003 is applied and all 10 referenced assets exist and pass real-image QA.
 
 insert into public.reader_collectible_catalog
   (collectible_key,title,image_url,asset_type,preview_url,download_url,rarity,min_episode,downloadable,active)
@@ -13,12 +13,7 @@ values
   ('RG-B001-CHAR-003','Nico Salazar','/assets/v27/rewards/nico-salazar.webp','CHARACTER_PICTURE','/assets/v27/rewards/nico-salazar.webp','/assets/v27/rewards/nico-salazar.webp','UNCOMMON',3,true,true),
   ('RG-B001-MON-001','Young Gnawer','/assets/v27/rewards/young-gnawer.webp','MONSTER_PICTURE','/assets/v27/rewards/young-gnawer.webp','/assets/v27/rewards/young-gnawer.webp','COMMON',3,true,true),
   ('RG-B001-DESK-001','Early GENESIS World Panorama','/assets/v27/rewards/early-genesis-world-panorama.webp','DESKTOP_WALLPAPER','/assets/v27/rewards/early-genesis-world-panorama.webp','/assets/v27/rewards/early-genesis-world-panorama.webp','RARE',0,true,true),
-  ('RG-B001-DESK-002','Flavio & Early Cast','/assets/v27/rewards/flavio-early-cast-wallpaper.webp','DESKTOP_WALLPAPER','/assets/v27/rewards/flavio-early-cast-wallpaper.webp','/assets/v27/rewards/flavio-early-cast-wallpaper.webp','EPIC',1,true,true),
-  ('RG-B001-MOB-001','Reborn Under Moonlight','/assets/v27/rewards/reborn-under-moonlight.webp','MOBILE_WALLPAPER','/assets/v27/rewards/reborn-under-moonlight.webp','/assets/v27/rewards/reborn-under-moonlight.webp','RARE',0,true,true),
-  ('RG-B001-MOB-002','The Road Ahead','/assets/v27/rewards/the-road-ahead.webp','MOBILE_WALLPAPER','/assets/v27/rewards/the-road-ahead.webp','/assets/v27/rewards/the-road-ahead.webp','UNCOMMON',1,true,true),
-  ('RG-B001-BG-001','Genesis Blue — Astral Hall','/assets/v27/rewards/genesis-blue-astral-hall.webp','BACKGROUND','/assets/v27/rewards/genesis-blue-astral-hall.webp','/assets/v27/rewards/genesis-blue-astral-hall.webp','COMMON',0,true,true),
-  ('RG-B001-BG-002','Forged Gold — Night Citadel','/assets/v27/rewards/forged-gold-night-citadel.webp','BACKGROUND','/assets/v27/rewards/forged-gold-night-citadel.webp','/assets/v27/rewards/forged-gold-night-citadel.webp','UNCOMMON',1,true,true),
-  ('RG-B001-SPEC-001','Reborn Greedy — Founding Illustration','/assets/v27/rewards/reborn-greedy-founding.webp','SPECIAL_ART','/assets/v27/rewards/reborn-greedy-founding.webp','/assets/v27/rewards/reborn-greedy-founding.webp','LEGENDARY',5,true,true)
+  ('RG-B001-DESK-002','Flavio & Early Cast','/assets/v27/rewards/flavio-early-cast-wallpaper.webp','DESKTOP_WALLPAPER','/assets/v27/rewards/flavio-early-cast-wallpaper.webp','/assets/v27/rewards/flavio-early-cast-wallpaper.webp','EPIC',1,true,true)
 on conflict(collectible_key) do update
 set title=excluded.title,
     image_url=excluded.image_url,
