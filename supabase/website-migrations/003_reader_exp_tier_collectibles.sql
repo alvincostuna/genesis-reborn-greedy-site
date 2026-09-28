@@ -69,7 +69,7 @@ as $$ select coalesce(sum(delta),0)::bigint from public.reader_exp_ledger where 
 create or replace function public.reader_tier(p_user_id uuid)
 returns integer language sql stable security definer
 set search_path='pg_catalog','public','pg_temp'
-as $ select floor(public.reader_total_exp(p_user_id)/1000.0)::integer+1 $;
+as $$ select floor(public.reader_total_exp(p_user_id)/1000.0)::integer+1 $$;
 
 create or replace function public.award_reader_exp_v1(
   p_user_id uuid,p_source_type text,p_source_reference text,p_delta integer,p_part_id uuid default null,p_metadata jsonb default '{}'::jsonb
@@ -298,7 +298,7 @@ create or replace function public.api_reader_collectibles_v1()
 returns jsonb
 language sql stable security definer
 set search_path='pg_catalog','public','auth','pg_temp'
-as $
+as $$
   with me as (
     select auth.uid() as user_id
   ),
@@ -346,7 +346,7 @@ as $
       )
   end
   from rewards
-$;
+$$;
 
 revoke all on function public.api_reader_collectibles_v1() from public;
 grant execute on function public.api_reader_collectibles_v1() to authenticated,service_role;
