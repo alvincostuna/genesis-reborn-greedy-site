@@ -201,6 +201,19 @@ async function initAccount(){
     guest?.classList.add("hidden");
     reader?.classList.remove("hidden");
     document.querySelector("#account-email").textContent=user.email||"";
+    const verified=!!(user.email_confirmed_at||user.confirmed_at);
+    const verifyBadge=document.querySelector("#email-verification-badge");
+    const verifyCopy=document.querySelector("#email-verification-copy");
+    const resendVerify=document.querySelector("#resend-verification");
+    if(verifyBadge){
+      verifyBadge.textContent=verified?"Verified":"Verification pending";
+      verifyBadge.className="security-status "+(verified?"verified":"pending");
+    }
+    if(verifyCopy)verifyCopy.textContent=verified
+      ?"Your email address is verified for this GENESIS account."
+      :"Confirm your email address to fully secure your GENESIS account.";
+    if(resendVerify)resendVerify.classList.toggle("hidden",verified);
+
     try{
       const data=await rpc("api_reader_account",{},session.access_token);
       document.querySelector("#account-display-name").textContent=data?.display_name||"Reader";
@@ -280,6 +293,26 @@ async function initAccount(){
     }catch(err){showAuthMessage(err.message,"error")}
   });
 
+  document.querySelector("#resend-verification")?.addEventListener("click",async()=>{
+    session=await getSession();
+    user=session?await getAuthUser(session):null;
+    const email=(user?.email||"").trim();
+    if(!email){showAuthMessage("No account email is available.","error");return}
+    const button=document.querySelector("#resend-verification");
+    const original=button?.textContent||"Resend verification email";
+    try{
+      if(button){button.disabled=true;button.textContent="Sending verification…"}
+      await authRequest("resend?redirect_to="+encodeURIComponent(accountUrl()),{
+        body:{type:"signup",email}
+      });
+      showAuthMessage("Verification email sent. Check your inbox and spam folder.","success");
+    }catch(err){
+      showAuthMessage(err.message||"Could not resend the verification email.","error");
+    }finally{
+      if(button){button.disabled=false;button.textContent=original}
+    }
+  });
+
   document.querySelector("#forgot-password")?.addEventListener("click",async()=>{
     const email=(document.querySelector("#signin-email")?.value||"").trim();
     if(!email){showAuthMessage("Enter your email in the Sign in box first.","error");return}
@@ -300,6 +333,27 @@ async function initAccount(){
       recovery?.classList.add("hidden");
       await render();
     }catch(err){showAuthMessage(err.message,"error")}
+  });
+
+  document.querySelector("#change-password-form")?.addEventListener("submit",async e=>{
+    e.preventDefault();
+    session=await getSession();
+    if(!session){showAuthMessage("Your session expired. Sign in again before changing your password.","error");return}
+    const password=document.querySelector("#change-password")?.value||"";
+    const confirm=document.querySelector("#change-password-confirm")?.value||"";
+    if(password.length<8){showAuthMessage("Use at least 8 characters for your new password.","error");return}
+    if(password!==confirm){showAuthMessage("The two password fields do not match.","error");return}
+    const submit=e.currentTarget.querySelector("button[type='submit']");
+    try{
+      if(submit){submit.disabled=true;submit.textContent="Updating password…"}
+      await authRequest("user",{method:"PUT",token:session.access_token,body:{password}});
+      e.currentTarget.reset();
+      showAuthMessage("Password changed successfully.","success");
+    }catch(err){
+      showAuthMessage(err.message||"Could not update your password.","error");
+    }finally{
+      if(submit){submit.disabled=false;submit.textContent="Update password"}
+    }
   });
 
   document.querySelector("#profile-form")?.addEventListener("submit",async e=>{
