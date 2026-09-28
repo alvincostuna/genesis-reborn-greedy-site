@@ -4565,3 +4565,214 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     overflow:hidden;
   }
 }
+
+
+/* ============================================================
+   WEB-DS-V2.8.2 — COMMUNITY + MANGA COMPLETION
+   ============================================================ */
+.game-fan-page,.game-manga-page{
+  min-height:100vh;
+  color:#f4ecdd;
+  background:
+    radial-gradient(circle at 50% -8%,rgba(42,156,255,.11),transparent 34%),
+    linear-gradient(#06101b,#030911 64%);
+}
+.fan-shell,.manga-shell{
+  width:min(1540px,100%);
+  margin:0 auto;
+  padding:18px 20px 90px;
+}
+.fan-hero,.manga-hero{
+  position:relative;
+  min-height:360px;
+  overflow:hidden;
+  border-color:rgba(217,177,95,.42);
+  box-shadow:0 24px 54px rgba(0,0,0,.32);
+}
+.fan-hero-art,.manga-hero-art{
+  position:absolute;inset:0;
+  background-size:cover;
+  background-position:center;
+}
+.fan-hero-art{
+  background-image:url("/assets/v27/rewards/flavio-early-cast-wallpaper.webp");
+  background-position:center 44%;
+}
+.manga-hero-art{
+  background-image:url("/assets/v27/rewards/genesis-awakening.webp");
+  background-position:center 50%;
+}
+.fan-hero-shade,.manga-hero-shade{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,rgba(2,8,14,.95) 0%,rgba(2,8,14,.66) 42%,rgba(2,8,14,.18) 72%,rgba(2,8,14,.60)),
+    linear-gradient(180deg,rgba(2,8,14,.04),rgba(2,8,14,.50));
+}
+.fan-hero-copy,.manga-copy{
+  position:relative;
+  z-index:2;
+  width:min(720px,62%);
+  padding:58px 48px;
+}
+.fan-hero-copy h1,.manga-copy h1{
+  margin:2px 0 14px;
+  color:#fff4da;
+  font:600 clamp(48px,5.5vw,76px)/.95 Georgia,"Times New Roman",serif;
+}
+.fan-hero-copy>p:last-of-type,.manga-copy>p:last-of-type{
+  color:#c5d1da;
+  font-size:13px;
+  line-height:1.65;
+}
+.fan-hero-meta{
+  display:flex;flex-wrap:wrap;gap:7px;margin-top:18px;
+}
+.fan-hero-meta span{
+  padding:6px 9px;border:1px solid rgba(103,197,250,.28);border-radius:999px;
+  background:rgba(4,17,28,.66);color:#a8c7da;font-size:8px;
+}
+.fan-status-card{
+  position:absolute;z-index:3;right:25px;bottom:24px;
+  width:250px;padding:15px;border:1px solid rgba(217,177,95,.40);border-radius:8px;
+  background:rgba(4,14,24,.84);backdrop-filter:blur(8px);text-align:right;
+}
+.fan-status-card small,.fan-status-card span{display:block;color:#8398a9;font-size:8px}
+.fan-status-card strong{display:block;margin:4px 0;color:#78d1ff;font-size:16px}
+.v28-fan-actions{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin:14px 0;
+}
+.fan-action-card{
+  min-height:205px;
+  padding:18px;
+  display:grid;
+  grid-template-columns:44px 1fr;
+  grid-template-rows:1fr auto;
+  gap:12px;
+  border:1px solid rgba(68,133,178,.32);
+  border-radius:9px;
+  background:linear-gradient(145deg,#0b2031,#06111c);
+}
+.fan-action-card.primary{border-color:rgba(217,177,95,.50)}
+.fan-action-icon{
+  width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(217,177,95,.45);
+  border-radius:50%;color:#f3d781;background:#071521;
+}
+.fan-action-card small{color:#6cc9fb;font-size:7px;letter-spacing:.14em}
+.fan-action-card h2{margin:4px 0 7px;color:#f3e4c4;font:600 21px Georgia,serif}
+.fan-action-card p{margin:0;color:#91a5b5;font-size:10px;line-height:1.55}
+.fan-action-card button,.fan-action-state{
+  grid-column:1/-1;
+  min-height:40px;
+  display:grid;place-items:center;
+  border:1px solid rgba(70,137,184,.32);
+  border-radius:7px;background:#071522;color:#8fa8ba;font-size:9px;
+}
+.fan-feed-shell{overflow:hidden}
+.fan-feed-toolbar{
+  display:flex;align-items:end;justify-content:space-between;gap:15px;
+  padding:14px 16px 2px;
+}
+.fan-feed-toolbar small{display:block;color:#6ecbfb;font-size:7px;letter-spacing:.14em}
+.fan-feed-toolbar strong{display:block;margin-top:3px;color:#f0deb7;font:600 18px Georgia,serif}
+.fan-feed-toolbar>span{color:#7e94a6;font-size:8px}
+.v28-fan-feed{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  padding:14px;
+}
+.v28-fan-feed .fan-post{
+  border-radius:8px;
+  border-color:rgba(77,145,190,.30);
+  background:linear-gradient(145deg,#0a1d2c,#06111c);
+}
+.v28-fan-feed .fan-media{
+  aspect-ratio:16/10;
+  background-size:cover;
+  background-position:center;
+  border-bottom:1px solid rgba(217,177,95,.20);
+}
+.v28-fan-feed .fan-copy{padding:13px}
+.v28-fan-feed .fan-copy p{font-size:10px;color:#99acbb}
+.manga-copy{padding-top:68px}
+.manga-status{
+  display:inline-flex;
+  margin-bottom:14px;
+  padding:7px 10px;
+  border:1px solid rgba(217,177,95,.48);
+  border-radius:999px;
+  background:rgba(8,25,39,.70);
+  color:#f0d37d;
+  font-size:8px;
+  letter-spacing:.16em;
+  font-weight:800;
+}
+.manga-actions{display:flex;gap:9px;margin-top:20px}
+.manga-actions a{
+  min-height:42px;padding:0 16px;display:grid;place-items:center;
+  border:1px solid rgba(217,177,95,.45);border-radius:7px;
+  background:linear-gradient(#163c59,#0a243a);color:#f1dfb3;font-size:10px;font-weight:700;
+}
+.manga-actions a+ a{border-color:rgba(92,183,239,.36);color:#b8e3ff}
+.manga-seal{
+  position:absolute;z-index:3;right:28px;bottom:26px;
+  width:230px;min-height:160px;padding:18px;
+  display:grid;place-items:center;
+  border:1px solid rgba(217,177,95,.42);border-radius:9px;
+  background:rgba(3,12,20,.80);backdrop-filter:blur(9px);
+}
+.manga-seal img{width:110px;max-height:58px;object-fit:contain;filter:drop-shadow(0 0 12px rgba(240,210,130,.18))}
+.manga-seal small{color:#8ba0b1;font-size:7px;letter-spacing:.18em}
+.manga-seal strong{color:#f1d98f;font:600 14px Georgia,serif}
+.manga-roadmap{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-top:14px;
+}
+.manga-roadmap article{
+  position:relative;min-height:170px;padding:18px 18px 17px;
+  display:grid;grid-template-columns:48px 1fr;grid-template-rows:auto auto 1fr;
+  column-gap:12px;
+}
+.manga-roadmap article>span{
+  grid-row:1/4;width:42px;height:42px;display:grid;place-items:center;
+  border:1px solid rgba(103,194,245,.30);border-radius:50%;color:#81d4ff;font-size:9px;
+}
+.manga-roadmap article small{color:#71cfff;font-size:7px;letter-spacing:.14em}
+.manga-roadmap article strong{color:#f2e0b5;font:600 18px Georgia,serif}
+.manga-roadmap article p{margin:7px 0 0;color:#859aaa;font-size:9px;line-height:1.5}
+.manga-roadmap article.locked{filter:saturate(.65)}
+.manga-roadmap article.locked:after{
+  content:"FUTURE";
+  position:absolute;right:12px;top:12px;
+  color:#5f7485;font-size:7px;letter-spacing:.13em;
+}
+@media(max-width:980px){
+  .v28-fan-actions{grid-template-columns:1fr}
+  .v28-fan-feed{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .manga-roadmap{grid-template-columns:1fr}
+}
+@media(max-width:820px){
+  .fan-shell,.manga-shell{padding:10px 10px 84px}
+  .fan-hero,.manga-hero{min-height:440px}
+  .fan-hero-copy,.manga-copy{width:100%;padding:38px 22px 130px}
+  .fan-hero-copy h1,.manga-copy h1{font-size:50px}
+  .fan-status-card,.manga-seal{
+    left:18px;right:18px;bottom:17px;width:auto;
+  }
+  .manga-seal{min-height:98px;display:flex;justify-content:space-between;gap:10px}
+  .manga-seal img{width:92px}
+}
+@media(max-width:560px){
+  .fan-hero,.manga-hero{min-height:470px}
+  .fan-hero-art{background-position:58% center}
+  .manga-hero-art{background-position:56% center}
+  .fan-hero-copy,.manga-copy{padding:32px 20px 138px}
+  .fan-hero-copy h1,.manga-copy h1{font-size:44px}
+  .v28-fan-feed{grid-template-columns:1fr;padding:10px}
+  .fan-feed-toolbar{align-items:flex-start;flex-direction:column;gap:3px}
+  .manga-actions{display:grid;grid-template-columns:1fr 1fr}
+}
