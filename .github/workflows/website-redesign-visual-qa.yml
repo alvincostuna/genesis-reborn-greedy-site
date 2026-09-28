@@ -11,6 +11,7 @@ on:
       - web-ds-v2-8-world-codex
       - web-ds-v2-9-final-ui
       - web-ds-v3-release-reward-rules
+      - web-ds-v3-auth-security
   workflow_dispatch:
 
 permissions:
@@ -244,6 +245,9 @@ jobs:
                   const episodes=document.querySelector('#profile-episodes-complete'); if(episodes)episodes.textContent='23';
                   const count=document.querySelector('#profile-collection-count'); if(count)count.textContent='4 Unlocked';
                   const pending=document.querySelector('#profile-pending-draws'); if(pending)pending.textContent='2 Reward Draws Ready';
+                  const verify=document.querySelector('#email-verification-badge'); if(verify){verify.textContent='Verified';verify.className='security-status verified';}
+                  const verifyCopy=document.querySelector('#email-verification-copy'); if(verifyCopy)verifyCopy.textContent='Your email address is verified for this GENESIS account.';
+                  const resend=document.querySelector('#resend-verification'); if(resend)resend.classList.add('hidden');
                   const grid=document.querySelector('#profile-collection-grid');
                   if(grid){
                     const rewards=[
