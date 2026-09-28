@@ -3824,3 +3824,109 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .reward-vault-grid .reward-state-copy strong{font-size:14px}
   .reward-vault-grid .reward-state-copy span{font-size:8px}
 }
+
+
+/* ============================================================
+   WEB-DS-V2.7.2 — LIVE REWARD VAULT POLISH
+   ============================================================ */
+.reward-vault-grid{
+  row-gap:14px;
+}
+.reward-vault-grid .reward-state-card{
+  min-height:100%;
+}
+.reward-vault-grid .reward-state-art{
+  height:118px;
+}
+.reward-vault-grid .reward-state-art img{
+  transform:scale(1.015);
+  transition:transform .18s ease,filter .18s ease;
+}
+.reward-vault-grid .reward-state-card:hover .reward-state-art img{
+  transform:scale(1.045);
+}
+.reward-state-card.portrait .reward-state-art{
+  background:
+    radial-gradient(circle at 50% 26%,rgba(70,159,222,.12),transparent 43%),
+    #020812;
+}
+.reward-state-card.portrait .reward-state-art img{
+  object-fit:contain;
+  object-position:center 18%;
+  transform:none;
+}
+.reward-state-card.portrait:hover .reward-state-art img{
+  transform:scale(1.018);
+}
+.reward-cta{
+  width:min(680px,calc(100% - 28px));
+  margin:18px auto 4px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:16px;
+  align-items:center;
+  padding:14px 15px;
+  border:1px solid rgba(231,189,99,.30);
+  border-radius:8px;
+  background:
+    radial-gradient(circle at 12% 20%,rgba(56,161,230,.10),transparent 38%),
+    linear-gradient(135deg,rgba(8,29,45,.92),rgba(3,12,21,.96));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02),0 12px 26px rgba(0,0,0,.2);
+  text-align:left;
+}
+.reward-cta-copy small{
+  display:block;
+  color:#7ed5ff;
+  font-size:7px;
+  letter-spacing:.16em;
+}
+.reward-cta-copy strong{
+  display:block;
+  margin-top:3px;
+  color:#f6e6bd;
+  font:600 14px Georgia,"Times New Roman",serif;
+}
+.reward-cta-copy span{
+  display:block;
+  margin-top:4px;
+  color:#8fa7b9;
+  font-size:8px;
+  line-height:1.4;
+}
+.reward-cta #reward-draw-button{
+  margin:0;
+  min-width:210px;
+  min-height:44px;
+  border-color:rgba(231,189,99,.45);
+  background:linear-gradient(180deg,rgba(16,54,80,.96),rgba(6,27,44,.96));
+  color:#f7df9e;
+  box-shadow:inset 0 0 18px rgba(90,180,240,.06);
+}
+.reward-cta.signed-out{
+  border-color:rgba(231,189,99,.46);
+}
+@media(min-width:981px){
+  .reward-vault-grid .reward-state-art{height:118px}
+}
+@media(max-width:620px){
+  .reward-vault-grid{
+    row-gap:12px;
+  }
+  .reward-vault-grid .reward-state-art{
+    height:152px;
+  }
+  .reward-vault-grid .reward-state-card.portrait .reward-state-art{
+    height:176px;
+  }
+  .reward-cta{
+    width:calc(100% - 20px);
+    grid-template-columns:1fr;
+    gap:11px;
+    padding:14px;
+  }
+  .reward-cta #reward-draw-button{
+    width:100%;
+    min-width:0;
+    min-height:46px;
+  }
+}
