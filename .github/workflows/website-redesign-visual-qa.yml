@@ -127,6 +127,51 @@ jobs:
               page.on('pageerror',e=>errors.push('pageerror: '+e.message));
               page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())});
               const response=await page.goto(base+path,{waitUntil:'networkidle',timeout:30000});
+              if(name==='world'){
+                await page.evaluate(()=>{
+                  const grid=document.querySelector('#world-grid');
+                  if(grid){
+                    const sample=[
+                      ['ATLAS','map','Discovered Region','Reader-safe public map record.','/assets/v27/rewards/early-genesis-world-panorama.webp','◎'],
+                      ['BESTIARY','monster','Field Creature','Reader-safe creature record.','/assets/v27/rewards/young-gnawer.webp','✦'],
+                      ['ARMORY','weapon','Revealed Equipment','Reader-safe equipment record.','/assets/v25/releases/release-duel.png','⚔']
+                    ];
+                    grid.innerHTML=sample.map(([label,type,title,desc,art,icon])=>
+                      '<article class="world-card v28-entity-card" data-entity-type="'+type+'">'+
+                      '<div class="entity-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.04),rgba(2,8,14,.82)),url(\''+art+'\')">'+
+                      '<span class="entity-symbol">'+icon+'</span><span class="entity-category">'+label+'</span></div>'+
+                      '<div class="entity-copy"><small>'+type.toUpperCase()+'</small><h2>'+title+'</h2><p>'+desc+'</p>'+
+                      '<div class="reveal-fields"><span>public name</span><span>category</span><span>summary</span></div></div></article>'
+                    ).join('');
+                  }
+                });
+              }
+              if(name==='codex'){
+                await page.evaluate(()=>{
+                  const grid=document.querySelector('#codex-results');
+                  const count=document.querySelector('#codex-result-count');
+                  if(count)count.textContent='8 reader-safe results';
+                  if(grid){
+                    const sample=[
+                      ['BESTIARY','monster','Creature Record','/assets/v27/rewards/young-gnawer.webp','✦'],
+                      ['ATLAS','map','Region Record','/assets/v27/rewards/early-genesis-world-panorama.webp','◎'],
+                      ['ARMORY','weapon','Weapon Record','/assets/v25/releases/release-duel.png','⚔'],
+                      ['ARMORY','armor','Armor Record','/assets/v25/releases/release-duel.png','⚔'],
+                      ['ARCHIVE','item','Item Record','/assets/v27/rewards/genesis-awakening.webp','▣'],
+                      ['PATH','class','Class Record','/assets/v25/destinations/destination-codex.png','✧'],
+                      ['PATH','profession','Profession Record','/assets/v25/destinations/destination-codex.png','✧'],
+                      ['QUEST','quest','Quest Record','/assets/v25/releases/release-city.png','◇']
+                    ];
+                    grid.innerHTML=sample.map(([label,type,title,art,icon])=>
+                      '<article class="codex-card v28-entity-card" data-entity-type="'+type+'">'+
+                      '<div class="entity-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.04),rgba(2,8,14,.82)),url(\''+art+'\')">'+
+                      '<span class="entity-symbol">'+icon+'</span><span class="entity-category">'+label+'</span></div>'+
+                      '<div class="entity-copy"><small>'+type.toUpperCase()+'</small><h2>'+title+'</h2><p>Representative reader-safe database record for visual QA.</p>'+
+                      '<div class="reveal-fields"><span>public name</span><span>summary</span><span>type</span></div></div></article>'
+                    ).join('');
+                  }
+                });
+              }
               if(name==='quests'){
                 await page.evaluate(()=>{
                   const button=document.querySelector('#reward-draw-button');
