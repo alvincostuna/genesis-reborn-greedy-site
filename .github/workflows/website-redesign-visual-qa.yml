@@ -5,6 +5,8 @@ on:
     branches:
       - website-redesign-v1
       - web-ds-v2-home
+      - web-ds-v2-6-dashboard
+      - web-ds-v2-7-rewards
   workflow_dispatch:
 
 permissions:
@@ -40,6 +42,45 @@ jobs:
         run: |
           npm install --legacy-peer-deps --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
+
+      - name: Detect V2.7 reward asset package
+        id: reward_assets
+        shell: bash
+        run: |
+          expected=(
+            genesis-awakening.webp
+            beginner-hunt.webp
+            flavio-nico-early-party.webp
+            starter-town-safe-zone.webp
+            flavio-reyes.webp
+            nico-salazar.webp
+            maya-villareal.webp
+            young-gnawer.webp
+            early-genesis-world-panorama.webp
+            flavio-early-cast-wallpaper.webp
+          )
+          root="public/assets/v27/rewards"
+          found=0
+          missing=()
+          for file in "${expected[@]}"; do
+            if [ -f "$root/$file" ]; then
+              found=$((found+1))
+            else
+              missing+=("$file")
+            fi
+          done
+          echo "Found $found/${#expected[@]} V2.7 reward images."
+          if [ "$found" -eq 0 ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::V2.7 reward images have not been uploaded yet; real-image QA is deferred."
+          elif [ "$found" -ne "${#expected[@]}" ]; then
+            printf 'Missing reward image: %s\n' "${missing[@]}"
+            echo "::error::Partial V2.7 reward upload detected. Upload all 10 images together."
+            exit 1
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "PASS: all 10 V2.7 reward images are present."
+          fi
 
       - name: Start isolated static preview
         run: |
@@ -84,6 +125,22 @@ jobs:
               page.on('pageerror',e=>errors.push('pageerror: '+e.message));
               page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())});
               const response=await page.goto(base+path,{waitUntil:'networkidle',timeout:30000});
+              if(name==='quests'){
+                await page.evaluate(()=>{
+                  const button=document.querySelector('#reward-draw-button');
+                  if(button){button.disabled=false;button.textContent='Claim Random Reward · 2 Ready';}
+                  const cards=[...document.querySelectorAll('#reward-vault-grid .reward-state-card')];
+                  cards.forEach((card,i)=>{
+                    card.classList.remove('earned','available','locked');
+                    card.classList.add(i<3?'earned':(i===6?'locked':'available'));
+                    const label=card.querySelector('.reward-state-copy span');
+                    if(label)label.textContent=i<3?(i===2?'Earned ×2':'Earned'):(i===6?'Locked by story progress':'Available in random draw');
+                    const lock=card.querySelector('.reward-lock');
+                    if(i<3&&lock)lock.remove();
+                    else if(lock)lock.textContent=i===6?'🔒':'◇';
+                  });
+                });
+              }
               if(name==='profile'){
                 await page.evaluate(()=>{
                   document.querySelector('#auth-guest')?.classList.add('hidden');
@@ -95,6 +152,25 @@ jobs:
                   const latest=document.querySelector('#profile-latest-read'); if(latest)latest.textContent='Episode 024 — Part 003';
                   const parts=document.querySelector('#profile-parts-read'); if(parts)parts.textContent='142';
                   const episodes=document.querySelector('#profile-episodes-complete'); if(episodes)episodes.textContent='23';
+                  const count=document.querySelector('#profile-collection-count'); if(count)count.textContent='4 Unlocked';
+                  const pending=document.querySelector('#profile-pending-draws'); if(pending)pending.textContent='2 Reward Draws Ready';
+                  const grid=document.querySelector('#profile-collection-grid');
+                  if(grid){
+                    const rewards=[
+                      ['Genesis Awakening','genesis-awakening.webp','earned','COMMON · PICTURE CARD','Earned'],
+                      ['Flavio Reyes','flavio-reyes.webp','earned','COMMON · CHARACTER PICTURE','Earned'],
+                      ['Young Gnawer','young-gnawer.webp','earned','COMMON · MONSTER PICTURE','Earned ×2'],
+                      ['Early GENESIS World Panorama','early-genesis-world-panorama.webp','earned','RARE · DESKTOP WALLPAPER','Earned'],
+                      ['Beginner Hunt','beginner-hunt.webp','available','UNCOMMON · PICTURE CARD','Available in random draw'],
+                      ['Amihan “Maya” Villareal','maya-villareal.webp','locked','RARE · CHARACTER PICTURE','Locked by story progress']
+                    ];
+                    grid.innerHTML=rewards.map(([title,file,state,meta,label])=>
+                      '<article class="reward-state-card compact '+state+'">'+
+                      '<div class="reward-state-art"><img src="/assets/v27/rewards/'+file+'" alt="">'+
+                      (state==='earned'?'':'<span class="reward-lock">'+(state==='locked'?'🔒':'◇')+'</span>')+'</div>'+
+                      '<div class="reward-state-copy"><small>'+meta+'</small><strong>'+title+'</strong><span>'+label+'</span></div></article>'
+                    ).join('');
+                  }
                 });
               }
               await page.screenshot({path:`visual-qa/${name}-${mode}.png`,fullPage:true});
@@ -117,6 +193,76 @@ jobs:
           }
           JS
           node visual-qa-runner.mjs
+
+
+      - name: Render V2.7 real reward asset QA
+        if: steps.reward_assets.outputs.ready == 'true'
+        run: |
+          cat > reward-assets-qa.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+
+          const files=[
+            'genesis-awakening.webp',
+            'beginner-hunt.webp',
+            'flavio-nico-early-party.webp',
+            'starter-town-safe-zone.webp',
+            'flavio-reyes.webp',
+            'nico-salazar.webp',
+            'maya-villareal.webp',
+            'young-gnawer.webp',
+            'early-genesis-world-panorama.webp',
+            'flavio-early-cast-wallpaper.webp'
+          ];
+          const base='http://127.0.0.1:4173/assets/v27/rewards/';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:1440,height:1200}});
+
+          await page.setContent(`
+            <style>
+              body{margin:0;background:#030912;color:#f5df9a;font:16px system-ui;padding:24px}
+              h1{font:700 28px Georgia,serif;margin:0 0 18px}
+              .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+              figure{margin:0;background:#071522;border:1px solid #8c7139;padding:10px}
+              img{width:100%;height:320px;object-fit:cover;display:block;background:#02070c}
+              img.portrait{object-fit:contain;background:
+                radial-gradient(circle at 50% 20%,rgba(55,126,180,.12),transparent 42%),
+                #02070c}
+              figcaption{padding:10px 2px 2px;color:#cbd9e4;font-size:13px}
+            </style>
+            <h1>GENESIS V2.7 — Reward Asset QA</h1>
+            <div class="grid">
+              ${files.map(f=>{
+                const portrait=['flavio-reyes.webp','nico-salazar.webp','maya-villareal.webp'].includes(f);
+                return `<figure><img class="${portrait?'portrait':''}" data-file="${f}" src="${base+f}"><figcaption>${f}</figcaption></figure>`;
+              }).join('')}
+            </div>`);
+
+          await page.waitForFunction(
+            expected => [...document.images].length===expected && [...document.images].every(img=>img.complete),
+            files.length,
+            {timeout:30000}
+          );
+
+          const results=await page.evaluate(()=>[...document.images].map(img=>({
+            file:img.dataset.file,
+            status:img.naturalWidth>0?200:0,
+            width:img.naturalWidth,
+            height:img.naturalHeight
+          })));
+
+          const bad=results.filter(x=>x.status!==200||x.width<800||x.height<800);
+          fs.writeFileSync('visual-qa/reward-assets-report.json',JSON.stringify(results,null,2));
+          await page.screenshot({path:'visual-qa/reward-assets-desktop.png',fullPage:true});
+          await browser.close();
+
+          console.log(JSON.stringify(results,null,2));
+          if(bad.length){
+            console.error('Blocking V2.7 reward asset defects:',bad);
+            process.exit(1);
+          }
+          JS
+          node reward-assets-qa.mjs
 
       - name: Upload rendered QA screenshots
         if: always()

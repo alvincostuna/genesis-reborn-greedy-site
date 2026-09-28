@@ -49,9 +49,9 @@
         <div class="profile-tags"><span id="profile-title-badge">GENESIS Adventurer</span><span id="profile-tier-badge">Tier 1</span></div>
       </div>
       <div class="profile-exp-block">
-        <div class="profile-exp-head"><strong id="profile-exp-total">0 EXP</strong><span id="profile-next-tier">2,000 to next Tier</span></div>
+        <div class="profile-exp-head"><strong id="profile-exp-total">0 EXP</strong><span id="profile-next-tier">1,000 to next Tier</span></div>
         <div class="exp-track big"><span id="profile-exp-bar" style="width:0%"></span></div>
-        <small>Every 2,000 EXP = Tier Up + 1 random collectible draw</small>
+        <small>Every 1,000 EXP = Tier Up + 1 random collectible draw</small>
       </div>
     </article>
 
@@ -78,10 +78,14 @@
 
       <article class="hud-card collection-card">
         <div class="card-head"><span>COLLECTION PORTFOLIO</span><span id="profile-collection-count">0 Unlocked</span></div>
-        <div class="collection-slots">
-          <div class="collection-slot locked">?</div><div class="collection-slot locked">?</div><div class="collection-slot locked">?</div><div class="collection-slot locked">?</div>
+        <div id="profile-collection-grid" class="collection-slots reward-portfolio-grid">
+          <div class="collection-slot locked"><span>?</span><small>Locked</small></div>
+          <div class="collection-slot locked"><span>?</span><small>Locked</small></div>
+          <div class="collection-slot locked"><span>?</span><small>Locked</small></div>
+          <div class="collection-slot locked"><span>?</span><small>Locked</small></div>
         </div>
-        <p class="collection-note">Random picture rewards unlock every Tier. Duplicates are allowed and remain in your collection history.</p>
+        <div class="collection-action-row"><strong id="profile-pending-draws">0 Reward Draws Ready</strong><a href="/site-preview/quests/">Open Reward Vault ›</a></div>
+        <p class="collection-note">Random visual rewards unlock every Tier. Duplicates are allowed and remain in your collection history.</p>
       </article>
 
       <article class="hud-card quest-card">

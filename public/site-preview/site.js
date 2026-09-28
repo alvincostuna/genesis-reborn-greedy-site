@@ -2,6 +2,7 @@ const SUPABASE_URL="https://lyhrwymhzhhxszquxnke.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_rCJL18_zLNtWH-ON1DTnDA_3quoGH3Q";
 
 const SESSION_KEY="genesis_reader_session_v1";
+const TIER_EXP_THRESHOLD=1000;
 
 function accountPath(){
   return location.pathname.startsWith("/site-preview/")?"/site-preview/account/":"/account/";
@@ -85,6 +86,30 @@ function textParagraphs(v){
   const parts=String(v||"").trim().split(/\n\s*\n/).filter(Boolean);
   return parts.map(p=>"<p>"+esc(p).replace(/\n/g,"<br>")+"</p>").join("");
 }
+async function loadRewardManifest(){
+  try{
+    const r=await fetch("/assets/v27/rewards/reward-manifest.json",{cache:"no-store"});
+    if(!r.ok)throw new Error("manifest unavailable");
+    const data=await r.json();
+    return Array.isArray(data?.first_upload_batch)?data.first_upload_batch:[];
+  }catch{return []}
+}
+function rewardTypeLabel(v){return String(v||"PICTURE_CARD").replaceAll("_"," ")}
+function rewardCardHtml(item,{owned=false,quantity=0,eligible=true,compact=false}={}){
+  const file=item?.filename||(item?.image_url||item?.preview_url||"").split("/").pop();
+  const src=item?.preview_url||item?.image_url||(file?"/assets/v27/rewards/"+file:"");
+  const title=item?.title||"GENESIS Reward";
+  const rarity=item?.rarity||"REWARD";
+  const type=item?.type||item?.asset_type||"PICTURE_CARD";
+  const state=owned?"earned":(eligible?"available":"locked");
+  return '<article class="reward-state-card '+state+(compact?" compact":"")+'">'+
+    '<div class="reward-state-art">'+(src?'<img src="'+esc(src)+'" alt="'+esc(title)+'">':'')+
+    (!owned?'<span class="reward-lock">'+(eligible?"◇":"🔒")+'</span>':'')+'</div>'+
+    '<div class="reward-state-copy"><small>'+esc(rarity)+' · '+esc(rewardTypeLabel(type))+'</small>'+
+    '<strong>'+esc(title)+'</strong>'+
+    '<span>'+(owned?("Earned"+(quantity>1?" ×"+quantity:"")):(eligible?"Available in random draw":"Locked by story progress"))+'</span></div>'+
+    '</article>';
+}
 async function edgeFunction(name,body,accessToken){
   const r=await fetch(SUPABASE_URL+"/functions/v1/"+name,{
     method:"POST",
@@ -162,17 +187,38 @@ async function initAccount(){
       document.querySelector("#account-badge").textContent=data?.support?.public_badge||"None";
       document.querySelector("#badge-supporter").checked=!!data?.show_supporter_badge;
       document.querySelector("#badge-vip").checked=!!data?.show_vip_badge;
-      const totalExp=Number(data?.reader_exp??data?.total_exp??0),tier=Math.floor(totalExp/2000)+1,within=totalExp%2000;
+      const totalExp=Number(data?.reader_exp??data?.total_exp??0),tier=Math.floor(totalExp/TIER_EXP_THRESHOLD)+1,within=totalExp%TIER_EXP_THRESHOLD;
       document.querySelector("#profile-tier-badge").textContent="Tier "+tier;
       document.querySelector("#profile-exp-total").textContent=totalExp.toLocaleString()+" EXP";
-      document.querySelector("#profile-next-tier").textContent=(2000-within).toLocaleString()+" to next Tier";
-      document.querySelector("#profile-exp-bar").style.width=Math.min(100,within/2000*100)+"%";
+      document.querySelector("#profile-next-tier").textContent=(TIER_EXP_THRESHOLD-within).toLocaleString()+" to next Tier";
+      document.querySelector("#profile-exp-bar").style.width=Math.min(100,within/TIER_EXP_THRESHOLD*100)+"%";
       document.querySelector("#profile-title-badge").textContent=data?.reader_title||data?.support?.public_badge||"GENESIS Adventurer";
       document.querySelector("#profile-latest-read").textContent=data?.latest_read_label||data?.reading_progress?.latest_label||"Not started";
       document.querySelector("#profile-parts-read").textContent=String(data?.parts_read??data?.reading_progress?.parts_read??0);
       document.querySelector("#profile-episodes-complete").textContent=String(data?.episodes_completed??data?.reading_progress?.episodes_completed??0);
       document.querySelector("#profile-joined").textContent=data?.created_at?new Date(data.created_at).toLocaleDateString("en-PH",{year:"numeric",month:"short",day:"numeric"}):"—";
       document.querySelector("#profile-collection-count").textContent=String(data?.collection_count??0)+" Unlocked";
+      const collectionGrid=document.querySelector("#profile-collection-grid");
+      if(collectionGrid){
+        let rewards=[];
+        try{
+          const collection=await rpc("api_reader_collectibles_v1",{},session.access_token);
+          rewards=Array.isArray(collection)?collection:(Array.isArray(collection?.items)?collection.items:[]);
+        }catch{}
+        if(!rewards.length){
+          const manifest=await loadRewardManifest();
+          rewards=manifest.map((x,i)=>({...x,owned:i<Math.min(Number(data?.collection_count??0),manifest.length),quantity:i<Number(data?.collection_count??0)?1:0,eligible:true}));
+        }
+        collectionGrid.innerHTML=rewards.slice(0,10).map(x=>rewardCardHtml(x,{
+          owned:!!(x.owned||Number(x.quantity)>0),
+          quantity:Number(x.quantity||0),
+          eligible:x.eligible!==false,
+          compact:true
+        })).join("")||'<div class="reward-vault-empty">No collectible rewards available yet.</div>';
+      }
+      const pendingDraws=Number(data?.pending_reward_draws??0);
+      const pendingEl=document.querySelector("#profile-pending-draws");
+      if(pendingEl)pendingEl.textContent=pendingDraws+" Reward Draw"+(pendingDraws===1?"":"s")+" Ready";
     }catch(e){
       showAuthMessage("Signed in, but account status could not be loaded yet.","error");
     }
@@ -541,12 +587,14 @@ async function initHome(){
       const name=data?.display_name||user?.user_metadata?.display_name||"Reader";
       document.querySelector("#home-reader-name").textContent=name;
       const totalExp=Number(data?.reader_exp??data?.total_exp??0);
-      const tier=Math.floor(totalExp/2000)+1;
-      const within=totalExp%2000;
+      const tier=Math.floor(totalExp/TIER_EXP_THRESHOLD)+1;
+      const within=totalExp%TIER_EXP_THRESHOLD;
       document.querySelector("#home-reader-tier").textContent="Tier "+tier;
-      document.querySelector("#home-exp-progress").textContent=within.toLocaleString()+" / 2,000 EXP";
+      document.querySelector("#home-exp-progress").textContent=within.toLocaleString()+" / "+TIER_EXP_THRESHOLD.toLocaleString()+" EXP";
       document.querySelector("#home-exp-total").textContent="Total EXP: "+totalExp.toLocaleString();
-      document.querySelector("#home-exp-bar").style.width=Math.min(100,within/2000*100)+"%";
+      document.querySelector("#home-exp-bar").style.width=Math.min(100,within/TIER_EXP_THRESHOLD*100)+"%";
+      const nextTierEl=document.querySelector("#home-tier-next");
+      if(nextTierEl)nextTierEl.textContent="Next reward in "+(TIER_EXP_THRESHOLD-within).toLocaleString()+" EXP";
       const support=Number(data?.support?.advance_parts??data?.support?.credit_balance??0);
       document.querySelector("#home-support-unlocks").textContent="+"+support;
       document.querySelector("#home-access-total").textContent="+"+support+" Parts Ahead";
@@ -581,6 +629,7 @@ if(page==="codex")initCodex();
 if(page==="fan")await initFan();
 if(page==="support")await initSupport();
 if(page==="account")await initAccount();
+if(page==="quests")await initQuests();
 
 async function initFan(){
   const feed=document.querySelector("#fan-feed");
@@ -594,6 +643,107 @@ async function initFan(){
   }catch{
     feed.innerHTML='<div class="empty-state large">Fan Page is temporarily unavailable.</div>';
   }
+}
+
+async function initQuests(){
+  const button=document.querySelector("#reward-draw-button");
+  const result=document.querySelector("#reward-draw-result");
+  const vaultGrid=document.querySelector("#reward-vault-grid");
+  if(!button)return;
+
+  const manifest=await loadRewardManifest();
+  if(vaultGrid&&manifest.length){
+    vaultGrid.innerHTML=manifest.map(x=>rewardCardHtml(x,{owned:false,quantity:0,eligible:true})).join("");
+  }
+
+  const session=await getSession();
+  const user=session?await getAuthUser(session):null;
+  if(!user||!session){
+    button.disabled=false;
+    button.textContent="Sign in to check reward draws";
+    button.addEventListener("click",()=>{location.href=accountPath()+"?next=quests"});
+    return;
+  }
+
+  let pending=0;
+  let accountData=null;
+  try{
+    const data=await rpc("api_reader_account_v3",{},session.access_token);
+    accountData=data;
+    pending=Number(data?.pending_reward_draws??0);
+  }catch{
+    try{
+      const data=await rpc("api_reader_account",{},session.access_token);
+      const totalExp=Number(data?.reader_exp??data?.total_exp??0);
+      const tier=Math.floor(totalExp/TIER_EXP_THRESHOLD)+1;
+      pending=Math.max(0,tier-1-Number(data?.collection_count??0));
+    }catch{}
+  }
+
+  if(vaultGrid){
+    let rewards=[];
+    try{
+      const collection=await rpc("api_reader_collectibles_v1",{},session.access_token);
+      rewards=Array.isArray(collection)?collection:(Array.isArray(collection?.items)?collection.items:[]);
+    }catch{}
+    if(!rewards.length){
+      const manifest=await loadRewardManifest();
+      const highest=Number(accountData?.highest_episode_read??999);
+      rewards=manifest.map(x=>({...x,owned:false,quantity:0,eligible:Number(x.min_episode??0)<=highest}));
+    }
+    vaultGrid.innerHTML=rewards.map(x=>rewardCardHtml(x,{
+      owned:!!(x.owned||Number(x.quantity)>0),
+      quantity:Number(x.quantity||0),
+      eligible:x.eligible!==false
+    })).join("")||'<div class="reward-vault-empty">Reward pool unavailable.</div>';
+  }
+
+  const paint=()=>{
+    button.disabled=pending<=0;
+    button.textContent=pending>0
+      ?("Claim Random Reward · "+pending+" Ready")
+      :"No reward draw available yet";
+  };
+  paint();
+
+  button.addEventListener("click",async()=>{
+    if(pending<=0)return;
+    const original=button.textContent;
+    button.disabled=true;
+    button.textContent="Drawing reward…";
+    try{
+      const draw=await rpc("reader_draw_collectible_v1",{},session.access_token);
+      if(draw?.status==="DRAWN"){
+        pending=Math.max(0,pending-1);
+        if(result){
+          result.classList.remove("hidden");
+          result.innerHTML=
+            '<div class="reward-result-card">'+
+            (draw.preview_url||draw.image_url?'<img src="'+esc(draw.preview_url||draw.image_url)+'" alt="">':'')+
+            '<div><small>'+esc(draw.rarity||"REWARD")+'</small>'+
+            '<strong>'+esc(draw.title||"GENESIS Reward")+'</strong>'+
+            '<span>'+esc(String(draw.asset_type||"PICTURE_CARD").replaceAll("_"," "))+'</span></div></div>';
+        }
+        paint();
+      }else{
+        pending=0;
+        paint();
+        if(result){
+          result.classList.remove("hidden");
+          result.textContent=draw?.status==="NO_ELIGIBLE_COLLECTIBLE"
+            ?"Your draw is ready, but no spoiler-safe reward is eligible yet."
+            :"No reward draw is currently available.";
+        }
+      }
+    }catch{
+      button.disabled=false;
+      button.textContent=original;
+      if(result){
+        result.classList.remove("hidden");
+        result.textContent="Reward drawing is not enabled on the live backend yet.";
+      }
+    }
+  });
 }
 
 async function initSupport(){

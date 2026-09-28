@@ -1,0 +1,67 @@
+{
+  "version": "WEB-DS-V2.7",
+  "root": "/assets/v27/rewards/",
+  "notes": "Flat reward asset directory. File category is metadata, not folder structure.",
+  "first_upload_batch": [
+    {
+      "key": "RG-B001-CARD-001",
+      "type": "PICTURE_CARD",
+      "filename": "genesis-awakening.webp",
+      "title": "Genesis Awakening"
+    },
+    {
+      "key": "RG-B001-CARD-004",
+      "type": "PICTURE_CARD",
+      "filename": "beginner-hunt.webp",
+      "title": "Beginner Hunt"
+    },
+    {
+      "key": "RG-B001-CARD-005",
+      "type": "PICTURE_CARD",
+      "filename": "flavio-nico-early-party.webp",
+      "title": "Flavio & Nico — Early Party"
+    },
+    {
+      "key": "RG-B001-CARD-006",
+      "type": "PICTURE_CARD",
+      "filename": "starter-town-safe-zone.webp",
+      "title": "Starter Town — Safe Zone"
+    },
+    {
+      "key": "RG-B001-CHAR-001",
+      "type": "CHARACTER_PICTURE",
+      "filename": "flavio-reyes.webp",
+      "title": "Flavio Reyes"
+    },
+    {
+      "key": "RG-B001-CHAR-003",
+      "type": "CHARACTER_PICTURE",
+      "filename": "nico-salazar.webp",
+      "title": "Nico Salazar"
+    },
+    {
+      "key": "RG-B001-CHAR-002",
+      "type": "CHARACTER_PICTURE",
+      "filename": "maya-villareal.webp",
+      "title": "Amihan “Maya” Villareal"
+    },
+    {
+      "key": "RG-B001-MON-001",
+      "type": "MONSTER_PICTURE",
+      "filename": "young-gnawer.webp",
+      "title": "Young Gnawer"
+    },
+    {
+      "key": "RG-B001-DESK-001",
+      "type": "DESKTOP_WALLPAPER",
+      "filename": "early-genesis-world-panorama.webp",
+      "title": "Early GENESIS World Panorama"
+    },
+    {
+      "key": "RG-B001-DESK-002",
+      "type": "DESKTOP_WALLPAPER",
+      "filename": "flavio-early-cast-wallpaper.webp",
+      "title": "Flavio & Early Cast"
+    }
+  ]
+}

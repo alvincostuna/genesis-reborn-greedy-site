@@ -20,6 +20,10 @@ create table if not exists public.reader_collectible_catalog(
   collectible_key text not null unique,
   title text not null,
   image_url text,
+  asset_type text not null default 'PICTURE_CARD'
+    check(asset_type in ('PICTURE_CARD','CHARACTER_PICTURE','MONSTER_PICTURE','DESKTOP_WALLPAPER','MOBILE_WALLPAPER','BACKGROUND','SPECIAL_ART')),
+  preview_url text,
+  download_url text,
   rarity text not null default 'COMMON' check(rarity in ('COMMON','UNCOMMON','RARE','EPIC','LEGENDARY')),
   min_episode integer not null default 0 check(min_episode>=0),
   downloadable boolean not null default true,
@@ -65,7 +69,7 @@ as $$ select coalesce(sum(delta),0)::bigint from public.reader_exp_ledger where 
 create or replace function public.reader_tier(p_user_id uuid)
 returns integer language sql stable security definer
 set search_path='pg_catalog','public','pg_temp'
-as $$ select floor(public.reader_total_exp(p_user_id)/2000.0)::integer+1 $$;
+as $ select floor(public.reader_total_exp(p_user_id)/1000.0)::integer+1 $;
 
 create or replace function public.award_reader_exp_v1(
   p_user_id uuid,p_source_type text,p_source_reference text,p_delta integer,p_part_id uuid default null,p_metadata jsonb default '{}'::jsonb
@@ -208,7 +212,8 @@ begin
   return jsonb_build_object(
     'status','DRAWN','tier_number',v_next_tier,'collectible_key',v_collectible.collectible_key,
     'title',v_collectible.title,'rarity',v_collectible.rarity,'image_url',v_collectible.image_url,
-    'downloadable',v_collectible.downloadable
+    'asset_type',v_collectible.asset_type,'preview_url',v_collectible.preview_url,
+    'download_url',v_collectible.download_url,'downloadable',v_collectible.downloadable
   );
 end
 $$;
@@ -222,6 +227,8 @@ declare
   v_uid uuid:=auth.uid();
   v_profile public.reader_profiles%rowtype;
   v_total bigint;
+  v_tier integer;
+  v_drawn integer;
   v_parts integer;
   v_eps integer;
   v_collection integer;
@@ -233,6 +240,8 @@ begin
   end if;
 
   v_total:=public.reader_total_exp(v_uid);
+  v_tier:=public.reader_tier(v_uid);
+  select count(*) into v_drawn from public.reader_collectible_draws where user_id=v_uid;
   select count(*) filter(where completed) into v_parts from public.reader_progress where user_id=v_uid;
   select count(distinct e.id)
   into v_eps
@@ -261,7 +270,11 @@ begin
       'Episode '||lpad(v_profile.highest_episode_read::text,3,'0')||
       case when v_profile.highest_part_key is not null then ' — '||v_profile.highest_part_key else '' end
       else 'Not started' end,
-    'total_exp',v_total,'reader_exp',v_total,'tier',public.reader_tier(v_uid),
+    'total_exp',v_total,'reader_exp',v_total,'tier',v_tier,
+    'tier_exp_threshold',1000,
+    'exp_into_tier',(v_total % 1000),
+    'exp_to_next_tier',(1000-(v_total % 1000)),
+    'pending_reward_draws',greatest(v_tier-1-coalesce(v_drawn,0),0),
     'parts_read',coalesce(v_parts,0),'episodes_completed',coalesce(v_eps,0),
     'collection_count',coalesce(v_collection,0),
     'support',public.api_reader_support_status()
@@ -275,3 +288,61 @@ revoke all on function public.reader_draw_collectible_v1() from public;
 grant execute on function public.reader_draw_collectible_v1() to authenticated;
 revoke all on function public.api_reader_account_v3() from public;
 grant execute on function public.api_reader_account_v3() to authenticated,service_role;
+
+create or replace function public.api_reader_collectibles_v1()
+returns jsonb
+language sql stable security definer
+set search_path='pg_catalog','public','auth','pg_temp'
+as $
+  with me as (
+    select auth.uid() as user_id
+  ),
+  progress as (
+    select coalesce(rp.highest_episode_read,0) as highest_episode_read
+    from me
+    left join public.reader_profiles rp on rp.user_id=me.user_id
+  ),
+  rewards as (
+    select
+      c.collectible_key,
+      c.title,
+      c.asset_type,
+      c.rarity,
+      c.image_url,
+      c.preview_url,
+      c.download_url,
+      c.downloadable,
+      c.min_episode,
+      coalesce(i.quantity,0)::integer as quantity,
+      (coalesce(i.quantity,0)>0) as owned,
+      (c.min_episode<=coalesce((select highest_episode_read from progress),0)) as eligible
+    from public.reader_collectible_catalog c
+    cross join me
+    left join public.reader_collectible_inventory i
+      on i.user_id=me.user_id and i.collectible_id=c.id
+    where c.active
+    order by
+      case c.rarity
+        when 'LEGENDARY' then 5
+        when 'EPIC' then 4
+        when 'RARE' then 3
+        when 'UNCOMMON' then 2
+        else 1
+      end desc,
+      c.created_at asc
+  )
+  select case
+    when (select user_id from me) is null then
+      jsonb_build_object('status','AUTHENTICATION_REQUIRED','items','[]'::jsonb)
+    else
+      jsonb_build_object(
+        'status','OK',
+        'items',coalesce(jsonb_agg(to_jsonb(rewards)),'[]'::jsonb)
+      )
+  end
+  from rewards
+$;
+
+revoke all on function public.api_reader_collectibles_v1() from public;
+grant execute on function public.api_reader_collectibles_v1() to authenticated,service_role;
+

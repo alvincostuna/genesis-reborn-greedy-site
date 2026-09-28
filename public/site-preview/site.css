@@ -2937,3 +2937,890 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   background-size:cover!important;
   background-position:center!important;
 }
+
+
+/* ============================================================
+   WEB-DS-V2.6 — DASHBOARD & CONTENT CARD RECONSTRUCTION
+   Priority: hierarchy, readability, premium HUD composition.
+   Visual-only. Existing IDs/routes/backend behavior preserved.
+   ============================================================ */
+
+/* Shared card hierarchy */
+.web-ds-v2 .v2-dashboard,
+.web-ds-v2 .v2-home-row,
+.web-ds-v2 .v2-feature-grid{
+  gap:12px;
+}
+.web-ds-v2 .v2-panel{
+  border-radius:10px;
+}
+.web-ds-v2 .v2-panel .card-head{
+  min-height:48px;
+  padding:0 16px;
+}
+.web-ds-v2 .v2-panel .card-head>span:first-child{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.web-ds-v2 .v2-panel .card-head .v25-icon{
+  width:18px;height:18px;
+  color:#f2d078;
+}
+.web-ds-v2 .v2-panel .card-head>a,
+.web-ds-v2 .v2-panel .card-head>span:last-child{
+  color:#83cdf7;
+  font-size:10px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+/* Next Release = primary utility HUD */
+.web-ds-v2 .v2-release-panel{
+  padding:18px 14px 16px;
+}
+.web-ds-v2 .v2-release-panel .v2-panel-rune{
+  margin-bottom:6px;
+}
+.web-ds-v2 .v2-release-panel .card-kicker{
+  font-size:16px;
+  letter-spacing:.08em;
+}
+.web-ds-v2 .release-time{
+  margin-top:3px;
+}
+.web-ds-v2 .release-part{
+  margin-top:3px;
+  font-size:11px;
+  color:#c9def0;
+}
+.web-ds-v2 .release-state-banner{
+  margin:12px 0 12px;
+}
+.web-ds-v2 .countdown-row{
+  margin-top:4px;
+}
+.web-ds-v2 .countdown-row>div{
+  min-height:76px;
+}
+.web-ds-v2 .v2-cycle-title{
+  margin-top:15px;
+  font-size:9px;
+  letter-spacing:.16em;
+}
+
+/* Currently Reading = strongest content card */
+.web-ds-v2 .v2-reading-panel{
+  min-height:100%;
+}
+.web-ds-v2 .reading-feature{
+  display:grid;
+  grid-template-columns:minmax(205px,34%) minmax(0,1fr);
+  min-height:300px;
+  gap:18px;
+  padding:14px;
+}
+.web-ds-v2 .v2-reading-art{
+  min-height:270px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:flex-start;
+  padding:17px;
+  background:
+    linear-gradient(180deg,transparent 38%,rgba(2,8,14,.92)),
+    url("/assets/v25/releases/release-city.png") center/cover no-repeat;
+}
+.web-ds-v2 .reading-art-label{
+  display:block;
+  margin-bottom:5px;
+  font-size:9px;
+  letter-spacing:.15em;
+  color:#8edcff;
+}
+.web-ds-v2 .reading-art-title{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:22px;
+  letter-spacing:.08em;
+  color:#ffe1a0;
+  text-shadow:0 2px 14px #000;
+}
+.web-ds-v2 .reading-copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:14px 8px 14px 0;
+}
+.web-ds-v2 .reading-copy>small{
+  font-size:10px;
+  margin-bottom:8px;
+}
+.web-ds-v2 .reading-copy h1{
+  margin:0 0 10px;
+  line-height:1.03;
+}
+.web-ds-v2 .reading-copy p{
+  max-width:48ch;
+  line-height:1.55;
+  color:#d6e0e8;
+}
+.web-ds-v2 .reading-actions{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:10px;
+}
+.web-ds-v2 .reading-actions .genesis-btn{
+  min-height:48px;
+}
+
+/* Your Access = compact character HUD */
+.web-ds-v2 .v2-access-panel{
+  display:flex;
+  flex-direction:column;
+}
+.web-ds-v2 .access-identity{
+  margin:12px 12px 8px;
+  padding:12px 12px 11px;
+  border:1px solid rgba(72,151,207,.34);
+  background:
+    radial-gradient(circle at 22% 18%,rgba(62,167,238,.12),transparent 35%),
+    linear-gradient(135deg,rgba(9,31,48,.88),rgba(4,13,22,.74));
+}
+.web-ds-v2 .access-kicker{
+  display:block;
+  margin-bottom:10px;
+  font-size:8px;
+  letter-spacing:.15em;
+  color:#75cfff;
+}
+.web-ds-v2 .profile-row{
+  padding:0;
+}
+.web-ds-v2 .profile-avatar{
+  width:62px;height:62px;
+}
+.web-ds-v2 .v2-profile-copy{
+  gap:3px;
+}
+.web-ds-v2 .v2-profile-copy small{
+  color:#9fb5c6;
+}
+.web-ds-v2 .access-progress-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin:2px 14px 5px;
+  font-size:8px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:#8198aa;
+}
+.web-ds-v2 .access-progress-head strong{
+  color:#ddc16f;
+  font-weight:600;
+}
+.web-ds-v2 .exp-track{
+  margin:0 14px;
+  height:9px;
+}
+.web-ds-v2 .exp-copy{
+  margin:5px 14px 9px;
+}
+.web-ds-v2 .access-list{
+  margin-top:auto;
+  border-top:1px solid rgba(79,148,195,.25);
+}
+.web-ds-v2 .access-list>div{
+  padding:0 14px;
+  min-height:39px;
+}
+.web-ds-v2 .access-list>div strong{
+  color:#f2d274;
+}
+
+/* Latest Releases = image-first cards */
+.web-ds-v2 .latest-card{
+  min-height:260px;
+}
+.web-ds-v2 .v2-release-cards{
+  gap:10px;
+  padding:12px;
+}
+.web-ds-v2 .v2-release-tile{
+  min-height:166px;
+  grid-template-columns:44% minmax(0,1fr);
+  border-color:rgba(231,189,99,.38);
+}
+.web-ds-v2 .release-thumb{
+  min-height:166px;
+  border-right:1px solid rgba(231,189,99,.24);
+}
+.web-ds-v2 .release-info{
+  padding:14px 12px;
+  justify-content:center;
+}
+.web-ds-v2 .release-info small{
+  font-size:8px;
+  letter-spacing:.13em;
+}
+.web-ds-v2 .release-info strong{
+  margin:5px 0 6px;
+  font-size:17px;
+  line-height:1.08;
+}
+.web-ds-v2 .release-info span{
+  font-size:9px;
+  line-height:1.45;
+  color:#afc1cf;
+}
+
+/* Announcements = concise quest log */
+.web-ds-v2 .notices-card{
+  min-height:260px;
+}
+.web-ds-v2 .notice-list{
+  padding:8px 12px 12px;
+}
+.web-ds-v2 .notice-list>div{
+  min-height:61px;
+  padding:9px 2px;
+  grid-template-columns:42px minmax(0,1fr) auto;
+  gap:10px;
+}
+.web-ds-v2 .notice-icon{
+  width:38px;height:38px;
+}
+.web-ds-v2 .notice-list p strong{
+  font-size:11px;
+}
+.web-ds-v2 .notice-list p small{
+  margin-top:3px;
+  font-size:8px;
+  line-height:1.4;
+}
+.web-ds-v2 .notice-list time{
+  font-size:7px;
+}
+
+/* Destination cards = cinematic navigation band */
+.web-ds-v2 .v2-feature-grid{
+  margin-top:12px;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile{
+  min-height:154px;
+  padding:17px;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile>i.v25-icon{
+  width:34px;height:34px;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile strong{
+  font-size:22px;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile span{
+  display:block;
+  margin-top:3px;
+  font-size:9px;
+  line-height:1.3;
+}
+.web-ds-v2 .v2-feature-grid .feature-tile>b .v25-icon{
+  width:24px;height:24px;
+}
+
+/* Desktop proportions */
+@media(min-width:1100px){
+  .web-ds-v2 .v2-dashboard{
+    grid-template-columns:365px minmax(0,1.65fr) 390px;
+    align-items:stretch;
+  }
+  .web-ds-v2 .v2-home-row{
+    grid-template-columns:minmax(0,1.62fr) minmax(355px,.78fr);
+  }
+}
+
+/* Tablet/mobile: authored stacking, not compressed desktop */
+@media(max-width:900px){
+  .web-ds-v2 .v2-dashboard{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:9px!important;
+  }
+  .web-ds-v2 .v2-reading-panel{order:2}
+  .web-ds-v2 .v2-release-panel{order:1}
+  .web-ds-v2 .v2-access-panel{order:3}
+  .web-ds-v2 .reading-feature{
+    grid-template-columns:128px minmax(0,1fr);
+    min-height:210px;
+    gap:11px;
+    padding:10px;
+  }
+  .web-ds-v2 .v2-reading-art{
+    min-height:190px;
+    padding:11px;
+  }
+  .web-ds-v2 .reading-art-title{font-size:15px}
+  .web-ds-v2 .reading-copy{
+    padding:8px 2px 8px 0;
+  }
+  .web-ds-v2 .reading-copy p{
+    font-size:10px;
+    line-height:1.45;
+  }
+  .web-ds-v2 .reading-actions{
+    grid-template-columns:1fr;
+    margin-top:10px;
+    gap:7px;
+  }
+  .web-ds-v2 .reading-actions .genesis-btn{
+    min-height:41px;
+  }
+  .web-ds-v2 .v2-release-cards{
+    grid-template-columns:1fr!important;
+  }
+  .web-ds-v2 .v2-release-tile{
+    grid-template-columns:130px minmax(0,1fr)!important;
+    min-height:118px!important;
+  }
+  .web-ds-v2 .release-thumb{
+    min-height:118px!important;
+  }
+  .web-ds-v2 .v2-feature-grid{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .web-ds-v2 .v2-feature-grid .feature-tile{
+    min-height:128px;
+  }
+}
+@media(max-width:520px){
+  .web-ds-v2 .v2-panel .card-head{
+    min-height:43px;
+    padding:0 12px;
+  }
+  .web-ds-v2 .reading-feature{
+    grid-template-columns:108px minmax(0,1fr);
+  }
+  .web-ds-v2 .v2-reading-art{
+    min-height:175px;
+  }
+  .web-ds-v2 .reading-copy h1{
+    font-size:19px;
+  }
+  .web-ds-v2 .v2-release-tile{
+    grid-template-columns:112px minmax(0,1fr)!important;
+  }
+  .web-ds-v2 .v2-feature-grid{
+    grid-template-columns:1fr!important;
+  }
+  .web-ds-v2 .v2-feature-grid .feature-tile{
+    min-height:118px;
+  }
+}
+
+
+/* ============================================================
+   WEB-DS-V2.7 — QUEST VISUAL REWARD SYSTEM
+   ============================================================ */
+.reward-gallery{
+  margin-top:18px;
+  overflow:hidden;
+}
+.reward-gallery-intro{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 210px;
+  gap:20px;
+  align-items:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at 85% 20%,rgba(75,166,255,.12),transparent 34%),
+    linear-gradient(135deg,rgba(10,32,49,.96),rgba(4,13,22,.96));
+  border-bottom:1px solid rgba(231,189,99,.24);
+}
+.reward-gallery-intro h2{
+  margin:4px 0 8px;
+  font-family:Georgia,"Times New Roman",serif;
+  color:#fff0c8;
+  font-size:27px;
+}
+.reward-gallery-intro p{
+  max-width:72ch;
+  color:#c8d5df;
+  line-height:1.55;
+}
+.reward-cycle-badge{
+  min-height:118px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  border:1px solid rgba(231,189,99,.5);
+  background:
+    radial-gradient(circle at 50% 15%,rgba(231,189,99,.14),transparent 40%),
+    rgba(4,16,27,.9);
+  box-shadow:inset 0 0 25px rgba(231,189,99,.04),0 10px 25px rgba(0,0,0,.22);
+}
+.reward-cycle-badge strong{
+  color:#ffe39a;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:28px;
+  text-shadow:0 0 15px rgba(231,189,99,.25);
+}
+.reward-cycle-badge span{
+  margin-top:6px;
+  color:#8fd8ff;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+.reward-category-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  padding:16px;
+}
+.reward-category-card{
+  position:relative;
+  overflow:hidden;
+  min-height:245px;
+  padding:0 14px 15px;
+  border:1px solid rgba(231,189,99,.36);
+  background:linear-gradient(145deg,#0b2031,#050f19);
+  box-shadow:0 12px 25px rgba(0,0,0,.22),inset 0 0 0 1px rgba(104,190,245,.04);
+}
+.reward-category-card:after{
+  content:"";
+  position:absolute;
+  inset:5px;
+  pointer-events:none;
+  border:1px solid rgba(231,189,99,.10);
+}
+.reward-preview-art{
+  height:148px;
+  margin:0 -14px 12px;
+  border-bottom:1px solid rgba(231,189,99,.28);
+  background-size:cover;
+  background-position:center;
+  box-shadow:inset 0 -45px 40px rgba(2,8,14,.34);
+}
+.reward-category-card.picture-card .reward-preview-art{
+  background-image:linear-gradient(180deg,transparent 55%,rgba(3,10,17,.55)),url("/assets/v25/releases/release-duel.png");
+}
+.reward-category-card.character-card .reward-preview-art{
+  background-image:linear-gradient(180deg,transparent 55%,rgba(3,10,17,.55)),url("/assets/v25/destinations/destination-fanpage.png");
+}
+.reward-category-card.monster-card .reward-preview-art{
+  background-image:linear-gradient(180deg,transparent 55%,rgba(3,10,17,.55)),url("/assets/v25/releases/release-mystery.png");
+}
+.reward-category-card.wallpaper-card .reward-preview-art{
+  background-image:linear-gradient(180deg,transparent 55%,rgba(3,10,17,.55)),url("/assets/v25/hero-home-desktop.webp");
+}
+.reward-category-card.mobile-wallpaper-card .reward-preview-art{
+  background-image:linear-gradient(180deg,transparent 55%,rgba(3,10,17,.55)),url("/assets/v25/hero-home-mobile.webp");
+  background-position:center 28%;
+}
+.reward-category-card.special-card .reward-preview-art{
+  background-image:linear-gradient(180deg,transparent 55%,rgba(3,10,17,.55)),url("/assets/v25/destinations/destination-codex.png");
+}
+.reward-category-card small{
+  display:block;
+  margin-bottom:5px;
+  color:#79d2ff;
+  letter-spacing:.14em;
+  font-size:8px;
+}
+.reward-category-card strong{
+  display:block;
+  color:#fff0cc;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:20px;
+}
+.reward-category-card span{
+  display:block;
+  margin-top:6px;
+  color:#aebfcd;
+  line-height:1.4;
+  font-size:10px;
+}
+.reward-safety-strip{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border-top:1px solid rgba(72,151,207,.26);
+  background:rgba(3,13,22,.84);
+}
+.reward-safety-strip span{
+  padding:11px 10px;
+  text-align:center;
+  color:#a9bed0;
+  font-size:9px;
+  border-right:1px solid rgba(72,151,207,.18);
+}
+.reward-safety-strip span:last-child{border-right:0}
+
+@media(max-width:900px){
+  .reward-gallery-intro{
+    grid-template-columns:1fr;
+  }
+  .reward-cycle-badge{
+    min-height:92px;
+  }
+  .reward-category-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:520px){
+  .reward-gallery-intro{
+    padding:15px;
+  }
+  .reward-gallery-intro h2{
+    font-size:22px;
+  }
+  .reward-category-grid{
+    grid-template-columns:1fr;
+    padding:10px;
+  }
+  .reward-category-card{
+    min-height:218px;
+  }
+  .reward-preview-art{
+    height:132px;
+  }
+  .reward-safety-strip{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+
+/* ============================================================
+   WEB-DS-V2.6.1 — MICRO REFINEMENT
+   Latest Releases identity, desktop rhythm, mobile reading.
+   ============================================================ */
+
+/* Stronger Latest Releases identity */
+.web-ds-v2 .v2-release-cards{
+  align-items:stretch;
+}
+.web-ds-v2 .v2-release-tile{
+  position:relative;
+  overflow:hidden;
+}
+.web-ds-v2 .v2-release-tile:after{
+  content:"";
+  position:absolute;
+  inset:5px;
+  pointer-events:none;
+  border:1px solid rgba(231,189,99,.09);
+}
+.web-ds-v2 .v2-release-tile:nth-child(1){
+  border-color:rgba(255,197,86,.46);
+}
+.web-ds-v2 .v2-release-tile:nth-child(2){
+  border-color:rgba(92,188,255,.44);
+}
+.web-ds-v2 .v2-release-tile:nth-child(3){
+  border-color:rgba(165,126,255,.38);
+}
+.web-ds-v2 .v2-release-tile:nth-child(1) .release-info small{color:#ffd478}
+.web-ds-v2 .v2-release-tile:nth-child(2) .release-info small{color:#8bdcff}
+.web-ds-v2 .v2-release-tile:nth-child(3) .release-info small{color:#c4a7ff}
+.web-ds-v2 .release-info strong{
+  letter-spacing:.005em;
+}
+.web-ds-v2 .release-info span{
+  max-width:24ch;
+}
+
+/* More breathing room between desktop content bands */
+@media(min-width:901px){
+  .web-ds-v2 .v2-dashboard{
+    margin-top:15px;
+    gap:14px;
+  }
+  .web-ds-v2 .v2-home-row{
+    margin-top:16px;
+    gap:14px;
+  }
+  .web-ds-v2 .v2-feature-grid{
+    margin-top:16px;
+    gap:14px;
+  }
+  .web-ds-v2 .v2-panel{
+    box-shadow:
+      0 20px 42px rgba(0,0,0,.34),
+      inset 0 1px 0 rgba(255,255,255,.03),
+      inset 0 0 0 1px rgba(47,137,203,.08);
+  }
+}
+
+/* Mobile Currently Reading: reduce compression */
+@media(max-width:520px){
+  .web-ds-v2 .v2-reading-panel .reading-feature{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    padding:10px;
+  }
+  .web-ds-v2 .v2-reading-art{
+    width:100%;
+    min-height:188px;
+    max-height:205px;
+    border-bottom-left-radius:0;
+    border-bottom-right-radius:0;
+    background-position:center 42%;
+  }
+  .web-ds-v2 .reading-copy{
+    padding:14px 4px 4px;
+  }
+  .web-ds-v2 .reading-copy>small{
+    margin-bottom:5px;
+  }
+  .web-ds-v2 .reading-copy h1{
+    font-size:23px;
+    line-height:1.08;
+    margin-bottom:8px;
+  }
+  .web-ds-v2 .reading-copy p{
+    font-size:11px;
+    line-height:1.5;
+    max-width:none;
+  }
+  .web-ds-v2 .reading-actions{
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    margin-top:12px;
+  }
+  .web-ds-v2 .reading-actions .genesis-btn{
+    min-height:42px;
+    padding-left:8px;
+    padding-right:8px;
+    font-size:10px;
+  }
+}
+@media(max-width:370px){
+  .web-ds-v2 .reading-actions{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* WEB-DS-V2.7 — reward claim feedback */
+.reward-draw-result{
+  margin:12px 0;
+}
+.reward-result-card{
+  display:grid;
+  grid-template-columns:84px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  padding:10px;
+  border:1px solid rgba(231,189,99,.38);
+  background:linear-gradient(135deg,rgba(10,32,49,.92),rgba(4,13,22,.96));
+}
+.reward-result-card img{
+  width:84px;
+  height:84px;
+  object-fit:cover;
+  border:1px solid rgba(111,199,255,.32);
+}
+.reward-result-card small{
+  display:block;
+  color:#8fd8ff;
+  font-size:8px;
+  letter-spacing:.14em;
+}
+.reward-result-card strong{
+  display:block;
+  margin:4px 0;
+  color:#ffe5a8;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:18px;
+}
+.reward-result-card span{
+  color:#aec2d2;
+  font-size:9px;
+}
+.collection-action-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:10px 0 0;
+  padding-top:10px;
+  border-top:1px solid rgba(72,151,207,.22);
+}
+.collection-action-row strong{
+  color:#f1cf73;
+  font-size:10px;
+}
+.collection-action-row a{
+  color:#82d2ff;
+  font-size:9px;
+}
+@media(max-width:520px){
+  .collection-action-row{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+
+
+/* ============================================================
+   WEB-DS-V2.7 — EARNED / LOCKED REWARD STATES
+   ============================================================ */
+.vault-divider{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:18px 18px 10px;
+  color:#d9b15f;
+  font-size:9px;
+  letter-spacing:.14em;
+}
+.vault-divider:before,.vault-divider:after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(217,177,95,.35));
+}
+.vault-divider:after{background:linear-gradient(90deg,rgba(217,177,95,.35),transparent)}
+.reward-vault-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  padding:0 14px 6px;
+  text-align:left;
+}
+.reward-vault-empty{
+  grid-column:1/-1;
+  padding:14px;
+  border:1px dashed rgba(111,199,255,.22);
+  border-radius:8px;
+  color:#7990a4;
+  font-size:10px;
+  text-align:center;
+}
+.reward-state-card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(104,190,245,.22);
+  border-radius:8px;
+  background:linear-gradient(145deg,#0b2031,#06111b);
+  box-shadow:0 10px 22px rgba(0,0,0,.18);
+}
+.reward-state-card.earned{
+  border-color:rgba(232,193,103,.58);
+  box-shadow:0 0 0 1px rgba(232,193,103,.08),0 12px 25px rgba(0,0,0,.26);
+}
+.reward-state-card.locked{
+  border-color:rgba(80,101,122,.24);
+}
+.reward-state-art{
+  position:relative;
+  height:118px;
+  overflow:hidden;
+  background:#020812;
+}
+.reward-state-art img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.reward-state-card.locked .reward-state-art img{
+  filter:grayscale(.75) brightness(.43) blur(.5px);
+}
+.reward-state-card.available .reward-state-art img{
+  filter:saturate(.82) brightness(.7);
+}
+.reward-lock{
+  position:absolute;
+  inset:auto 8px 8px auto;
+  min-width:28px;
+  height:28px;
+  padding:0 7px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(221,196,129,.34);
+  border-radius:999px;
+  background:rgba(3,10,18,.82);
+  color:#f0d183;
+  font-size:12px;
+}
+.reward-state-copy{
+  padding:10px;
+}
+.reward-state-copy small{
+  display:block;
+  color:#78cfff;
+  font-size:7px;
+  letter-spacing:.11em;
+}
+.reward-state-copy strong{
+  display:block;
+  margin:4px 0 5px;
+  color:#f3e4c3;
+  font:600 14px Georgia,"Times New Roman",serif;
+  line-height:1.15;
+}
+.reward-state-copy span{
+  display:block;
+  color:#879bad;
+  font-size:8px;
+}
+.reward-state-card.earned .reward-state-copy span{color:#e2c879}
+.reward-state-card.locked .reward-state-copy span{color:#718292}
+.reward-portfolio-grid{
+  grid-template-columns:repeat(5,minmax(0,1fr));
+}
+.reward-portfolio-grid .reward-state-card.compact .reward-state-art{
+  height:126px;
+}
+.reward-portfolio-grid .reward-state-card.compact .reward-state-copy{
+  padding:8px;
+}
+.reward-portfolio-grid .reward-state-card.compact .reward-state-copy strong{
+  font-size:12px;
+}
+@media(max-width:980px){
+  .reward-portfolio-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .reward-vault-grid{grid-template-columns:1fr 1fr;padding:0 10px 4px}
+  .reward-state-art{height:108px}
+  .reward-portfolio-grid{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px}
+  .reward-portfolio-grid .reward-state-card.compact .reward-state-art{height:130px}
+}
+
+
+/* ============================================================
+   WEB-DS-V2.7.1 — REWARD VAULT DENSITY / MOBILE LEGIBILITY
+   ============================================================ */
+@media(min-width:981px){
+  .quest-layout{grid-template-columns:.8fr 1.2fr;align-items:start}
+  .reward-vault-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .reward-vault-grid .reward-state-art{height:94px}
+  .reward-vault-grid .reward-state-copy{padding:8px}
+  .reward-vault-grid .reward-state-copy strong{font-size:12px}
+  .reward-vault-grid .reward-state-copy small{font-size:6.5px}
+  .reward-vault-grid .reward-state-copy span{font-size:7px}
+}
+@media(max-width:620px){
+  .reward-vault{padding-bottom:16px}
+  .reward-vault-grid{
+    display:grid;
+    grid-auto-flow:column;
+    grid-template-columns:none;
+    grid-template-rows:repeat(2,auto);
+    grid-auto-columns:72%;
+    gap:9px;
+    overflow-x:auto;
+    padding:0 12px 10px;
+    scroll-snap-type:x proximity;
+    scrollbar-width:thin;
+  }
+  .reward-vault-grid .reward-state-card{scroll-snap-align:start}
+  .reward-vault-grid .reward-state-art{height:132px}
+  .reward-vault-grid .reward-state-copy{padding:10px}
+  .reward-vault-grid .reward-state-copy small{font-size:7px}
+  .reward-vault-grid .reward-state-copy strong{font-size:14px}
+  .reward-vault-grid .reward-state-copy span{font-size:8px}
+}
