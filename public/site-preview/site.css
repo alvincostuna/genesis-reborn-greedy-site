@@ -3789,3 +3789,38 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .reward-portfolio-grid{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px}
   .reward-portfolio-grid .reward-state-card.compact .reward-state-art{height:130px}
 }
+
+
+/* ============================================================
+   WEB-DS-V2.7.1 — REWARD VAULT DENSITY / MOBILE LEGIBILITY
+   ============================================================ */
+@media(min-width:981px){
+  .quest-layout{grid-template-columns:.8fr 1.2fr;align-items:start}
+  .reward-vault-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .reward-vault-grid .reward-state-art{height:94px}
+  .reward-vault-grid .reward-state-copy{padding:8px}
+  .reward-vault-grid .reward-state-copy strong{font-size:12px}
+  .reward-vault-grid .reward-state-copy small{font-size:6.5px}
+  .reward-vault-grid .reward-state-copy span{font-size:7px}
+}
+@media(max-width:620px){
+  .reward-vault{padding-bottom:16px}
+  .reward-vault-grid{
+    display:grid;
+    grid-auto-flow:column;
+    grid-template-columns:none;
+    grid-template-rows:repeat(2,auto);
+    grid-auto-columns:72%;
+    gap:9px;
+    overflow-x:auto;
+    padding:0 12px 10px;
+    scroll-snap-type:x proximity;
+    scrollbar-width:thin;
+  }
+  .reward-vault-grid .reward-state-card{scroll-snap-align:start}
+  .reward-vault-grid .reward-state-art{height:132px}
+  .reward-vault-grid .reward-state-copy{padding:10px}
+  .reward-vault-grid .reward-state-copy small{font-size:7px}
+  .reward-vault-grid .reward-state-copy strong{font-size:14px}
+  .reward-vault-grid .reward-state-copy span{font-size:8px}
+}
