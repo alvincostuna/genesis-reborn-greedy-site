@@ -54,6 +54,7 @@ jobs:
           cp public/assets/genesis-official-logo-64.png .live-assets/assets/genesis-official-logo-64.png
           cp public/assets/genesis-wordmark-v2.svg .live-assets/assets/genesis-wordmark-v2.svg
           if [ -d public/assets/v25 ]; then cp -R public/assets/v25 .live-assets/assets/v25; fi
+          if [ -d public/assets/v27 ]; then cp -R public/assets/v27 .live-assets/assets/v27; fi
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
           python - <<'PY'
           from pathlib import Path
@@ -74,6 +75,30 @@ jobs:
           ACTUAL_HERO_SHA="$(sha256sum .live-assets/assets/master-key-art-split-world-v1.webp | awk '{print $1}')"
           echo "Hero SHA-256: $ACTUAL_HERO_SHA"
           test "$ACTUAL_HERO_SHA" = "$EXPECTED_HERO_SHA"
+
+      - name: Verify V2.7 reward assets in live package
+        run: |
+          set -euo pipefail
+          expected=(
+            genesis-awakening.webp
+            beginner-hunt.webp
+            flavio-nico-early-party.webp
+            starter-town-safe-zone.webp
+            flavio-reyes.webp
+            nico-salazar.webp
+            maya-villareal.webp
+            young-gnawer.webp
+            early-genesis-world-panorama.webp
+            flavio-early-cast-wallpaper.webp
+          )
+          test -f .live-assets/assets/v27/rewards/reward-manifest.json
+          for file in "${expected[@]}"; do
+            test -f ".live-assets/assets/v27/rewards/$file" || {
+              echo "::error::Missing V2.7 reward asset in live package: $file"
+              exit 1
+            }
+          done
+          echo "PASS: V2.7 reward manifest + 10 reward images packaged for live."
 
       - name: Snapshot current live deployment
         env:
