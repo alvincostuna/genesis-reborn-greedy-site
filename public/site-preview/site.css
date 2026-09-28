@@ -4521,3 +4521,47 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     gap:4px;
   }
 }
+
+
+/* WEB-DS-V2.8.1 — mobile overflow containment */
+@media(max-width:820px){
+  .world-shell,
+  .world-console,
+  .world-sidebar,
+  .world-map-stage,
+  .world-discovery-strip,
+  .world-tabs,
+  #world-grid{
+    min-width:0;
+    max-width:100%;
+  }
+  .world-console>*{min-width:0}
+  .world-sidebar{overflow:hidden}
+  .world-tabs{
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+    scrollbar-width:thin;
+  }
+  .world-tabs button{
+    flex:0 0 auto;
+  }
+}
+@media(max-width:560px){
+  .world-discovery-strip{
+    width:100%;
+    max-width:100%;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+    scrollbar-width:thin;
+  }
+  .world-discovery-tile{
+    flex:0 0 168px;
+    min-width:168px;
+  }
+  .world-map-stage{
+    overflow:hidden;
+  }
+  #world-grid{
+    overflow:hidden;
+  }
+}
