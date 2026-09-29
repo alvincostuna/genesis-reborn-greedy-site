@@ -1,0 +1,148 @@
+name: Deploy GENESIS Protected Admin
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - website-admin-reconcile-v1
+    paths:
+      - "public/admin/**"
+      - "src/worker.ts"
+      - "wrangler.toml"
+      - ".github/workflows/deploy-admin-preview.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: genesis-admin-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy-admin-preview:
+    environment: genesis-admin-preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+
+    steps:
+      - name: Checkout reconciled source
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Type-check and syntax-check
+        run: |
+          set -euo pipefail
+          npm run types
+          node --check public/admin/admin.js
+          node --check public/admin/read/reader.js
+
+      - name: Reject static production manuscript snapshots
+        run: |
+          set -euo pipefail
+          if find public/admin -path '*/voice-revisions/*' -type f -print | grep -q .; then
+            echo "::error::Static production manuscript snapshots are forbidden in Admin runtime."
+            exit 1
+          fi
+          if grep -R "/admin/voice-revisions/" public/admin --include='*.js' --include='*.html'; then
+            echo "::error::Admin manuscript reader must use protected backend APIs."
+            exit 1
+          fi
+
+      - name: Upload isolated protected Admin version
+        id: upload
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: versions upload --env preview --keep-vars --strict
+
+      - name: Verify required private binding names
+        env:
+          WRANGLER_OUTPUT: ${{ steps.upload.outputs.command-output }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          VERSION_ID="$(printf '%s\n' "$WRANGLER_OUTPUT" | sed -n 's/.*Worker Version ID: //p' | tail -n 1)"
+          test -n "$VERSION_ID"
+          npx wrangler versions view "$VERSION_ID" --env preview --json > /tmp/admin-version.json
+          python - <<'PY'
+          import json,sys
+          data=json.load(open('/tmp/admin-version.json',encoding='utf-8'))
+          names=set()
+          def walk(v):
+              if isinstance(v,dict):
+                  for k,val in v.items():
+                      if k in {'name','binding'} and isinstance(val,str): names.add(val)
+                      walk(val)
+              elif isinstance(v,list):
+                  for x in v: walk(x)
+          walk(data)
+          required={'SUPABASE_URL','SUPABASE_SERVICE_ROLE_KEY','CF_ACCESS_TEAM_DOMAIN','CF_ACCESS_AUD','ADMIN_EMAILS'}
+          missing=sorted(required-names)
+          print("Required private binding names present:",", ".join(sorted(required & names)))
+          if missing:
+              print("Missing:",", ".join(missing))
+              sys.exit(1)
+          PY
+
+      - name: Verify uploaded Worker auth gate
+        env:
+          WRANGLER_OUTPUT: ${{ steps.upload.outputs.command-output }}
+        run: |
+          set -euo pipefail
+          VERSION_URL="$(printf '%s\n' "$WRANGLER_OUTPUT" | grep -Eo 'https://[A-Za-z0-9.-]+workers\.dev' | tail -n 1)"
+          test -n "$VERSION_URL"
+          STATUS="$(curl -sS -D /tmp/admin-candidate-headers.txt -o /tmp/admin-candidate-body.txt -w '%{http_code}' "$VERSION_URL/admin/")"
+          echo "Candidate /admin/ -> HTTP $STATUS"
+          if [ "$STATUS" = "401" ]; then
+            echo "PASS: Worker auth gate"
+          elif [ "$STATUS" = "302" ] && grep -Eiq '^(location:.*(cloudflareaccess|/cdn-cgi/access))' /tmp/admin-candidate-headers.txt; then
+            echo "PASS: Cloudflare Access redirect"
+          else
+            echo "::error::Protected Admin candidate did not enforce authentication."
+            cat /tmp/admin-candidate-headers.txt || true
+            exit 1
+          fi
+
+      - name: Promote verified Admin version
+        env:
+          WRANGLER_OUTPUT: ${{ steps.upload.outputs.command-output }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          VERSION_ID="$(printf '%s\n' "$WRANGLER_OUTPUT" | sed -n 's/.*Worker Version ID: //p' | tail -n 1)"
+          npx wrangler versions deploy "$VERSION_ID" --env preview --yes
+
+      - name: Verify stable protected Admin hostname
+        run: |
+          set -euo pipefail
+          BASE="https://genesis-reborn-greedy-site-preview.hirangnalupa.workers.dev"
+          for path in /admin/ /admin/admin.js /admin/admin.css /admin/read/ /admin/api/website-ops; do
+            STATUS="000"
+            for attempt in 1 2 3 4 5 6 7 8; do
+              STATUS="$(curl -sS -D /tmp/admin-stable-headers.txt -o /tmp/admin-stable-body.txt -w '%{http_code}' "$BASE$path" || true)"
+              echo "Stable $path attempt $attempt -> HTTP $STATUS"
+              case "$STATUS" in 401|302|403) break;; esac
+              sleep 2
+            done
+            case "$STATUS" in
+              401|403) ;;
+              302)
+                grep -Eiq '^(location:.*(cloudflareaccess|/cdn-cgi/access))' /tmp/admin-stable-headers.txt
+                ;;
+              *)
+                echo "::error::Stable Admin protection failed for $path"
+                exit 1
+                ;;
+            esac
+          done
+          echo "GENESIS protected Admin verified."
