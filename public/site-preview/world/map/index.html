@@ -1,8 +1,8 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#06101b"><title>World Atlas — GENESIS: REBORN GREEDY</title>
+<meta name="theme-color" content="#06101b"><title>Map — GENESIS Atlas</title>
 <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png"><link rel="stylesheet" href="/site-preview/site.css">
-</head><body data-page="world" class="game-world-page web-ds-v2 unified-public-page">
+</head><body data-page="map-detail" class="game-world-page web-ds-v2 unified-public-page">
 <header class="game-nav v2-nav">
   <button class="v2-mobile-menu" type="button" aria-label="Open navigation">☰</button>
   <a class="game-brand v2-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
@@ -24,49 +24,53 @@
   </div>
 </header>
 
-<main class="world-shell atlas-v1-shell">
-  <section class="world-hero hud-card atlas-v1-hero">
-    <div class="world-hero-art"></div><div class="world-hero-shade"></div>
-    <div class="world-hero-copy">
-      <p class="eyebrow">SUPABASE-DRIVEN WORLD DATABASE</p>
-      <h1>GENESIS Atlas</h1>
-      <p>Every visible location comes from the canonical database. Maps appear only after released Final Canon makes them reader-safe; unrevealed territory remains under fog-of-war.</p>
-      <div class="world-hero-actions">
-        <a class="atlas-action-primary" href="#atlas-browser">Browse revealed maps</a>
-        <a href="/site-preview/codex/?type=monster">Open Bestiary</a>
-        <a href="/site-preview/codex/?type=weapon">Open Armory</a>
-      </div>
+<main class="world-shell atlas-detail-shell">
+  <nav class="atlas-breadcrumb" aria-label="Breadcrumb"><a href="/site-preview/world/">World Atlas</a><span>›</span><strong id="map-breadcrumb-name">Map</strong></nav>
+
+  <section id="map-detail-hero" class="map-detail-hero hud-card">
+    <div class="map-detail-art is-placeholder" id="map-detail-art">
+      <div class="map-placeholder-mark">MAP ART<br><strong>PENDING</strong></div>
     </div>
-    <div class="atlas-contract-badge">
-      <span>ATLAS CONTRACT</span><strong id="atlas-status">Connecting…</strong><small>Fail-closed reveal gating</small>
+    <div class="map-detail-copy">
+      <p class="eyebrow" id="map-detail-region">DISCOVERED WORLD</p>
+      <h1 id="map-detail-name">Loading map…</h1>
+      <p id="map-detail-description">Checking the reader-safe Atlas contract.</p>
+      <div class="map-detail-badges"><span id="map-detail-type">MAP</span><span id="map-detail-state">FOG CHECK</span><span id="map-detail-code">—</span></div>
     </div>
   </section>
 
-  <section class="atlas-v1-strip" aria-label="Atlas database paths">
-    <a class="active" href="/site-preview/world/"><b>ATLAS</b><small>Maps & regions</small></a>
-    <a href="/site-preview/codex/?type=monster"><b>BESTIARY</b><small>Monsters</small></a>
-    <a href="/site-preview/codex/?type=weapon"><b>WEAPONS</b><small>Armory</small></a>
-    <a href="/site-preview/codex/?type=armor"><b>ARMOR</b><small>Equipment</small></a>
-    <a href="/site-preview/codex/?type=item"><b>ITEMS</b><small>Archive</small></a>
+  <section id="map-locked-state" class="atlas-fog-state hud-card hidden">
+    <div class="atlas-fog-orb">?</div><strong>This location is still under fog-of-war.</strong>
+    <p>The canonical database may already contain this map, but no published Final Canon reveal permits the reader site to show it yet.</p>
+    <a class="atlas-action-primary" href="/site-preview/world/">Return to Atlas</a>
   </section>
 
-  <section id="atlas-browser" class="atlas-browser hud-card">
-    <div class="card-head"><span>WORLD ATLAS</span><span>Reader-safe Supabase projection</span></div>
-    <div class="atlas-toolbar">
-      <label><span>Find a revealed location</span><input id="atlas-search" type="search" placeholder="Map name or code" autocomplete="off"></label>
-      <button id="atlas-search-button" type="button">Search Atlas</button>
-      <button id="atlas-clear-button" type="button" class="ghost">Clear</button>
-    </div>
-    <div id="atlas-region-filter" class="atlas-region-filter" aria-label="Region filters"></div>
-    <div id="atlas-board" class="atlas-board" aria-live="polite">
-      <div class="atlas-fog-state"><div class="atlas-fog-orb">?</div><strong>Reading the world database…</strong><p>Only executed reader-safe reveals will be shown.</p></div>
-    </div>
-  </section>
+  <div id="map-detail-content" class="map-detail-content">
+    <section class="hud-card map-data-panel">
+      <div class="card-head"><span>REVEALED MAP DATA</span><span>Published fields only</span></div>
+      <div id="map-revealed-fields" class="map-revealed-fields"><div class="empty-state">No extra fields revealed yet.</div></div>
+    </section>
 
-  <section class="atlas-safety-note hud-card">
-    <div><strong>Fog-of-war is data protection</strong><p>The production database can contain maps, monsters, NPCs, shops and routes long before readers are allowed to know them. The Atlas never treats backend existence as a reveal.</p></div>
-    <div><strong>Artwork can arrive later</strong><p>When a map is reader-safe but has no approved web artwork, its page stays usable with a clearly marked fog/placeholder visual until the art pipeline binds the real image.</p></div>
-  </section>
+    <section class="hud-card map-link-panel">
+      <div class="card-head"><span>CONNECTED MAPS</span><span id="map-connections-gate">Fog gated</span></div>
+      <div id="map-connections" class="atlas-related-grid"><div class="empty-state">Checking revealed routes…</div></div>
+    </section>
+
+    <section class="hud-card map-link-panel">
+      <div class="card-head"><span>BESTIARY — THIS MAP</span><span id="map-monsters-gate">Fog gated</span></div>
+      <div id="map-monsters" class="atlas-related-grid"><div class="empty-state">Checking revealed creatures…</div></div>
+    </section>
+
+    <section class="hud-card map-link-panel">
+      <div class="card-head"><span>NPCs & PEOPLE</span><span id="map-npcs-gate">Fog gated</span></div>
+      <div id="map-npcs" class="atlas-related-grid"><div class="empty-state">Checking revealed NPCs…</div></div>
+    </section>
+
+    <section class="hud-card map-link-panel">
+      <div class="card-head"><span>SHOPS & SERVICES</span><span id="map-shops-gate">Fog gated</span></div>
+      <div id="map-shops" class="atlas-related-grid"><div class="empty-state">Checking revealed shops…</div></div>
+    </section>
+  </div>
 </main>
 
 <nav class="mobile-bottom-nav v2-mobile-bottom" aria-label="Mobile navigation">

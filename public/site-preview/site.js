@@ -16,6 +16,17 @@ function readerUrl(episode=null,part=null){
   if(part!==null&&part!==undefined&&part!=="")u.searchParams.set("part",String(part));
   return u.pathname+u.search;
 }
+function mapDetailUrl(slug){
+  const u=new URL(sitePath("/world/map/"),location.origin);
+  if(slug)u.searchParams.set("slug",String(slug));
+  return u.pathname+u.search;
+}
+function codexEntityUrl(type,name){
+  const u=new URL(sitePath("/codex/"),location.origin);
+  if(type)u.searchParams.set("type",String(type));
+  if(name)u.searchParams.set("q",String(name));
+  return u.pathname+u.search;
+}
 function readLocalProgress(){
   try{return JSON.parse(localStorage.getItem(READ_STATE_KEY)||"null")}catch{return null}
 }
@@ -654,42 +665,206 @@ async function initRead(){
   await openEpisode(requestedEpisode,requestedPart||null);
 }
 
-async function loadWorld(type){
-  const grid=document.querySelector("#world-grid");
-  grid.innerHTML='<div class="empty-state large">Loading revealed '+esc(type)+' records…</div>';
+
+function atlasArt(seed=""){
+  const v=entityVisual("map",seed);
+  return v?.art||"/assets/v27/rewards/early-genesis-world-panorama.webp";
+}
+function atlasFieldText(value){
+  if(value===null||value===undefined)return "—";
+  if(typeof value==="string")return value;
+  if(typeof value==="number"||typeof value==="boolean")return String(value);
+  if(Array.isArray(value))return value.map(atlasFieldText).join(", ");
+  try{return JSON.stringify(value)}catch{return String(value)}
+}
+function atlasPrettyKey(key){
+  return String(key||"").replaceAll("_"," ").replace(/\b\w/g,m=>m.toUpperCase());
+}
+function atlasVisibleFields(fields={}){
+  const relationKeys=new Set([
+    "connections","connected_maps","routes","monsters","monster_ids","bestiary","encounters",
+    "npcs","npc_ids","people","shops","shop_ids","services","region","map_type","atlas_art_url"
+  ]);
+  return Object.entries(fields&&typeof fields==="object"?fields:{})
+    .filter(([key])=>!relationKeys.has(key))
+    .slice(0,18);
+}
+function atlasMapCard(map){
+  const art=map?.art?.url||atlasArt(map?.slug||map?.entity_code||map?.public_name);
+  const placeholder=map?.art?.status!=="READY";
+  const fields=atlasVisibleFields(map?.revealed_fields||{});
+  const chips=fields.slice(0,3).map(([k,v])=>'<span title="'+esc(atlasFieldText(v))+'">'+esc(atlasPrettyKey(k))+'</span>').join("");
+  return '<a class="atlas-map-card'+(placeholder?' is-placeholder':'')+'" href="'+esc(mapDetailUrl(map?.slug))+'">'+
+    '<div class="atlas-map-card-art" style="background-image:linear-gradient(180deg,rgba(4,10,17,.04),rgba(4,10,17,.88)),url(\''+esc(art)+'\')">'+
+      '<span class="atlas-map-state">'+esc(map?.reveal_state||"DISCOVERED")+'</span>'+
+      (placeholder?'<span class="atlas-art-pending">ART PENDING</span>':'')+
+    '</div>'+
+    '<div class="atlas-map-card-copy">'+
+      '<small>'+esc(map?.region||"Discovered World")+' · '+esc(map?.map_type||"MAP")+'</small>'+
+      '<h2>'+esc(map?.public_name||"Revealed map")+'</h2>'+
+      '<p>'+esc(map?.short_description||"A reader-safe GENESIS location.")+'</p>'+
+      (chips?'<div class="atlas-field-chips">'+chips+'</div>':'')+
+      '<span class="atlas-open-link">Open map database →</span>'+
+    '</div>'+
+  '</a>';
+}
+function renderAtlasRegions(maps){
+  const filter=document.querySelector("#atlas-region-filter");
+  if(!filter)return;
+  const regions=[...new Set(maps.map(x=>x.region||"Discovered World"))].sort((a,b)=>a.localeCompare(b));
+  if(regions.length<=1){filter.innerHTML="";return;}
+  filter.innerHTML='<button type="button" class="active" data-atlas-region="">All</button>'+
+    regions.map(r=>'<button type="button" data-atlas-region="'+esc(r)+'">'+esc(r)+'</button>').join("");
+  filter.querySelectorAll("[data-atlas-region]").forEach(button=>button.addEventListener("click",()=>{
+    filter.querySelectorAll("[data-atlas-region]").forEach(x=>x.classList.toggle("active",x===button));
+    const wanted=button.dataset.atlasRegion||"";
+    document.querySelectorAll(".atlas-region-group").forEach(group=>{
+      group.classList.toggle("hidden",!!wanted&&group.dataset.region!==wanted);
+    });
+  }));
+}
+function renderAtlasBoard(maps,contract){
+  const board=document.querySelector("#atlas-board");
+  const status=document.querySelector("#atlas-status");
+  if(!board)return;
+  if(status)status.textContent=(contract?.reader_safe_count??maps.length)+" map"+((contract?.reader_safe_count??maps.length)===1?"":"s")+" revealed";
+  if(!maps.length){
+    board.innerHTML='<div class="atlas-fog-state">'+
+      '<div class="atlas-fog-orb">?</div>'+
+      '<strong>The Atlas is still under full fog-of-war.</strong>'+
+      '<p>No map has an executed published Final Canon reveal yet. The world database remains private until the story opens it.</p>'+
+      '<span class="atlas-fog-rule">Backend existence ≠ reader visibility</span>'+
+    '</div>';
+    const filter=document.querySelector("#atlas-region-filter");if(filter)filter.innerHTML="";
+    return;
+  }
+  const groups=new Map();
+  maps.forEach(map=>{
+    const region=map.region||"Discovered World";
+    if(!groups.has(region))groups.set(region,[]);
+    groups.get(region).push(map);
+  });
+  board.innerHTML=[...groups.entries()].sort(([a],[b])=>a.localeCompare(b)).map(([region,items])=>
+    '<section class="atlas-region-group" data-region="'+esc(region)+'">'+
+      '<div class="atlas-region-head"><div><small>REGION</small><strong>'+esc(region)+'</strong></div><span>'+items.length+' revealed</span></div>'+
+      '<div class="atlas-map-grid">'+items.map(atlasMapCard).join("")+'</div>'+
+    '</section>'
+  ).join("");
+  renderAtlasRegions(maps);
+}
+async function loadAtlasIndex(query=null){
+  const board=document.querySelector("#atlas-board");
+  if(board)board.innerHTML='<div class="atlas-fog-state"><div class="atlas-fog-orb">⌁</div><strong>Querying the reader-safe Atlas…</strong><p>Supabase is resolving released locations.</p></div>';
   try{
-    let rows=[];
-    if(type==="equipment"){
-      const [w,a]=await Promise.all([
-        rpc("api_entity_search",{p_type:"weapon",p_query:null,p_limit:12}),
-        rpc("api_entity_search",{p_type:"armor",p_query:null,p_limit:12})
-      ]);
-      rows=[...(Array.isArray(w)?w:[]),...(Array.isArray(a)?a:[])].slice(0,18);
-    }else{
-      rows=await rpc("api_entity_search",{p_type:type,p_query:null,p_limit:18});
-    }
-    if(!Array.isArray(rows)||!rows.length){
-      const v=entityVisual(type);
-      grid.innerHTML='<div class="v28-empty-discovery"><div class="empty-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.08),rgba(2,8,14,.92)),url(\''+esc(v.art)+'\')"></div><div><small>'+esc(v.label)+'</small><strong>Nothing reader-safe has been revealed here yet.</strong><p>Production knowledge remains hidden until a released Part makes it public.</p></div></div>';
-      return;
-    }
-    grid.innerHTML=rows.map(x=>entityCard(x,"world")).join("");
-  }catch(e){
-    grid.innerHTML='<div class="empty-state large">World preview is temporarily unavailable.</div>';
+    const raw=await rpc("api_atlas_map_index_v1",{p_query:query||null,p_limit:100});
+    const data=firstRow(raw)||raw||{};
+    const maps=Array.isArray(data?.maps)?data.maps:[];
+    renderAtlasBoard(maps,data);
+  }catch(error){
+    if(board)board.innerHTML='<div class="atlas-fog-state error-state"><div class="atlas-fog-orb">!</div><strong>Atlas data is temporarily unavailable.</strong><p>'+esc(error.message||"Reader Atlas request failed.")+'</p></div>';
+    const status=document.querySelector("#atlas-status");if(status)status.textContent="Unavailable";
   }
 }
 function initWorld(){
-  const buttons=[...document.querySelectorAll("[data-world-type]")];
-  const jumpButtons=[...document.querySelectorAll("[data-world-jump]")];
-  const activate=type=>{
-    buttons.forEach(x=>x.classList.toggle("active",x.dataset.worldType===type));
-    jumpButtons.forEach(x=>x.classList.toggle("active",x.dataset.worldJump===type));
-    loadWorld(type);
-    document.querySelector(".world-map-stage")?.scrollIntoView({behavior:"smooth",block:"start"});
-  };
-  buttons.forEach(b=>b.addEventListener("click",()=>activate(b.dataset.worldType)));
-  jumpButtons.forEach(b=>b.addEventListener("click",()=>activate(b.dataset.worldJump)));
-  loadWorld("map");
+  const input=document.querySelector("#atlas-search");
+  const run=()=>loadAtlasIndex(input?.value.trim()||null);
+  document.querySelector("#atlas-search-button")?.addEventListener("click",run);
+  document.querySelector("#atlas-clear-button")?.addEventListener("click",()=>{
+    if(input)input.value="";
+    loadAtlasIndex(null);
+  });
+  input?.addEventListener("keydown",e=>{if(e.key==="Enter")run()});
+  loadAtlasIndex(null);
+}
+
+function atlasRelatedCard(item,kind){
+  const type=kind==="connections"?"map":(item?.entity_type||kind.replace(/s$/,""));
+  const art=item?.art?.url||entityVisual(type,item?.entity_code||item?.slug||item?.public_name)?.art||atlasArt(item?.slug);
+  const href=kind==="connections"
+    ?mapDetailUrl(item?.slug)
+    :codexEntityUrl(type,item?.public_name);
+  return '<a class="atlas-related-card is-placeholder" href="'+esc(href)+'">'+
+    '<div class="atlas-related-art" style="background-image:linear-gradient(180deg,rgba(4,10,17,.08),rgba(4,10,17,.92)),url(\''+esc(art)+'\')"><span>ART PENDING</span></div>'+
+    '<div><small>'+esc(type.toUpperCase())+'</small><strong>'+esc(item?.public_name||item?.entity_code||"Revealed entry")+'</strong><p>'+esc(item?.short_description||"Reader-safe related record.")+'</p></div>'+
+  '</a>';
+}
+function renderMapRelation(kind,allowed,items){
+  const root=document.querySelector("#map-"+kind);
+  const gate=document.querySelector("#map-"+kind+"-gate");
+  if(gate)gate.textContent=allowed?"REVEALED":"FOG-GATED";
+  if(!root)return;
+  if(!allowed){
+    root.innerHTML='<div class="atlas-relation-fog"><strong>Relationship still hidden</strong><p>This map may already have '+esc(kind)+' in the production database, but the story has not released that relationship.</p></div>';
+    return;
+  }
+  if(!Array.isArray(items)||!items.length){
+    root.innerHTML='<div class="empty-state">No reader-safe '+esc(kind)+' are currently attached to this map.</div>';
+    return;
+  }
+  root.innerHTML=items.map(x=>atlasRelatedCard(x,kind)).join("");
+}
+function renderMapFields(fields){
+  const root=document.querySelector("#map-revealed-fields");
+  if(!root)return;
+  const rows=atlasVisibleFields(fields||{});
+  if(!rows.length){
+    root.innerHTML='<div class="empty-state">The map identity is revealed, but no additional map fields have been released yet.</div>';
+    return;
+  }
+  root.innerHTML=rows.map(([key,value])=>
+    '<div class="map-field-card"><small>'+esc(atlasPrettyKey(key))+'</small><strong>'+esc(atlasFieldText(value))+'</strong></div>'
+  ).join("");
+}
+async function initMapDetail(){
+  const params=new URLSearchParams(location.search);
+  const slug=params.get("slug")||"";
+  const locked=document.querySelector("#map-locked-state");
+  const content=document.querySelector("#map-detail-content");
+  if(!slug){
+    locked?.classList.remove("hidden");
+    if(content)content.classList.add("hidden");
+    document.querySelector("#map-detail-name").textContent="Unknown Atlas location";
+    return;
+  }
+  try{
+    const raw=await rpc("api_atlas_map_detail_v1",{p_slug:slug});
+    const data=firstRow(raw)||raw;
+    if(!data?.map){
+      locked?.classList.remove("hidden");
+      if(content)content.classList.add("hidden");
+      document.querySelector("#map-detail-name").textContent="Fog-of-war";
+      document.querySelector("#map-detail-description").textContent="This Atlas location is not reader-safe yet.";
+      return;
+    }
+    const map=data.map;
+    document.title=(map.public_name||"Map")+" — GENESIS Atlas";
+    document.querySelector("#map-breadcrumb-name").textContent=map.public_name||"Map";
+    document.querySelector("#map-detail-region").textContent=(map.region||"Discovered World").toUpperCase();
+    document.querySelector("#map-detail-name").textContent=map.public_name||"Revealed map";
+    document.querySelector("#map-detail-description").textContent=map.short_description||"A reader-safe GENESIS location.";
+    document.querySelector("#map-detail-type").textContent=map.map_type||"MAP";
+    document.querySelector("#map-detail-state").textContent=map.reveal_state||"DISCOVERED";
+    document.querySelector("#map-detail-code").textContent=map.entity_code||"—";
+    const artRoot=document.querySelector("#map-detail-art");
+    const artUrl=map?.art?.url||atlasArt(map.slug||map.entity_code);
+    if(artRoot){
+      artRoot.style.backgroundImage="linear-gradient(180deg,rgba(2,7,12,.12),rgba(2,7,12,.72)),url('"+String(artUrl).replaceAll("'","%27")+"')";
+      artRoot.classList.toggle("is-placeholder",map?.art?.status!=="READY");
+      const mark=artRoot.querySelector(".map-placeholder-mark");
+      if(mark)mark.innerHTML=map?.art?.status==="READY"?"READER-SAFE<br><strong>ARTWORK</strong>":"MAP ART<br><strong>PENDING</strong>";
+    }
+    renderMapFields(map.revealed_fields||{});
+    const gates=data.cross_link_gates||{};
+    renderMapRelation("connections",!!gates.connections,data.connections);
+    renderMapRelation("monsters",!!gates.monsters,data.monsters);
+    renderMapRelation("npcs",!!gates.npcs,data.npcs);
+    renderMapRelation("shops",!!gates.shops,data.shops);
+  }catch(error){
+    locked?.classList.remove("hidden");
+    if(content)content.classList.add("hidden");
+    document.querySelector("#map-detail-name").textContent="Atlas unavailable";
+    document.querySelector("#map-detail-description").textContent=error.message||"Reader Atlas request failed.";
+  }
 }
 
 async function loadCodex(){
@@ -698,7 +873,7 @@ async function loadCodex(){
   const query=document.querySelector("#codex-search").value.trim()||null;
   results.innerHTML='<div class="empty-state large">Searching revealed database…</div>';
   try{
-    const rows=await rpc("api_entity_search",{p_type:type,p_query:query,p_limit:60});
+    const rows=await rpc("api_entity_search_v2",{p_type:type,p_query:query,p_limit:60});
     const count=document.querySelector("#codex-result-count");
     if(!Array.isArray(rows)||!rows.length){
       if(count)count.textContent="0 reader-safe results";
@@ -713,8 +888,15 @@ async function loadCodex(){
   }
 }
 function initCodex(){
-  const q=new URLSearchParams(location.search).get("q");
+  const params=new URLSearchParams(location.search);
+  const q=params.get("q");
+  const requestedType=params.get("type");
   if(q&&document.querySelector("#codex-search"))document.querySelector("#codex-search").value=q;
+  if(requestedType&&document.querySelector("#codex-type")){
+    const select=document.querySelector("#codex-type");
+    const valid=[...select.options].some(o=>o.value===requestedType);
+    if(valid)select.value=requestedType;
+  }
   document.querySelector("#codex-search-button")?.addEventListener("click",loadCodex);
   document.querySelector("#codex-type")?.addEventListener("change",loadCodex);
   document.querySelector("#codex-search")?.addEventListener("keydown",e=>{if(e.key==="Enter")loadCodex()});
@@ -730,7 +912,8 @@ function initCodex(){
     loadCodex();
     document.querySelector(".codex-console")?.scrollIntoView({behavior:"smooth",block:"start"});
   }));
-  document.querySelector("[data-codex-chip='']")?.classList.add("active");
+  const currentType=document.querySelector("#codex-type")?.value||"";
+  document.querySelectorAll("[data-codex-chip]").forEach(x=>x.classList.toggle("active",x.dataset.codexChip===currentType));
   loadCodex();
 }
 
@@ -759,7 +942,7 @@ async function searchGenesisPublic(query){
   if(q.length<2)return [];
   const [episodesRaw,entitiesRaw]=await Promise.allSettled([
     rpc("api_episode_library"),
-    rpc("api_entity_search",{p_type:null,p_query:q,p_limit:18})
+    rpc("api_entity_search_v2",{p_type:null,p_query:q,p_limit:18})
   ]);
   const episodes=episodesRaw.status==="fulfilled"&&Array.isArray(episodesRaw.value)
     ?episodesRaw.value.filter(e=>String(e.title||"").toLowerCase().includes(q.toLowerCase())||String(e.summary_public||"").toLowerCase().includes(q.toLowerCase())||String(e.episode_number)===q).slice(0,6)
@@ -1201,6 +1384,7 @@ await initSiteChrome();
 if(page==="home")await initHome();
 if(page==="read"){await initRead();initReaderControls();}
 if(page==="world")initWorld();
+if(page==="map-detail")await initMapDetail();
 if(page==="codex")initCodex();
 if(page==="fan")await initFan();
 if(page==="support")await initSupport();
