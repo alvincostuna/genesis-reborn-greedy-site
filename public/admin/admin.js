@@ -518,7 +518,7 @@ async function loadDatabaseProposals(){
   const root=$("#database-proposals");
   const staging=$("#database-staging");
   root.innerHTML='<div class="empty">Loading staged changes…</div>';
-  if(!state.activeDatabaseRecord)staging.innerHTML='<div class="empty">Select “Stage change” on a database record. Direct table editing is disabled.</div>';
+  if(!state.activeDatabaseRecord)staging.innerHTML='<div class="empty">Open a database record to inspect protected detail, Atlas gates and Visual Status. Direct table editing is disabled.</div>';
   try{
     const d=await api("/admin/api/database/proposals?limit=200");
     state.databaseAllowedFields=d.allowed_fields||{};
@@ -637,8 +637,13 @@ async function renderDatabaseStaging(domain,record){
   let manifest=null;
   let atlasError="";
   let artError="";
-  try{atlas=await api("/admin/api/atlas-gates/"+encodeURIComponent(record.id));}
-  catch(error){atlasError=error.message;}
+  const entityBacked=!["loot","crafting"].includes(domain);
+  if(entityBacked){
+    try{atlas=await api("/admin/api/atlas-gates/"+encodeURIComponent(record.id));}
+    catch(error){atlasError=error.message;}
+  }else{
+    atlasError="Atlas gate is not applicable to this non-entity database domain.";
+  }
   try{manifest=await ensureArtAssetsManifest();}
   catch(error){artError=error.message;}
 
