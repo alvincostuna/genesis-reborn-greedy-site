@@ -1,0 +1,105 @@
+name: GENESIS Admin Reconciliation QA
+
+on:
+  push:
+    branches:
+      - website-admin-reconcile-v1
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "public/admin/**"
+      - "src/worker.ts"
+      - "docs/ADMIN_OPERATIONAL_CONTINUITY_PLAN.md"
+      - ".github/workflows/admin-reconciliation-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: genesis-admin-reconcile-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout reconciliation source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Type-check Worker
+        run: npm run types
+
+      - name: Check Admin JavaScript
+        run: |
+          node --check public/admin/admin.js
+          node --check public/admin/read/reader.js
+
+      - name: Check public JavaScript remains valid
+        run: node --check public/site-preview/site.js
+
+      - name: Protect public reader lineage during Admin reconciliation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          CHANGED="$(git diff --name-only origin/main...HEAD)"
+          printf '%s
+' "$CHANGED"
+
+          FORBIDDEN="$(printf '%s
+' "$CHANGED" | grep -E '^(public/site-preview/|src/public-worker\.ts$|wrangler\.live\.toml$|\.github/workflows/deploy-live\.yml$|package\.json$)' || true)"
+          if [ -n "$FORBIDDEN" ]; then
+            echo "::error::R1 reconciliation changed public-reader authority files:"
+            printf '%s
+' "$FORBIDDEN"
+            exit 1
+          fi
+
+      - name: Reject static manuscript snapshots in Admin runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          if find public/admin -path '*/voice-revisions/*' -type f -print | grep -q .; then
+            echo "::error::Static production manuscript snapshots must not be deployed as Admin runtime truth."
+            exit 1
+          fi
+          if grep -R "/admin/voice-revisions/" public/admin --include='*.js' --include='*.html'; then
+            echo "::error::Admin reader must use protected backend manuscript APIs, not static voice-revision files."
+            exit 1
+          fi
+
+      - name: Check Website Ops contract wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'data-view="website-ops"' public/admin/index.html
+          grep -q '/admin/api/website-ops' public/admin/admin.js
+          grep -q 'genesis_admin_website_ops_status' src/worker.ts
+          grep -q '/admin/read/' public/admin/admin.js
+
+      - name: Confirm public Worker still blocks Admin
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'url.pathname === "/admin"' src/public-worker.ts
+          grep -q 'status:404' src/public-worker.ts
+
+      - name: R1 result
+        run: |
+          echo "ADMIN_RECON_R1_PASS"
+          echo "Public reader authority files unchanged."
+          echo "Admin shell/mobile reader/Website Ops wiring validated."
