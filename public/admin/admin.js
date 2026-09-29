@@ -495,13 +495,13 @@ async function loadDatabase(){
     }
     table.innerHTML=
       '<div class="database-head"><span>'+escapeHtml(domain.toUpperCase())+'</span><small>'+escapeHtml(data.total??items.length)+' total records</small></div>'+
-      '<div class="table-scroll"><table><thead><tr><th>Name</th><th>Code</th><th>Status</th><th>Key metadata</th><th>Staged edit</th></tr></thead><tbody>'+
+      '<div class="table-scroll"><table><thead><tr><th>Name</th><th>Code</th><th>Status</th><th>Key metadata</th><th>Detail</th></tr></thead><tbody>'+
       items.map((x)=>
         '<tr><td><strong>'+escapeHtml(x.name||"—")+'</strong></td>'+
         '<td><code>'+escapeHtml(x.code||"—")+'</code></td>'+
         '<td><span class="status review">'+escapeHtml(x.status||"—")+'</span></td>'+
         '<td class="meta-text">'+escapeHtml(compactMeta(x.meta))+'</td>'+
-        '<td>'+(hasPermission("DATABASE_EDIT")?'<button class="db-stage-button" data-db-code="'+escapeHtml(x.code||"")+'">Stage change</button>':'<span class="muted">View only</span>')+'</td></tr>'
+        '<td><button class="db-stage-button" data-db-code="'+escapeHtml(x.code||"")+'">'+(hasPermission("DATABASE_EDIT")?'Open detail / stage':'View detail')+'</button></td></tr>'
       ).join("")+
       '</tbody></table></div>';
 
@@ -518,7 +518,7 @@ async function loadDatabaseProposals(){
   const root=$("#database-proposals");
   const staging=$("#database-staging");
   root.innerHTML='<div class="empty">Loading staged changes…</div>';
-  if(!state.activeDatabaseRecord)staging.innerHTML='<div class="empty">Select “Stage change” on a database record. Direct table editing is disabled.</div>';
+  if(!state.activeDatabaseRecord)staging.innerHTML='<div class="empty">Open a database record to inspect protected detail, Atlas gates and Visual Status. Direct table editing is disabled.</div>';
   try{
     const d=await api("/admin/api/database/proposals?limit=200");
     state.databaseAllowedFields=d.allowed_fields||{};
@@ -587,16 +587,124 @@ async function loadDatabaseProposals(){
   }
 }
 
-function renderDatabaseStaging(domain,record){
+
+async function ensureArtAssetsManifest(){
+  if(state.artAssetsManifest)return state.artAssetsManifest;
+  state.artAssetsManifest=await api("/admin/api/art-assets");
+  return state.artAssetsManifest;
+}
+
+function atlasGateClass(value){
+  const gate=String(value||"HIDDEN").toUpperCase();
+  if(["MASTERED","ANALYZED"].includes(gate))return "final";
+  if(["DISCOVERED","ENCOUNTERED"].includes(gate))return "published";
+  return "review";
+}
+
+function visualAssetPublicReady(asset){
+  const approval=String(asset?.approval_status||"").toUpperCase();
+  const cdn=String(asset?.cdn_status||"").toUpperCase();
+  const visibility=String(asset?.public_visibility||"HIDDEN").toUpperCase();
+  return ["APPROVED","WEB_EXPORTED","PUBLISHED"].includes(approval)
+    && asset?.reader_safe===true
+    && asset?.public_eligible===true
+    && visibility!=="HIDDEN"
+    && cdn!=="NOT_EXPORTED";
+}
+
+function renderGateSteps(atlas){
+  const current=String(atlas?.current_gate||"HIDDEN").toUpperCase();
+  const gates=Array.isArray(atlas?.gates)?atlas.gates:[];
+  return '<div class="table-scroll"><table><thead><tr><th>Gate</th><th>Reader surface</th><th>Promotion evidence</th><th>Mode</th></tr></thead><tbody>'+
+    gates.map(g=>
+      '<tr>'+
+        '<td><span class="status '+atlasGateClass(g.gate)+'">'+escapeHtml(g.gate)+'</span>'+(String(g.gate).toUpperCase()===current?'<br><small>CURRENT</small>':'')+'</td>'+
+        '<td>'+escapeHtml(g.reader_surface||"—")+'</td>'+
+        '<td class="meta-text">'+escapeHtml(g.promotion_evidence||"—")+'</td>'+
+        '<td>'+escapeHtml(g.automatic?"evidence-driven":"explicit only")+'</td>'+
+      '</tr>'
+    ).join("")+
+    '</tbody></table></div>';
+}
+
+async function renderDatabaseStaging(domain,record){
   state.activeDatabaseRecord={domain,record};
   const root=$("#database-staging");
   const allowed=state.databaseAllowedFields?.[domain]||[];
+  root.innerHTML='<div class="empty">Loading protected detail, Atlas gates and Visual Status…</div>';
+
+  let atlas=null;
+  let manifest=null;
+  let atlasError="";
+  let artError="";
+  const entityBacked=!["loot","crafting"].includes(domain);
+  if(entityBacked){
+    try{atlas=await api("/admin/api/atlas-gates/"+encodeURIComponent(record.id));}
+    catch(error){atlasError=error.message;}
+  }else{
+    atlasError="Atlas gate is not applicable to this non-entity database domain.";
+  }
+  try{manifest=await ensureArtAssetsManifest();}
+  catch(error){artError=error.message;}
+
+  const assets=(manifest?.items||[]).filter(x=>String(x.supabase_entity_id||"")===String(record.id||""));
+  const publicReadyAssets=assets.filter(visualAssetPublicReady);
+  const firstPlan=atlas?.active_reveal_plan||atlas?.latest_approved_reveal_plan||null;
+  const fields=atlas?.reader_fields||{};
+  const projection=atlas?.projection||{};
+
+  const atlasPanel=atlasError
+    ?'<div class="error">'+escapeHtml(atlasError)+'</div>'
+    :'<div class="database-head"><span>Reader-safe Atlas Gate</span><small>'+escapeHtml(atlas?.contract_version||"")+'</small></div>'+
+      '<div class="runtime">'+
+        '<div><small>Current gate</small><strong><span class="status '+atlasGateClass(atlas?.current_gate)+'">'+escapeHtml(atlas?.current_gate||"HIDDEN")+'</span></strong></div>'+
+        '<div><small>Projection gate</small><strong>'+escapeHtml(atlas?.projection_gate||"HIDDEN")+'</strong></div>'+
+        '<div><small>Website status</small><strong>'+escapeHtml(projection.website_status||"NOT_REGISTERED")+'</strong></div>'+
+        '<div><small>FIRST_PUBLIC executed</small><strong>'+escapeHtml(atlas?.first_public_executed?"YES":"NO")+'</strong></div>'+
+        '<div><small>Reveal plan</small><strong>'+escapeHtml(firstPlan?((firstPlan.roadmap_status||"—")+" · "+(firstPlan.part_key||"—")):"NONE")+'</strong></div>'+
+        '<div><small>Executed reveal fields</small><strong>'+escapeHtml((fields.executed_revealed_fields||[]).length)+'</strong></div>'+
+      '</div>'+
+      '<div class="admin-note compact"><strong>Reader-safe rule</strong><p>Fail closed. Art, backend completeness, private roadmap presence and monster roster registration never promote the Atlas gate. Hidden-field denylist remains binding even at MASTERED.</p></div>'+
+      '<div class="db-stage-body">'+
+        '<div><small>Projection-safe fields</small><p class="db-allowed-fields">'+escapeHtml((fields.projection_safe_fields||[]).join(", ")||"None registered")+'</p></div>'+
+        '<div><small>Hidden fields</small><p class="db-allowed-fields">'+escapeHtml((fields.hidden_fields||[]).join(", ")||"None registered")+'</p></div>'+
+      '</div>'+
+      renderGateSteps(atlas);
+
+  const artPanel=artError
+    ?'<div class="error">'+escapeHtml(artError)+'</div>'
+    :'<div class="database-head"><span>Visual Status</span><small>'+escapeHtml(assets.length)+' linked asset(s) by Supabase entity UUID</small></div>'+
+      '<div class="runtime">'+
+        '<div><small>Manifest assets</small><strong>'+escapeHtml(assets.length)+'</strong></div>'+
+        '<div><small>Public-ready visuals</small><strong>'+escapeHtml(publicReadyAssets.length)+'</strong></div>'+
+        '<div><small>Link key</small><strong><code>'+escapeHtml(record.id||"—")+'</code></strong></div>'+
+      '</div>'+
+      (assets.length
+        ?'<div class="table-scroll"><table><thead><tr><th>Asset</th><th>Approval</th><th>Review</th><th>Web/CDN</th><th>Visibility</th><th>Reader gate</th><th>Drive</th></tr></thead><tbody>'+
+          assets.map(a=>
+            '<tr>'+
+              '<td><strong>'+escapeHtml(a.display_name||"—")+'</strong><br><code>'+escapeHtml(a.asset_id||"—")+'</code><br><small>'+escapeHtml((a.asset_role||"—")+" · "+(a.variant_key||"—"))+'</small></td>'+
+              '<td><span class="status '+artAssetStatusClass(a.approval_status)+'">'+escapeHtml(a.approval_status||"—")+'</span></td>'+
+              '<td>'+escapeHtml(a.review_status||"NOT_REVIEWED")+'</td>'+
+              '<td>'+escapeHtml(a.cdn_status||"—")+'<br><small>'+escapeHtml(a.web_path||"No web export")+'</small></td>'+
+              '<td>'+escapeHtml(a.public_visibility||"HIDDEN")+'</td>'+
+              '<td>'+escapeHtml(visualAssetPublicReady(a)?"PUBLIC-READY":"BLOCKED")+'<br><small>safe '+escapeHtml(a.reader_safe?"YES":"NO")+' · eligible '+escapeHtml(a.public_eligible?"YES":"NO")+'</small></td>'+
+              '<td><code>'+escapeHtml(a.drive_file_id||a.master_drive_file_id||a.drive_folder_id||"—")+'</code></td>'+
+            '</tr>'
+          ).join("")+
+          '</tbody></table></div>'
+        :'<div class="empty">No art asset is linked to this entity UUID. This does not affect canon or Atlas visibility.</div>');
+
   root.innerHTML=
-    '<div class="database-head"><span>Stage Change · '+escapeHtml(record.name||record.code)+'</span><small>'+escapeHtml(domain)+' · '+escapeHtml(record.code)+'</small></div>'+
+    '<div class="database-head"><span>Entity Detail · '+escapeHtml(record.name||record.code)+'</span><small>'+escapeHtml(domain)+' · '+escapeHtml(record.code)+'</small></div>'+
     '<div class="db-stage-body">'+
-      '<div class="admin-note compact"><strong>Staged-only editor</strong><p>IDs, codes, relationships, first-use anchors and other continuity pointers cannot be changed here. The proposal must validate before a separate approver can apply it.</p></div>'+
-      '<div><small>Allowed fields</small><p class="db-allowed-fields">'+escapeHtml(allowed.join(", ")||"Loading allowlist…")+'</p></div>'+
-      '<div><small>Current browser snapshot</small><pre class="db-json-preview">'+escapeHtml(JSON.stringify({name:record.name,status:record.status,meta:record.meta},null,2))+'</pre></div>'+
+      '<div class="admin-note compact"><strong>Protected detail</strong><p>Read-only identity, reader-safe Atlas state and Visual Status are linked by the authoritative Supabase entity UUID. No detail shown here can publish the entity.</p></div>'+
+      '<div><small>Current database snapshot</small><pre class="db-json-preview">'+escapeHtml(JSON.stringify({id:record.id,code:record.code,name:record.name,status:record.status,meta:record.meta},null,2))+'</pre></div>'+
+    '</div>'+
+    '<div class="db-detail-section">'+atlasPanel+'</div>'+
+    '<div class="db-detail-section">'+artPanel+'</div>'+
+    '<div class="db-stage-body">'+
+      '<div><small>Allowed staged-edit fields</small><p class="db-allowed-fields">'+escapeHtml(allowed.join(", ")||"Loading allowlist…")+'</p></div>'+
       (hasPermission("DATABASE_EDIT")
         ?'<form id="database-proposal-form" class="admin-control-form">'+
            '<strong>Create staged patch</strong>'+
@@ -604,7 +712,7 @@ function renderDatabaseStaging(domain,record){
            '<input name="reason" placeholder="Why this canonical database change is needed" required>'+
            '<button type="submit">Validate & Stage Proposal</button>'+
          '</form>'
-        :'<div class="empty">DATABASE_EDIT is required to stage changes.</div>')+
+        :'<div class="empty">DATABASE_EDIT is required to stage changes. Detail, Atlas and Visual Status remain view-only.</div>')+
     '</div>';
 
   const form=$("#database-proposal-form");
@@ -623,7 +731,7 @@ function renderDatabaseStaging(domain,record){
       });
       alert("Proposal "+result.status+"\n"+result.proposal_id);
       state.activeDatabaseRecord=null;
-      $("#database-staging").innerHTML='<div class="empty">Proposal staged. Select another database record to create a new change.</div>';
+      $("#database-staging").innerHTML='<div class="empty">Proposal staged. Select another database record to open its detail.</div>';
       await loadDatabaseProposals();
     }catch(error){alert(error.message);}
     finally{button.disabled=false;}
@@ -721,7 +829,7 @@ async function loadArtAssets(){
   root.innerHTML='<div class="empty">Loading protected art manifest snapshot…</div>';
   summary.innerHTML='<div class="card"><span>Art manifest</span><strong>Loading…</strong></div>';
   try{
-    state.artAssetsManifest=await api("/admin/api/art-assets");
+    await ensureArtAssetsManifest();
     renderArtAssets();
   }catch(error){
     state.artAssetsManifest=null;
