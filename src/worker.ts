@@ -803,6 +803,16 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     return json({ ok: true, data });
   }
 
+  const atlasGateMatch = path.match(/^\/admin\/api\/atlas-gates\/([0-9a-f-]+)$/i);
+  if (atlasGateMatch) {
+    await requirePermission(email, env, "DATABASE_VIEW");
+    const data = await rpc(env, "genesis_admin_atlas_gate_detail", {
+      p_actor: email,
+      p_entity_id: atlasGateMatch[1]
+    });
+    return json({ ok: true, data });
+  }
+
   if (path === "/admin/api/support/summary") {
     await requirePermission(email, env, "SUPPORT_VIEW");
     const data = await rpc(env, "genesis_admin_support_summary");
