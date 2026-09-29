@@ -627,6 +627,306 @@ function renderGateSteps(atlas){
     '</tbody></table></div>';
 }
 
+
+function detailValue(value){
+  if(value===undefined||value===null||value==="")return "—";
+  if(typeof value==="boolean")return value?"YES":"NO";
+  if(typeof value==="object")return JSON.stringify(value);
+  return String(value);
+}
+
+function detailJson(label,value){
+  if(value===undefined||value===null)return "";
+  return '<div class="detail-json-card"><small>'+escapeHtml(label)+'</small><pre>'+escapeHtml(JSON.stringify(value,null,2))+'</pre></div>';
+}
+
+function detailCards(pairs){
+  return '<div class="runtime">'+pairs.map(([label,value])=>
+    '<div><small>'+escapeHtml(label)+'</small><strong>'+escapeHtml(detailValue(value))+'</strong></div>'
+  ).join("")+'</div>';
+}
+
+function detailEmpty(message){
+  return '<div class="empty">'+escapeHtml(message)+'</div>';
+}
+
+function dropRateText(value){
+  if(value===undefined||value===null||value==="")return "—";
+  const n=Number(value);
+  if(!Number.isFinite(n))return String(value);
+  return (n*100).toFixed(n<0.01?3:2)+"%";
+}
+
+function renderMonsterProtectedDetail(payload){
+  const d=payload?.detail||{};
+  const m=d.master||{};
+  const counts=d.counts||{};
+  const runtime=d.runtime_profiles||{};
+  const derived=runtime.derived||{};
+  const skills=Array.isArray(d.skills)?d.skills:[];
+  const spawns=Array.isArray(d.spawns)?d.spawns:[];
+  const loot=Array.isArray(d.loot)?d.loot:[];
+
+  return '<div class="database-head"><span>Monster Detail</span><small>'+escapeHtml(payload?.contract_version||"")+'</small></div>'+
+    '<div class="admin-note compact"><strong>Protected backend facts</strong><p>Exact combat values, spawn populations/timers, private skills and drop rates are Admin-only. They do not become reader-safe merely because they are visible here.</p></div>'+
+    detailCards([
+      ["Level",m.level_min===m.level_max?m.level_min:(detailValue(m.level_min)+"–"+detailValue(m.level_max))],
+      ["Rank / Rarity",(m.rank||"—")+" / "+(m.rarity_class||"—")],
+      ["Race",m.race_key],
+      ["Species",m.species],
+      ["Family",m.family],
+      ["Property",m.property_key||m.element],
+      ["HP / SP",detailValue(m.max_hp)+" / "+detailValue(m.max_sp)],
+      ["ATK",m.attack_power],
+      ["P.DEF / M.DEF",detailValue(m.physical_def)+" / "+detailValue(m.magic_def)],
+      ["Base EXP",m.base_exp],
+      ["Skills",counts.skills??skills.length],
+      ["Spawn profiles",counts.spawn_profiles??spawns.length],
+      ["Loot entries",counts.loot_entries??loot.length],
+      ["Natural spawn",m.natural_spawn],
+      ["Backend",m.backend_status]
+    ])+
+    '<div class="detail-subhead">Derived combat profile</div>'+
+    (Object.keys(derived).length
+      ?'<div class="table-scroll"><table><thead><tr><th>STR</th><th>AGI</th><th>VIT</th><th>FOC</th><th>INS</th><th>DEX</th><th>WIL</th><th>LUK</th><th>Accuracy</th><th>Evasion</th><th>Ranges</th><th>Speed / Delay</th></tr></thead><tbody><tr>'+
+        '<td>'+escapeHtml(detailValue(derived.str_value))+'</td>'+
+        '<td>'+escapeHtml(detailValue(derived.agi_value))+'</td>'+
+        '<td>'+escapeHtml(detailValue(derived.vit_value))+'</td>'+
+        '<td>'+escapeHtml(detailValue(derived.foc_value))+'</td>'+
+        '<td>'+escapeHtml(detailValue(derived.ins_value))+'</td>'+
+        '<td>'+escapeHtml(detailValue(derived.dex_value))+'</td>'+
+        '<td>'+escapeHtml(detailValue(derived.wil_value))+'</td>'+
+        '<td>'+escapeHtml(detailValue(derived.luk_value))+'</td>'+
+        '<td>'+escapeHtml(detailValue(derived.accuracy))+'</td>'+
+        '<td>'+escapeHtml(detailValue(derived.evasion))+'</td>'+
+        '<td>'+escapeHtml("ATK "+detailValue(derived.attack_range_cells)+" · spell "+detailValue(derived.spell_range_cells)+" · sight "+detailValue(derived.sight_range_cells))+'</td>'+
+        '<td>'+escapeHtml(detailValue(derived.move_speed_class)+" · "+detailValue(derived.attack_delay_ms)+" ms")+'</td>'+
+        '</tr></tbody></table></div>'
+      :detailEmpty("No derived combat profile registered."))+
+    '<div class="detail-subhead">Skills</div>'+
+    (skills.length
+      ?'<div class="table-scroll"><table><thead><tr><th>Skill</th><th>Assignment</th><th>Rank</th><th>SP</th><th>Power</th><th>Cooldown</th><th>Visibility</th><th>Private description</th></tr></thead><tbody>'+
+       skills.map(s=>{
+         const a=s.assignment||{};
+         return '<tr>'+
+           '<td><strong>'+escapeHtml(s.skill_name||"—")+'</strong><br><code>'+escapeHtml(s.skill_code||"—")+'</code></td>'+
+           '<td>'+escapeHtml(detailValue(a.assignment_kind))+'<br><small>'+escapeHtml(detailValue(a.slot_key))+'</small></td>'+
+           '<td>'+escapeHtml(detailValue(a.rank_min))+'–'+escapeHtml(detailValue(a.rank_max??s.rank_max))+'</td>'+
+           '<td>'+escapeHtml(detailValue(s.sp_cost))+'</td>'+
+           '<td>'+escapeHtml(detailValue(s.power_coefficient))+'× + '+escapeHtml(detailValue(s.flat_power))+'</td>'+
+           '<td>'+escapeHtml(detailValue(s.cooldown_seconds))+'s</td>'+
+           '<td>'+escapeHtml(detailValue(s.visibility))+'</td>'+
+           '<td class="meta-text">'+escapeHtml(detailValue(s.description_private))+'</td>'+
+         '</tr>';
+       }).join("")+
+       '</tbody></table></div>'
+      :detailEmpty("No skill assignments registered."))+
+    '<div class="detail-subhead">Spawn / ecology placement</div>'+
+    (spawns.length
+      ?'<div class="table-scroll"><table><thead><tr><th>Map</th><th>Class</th><th>Target population</th><th>Hard cap</th><th>Respawn</th><th>Pattern</th><th>Aggression</th><th>Active</th></tr></thead><tbody>'+
+       spawns.map(x=>{
+         const s=x.spawn||{};
+         return '<tr>'+
+           '<td><strong>'+escapeHtml(x.map_name||"—")+'</strong><br><code>'+escapeHtml(x.map_code||"—")+'</code><br><small>'+escapeHtml(x.zone_name||"No zone")+'</small></td>'+
+           '<td>'+escapeHtml(detailValue(s.spawn_class))+'</td>'+
+           '<td>'+escapeHtml(detailValue(s.target_active_min))+'–'+escapeHtml(detailValue(s.target_active_max))+'</td>'+
+           '<td>'+escapeHtml(detailValue(s.hard_active_cap))+'</td>'+
+           '<td>'+escapeHtml(detailValue(s.respawn_min_seconds))+'–'+escapeHtml(detailValue(s.respawn_max_seconds))+'s</td>'+
+           '<td>'+escapeHtml(detailValue(s.spawn_pattern))+'</td>'+
+           '<td>'+escapeHtml(detailValue(s.aggression_type))+'<br><small>radius '+escapeHtml(detailValue(s.aggro_radius))+'</small></td>'+
+           '<td>'+escapeHtml(detailValue(s.is_active))+'</td>'+
+         '</tr>';
+       }).join("")+
+       '</tbody></table></div>'
+      :detailEmpty("No spawn profiles registered."))+
+    '<div class="detail-subhead">Loot</div>'+
+    (loot.length
+      ?'<div class="table-scroll"><table><thead><tr><th>Item</th><th>Drop class</th><th>Qty</th><th>Exact rate</th><th>Item type</th><th>Conditions</th></tr></thead><tbody>'+
+       loot.map(x=>
+         '<tr>'+
+           '<td><strong>'+escapeHtml(x.item_name||"—")+'</strong><br><code>'+escapeHtml(x.item_code||"—")+'</code></td>'+
+           '<td>'+escapeHtml(detailValue(x.drop_class))+'</td>'+
+           '<td>'+escapeHtml(detailValue(x.quantity_min))+'–'+escapeHtml(detailValue(x.quantity_max))+'</td>'+
+           '<td>'+escapeHtml(dropRateText(x.drop_rate))+'</td>'+
+           '<td>'+escapeHtml(detailValue(x.item_category))+' · '+escapeHtml(detailValue(x.item_subtype))+'<br><small>'+escapeHtml(detailValue(x.item_rarity))+'</small></td>'+
+           '<td class="meta-text">'+escapeHtml(detailValue(x.conditions))+'</td>'+
+         '</tr>'
+       ).join("")+
+       '</tbody></table></div>'
+      :detailEmpty("No loot entries registered."))+
+    '<div class="detail-subhead">Taxonomy & system profiles</div>'+
+    '<div class="detail-json-grid">'+
+      detailJson("Weaknesses",m.weaknesses)+
+      detailJson("Resistances",m.resistances)+
+      detailJson("Immunities",m.immunities)+
+      detailJson("Behavior flags",m.behavior_flags)+
+      detailJson("Race profile",d.taxonomy?.race)+
+      detailJson("Property profile",d.taxonomy?.property)+
+      detailJson("Rank profile",d.taxonomy?.rank)+
+      detailJson("Cognition",runtime.cognition)+
+      detailJson("Taming",runtime.taming)+
+      detailJson("Spawn rarity",runtime.spawn_rarity)+
+      detailJson("Identification visibility",runtime.identification)+
+      detailJson("Loot table",d.loot_table)+
+    '</div>';
+}
+
+function renderMapProtectedDetail(payload){
+  const d=payload?.detail||{};
+  const m=d.master||{};
+  const e=d.ecology||{};
+  const c=d.counts||{};
+  const spawns=Array.isArray(d.spawns)?d.spawns:[];
+  const routes=Array.isArray(d.routes)?d.routes:[];
+  const zones=Array.isArray(d.zones)?d.zones:[];
+  const landmarks=Array.isArray(d.landmarks)?d.landmarks:[];
+  const npcs=Array.isArray(d.npcs)?d.npcs:[];
+  const shops=Array.isArray(d.shops)?d.shops:[];
+
+  return '<div class="database-head"><span>Map Detail</span><small>'+escapeHtml(payload?.contract_version||"")+'</small></div>'+
+    '<div class="admin-note compact"><strong>Protected world structure</strong><p>Routes, ecology, spawn populations and hidden navigation facts are Admin-only until their separate reader-safe discovery/reveal gates allow them.</p></div>'+
+    detailCards([
+      ["Region",m.region],["Map type",m.map_type],
+      ["Level range",detailValue(m.level_min)+"–"+detailValue(m.level_max)],
+      ["Danger",m.danger_rating],["Scale",m.scale_class],
+      ["Safe area",m.is_safe_area],["Instanced",m.is_instanced],
+      ["Discovery",m.default_discovery_mode],
+      ["Ecology",e.ecology_mode||"—"],
+      ["Species",c.monster_species??0],["Spawn profiles",c.spawn_profiles??0],
+      ["Routes",c.routes??0],["Zones",c.zones??0],["Landmarks",c.landmarks??0],
+      ["NPCs",c.npcs??0],["Shops",c.shops??0]
+    ])+
+    '<div class="detail-subhead">Monster ecology / spawn registry</div>'+
+    (spawns.length
+      ?'<div class="table-scroll"><table><thead><tr><th>Monster</th><th>Rank / Level</th><th>Spawn class</th><th>Population</th><th>Respawn</th><th>Pattern</th><th>Aggression</th><th>Zone</th></tr></thead><tbody>'+
+       spawns.map(x=>{
+         const s=x.spawn||{};
+         return '<tr>'+
+           '<td><strong>'+escapeHtml(x.monster_name||"—")+'</strong><br><code>'+escapeHtml(x.monster_code||"—")+'</code></td>'+
+           '<td>'+escapeHtml(detailValue(x.monster_rank))+'<br><small>'+escapeHtml(detailValue(x.monster_level_min))+'–'+escapeHtml(detailValue(x.monster_level_max))+' · '+escapeHtml(detailValue(x.monster_rarity))+'</small></td>'+
+           '<td>'+escapeHtml(detailValue(s.spawn_class))+'</td>'+
+           '<td>'+escapeHtml(detailValue(s.target_active_min))+'–'+escapeHtml(detailValue(s.target_active_max))+' / cap '+escapeHtml(detailValue(s.hard_active_cap))+'</td>'+
+           '<td>'+escapeHtml(detailValue(s.respawn_min_seconds))+'–'+escapeHtml(detailValue(s.respawn_max_seconds))+'s</td>'+
+           '<td>'+escapeHtml(detailValue(s.spawn_pattern))+'</td>'+
+           '<td>'+escapeHtml(detailValue(s.aggression_type))+'</td>'+
+           '<td>'+escapeHtml(x.zone_name||"—")+'</td>'+
+         '</tr>';
+       }).join("")+
+       '</tbody></table></div>'
+      :detailEmpty("No spawn profiles registered for this map."))+
+    '<div class="detail-subhead">Routes</div>'+
+    (routes.length
+      ?'<div class="table-scroll"><table><thead><tr><th>Route</th><th>Origin → Destination</th><th>Direction</th><th>Distance / Time</th><th>Terrain</th><th>Danger</th><th>Encounter</th><th>Active</th></tr></thead><tbody>'+
+       routes.map(x=>{
+         const r=x.route||{};
+         return '<tr>'+
+           '<td><strong>'+escapeHtml(r.canonical_name||"—")+'</strong><br><code>'+escapeHtml(r.route_key||"—")+'</code></td>'+
+           '<td>'+escapeHtml(x.origin_name||"—")+' → '+escapeHtml(x.destination_name||"—")+'</td>'+
+           '<td>'+escapeHtml(detailValue(r.direction_label))+'</td>'+
+           '<td>'+escapeHtml(detailValue(r.distance_units))+' · '+escapeHtml(detailValue(r.base_travel_seconds))+'s</td>'+
+           '<td>'+escapeHtml(detailValue(r.terrain_type))+' / '+escapeHtml(detailValue(r.road_quality))+'</td>'+
+           '<td>'+escapeHtml(detailValue(r.danger_rating))+'</td>'+
+           '<td>'+escapeHtml(detailValue(r.encounter_policy))+'</td>'+
+           '<td>'+escapeHtml(detailValue(r.is_active))+'</td>'+
+         '</tr>';
+       }).join("")+
+       '</tbody></table></div>'
+      :detailEmpty("No routes registered."))+
+    '<div class="detail-subhead">Zones & landmarks</div>'+
+    ((zones.length||landmarks.length)
+      ?'<div class="detail-json-grid">'+
+        detailJson("Zones",zones)+detailJson("Landmarks",landmarks)+
+       '</div>'
+      :detailEmpty("No zones or landmarks registered."))+
+    '<div class="detail-subhead">NPCs & shops</div>'+
+    ((npcs.length||shops.length)
+      ?'<div class="detail-json-grid">'+detailJson("NPCs",npcs)+detailJson("Shops",shops)+'</div>'
+      :detailEmpty("No normalized NPC or shop rows registered."))+
+    '<div class="detail-subhead">World policy</div>'+
+    '<div class="detail-json-grid">'+
+      detailJson("Ecology policy",e)+
+      detailJson("Terrain profile",m.terrain_profile)+
+      detailJson("Entry requirements",m.entry_requirements)+
+      detailJson("Travel notes",m.travel_notes)+
+      detailJson("Legacy connections",m.connections)+
+      detailJson("Legacy resources",m.resources)+
+    '</div>';
+}
+
+function renderItemProtectedDetail(payload){
+  const d=payload?.detail||{};
+  const m=d.master||{};
+  const c=d.counts||{};
+  const eq=d.equipment||{};
+  const life=d.lifecycle||{};
+  const drops=Array.isArray(d.drop_sources)?d.drop_sources:[];
+  const shops=Array.isArray(d.shops)?d.shops:[];
+  const overrides=Array.isArray(d.vendor_overrides)?d.vendor_overrides:[];
+  const distribution=Array.isArray(d.world_distribution)?d.world_distribution:[];
+
+  const equipmentProfile=eq.weapon||eq.armor||eq.accessory||null;
+  const equipmentKind=eq.weapon?"Weapon":(eq.armor?"Armor":(eq.accessory?"Accessory":"General item"));
+
+  return '<div class="database-head"><span>Item Detail</span><small>'+escapeHtml(payload?.contract_version||"")+'</small></div>'+
+    '<div class="admin-note compact"><strong>Protected economy / equipment facts</strong><p>Exact drop rates, hidden shop inventory, requirements, enhancement rules and identification masks remain Admin-only unless separately revealed.</p></div>'+
+    detailCards([
+      ["Category",m.category],["Subtype",m.subtype],["Rarity",m.rarity],
+      ["Weight",m.weight],["Stack",m.stack_limit],
+      ["Equipment kind",equipmentKind],
+      ["Tradable",m.tradable],["Auctionable",m.auctionable],
+      ["Vendor sellable",m.vendor_sellable],["Craftable",m.craftable],
+      ["Consumable",m.consumable],["Repairable",m.repairable],
+      ["Quest bound",m.quest_bound],["Durability",m.base_durability],
+      ["Drop sources",c.drop_sources??drops.length],["Shop listings",c.shop_listings??shops.length],
+      ["Backend",m.backend_status]
+    ])+
+    '<div class="detail-subhead">Equipment / use profile</div>'+
+    '<div class="detail-json-grid">'+
+      detailJson(equipmentKind+" profile",equipmentProfile)+
+      detailJson("Use profile",eq.use_profile)+
+    '</div>'+
+    '<div class="detail-subhead">Identification, enhancement & sockets</div>'+
+    '<div class="detail-json-grid">'+
+      detailJson("Identification",life.identification)+
+      detailJson("Enhancement",life.enhancement)+
+      detailJson("Sockets",life.sockets)+
+    '</div>'+
+    '<div class="detail-subhead">Drop sources</div>'+
+    (drops.length
+      ?'<div class="table-scroll"><table><thead><tr><th>Source</th><th>Type</th><th>Drop class</th><th>Qty</th><th>Exact rate</th><th>Conditions</th></tr></thead><tbody>'+
+       drops.map(x=>
+         '<tr>'+
+           '<td><strong>'+escapeHtml(x.source_name||"—")+'</strong><br><code>'+escapeHtml(x.source_code||"—")+'</code></td>'+
+           '<td>'+escapeHtml(detailValue(x.source_type))+'</td>'+
+           '<td>'+escapeHtml(detailValue(x.drop_class))+'</td>'+
+           '<td>'+escapeHtml(detailValue(x.quantity_min))+'–'+escapeHtml(detailValue(x.quantity_max))+'</td>'+
+           '<td>'+escapeHtml(dropRateText(x.drop_rate))+'</td>'+
+           '<td class="meta-text">'+escapeHtml(detailValue(x.conditions))+'</td>'+
+         '</tr>'
+       ).join("")+
+       '</tbody></table></div>'
+      :detailEmpty("No loot-source rows registered."))+
+    '<div class="detail-subhead">Shop / vendor availability</div>'+
+    ((shops.length||overrides.length)
+      ?'<div class="detail-json-grid">'+detailJson("Shop inventory",shops)+detailJson("Vendor overrides",overrides)+'</div>'
+      :detailEmpty("No shop inventory or vendor override rows registered."))+
+    '<div class="detail-subhead">World distribution</div>'+
+    ((distribution.length||d.world_presence)
+      ?'<div class="detail-json-grid">'+detailJson("Map distribution",distribution)+detailJson("World presence",d.world_presence)+'</div>'
+      :detailEmpty("No equipment distribution rows registered."))+
+    '<div class="detail-subhead">Private description</div>'+
+    '<div class="detail-copy">'+escapeHtml(m.description_private||"—")+'</div>';
+}
+
+function renderProtectedEntityDetail(domain,payload,error){
+  if(error)return '<div class="database-head"><span>Expanded Detail</span><small>protected</small></div><div class="error">'+escapeHtml(error)+'</div>';
+  if(!payload)return "";
+  if(domain==="monsters")return renderMonsterProtectedDetail(payload);
+  if(domain==="maps")return renderMapProtectedDetail(payload);
+  if(domain==="items")return renderItemProtectedDetail(payload);
+  return "";
+}
+
 async function renderDatabaseStaging(domain,record){
   state.activeDatabaseRecord={domain,record};
   const root=$("#database-staging");
@@ -635,9 +935,15 @@ async function renderDatabaseStaging(domain,record){
 
   let atlas=null;
   let manifest=null;
+  let protectedDetail=null;
   let atlasError="";
   let artError="";
+  let protectedDetailError="";
   const entityBacked=!["loot","crafting"].includes(domain);
+  if(["monsters","maps","items"].includes(domain)){
+    try{protectedDetail=await api("/admin/api/database/detail/"+encodeURIComponent(domain)+"/"+encodeURIComponent(record.id));}
+    catch(error){protectedDetailError=error.message;}
+  }
   if(entityBacked){
     try{atlas=await api("/admin/api/atlas-gates/"+encodeURIComponent(record.id));}
     catch(error){atlasError=error.message;}
@@ -647,6 +953,7 @@ async function renderDatabaseStaging(domain,record){
   try{manifest=await ensureArtAssetsManifest();}
   catch(error){artError=error.message;}
 
+  const protectedPanel=renderProtectedEntityDetail(domain,protectedDetail,protectedDetailError);
   const assets=(manifest?.items||[]).filter(x=>String(x.supabase_entity_id||"")===String(record.id||""));
   const publicReadyAssets=assets.filter(visualAssetPublicReady);
   const firstPlan=atlas?.active_reveal_plan||atlas?.latest_approved_reveal_plan||null;
@@ -701,6 +1008,7 @@ async function renderDatabaseStaging(domain,record){
       '<div class="admin-note compact"><strong>Protected detail</strong><p>Read-only identity, reader-safe Atlas state and Visual Status are linked by the authoritative Supabase entity UUID. No detail shown here can publish the entity.</p></div>'+
       '<div><small>Current database snapshot</small><pre class="db-json-preview">'+escapeHtml(JSON.stringify({id:record.id,code:record.code,name:record.name,status:record.status,meta:record.meta},null,2))+'</pre></div>'+
     '</div>'+
+    (protectedPanel?'<div class="db-detail-section">'+protectedPanel+'</div>':'')+
     '<div class="db-detail-section">'+atlasPanel+'</div>'+
     '<div class="db-detail-section">'+artPanel+'</div>'+
     '<div class="db-stage-body">'+
