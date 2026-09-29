@@ -1,0 +1,84 @@
+name: GENESIS Production Readiness Gate
+
+on:
+  push:
+    branches:
+      - website-finish-v1
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: genesis-production-readiness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout candidate source
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Type-check
+        run: npm run types
+
+      - name: JavaScript syntax
+        run: |
+          node --check public/site-preview/site.js
+          node --check public/admin/admin.js
+          node --check public/admin/read/reader.js
+
+      - name: Run red-team readiness audit
+        run: node scripts/production-readiness-audit.mjs --fail-on-s1
+
+      - name: Build public-only candidate package
+        run: |
+          set -euo pipefail
+          rm -rf .readiness-live-assets
+          mkdir -p .readiness-live-assets/assets
+          cp public/site-preview/index.html .readiness-live-assets/index.html
+          cp public/site-preview/site.css .readiness-live-assets/site.css
+          cp public/site-preview/site.js .readiness-live-assets/site.js
+          for route in read world codex fan-page manga support account quests; do
+            cp -R "public/site-preview/$route" ".readiness-live-assets/$route"
+          done
+          cp public/assets/genesis-official-logo.png .readiness-live-assets/assets/genesis-official-logo.png
+          cp public/assets/genesis-official-logo-64.png .readiness-live-assets/assets/genesis-official-logo-64.png
+          cp public/assets/genesis-wordmark-v2.svg .readiness-live-assets/assets/genesis-wordmark-v2.svg
+          cp -R public/assets/v25 .readiness-live-assets/assets/v25
+          cp -R public/assets/v27 .readiness-live-assets/assets/v27
+          python - <<'PY'
+          from pathlib import Path
+          for p in Path('.readiness-live-assets').rglob('*.html'):
+              s=p.read_text(encoding='utf-8').replace('/site-preview/','/')
+              s=s.replace('<meta name="robots" content="noindex,nofollow">','')
+              p.write_text(s,encoding='utf-8')
+          PY
+          if grep -R "/site-preview/" .readiness-live-assets --include='*.html'; then
+            echo "::error::Preview-only path leaked into public package"; exit 1
+          fi
+          if find .readiness-live-assets -iname '*admin*' -print | grep -q .; then
+            echo "::error::Admin asset leaked into public package"; exit 1
+          fi
+
+      - name: Upload readiness evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: genesis-readiness-${{ github.sha }}
+          path: readiness-artifacts/
+          retention-days: 30
