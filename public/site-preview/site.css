@@ -5664,3 +5664,406 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2 .v2-panel:after,
   .web-ds-v2 .feature-tile:after{animation:none!important}
 }
+
+
+/* ============================================================
+   WEB-DS-V3 — SITE-WIDE GENESIS SHELL
+   Makes every public route inherit the Home visual language
+   without changing route-specific functionality.
+   ============================================================ */
+.unified-public-page{
+  --u-gold:#d8b36d;
+  --u-gold-soft:rgba(216,179,109,.48);
+  --u-gold-faint:rgba(216,179,109,.16);
+  --u-blue:#6ecbff;
+  --u-blue-soft:rgba(76,170,238,.28);
+  min-height:100vh;
+  color:#f4ecdd;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(39,112,184,.15),transparent 34%),
+    radial-gradient(circle at 92% 18%,rgba(212,168,79,.055),transparent 28%),
+    linear-gradient(180deg,#030912 0%,#04101a 45%,#030912 100%);
+  padding-bottom:86px;
+}
+.unified-public-page .genesis-ambient-overlay{opacity:.48}
+.unified-public-page :where(
+  .reader-shell,.world-shell,.codex-shell,.fan-shell,.manga-shell,
+  .support-shell,.profile-shell,.quest-shell
+){
+  position:relative;
+  z-index:1;
+  width:min(1416px,calc(100% - 20px))!important;
+  max-width:1416px!important;
+  margin:0 auto!important;
+  padding-left:0!important;
+  padding-right:0!important;
+}
+
+/* Shared framed surface language */
+.unified-public-page :where(
+  .reader-commandbar,.game-rail,.game-manuscript,.reader-tools-panel,
+  .world-hero,.world-sidebar,.world-map-stage,
+  .codex-header,.codex-console,
+  .fan-hero,.fan-feed-shell,.fan-action-card,
+  .manga-hero,.manga-roadmap>article,
+  .support-hero,.support-notice,.support-game-card,.support-system-card,.contact-panel,
+  .profile-hero-card,.account-card,.profile-grid>.hud-card,
+  .quest-hero,.quest-layout>.hud-card,.milestone-track,.reward-gallery,.quest-notes>div
+){
+  border:1px solid rgba(216,179,109,.48)!important;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(65,154,226,.07),transparent 30%),
+    linear-gradient(155deg,rgba(10,25,40,.985),rgba(4,12,21,.99))!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(94,156,202,.055),
+    inset 0 0 34px rgba(38,121,190,.025),
+    0 18px 48px rgba(0,0,0,.30)!important;
+  border-radius:9px!important;
+}
+.unified-public-page :where(
+  .reader-commandbar,.game-rail,.game-manuscript,.reader-tools-panel,
+  .world-hero,.world-sidebar,.world-map-stage,
+  .codex-header,.codex-console,
+  .fan-hero,.fan-feed-shell,
+  .manga-hero,.support-hero,
+  .profile-hero-card,.quest-hero
+){
+  outline:1px solid rgba(216,179,109,.16);
+  outline-offset:-7px;
+}
+
+/* Shared panel headers */
+.unified-public-page :where(.card-head,.rail-head,.codex-results-head,.fan-feed-toolbar){
+  min-height:42px;
+  border-bottom:1px solid rgba(216,179,109,.24)!important;
+  background:linear-gradient(180deg,rgba(19,42,64,.55),rgba(7,18,30,.20));
+  color:#f0d99f!important;
+  font-family:Georgia,"Times New Roman",serif;
+  letter-spacing:.055em;
+}
+.unified-public-page :where(.card-head,.rail-head) span:first-child{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  color:#f1dba6;
+}
+.unified-public-page :where(.card-head,.rail-head) small,
+.unified-public-page :where(.card-head,.rail-head) span:last-child{
+  color:#8fc6e8!important;
+}
+
+/* Shared typography */
+.unified-public-page :where(h1,h2,h3){
+  font-family:Georgia,"Times New Roman",serif;
+  color:#f4dfae;
+  text-shadow:0 1px 0 rgba(0,0,0,.55);
+}
+.unified-public-page .eyebrow{
+  color:#e1bd6f!important;
+  letter-spacing:.18em;
+}
+.unified-public-page :where(p,small,label,.empty-state){
+  text-rendering:optimizeLegibility;
+}
+.unified-public-page :where(.world-hero-copy,.codex-hero-copy,.fan-hero-copy,.support-hero-copy,.manga-hero-copy) p{
+  color:#b8c7d4;
+}
+
+/* Shared buttons and interactive language */
+.unified-public-page main :where(
+  button,.support-card-link,.collection-action-row a,.card-head a,
+  .world-hero-actions button,.reader-quick-controls button,.reader-bottom-controls button
+){
+  transition:border-color .18s ease,background .18s ease,color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+.unified-public-page main button:not(:disabled),
+.unified-public-page main :where(.support-card-link,.collection-action-row a){
+  border-color:rgba(92,160,214,.52);
+  background:linear-gradient(180deg,#0d2235,#071522);
+  color:#dcecf8;
+}
+.unified-public-page main button:not(:disabled):hover,
+.unified-public-page main :where(.support-card-link,.collection-action-row a):hover{
+  border-color:rgba(216,179,109,.70);
+  color:#fff0c8;
+  box-shadow:0 0 0 1px rgba(216,179,109,.08),0 0 22px rgba(62,160,238,.10);
+  transform:translateY(-1px);
+}
+.unified-public-page main button:disabled{
+  border-color:rgba(85,111,134,.34);
+  background:#09121c;
+  color:#687989;
+}
+.unified-public-page :where(input,textarea,select){
+  border-color:rgba(66,125,170,.48)!important;
+  background:#061522!important;
+  color:#dceaf5!important;
+}
+.unified-public-page :where(input,textarea,select):focus{
+  outline:none;
+  border-color:#59b6ed!important;
+  box-shadow:0 0 0 3px rgba(73,170,233,.11);
+}
+
+/* Route-specific shell alignment */
+.unified-public-page .reader-shell{padding-top:14px!important}
+.unified-public-page .reader-commandbar{
+  padding:18px 20px;
+  margin-bottom:12px;
+  align-items:center;
+}
+.unified-public-page .reader-commandbar h1{font-size:34px;color:#f4dfae}
+.unified-public-page .reader-game-layout{gap:12px}
+.unified-public-page .game-rail,
+.unified-public-page .reader-tools-panel{top:94px}
+.unified-public-page .novel-head{
+  border-bottom-color:rgba(216,179,109,.22);
+  background:linear-gradient(180deg,rgba(16,38,58,.38),rgba(5,14,23,.05));
+}
+.unified-public-page .novel-body{
+  color:#e9e3d8;
+}
+.unified-public-page .reader-bottom-controls,
+.unified-public-page .part-tabs{
+  border-color:rgba(216,179,109,.18);
+}
+.unified-public-page .part-tabs button.active,
+.unified-public-page .episode-button.active{
+  border-color:rgba(216,179,109,.58);
+  background:linear-gradient(180deg,rgba(30,65,91,.82),rgba(13,33,51,.90));
+  color:#fff0ca;
+}
+
+.unified-public-page :where(.world-shell,.codex-shell,.fan-shell,.manga-shell,.support-shell,.quest-shell){
+  padding-top:14px!important;
+}
+.unified-public-page :where(.world-hero,.codex-header,.fan-hero,.manga-hero,.support-hero,.quest-hero){
+  overflow:hidden;
+}
+.unified-public-page :where(.world-hero,.codex-header,.fan-hero,.manga-hero,.support-hero,.quest-hero) h1{
+  font-size:clamp(34px,4.4vw,58px);
+}
+.unified-public-page .world-console,
+.unified-public-page .quest-layout,
+.unified-public-page .support-secondary-grid{
+  gap:12px;
+}
+.unified-public-page .world-discovery-tile,
+.unified-public-page .codex-discovery-strip button{
+  border-color:rgba(216,179,109,.30)!important;
+  background:linear-gradient(180deg,rgba(13,34,52,.94),rgba(6,17,28,.96))!important;
+}
+.unified-public-page :where(.world-discovery-tile,.codex-discovery-strip button):hover{
+  border-color:rgba(216,179,109,.66)!important;
+  box-shadow:0 0 20px rgba(61,157,231,.09);
+}
+.unified-public-page .world-discovery-tile.active{
+  border-color:rgba(216,179,109,.76)!important;
+  color:#f5dfab;
+}
+.unified-public-page .world-tabs button.active,
+.unified-public-page .codex-category-strip button.active{
+  border-color:rgba(216,179,109,.72)!important;
+  color:#f5dfab!important;
+}
+
+.unified-public-page .profile-shell{padding-top:14px!important}
+.unified-public-page .guest-gate,
+.unified-public-page .profile-grid{
+  gap:12px;
+}
+.unified-public-page .profile-hero-card{
+  border-color:rgba(216,179,109,.58)!important;
+}
+.unified-public-page .account-card h2,
+.unified-public-page .profile-identity h1{
+  color:#f4dfae;
+}
+.unified-public-page .tier-pill,
+.unified-public-page .profile-tags span{
+  border-color:rgba(216,179,109,.52);
+}
+
+.unified-public-page .support-tier-grid{gap:12px}
+.unified-public-page .support-game-card.featured,
+.unified-public-page .support-game-card.legendary{
+  border-color:rgba(216,179,109,.72)!important;
+  box-shadow:inset 0 0 32px rgba(216,179,109,.025),0 18px 48px rgba(0,0,0,.34)!important;
+}
+.unified-public-page .support-fineprint{
+  color:#7f95a8;
+  border-top:1px solid rgba(216,179,109,.16);
+  padding-top:14px;
+}
+.unified-public-page .fan-action-card:hover,
+.unified-public-page .support-game-card:hover,
+.unified-public-page .reward-category-card:hover,
+.unified-public-page .world-discovery-tile:hover{
+  transform:translateY(-2px);
+  box-shadow:0 22px 54px rgba(0,0,0,.34),0 0 26px rgba(62,160,238,.06)!important;
+}
+
+/* Same spacing rhythm as Home */
+.unified-public-page main>section+section{margin-top:12px}
+.unified-public-page :where(.world-console,.quest-layout,.support-tier-grid,.support-secondary-grid,.profile-grid,.fan-actions){margin-top:12px}
+.unified-public-page .mobile-bottom-nav.v2-mobile-bottom{
+  border-top-color:rgba(216,179,109,.46);
+}
+
+/* Decorative panel glint — restrained on utility/reading surfaces */
+@media(hover:hover) and (pointer:fine){
+  .unified-public-page :where(
+    .world-hero,.codex-header,.fan-hero,.manga-hero,.support-hero,.quest-hero,
+    .support-game-card,.fan-action-card,.profile-grid>.hud-card,.quest-layout>.hud-card
+  ){
+    transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+  }
+  .unified-public-page :where(
+    .support-game-card,.fan-action-card,.profile-grid>.hud-card,.quest-layout>.hud-card
+  ):hover{
+    border-color:rgba(216,179,109,.64)!important;
+  }
+}
+
+/* Tablet/mobile keeps the same shell but prioritizes content */
+@media(max-width:900px){
+  .unified-public-page{
+    padding-bottom:82px;
+  }
+  .unified-public-page :where(
+    .reader-shell,.world-shell,.codex-shell,.fan-shell,.manga-shell,
+    .support-shell,.profile-shell,.quest-shell
+  ){
+    width:100%!important;
+    padding-left:9px!important;
+    padding-right:9px!important;
+    padding-top:9px!important;
+  }
+  .unified-public-page .reader-commandbar{
+    padding:14px;
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  .unified-public-page .reader-commandbar h1{font-size:28px}
+  .unified-public-page .reader-release-block{width:100%}
+  .unified-public-page .reader-quick-controls{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}
+  .unified-public-page .reader-quick-controls button{min-width:0;padding:10px 6px}
+  .unified-public-page :where(.game-rail,.reader-tools-panel){top:74px}
+  .unified-public-page :where(.world-hero,.codex-header,.fan-hero,.manga-hero,.support-hero,.quest-hero){
+    border-radius:8px!important;
+  }
+  .unified-public-page :where(.world-hero,.codex-header,.fan-hero,.manga-hero,.support-hero,.quest-hero) h1{
+    font-size:clamp(30px,9vw,44px);
+  }
+  .unified-public-page .profile-grid,
+  .unified-public-page .guest-gate{
+    gap:9px;
+  }
+}
+@media(max-width:520px){
+  .unified-public-page :where(
+    .reader-shell,.world-shell,.codex-shell,.fan-shell,.manga-shell,
+    .support-shell,.profile-shell,.quest-shell
+  ){
+    padding-left:7px!important;
+    padding-right:7px!important;
+  }
+  .unified-public-page .reader-quick-controls{grid-template-columns:1fr 1fr 1fr}
+  .unified-public-page .reader-quick-controls button{font-size:10px}
+  .unified-public-page :where(.card-head,.rail-head){font-size:11px}
+  .unified-public-page main>section+section{margin-top:9px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .unified-public-page *,
+  .unified-public-page *::before,
+  .unified-public-page *::after{
+    scroll-behavior:auto!important;
+  }
+}
+
+
+/* V3 shared ornamental corner system */
+.unified-public-page :where(
+  .reader-commandbar,.game-rail,.game-manuscript,.reader-tools-panel,
+  .world-hero,.world-sidebar,.world-map-stage,
+  .codex-header,.codex-console,
+  .fan-hero,.fan-feed-shell,.manga-hero,.support-hero,
+  .profile-hero-card,.quest-hero
+){position:relative}
+.unified-public-page .unified-corner{
+  position:absolute;
+  z-index:12;
+  width:30px;
+  height:30px;
+  pointer-events:none;
+  opacity:.72;
+  filter:drop-shadow(0 0 5px rgba(216,179,109,.14));
+}
+.unified-public-page .unified-corner::before,
+.unified-public-page .unified-corner::after{
+  content:"";
+  position:absolute;
+  background:linear-gradient(90deg,rgba(216,179,109,.96),rgba(216,179,109,.18));
+}
+.unified-public-page .unified-corner::before{width:30px;height:1px}
+.unified-public-page .unified-corner::after{width:1px;height:30px}
+.unified-public-page .unified-corner.tl{left:9px;top:9px}
+.unified-public-page .unified-corner.tr{right:9px;top:9px;transform:scaleX(-1)}
+.unified-public-page .unified-corner.bl{left:9px;bottom:9px;transform:scaleY(-1)}
+.unified-public-page .unified-corner.br{right:9px;bottom:9px;transform:scale(-1)}
+.unified-public-page .unified-corner.tl::before,
+.unified-public-page .unified-corner.tr::before,
+.unified-public-page .unified-corner.bl::before,
+.unified-public-page .unified-corner.br::before{left:0;top:0}
+.unified-public-page .unified-corner.tl::after,
+.unified-public-page .unified-corner.tr::after,
+.unified-public-page .unified-corner.bl::after,
+.unified-public-page .unified-corner.br::after{left:0;top:0}
+@media(max-width:900px){
+  .unified-public-page .unified-corner{width:22px;height:22px;opacity:.52}
+  .unified-public-page .unified-corner::before{width:22px}
+  .unified-public-page .unified-corner::after{height:22px}
+  .unified-public-page .unified-corner.tl{left:6px;top:6px}
+  .unified-public-page .unified-corner.tr{right:6px;top:6px}
+  .unified-public-page .unified-corner.bl{left:6px;bottom:6px}
+  .unified-public-page .unified-corner.br{right:6px;bottom:6px}
+}
+
+
+/* V3.0.1 — mobile Codex overflow containment */
+@media(max-width:560px){
+  .unified-public-page .codex-shell{
+    overflow-x:hidden!important;
+  }
+  .unified-public-page :where(
+    .codex-header,.codex-console,.codex-tools,.codex-results-head,
+    .codex-discovery-strip,.codex-category-strip,#codex-results,.v28-codex-grid
+  ){
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  .unified-public-page .codex-console{
+    width:100%!important;
+    overflow:hidden!important;
+  }
+  .unified-public-page .codex-tools{
+    width:100%!important;
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .unified-public-page .codex-tools>*{
+    min-width:0!important;
+    max-width:100%!important;
+    width:100%!important;
+  }
+  .unified-public-page .codex-discovery-strip,
+  .unified-public-page .codex-category-strip{
+    width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    overscroll-behavior-inline:contain;
+    scrollbar-width:none;
+  }
+  .unified-public-page .codex-discovery-strip::-webkit-scrollbar,
+  .unified-public-page .codex-category-strip::-webkit-scrollbar{display:none}
+}

@@ -941,6 +941,27 @@ function initAmbientOverlay(){
   layer.innerHTML='<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>';
   document.body.append(layer);
 }
+function initUnifiedPublicFrames(){
+  if(!document.body.classList.contains("unified-public-page"))return;
+  const selectors=[
+    ".reader-commandbar",".game-rail",".game-manuscript",".reader-tools-panel",
+    ".world-hero",".world-sidebar",".world-map-stage",
+    ".codex-header",".codex-console",
+    ".fan-hero",".fan-feed-shell",
+    ".manga-hero",".support-hero",
+    ".profile-hero-card",".quest-hero"
+  ];
+  for(const el of document.querySelectorAll(selectors.join(","))){
+    if(el.querySelector(":scope > .unified-corner"))continue;
+    for(const pos of ["tl","tr","bl","br"]){
+      const corner=document.createElement("i");
+      corner.className="unified-corner "+pos;
+      corner.setAttribute("aria-hidden","true");
+      el.appendChild(corner);
+    }
+  }
+}
+
 async function initSiteChrome(){
   document.querySelector("#global-flyout-backdrop")?.addEventListener("click",closeGlobalFlyouts);
   addEventListener("keydown",e=>{if(e.key==="Escape")closeGlobalFlyouts()});
@@ -948,6 +969,7 @@ async function initSiteChrome(){
   await initNotifications();
   initMobileHomeNav();
   initAmbientOverlay();
+  initUnifiedPublicFrames();
 }
 
 function releaseStateFromClock(clock){

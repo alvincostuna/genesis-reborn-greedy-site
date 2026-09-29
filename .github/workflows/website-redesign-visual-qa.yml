@@ -14,6 +14,7 @@ on:
       - web-ds-v3-release-reward-rules
       - web-ds-v3-auth-security-v2
       - website-finish-v1
+      - website-unified-shell-v1
   pull_request:
     branches:
       - main
@@ -23,7 +24,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: genesis-website-visual-qa
+  group: genesis-website-visual-qa-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -50,6 +51,9 @@ jobs:
           node --check public/site-preview/site.js
           node --check public/admin/admin.js
           node --check public/admin/read/reader.js
+
+      - name: Audit shared public shell consistency
+        run: node scripts/public-shell-consistency-audit.mjs
 
       - name: Install Playwright Chromium
         run: |

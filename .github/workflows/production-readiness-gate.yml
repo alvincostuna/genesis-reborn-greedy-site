@@ -5,6 +5,7 @@ on:
     branches:
       - website-finish-v1
       - main
+      - website-unified-shell-v1
   pull_request:
     branches:
       - main
@@ -44,6 +45,9 @@ jobs:
 
       - name: Run red-team readiness audit
         run: node scripts/production-readiness-audit.mjs --fail-on-s1
+
+      - name: Public shell consistency
+        run: node scripts/public-shell-consistency-audit.mjs
 
       - name: Build public-only candidate package
         run: |

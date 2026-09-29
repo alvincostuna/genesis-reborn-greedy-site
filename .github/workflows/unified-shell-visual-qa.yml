@@ -1,0 +1,167 @@
+name: GENESIS Unified Shell QA
+
+on:
+  push:
+    branches:
+      - website-unified-shell-v1
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "public/site-preview/**"
+      - "scripts/public-shell-consistency-audit.mjs"
+      - ".github/workflows/unified-shell-visual-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: genesis-unified-shell-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unified-shell:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Syntax and shell contract
+        run: |
+          node --check public/site-preview/site.js
+          node scripts/public-shell-consistency-audit.mjs
+
+      - name: Install Chromium
+        run: |
+          npm install --legacy-peer-deps --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start static preview
+        run: |
+          python3 -m http.server 4173 --directory public >/tmp/genesis-shell-http.log 2>&1 &
+          echo $! >/tmp/genesis-shell-http.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/site-preview/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/genesis-shell-http.log
+          exit 1
+
+      - name: Verify unified desktop and mobile shell
+        run: |
+          mkdir -p unified-shell-qa
+          cat > unified-shell-runner.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+
+          const base='http://127.0.0.1:4173/site-preview';
+          const pages=[
+            ['home','/'],
+            ['read','/read/'],
+            ['world','/world/'],
+            ['codex','/codex/'],
+            ['fan','/fan-page/'],
+            ['manga','/manga/'],
+            ['support','/support/'],
+            ['account','/account/'],
+            ['quests','/quests/']
+          ];
+          const modes=[
+            ['desktop',{width:1440,height:1000}],
+            ['mobile',{width:390,height:844}]
+          ];
+          const browser=await chromium.launch({headless:true});
+          const report=[];
+
+          for(const [mode,viewport] of modes){
+            const context=await browser.newContext({viewport,deviceScaleFactor:1});
+            await context.route('https://lyhrwymhzhhxszquxnke.supabase.co/**',async route=>{
+              const u=route.request().url();
+              if(u.includes('/rest/v1/rpc/api_public_release_state_v1')){
+                return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{
+                  launch_authorized:false,releases_paused:true,next_publish_at:null,next_part:null,
+                  next_cycle_at:null,daily_slots:['08:00','14:00','20:00'],sunday_rest:true,released_parts:0
+                }])});
+              }
+              if(u.includes('/rest/v1/rpc/'))return route.fulfill({status:200,contentType:'application/json',body:'[]'});
+              if(u.includes('/auth/v1/'))return route.fulfill({status:401,contentType:'application/json',body:'{"message":"QA"}'});
+              return route.fulfill({status:200,contentType:'application/json',body:'{}'});
+            });
+
+            for(const [name,path] of pages){
+              const page=await context.newPage();
+              const errors=[];
+              page.on('pageerror',e=>errors.push(e.message));
+              const res=await page.goto(base+path,{waitUntil:'networkidle',timeout:30000});
+              await page.waitForTimeout(150);
+
+              const state=await page.evaluate(({name,mode})=>{
+                const nav=document.querySelector('.game-nav.v2-nav');
+                const brand=document.querySelector('.game-brand.v2-brand img');
+                const primary=document.querySelector('.desktop-nav.v2-primary-nav');
+                const profile=document.querySelector('.profile-orb[data-auth-link]');
+                const search=document.querySelector('#global-search-input');
+                const bell=document.querySelector('#notification-button');
+                const mobile=document.querySelector('.mobile-bottom-nav.v2-mobile-bottom');
+                const corners=document.querySelectorAll('.unified-corner').length;
+                const navRect=nav?.getBoundingClientRect();
+                const brandRect=brand?.getBoundingClientRect();
+                const profileRect=profile?.getBoundingClientRect();
+                const scrollWidth=document.documentElement.scrollWidth;
+                const bodyClass=document.body.className;
+                return {
+                  name,mode,bodyClass,
+                  nav:!!nav,brand:!!brand,primary:!!primary,profile:!!profile,search:!!search,bell:!!bell,mobile:!!mobile,
+                  corners,scrollWidth,viewport:innerWidth,
+                  navHeight:navRect?.height||0,brandWidth:brandRect?.width||0,profileWidth:profileRect?.width||0,
+                  mobileDisplay:mobile?getComputedStyle(mobile).display:'none',
+                  oldCompact:!!document.querySelector('.game-nav.compact'),
+                  unicodeShell:/[⌂▤◎▣♟▧♡]/.test((nav?.textContent||'')+(mobile?.textContent||''))
+                };
+              },{name,mode});
+
+              const failures=[];
+              if(!state.nav||!state.brand||!state.primary||!state.profile||!state.search||!state.bell||!state.mobile)failures.push('missing shared shell control');
+              if(state.oldCompact)failures.push('legacy compact nav present');
+              if(state.unicodeShell)failures.push('legacy unicode shell icon present');
+              if(state.navHeight<55)failures.push('header too short/clipped');
+              if(state.brandWidth<120)failures.push('wordmark clipped');
+              if(state.profileWidth<30)failures.push('profile orb clipped');
+              if(state.scrollWidth>state.viewport+2)failures.push('horizontal overflow');
+              if(name!=='home'&&!state.bodyClass.includes('unified-public-page'))failures.push('missing unified-public-page class');
+              if(name!=='home'&&state.corners<4)failures.push('ornamental corners not initialized');
+              if(mode==='mobile'&&state.mobileDisplay==='none')failures.push('mobile bottom navigation hidden');
+              if(mode==='desktop'&&state.mobileDisplay!=='none')failures.push('mobile bottom navigation visible on desktop');
+              if(errors.length)failures.push('page errors: '+errors.join(' | '));
+
+              await page.screenshot({path:`unified-shell-qa/${name}-${mode}.png`,fullPage:true});
+              report.push({...state,status:res?.status()||0,errors,failures});
+              await page.close();
+            }
+            await context.close();
+          }
+          await browser.close();
+          fs.writeFileSync('unified-shell-qa/report.json',JSON.stringify(report,null,2));
+          console.log(JSON.stringify(report,null,2));
+          const bad=report.filter(x=>x.status>=400||x.failures.length);
+          if(bad.length){console.error('Unified shell QA failures:',bad);process.exit(1)}
+          JS
+          node unified-shell-runner.mjs
+
+      - name: Upload unified shell evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: genesis-unified-shell-qa-${{ github.sha }}
+          path: unified-shell-qa/
+          retention-days: 14
