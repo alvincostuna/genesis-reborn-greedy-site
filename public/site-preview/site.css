@@ -5981,3 +5981,51 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     scroll-behavior:auto!important;
   }
 }
+
+
+/* V3 shared ornamental corner system */
+.unified-public-page :where(
+  .reader-commandbar,.game-rail,.game-manuscript,.reader-tools-panel,
+  .world-hero,.world-sidebar,.world-map-stage,
+  .codex-header,.codex-console,
+  .fan-hero,.fan-feed-shell,.manga-hero,.support-hero,
+  .profile-hero-card,.quest-hero
+){position:relative}
+.unified-public-page .unified-corner{
+  position:absolute;
+  z-index:12;
+  width:30px;
+  height:30px;
+  pointer-events:none;
+  opacity:.72;
+  filter:drop-shadow(0 0 5px rgba(216,179,109,.14));
+}
+.unified-public-page .unified-corner::before,
+.unified-public-page .unified-corner::after{
+  content:"";
+  position:absolute;
+  background:linear-gradient(90deg,rgba(216,179,109,.96),rgba(216,179,109,.18));
+}
+.unified-public-page .unified-corner::before{width:30px;height:1px}
+.unified-public-page .unified-corner::after{width:1px;height:30px}
+.unified-public-page .unified-corner.tl{left:9px;top:9px}
+.unified-public-page .unified-corner.tr{right:9px;top:9px;transform:scaleX(-1)}
+.unified-public-page .unified-corner.bl{left:9px;bottom:9px;transform:scaleY(-1)}
+.unified-public-page .unified-corner.br{right:9px;bottom:9px;transform:scale(-1)}
+.unified-public-page .unified-corner.tl::before,
+.unified-public-page .unified-corner.tr::before,
+.unified-public-page .unified-corner.bl::before,
+.unified-public-page .unified-corner.br::before{left:0;top:0}
+.unified-public-page .unified-corner.tl::after,
+.unified-public-page .unified-corner.tr::after,
+.unified-public-page .unified-corner.bl::after,
+.unified-public-page .unified-corner.br::after{left:0;top:0}
+@media(max-width:900px){
+  .unified-public-page .unified-corner{width:22px;height:22px;opacity:.52}
+  .unified-public-page .unified-corner::before{width:22px}
+  .unified-public-page .unified-corner::after{height:22px}
+  .unified-public-page .unified-corner.tl{left:6px;top:6px}
+  .unified-public-page .unified-corner.tr{right:6px;top:6px}
+  .unified-public-page .unified-corner.bl{left:6px;bottom:6px}
+  .unified-public-page .unified-corner.br{right:6px;bottom:6px}
+}
