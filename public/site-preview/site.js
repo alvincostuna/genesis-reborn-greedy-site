@@ -753,9 +753,10 @@ function phtDateTime(value){
     timeZone:"Asia/Manila",month:"short",day:"numeric",hour:"numeric",minute:"2-digit",hour12:true
   }).format(d)+" PHT";
 }
-function readNotificationIds(){
+function notificationReadState(){
   try{return new Set(JSON.parse(localStorage.getItem(NOTIFICATION_READ_KEY)||"[]"))}catch{return new Set()}
 }
+function readNotificationIds(){return notificationReadState()}
 function storeNotificationIds(set){
   try{localStorage.setItem(NOTIFICATION_READ_KEY,JSON.stringify([...set].slice(-120)))}catch{}
 }
@@ -817,12 +818,15 @@ async function resolveResumeState(episodes,session){
 }
 async function initGlobalSearch(){
   const input=document.querySelector("#global-search-input");
+  const mobileInput=document.querySelector("#global-search-mobile-input");
+  const mobileButton=document.querySelector("#mobile-search-button");
   const panel=document.querySelector("#global-search-panel");
   const results=document.querySelector("#global-search-results");
   const backdrop=document.querySelector("#global-search-backdrop");
   if(!input||!panel||!results)return;
   input.disabled=false;
-  let timer=null,requestId=0;
+  let timer=null,requestId=0,lastSource=input;
+  const allInputs=[input,mobileInput].filter(Boolean);
   const close=()=>{
     panel.classList.add("hidden");
     backdrop?.classList.add("hidden");
@@ -835,9 +839,15 @@ async function initGlobalSearch(){
     input.setAttribute("aria-expanded","true");
     document.body.classList.add("global-search-open");
   };
-  const run=async()=>{
-    const q=input.value.trim();
+  const syncValue=(source)=>{
+    lastSource=source||lastSource||input;
+    for(const field of allInputs)if(field!==source)field.value=source.value;
+  };
+  const run=async(source=lastSource||input)=>{
+    syncValue(source);
+    const q=String(source?.value||"").trim();
     if(q.length<2){
+      open();
       results.innerHTML='<div class="global-search-empty">Type at least 2 characters to search released stories and revealed World/Codex records.</div>';
       return;
     }
@@ -873,16 +883,24 @@ async function initGlobalSearch(){
       results.innerHTML='<div class="global-search-empty">Search is temporarily unavailable. No hidden production data was queried.</div>';
     }
   };
-  input.addEventListener("focus",()=>{if(input.value.trim().length>=2)run()});
-  input.addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(run,180)});
-  input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();run()}if(e.key==="Escape")close()});
+  for(const field of allInputs){
+    field.addEventListener("focus",()=>{lastSource=field;if(field.value.trim().length>=2)run(field)});
+    field.addEventListener("input",()=>{syncValue(field);clearTimeout(timer);timer=setTimeout(()=>run(field),180)});
+    field.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();run(field)}if(e.key==="Escape")close()});
+  }
+  mobileButton?.addEventListener("click",()=>{
+    open();
+    syncValue(input);
+    setTimeout(()=>mobileInput?.focus(),20);
+  });
   document.querySelector("#global-search-close")?.addEventListener("click",close);
   backdrop?.addEventListener("click",close);
   addEventListener("keydown",e=>{
-    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();input.focus();open()}
-    if(e.key==="/"&&!/input|textarea|select/i.test(document.activeElement?.tagName||"")){e.preventDefault();input.focus();open()}
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();open();(innerWidth<=900?mobileInput:input)?.focus()}
+    if(e.key==="/"&&!/input|textarea|select/i.test(document.activeElement?.tagName||"")){e.preventDefault();open();(innerWidth<=900?mobileInput:input)?.focus()}
   });
 }
+
 async function initNotificationCenter(releaseState=null){
   const button=document.querySelector("#notification-button");
   const panel=document.querySelector("#notification-panel");
