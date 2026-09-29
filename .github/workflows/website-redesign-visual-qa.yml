@@ -24,7 +24,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: genesis-website-visual-qa
+  group: genesis-website-visual-qa-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
