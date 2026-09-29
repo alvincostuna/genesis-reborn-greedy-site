@@ -789,6 +789,20 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     return json({ ok: true, data });
   }
 
+
+  if (path === "/admin/api/art-assets") {
+    await requirePermission(email, env, "DATABASE_VIEW");
+    const assetUrl = new URL(request.url);
+    assetUrl.pathname = "/admin/art-assets.snapshot.json";
+    assetUrl.search = "";
+    const response = await env.ASSETS.fetch(new Request(assetUrl.toString(), { method: "GET" }));
+    if (!response.ok) {
+      throw new HttpError(503, "ART_MANIFEST_SNAPSHOT_UNAVAILABLE", "Protected art manifest snapshot is unavailable.");
+    }
+    const data = await response.json();
+    return json({ ok: true, data });
+  }
+
   if (path === "/admin/api/support/summary") {
     await requirePermission(email, env, "SUPPORT_VIEW");
     const data = await rpc(env, "genesis_admin_support_summary");
@@ -907,6 +921,9 @@ async function handleAdminAsset(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   if (url.pathname === "/admin" || url.pathname === "/admin/") {
     url.pathname = "/admin/index.html";
+  }
+  if (url.pathname === "/admin/art-assets.snapshot.json") {
+    return new Response("Not found.", { status: 404, headers: { "Cache-Control": "no-store" } });
   }
 
   const response = await env.ASSETS.fetch(new Request(url.toString(), request));
