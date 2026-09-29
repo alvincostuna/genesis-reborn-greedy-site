@@ -260,7 +260,7 @@ async function loadManuscripts(){
       ).join("")+
       '</tbody></table>';
 
-    $("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>{
+    $(" #manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>{
       if(isMobileAdminDevice()){
         location.href="/admin/read/?part="+encodeURIComponent(row.dataset.part)+"&stage=best";
         return;
