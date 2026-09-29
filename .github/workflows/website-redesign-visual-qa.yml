@@ -133,6 +133,36 @@ jobs:
           const report=[];
           for(const [mode,viewport] of viewports){
             const context=await browser.newContext({viewport,deviceScaleFactor:1});
+
+            // Visual QA is deterministic and must not depend on live Supabase/network state.
+            // Runtime/API correctness is covered by the separate readiness and deployment gates.
+            await context.route('https://lyhrwymhzhhxszquxnke.supabase.co/**',async route=>{
+              const url=route.request().url();
+              if(url.includes('/rest/v1/rpc/api_public_release_state_v1')){
+                return route.fulfill({
+                  status:200,
+                  contentType:'application/json',
+                  body:JSON.stringify([{
+                    contract_version:'QA',
+                    launch_authorized:false,
+                    releases_paused:true,
+                    daily_slots:['08:00','14:00','20:00'],
+                    sunday_rest:true,
+                    next_publish_at:null,
+                    next_part:null,
+                    released_parts:0
+                  }])
+                });
+              }
+              if(url.includes('/rest/v1/rpc/')){
+                return route.fulfill({status:200,contentType:'application/json',body:'[]'});
+              }
+              if(url.includes('/auth/v1/')){
+                return route.fulfill({status:401,contentType:'application/json',body:'{"message":"QA signed-out fixture"}'});
+              }
+              return route.fulfill({status:200,contentType:'application/json',body:'{}'});
+            });
+
             for(const [name,path] of pages){
               const page=await context.newPage();
               const errors=[];
