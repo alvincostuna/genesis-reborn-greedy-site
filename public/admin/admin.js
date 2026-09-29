@@ -1,4 +1,4 @@
-const state={manuscripts:[],activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[],activeDatabaseRecord:null,databaseAllowedFields:{}};
+const state={manuscripts:[],activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[],activeDatabaseRecord:null,databaseAllowedFields:{},artAssetsManifest:null};
 const $=(s)=>document.querySelector(s);
 const $$=(s)=>[...document.querySelectorAll(s)];
 
@@ -630,6 +630,105 @@ function renderDatabaseStaging(domain,record){
   });
 }
 
+
+
+function artAssetStatusClass(value){
+  if(["APPROVED","WEB_EXPORTED","PUBLISHED"].includes(String(value||"").toUpperCase()))return "final";
+  return "review";
+}
+
+function renderArtAssets(){
+  const root=$("#art-assets-table");
+  const summary=$("#art-assets-summary");
+  const manifest=state.artAssetsManifest;
+  if(!manifest){
+    summary.innerHTML="";
+    root.innerHTML='<div class="empty">No art manifest snapshot loaded.</div>';
+    return;
+  }
+
+  const type=String($("#art-assets-type")?.value||"").trim().toUpperCase();
+  const status=String($("#art-assets-status")?.value||"").trim().toUpperCase();
+  const query=String($("#art-assets-search")?.value||"").trim().toLowerCase();
+  const all=Array.isArray(manifest.items)?manifest.items:[];
+  const rows=all.filter(x=>{
+    if(type&&String(x.entity_type||"").toUpperCase()!==type)return false;
+    if(status&&String(x.approval_status||"").toUpperCase()!==status)return false;
+    if(query){
+      const hay=[
+        x.asset_id,x.entity_type,x.entity_key,x.display_name,x.supabase_entity_id,
+        x.supabase_entity_table,x.approval_status,x.review_status,x.cdn_status
+      ].join(" ").toLowerCase();
+      if(!hay.includes(query))return false;
+    }
+    return true;
+  });
+
+  const visible=all.filter(x=>x.public_visibility&&x.public_visibility!=="HIDDEN").length;
+  const safe=all.filter(x=>x.reader_safe===true).length;
+  const exported=all.filter(x=>x.cdn_status&&x.cdn_status!=="NOT_EXPORTED").length;
+  const approved=all.filter(x=>["APPROVED","WEB_EXPORTED","PUBLISHED"].includes(String(x.approval_status||"").toUpperCase())).length;
+  summary.innerHTML=
+    '<div class="card"><span>Manifest assets</span><strong>'+escapeHtml(all.length)+'</strong></div>'+
+    '<div class="card"><span>Approved+</span><strong>'+escapeHtml(approved)+'</strong></div>'+
+    '<div class="card"><span>Web exported</span><strong>'+escapeHtml(exported)+'</strong></div>'+
+    '<div class="card"><span>Reader-safe</span><strong>'+escapeHtml(safe)+'</strong></div>'+
+    '<div class="card"><span>Public-visible</span><strong>'+escapeHtml(visible)+'</strong></div>'+
+    '<div class="card"><span>Filtered</span><strong>'+escapeHtml(rows.length)+'</strong></div>';
+
+  const source=manifest.source||{};
+  const safety=manifest.safety||{};
+  root.innerHTML=
+    '<div class="database-head"><span>Visual Asset Register</span><small>'+escapeHtml(source.manifest_title||"GENESIS Art Manifest")+' · '+escapeHtml(rows.length)+' shown</small></div>'+
+    '<div class="admin-note compact"><strong>Fail-closed publication rule</strong><p>'+
+      escapeHtml(safety.public_visibility_rule||"Artwork existence never grants reader visibility.")+
+      ' Source modified: '+escapeHtml(source.source_modified_at||"—")+
+    '</p></div>'+
+    (rows.length
+      ?'<div class="table-scroll"><table><thead><tr>'+
+        '<th>Asset / Entity</th><th>Art status</th><th>Master</th><th>Review</th><th>Web export</th><th>Visibility</th><th>Authoritative link</th><th>Drive source</th><th>History</th>'+
+        '</tr></thead><tbody>'+
+        rows.map(x=>{
+          const driveRef=x.drive_file_id||x.master_drive_file_id||x.drive_folder_id||"—";
+          const lastReview=x.reviewed_at
+            ?String(x.reviewed_at)+(x.reviewer?" · "+x.reviewer:"")
+            :(x.review_status||"NOT_REVIEWED");
+          const history=[
+            x.replaces_asset_id?"replaces "+x.replaces_asset_id:"",
+            x.replaced_by_asset_id?"replaced by "+x.replaced_by_asset_id:"",
+            x.retired_at?"retired "+x.retired_at:""
+          ].filter(Boolean).join(" · ")||"—";
+          const route=x.profile_route||x.atlas_route||x.item_route||"";
+          return '<tr>'+
+            '<td><strong>'+escapeHtml(x.display_name||"—")+'</strong><br><code>'+escapeHtml(x.asset_id||"—")+'</code><br><small>'+escapeHtml(x.entity_key||"—")+'</small></td>'+
+            '<td><span class="status '+artAssetStatusClass(x.approval_status)+'">'+escapeHtml(x.approval_status||"—")+'</span><br><small>'+escapeHtml(x.asset_role||"—")+' · '+escapeHtml(x.variant_key||"—")+'</small></td>'+
+            '<td>'+escapeHtml(x.version||"—")+'<br><small>'+escapeHtml(x.final_approver||"No final approver")+'</small></td>'+
+            '<td>'+escapeHtml(lastReview)+'</td>'+
+            '<td>'+escapeHtml(x.cdn_status||"—")+'<br><small>'+escapeHtml(x.web_path||"No web path")+'</small></td>'+
+            '<td>'+escapeHtml(x.public_visibility||"—")+'<br><small>reader-safe: '+escapeHtml(x.reader_safe?"YES":"NO")+' · eligible: '+escapeHtml(x.public_eligible?"YES":"NO")+'</small></td>'+
+            '<td><code>'+escapeHtml(x.supabase_entity_table||"—")+'</code><br><small>'+escapeHtml(x.supabase_entity_id||"—")+'</small>'+(route?'<br><small>'+escapeHtml(route)+'</small>':'')+'</td>'+
+            '<td><code>'+escapeHtml(driveRef)+'</code></td>'+
+            '<td>'+escapeHtml(history)+'</td>'+
+          '</tr>';
+        }).join("")+
+        '</tbody></table></div>'
+      :'<div class="empty">No art assets match this filter.</div>');
+}
+
+async function loadArtAssets(){
+  const root=$("#art-assets-table");
+  const summary=$("#art-assets-summary");
+  root.innerHTML='<div class="empty">Loading protected art manifest snapshot…</div>';
+  summary.innerHTML='<div class="card"><span>Art manifest</span><strong>Loading…</strong></div>';
+  try{
+    state.artAssetsManifest=await api("/admin/api/art-assets");
+    renderArtAssets();
+  }catch(error){
+    state.artAssetsManifest=null;
+    summary.innerHTML="";
+    root.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+  }
+}
 
 function adminBadge(badge){
   if(!badge)return "";
@@ -1637,7 +1736,7 @@ function switchView(name){
   $$(".view").forEach((x)=>x.classList.add("hidden"));
   $$(".nav").forEach((x)=>x.classList.toggle("active",x.dataset.view===name));
   $("#"+name+"-view").classList.remove("hidden");
-  const titles={production:"Production Dashboard","website-ops":"Website Operations",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database",codex:"Codex",support:"Support",messages:"Reader Messages",readers:"Readers",community:"Community",settings:"Settings"};
+  const titles={production:"Production Dashboard","website-ops":"Website Operations",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database","art-assets":"Art Assets / Visual Status",codex:"Codex",support:"Support",messages:"Reader Messages",readers:"Readers",community:"Community",settings:"Settings"};
   $("#page-title").textContent=titles[name]||"Control Center";
   if(name==="website-ops")loadWebsiteOps();
   if(name==="manuscripts")loadManuscripts();
@@ -1647,6 +1746,7 @@ function switchView(name){
   if(name==="authority")loadAuthority();
   if(name==="access")loadAccess();
   if(name==="database"){loadDatabaseSummary();loadDatabase();loadDatabaseProposals();}
+  if(name==="art-assets")loadArtAssets();
   if(name==="codex")loadCodex();
   if(name==="support")loadSupport();
   if(name==="messages")loadMessages();
@@ -1667,6 +1767,10 @@ $("#preview-button").addEventListener("click",previewCurrent);
 $("#refresh-database").addEventListener("click",loadDatabase);
 $("#database-domain").addEventListener("change",loadDatabase);
 $("#database-search").addEventListener("keydown",(e)=>{if(e.key==="Enter")loadDatabase();});
+$("#refresh-art-assets").addEventListener("click",loadArtAssets);
+$("#art-assets-type").addEventListener("change",renderArtAssets);
+$("#art-assets-status").addEventListener("change",renderArtAssets);
+$("#art-assets-search").addEventListener("input",renderArtAssets);
 
 // GENESIS mobile admin nav — reconciled from protected Admin branch.
 (function(){
