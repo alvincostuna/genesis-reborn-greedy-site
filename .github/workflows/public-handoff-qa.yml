@@ -49,6 +49,26 @@ jobs:
           fi
           grep -q 'releaseState?.launch_authorized&&!releaseState?.releases_paused' public/site-preview/site.js
 
+      - name: Check finished homepage contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -E '<input[^>]*id="global-search-input"[^>]*disabled' public/site-preview/index.html; then
+            echo "::error::Global search is still disabled."
+            exit 1
+          fi
+          grep -q 'initGlobalSearch' public/site-preview/site.js
+          grep -q 'api_entity_search' public/site-preview/site.js
+          grep -q 'notificationReadState' public/site-preview/site.js
+          grep -q 'initNotificationCenter' public/site-preview/site.js
+          grep -q 'genesis_reader_resume_v2' public/site-preview/site.js
+          grep -q 'published_at' public/site-preview/site.js
+          grep -q 'PART ' public/site-preview/site.js
+          grep -q 'hero-atmosphere' public/site-preview/index.html
+          grep -q 'prefers-reduced-motion' public/site-preview/site.css
+          grep -q 'link.replaceChildren(img)' public/site-preview/site.js
+          echo "Homepage functional-contract checks passed."
+
       - name: Keep Admin and Worker isolation unchanged
         shell: bash
         run: |
