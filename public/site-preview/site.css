@@ -5486,3 +5486,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .v2-panel::after,.feature-tile::after,.release-tile::after{display:none!important}
   *{scroll-behavior:auto!important}
 }
+
+
+.v2-mobile-search{display:none}
+.global-search-mobile-field{
+  display:none;margin:12px 12px 0;padding:0 12px;height:46px;align-items:center;gap:9px;
+  border:1px solid #29455f;border-radius:10px;background:#071421
+}
+.global-search-mobile-field input{
+  width:100%;border:0;outline:0;background:transparent;color:#eef7ff;font-size:14px
+}
+.global-search-mobile-field .v25-icon{flex:0 0 auto;color:#8fc9ff}
+
+@media(max-width:900px){
+  .v2-mobile-search{display:grid!important;place-items:center;width:40px!important;height:40px!important;flex:0 0 40px!important}
+  .global-search-mobile-field{display:flex}
+  .global-search-results{max-height:calc(78vh - 128px)}
+}
