@@ -1,15 +1,9 @@
 name: Deploy GENESIS Protected Admin
 
 on:
-  push:
-    branches:
-      - website-finish-v1
-      - main
-    paths:
-      - "public/admin/**"
-      - "src/worker.ts"
-      - "wrangler.toml"
-      - ".github/workflows/deploy-admin-preview.yml"
+  # Protected Admin is currently promoted through the environment-authorized
+  # deployment launcher on feat/admin-manuscript-viewer, which checks out main.
+  # Keep this reconciled workflow available for future environment-policy migration.
   workflow_dispatch:
 
 permissions:
