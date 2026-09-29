@@ -3,7 +3,7 @@ const $=(s)=>document.querySelector(s);
 const $$=(s)=>[...document.querySelectorAll(s)];
 
 async function api(path){
-  const response=await fetch(path,{credentials:"same-origin",headers:{Accept:"application/json"}});
+  const response=await fetch(path,{credentials:"same-origin",cache:"no-store",headers:{Accept:"application/json","Cache-Control":"no-cache","Pragma":"no-cache"}});
   const payload=await response.json().catch(()=>null);
   if(!response.ok||!payload?.ok){
     throw new Error(payload?.error?.message||("Request failed ("+response.status+")"));
@@ -35,6 +35,15 @@ function statusClass(value){
   if(value==="Final Canon")return"final";
   if(value==="Published")return"published";
   return"review";
+}
+
+function isMobileAdminDevice(){
+  return Boolean(
+    navigator.maxTouchPoints>0 ||
+    window.matchMedia?.("(pointer: coarse)").matches ||
+    window.matchMedia?.("(max-width: 900px)").matches ||
+    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"")
+  );
 }
 
 async function loadProduction(){
@@ -146,6 +155,78 @@ async function loadProduction(){
   }
 }
 
+async function loadWebsiteOps(){
+  const summary=$("#website-ops-summary");
+  const integrity=$("#website-ops-integrity");
+  const queue=$("#website-ops-queue");
+  const publicRoot=$("#website-ops-public");
+  summary.innerHTML='<div class="card"><span>Website operations</span><strong>Loading…</strong></div>';
+  integrity.innerHTML='<div class="empty">Checking production → release handoff…</div>';
+  queue.innerHTML='<div class="empty">Loading release queue state…</div>';
+  publicRoot.innerHTML='<div class="empty">Loading public-site state…</div>';
+  try{
+    const d=await api("/admin/api/website-ops");
+    const production=d.production||{};
+    const handoff=d.handoff_integrity||{};
+    const release=d.release_queue||{};
+    const pub=d.public_site||{};
+    const controls=d.release_controls||{};
+    const lock=d.production_lock||{};
+    const clock=pub.clock||{};
+    const healthy=handoff.health==="PASS";
+
+    summary.innerHTML=
+      '<div class="card"><span>Operational state</span><strong class="'+(healthy?"good-text":"danger-text")+'">'+escapeHtml(d.operational_status||"UNKNOWN")+'</strong></div>'+
+      '<div class="card"><span>Handoff integrity</span><strong class="'+(healthy?"good-text":"danger-text")+'">'+escapeHtml(handoff.health||"UNKNOWN")+'</strong></div>'+
+      '<div class="card"><span>AI-2 Stage 1</span><strong>'+escapeHtml(production.stage1_available??0)+'</strong></div>'+
+      '<div class="card"><span>AI-1 / Stage 2</span><strong>'+escapeHtml(production.stage2_available??0)+'</strong></div>'+
+      '<div class="card"><span>Final Canon</span><strong>'+escapeHtml(production.final_canon??0)+'</strong></div>'+
+      '<div class="card"><span>Public Parts</span><strong>'+escapeHtml(pub.published_story_parts??0)+'</strong></div>';
+
+    const latest=production.latest_final_canon||null;
+    integrity.innerHTML=
+      '<div class="database-head"><span>Automatic Story Handoff</span><small>'+escapeHtml(d.contract_version||"")+'</small></div>'+
+      '<div class="ops-health">'+
+        '<div class="ops-health-row"><span>Active branch</span><strong>'+escapeHtml(d.active_context?.branch_key||"—")+'</strong></div>'+
+        '<div class="ops-health-row"><span>Production router</span><strong>'+escapeHtml(lock.router_state||"—")+'</strong></div>'+
+        '<div class="ops-health-row"><span>Final Canon without queue item</span><strong class="'+((handoff.final_canon_without_release_item||0)===0?"good-text":"danger-text")+'">'+escapeHtml(handoff.final_canon_without_release_item??0)+'</strong></div>'+
+        '<div class="ops-health-row"><span>Release pointer mismatches</span><strong class="'+((handoff.release_pointer_mismatches||0)===0?"good-text":"danger-text")+'">'+escapeHtml(handoff.release_pointer_mismatches??0)+'</strong></div>'+
+        '<div class="ops-health-row"><span>Auto-queue trigger</span><strong>'+escapeHtml(handoff.auto_queue_trigger||"—")+'</strong></div>'+
+        '<div class="ops-health-row"><span>Latest Final Canon</span><strong>'+(latest?escapeHtml(latest.part_key+" · "+latest.title):"Waiting for Final Canon")+'</strong></div>'+
+      '</div>';
+
+    const next=release.next_item||null;
+    queue.innerHTML=
+      '<div class="database-head"><span>Release Queue</span><small>Final Canon enters HIDDEN automatically</small></div>'+
+      '<div class="runtime">'+
+        '<div><small>Hidden</small><strong>'+escapeHtml(release.hidden??0)+'</strong></div>'+
+        '<div><small>Ready</small><strong>'+escapeHtml(release.ready??0)+'</strong></div>'+
+        '<div><small>Scheduled</small><strong>'+escapeHtml(release.scheduled??0)+'</strong></div>'+
+        '<div><small>Published</small><strong>'+escapeHtml(release.published??0)+'</strong></div>'+
+        '<div><small>Withdrawn</small><strong>'+escapeHtml(release.withdrawn??0)+'</strong></div>'+
+        '<div><small>Next queue item</small><strong>'+(next?escapeHtml(next.part_key+" · "+next.release_status):"None yet")+'</strong></div>'+
+      '</div>';
+
+    const slots=Array.isArray(clock.daily_slots)?clock.daily_slots.join(" / "):"08:00 / 14:00 / 20:00";
+    publicRoot.innerHTML=
+      '<div class="database-head"><span>Official Website Publication State</span><small>Public site reads published content only</small></div>'+
+      '<div class="runtime">'+
+        '<div><small>Releases</small><strong>'+escapeHtml(controls.releases_paused?"PAUSED":"ACTIVE")+'</strong></div>'+
+        '<div><small>Launch authorized</small><strong>'+escapeHtml(controls.launch_authorized?"YES":"NO")+'</strong></div>'+
+        '<div><small>Cadence</small><strong>'+escapeHtml(slots)+' PHT</strong></div>'+
+        '<div><small>Sunday</small><strong>'+escapeHtml(clock.sunday_rest?"REST DAY":"ACTIVE")+'</strong></div>'+
+        '<div><small>Next scheduled publish</small><strong>'+escapeHtml(clock.next_publish_at||"NOT SET")+'</strong></div>'+
+        '<div><small>Published Parts</small><strong>'+escapeHtml(clock.released_parts??0)+'</strong></div>'+
+      '</div>'+
+      '<div class="admin-note compact"><strong>Operational contract</strong><p>Production remains authoritative. A Part becomes website-eligible only after FINAL_CANON. The database automatically creates a hidden release item. Admin controls readiness/scheduling; only PUBLISHED Parts become public. This view is read-only and cannot resume story production.</p></div>';
+  }catch(error){
+    summary.innerHTML="";
+    integrity.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    queue.innerHTML="";
+    publicRoot.innerHTML="";
+  }
+}
+
 async function loadManuscripts(){
   const table=$("#manuscript-table");
   table.innerHTML='<div class="empty">Loading manuscripts…</div>';
@@ -179,7 +260,13 @@ async function loadManuscripts(){
       ).join("")+
       '</tbody></table>';
 
-    $("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>openPart(row.dataset.part)));
+    $("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>{
+      if(isMobileAdminDevice()){
+        location.href="/admin/read/?part="+encodeURIComponent(row.dataset.part)+"&stage=best";
+        return;
+      }
+      openPart(row.dataset.part);
+    }));
   }catch(error){
     table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
   }
@@ -1550,8 +1637,9 @@ function switchView(name){
   $$(".view").forEach((x)=>x.classList.add("hidden"));
   $$(".nav").forEach((x)=>x.classList.toggle("active",x.dataset.view===name));
   $("#"+name+"-view").classList.remove("hidden");
-  const titles={production:"Production Dashboard",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database",codex:"Codex",support:"Support",messages:"Reader Messages",readers:"Readers",community:"Community",settings:"Settings"};
+  const titles={production:"Production Dashboard","website-ops":"Website Operations",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database",codex:"Codex",support:"Support",messages:"Reader Messages",readers:"Readers",community:"Community",settings:"Settings"};
   $("#page-title").textContent=titles[name]||"Control Center";
+  if(name==="website-ops")loadWebsiteOps();
   if(name==="manuscripts")loadManuscripts();
   if(name==="releases")loadReleases();
   if(name==="roadmap")loadRoadmap();
@@ -1579,5 +1667,25 @@ $("#preview-button").addEventListener("click",previewCurrent);
 $("#refresh-database").addEventListener("click",loadDatabase);
 $("#database-domain").addEventListener("change",loadDatabase);
 $("#database-search").addEventListener("keydown",(e)=>{if(e.key==="Enter")loadDatabase();});
+
+// GENESIS mobile admin nav — reconciled from protected Admin branch.
+(function(){
+  const menu=document.querySelector("#mobile-menu-button");
+  const backdrop=document.querySelector("#mobile-nav-backdrop");
+  const closeMenu=()=>{
+    document.body.classList.remove("mobile-nav-open");
+    menu?.setAttribute("aria-expanded","false");
+  };
+  const openMenu=()=>{
+    document.body.classList.add("mobile-nav-open");
+    menu?.setAttribute("aria-expanded","true");
+  };
+  menu?.addEventListener("click",()=>{
+    document.body.classList.contains("mobile-nav-open")?closeMenu():openMenu();
+  });
+  backdrop?.addEventListener("click",closeMenu);
+  document.querySelectorAll(".sidebar .nav").forEach(button=>button.addEventListener("click",closeMenu));
+  window.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu();});
+})();
 
 initializeAdmin();
