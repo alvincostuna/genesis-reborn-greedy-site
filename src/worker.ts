@@ -651,6 +651,12 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     return json({ ok: true, data });
   }
 
+  if (path === "/admin/api/website-ops") {
+    await requirePermission(email, env, "DASHBOARD_VIEW");
+    const data = await rpc(env, "genesis_admin_website_ops_status");
+    return json({ ok: true, data });
+  }
+
   if (path === "/admin/api/production") {
     await requirePermission(email, env, "DASHBOARD_VIEW");
     const data = await rpc(env, "genesis_admin_dashboard", { p_limit: 100 });
