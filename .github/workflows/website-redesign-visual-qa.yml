@@ -3,6 +3,7 @@ name: GENESIS Website Visual QA
 on:
   push:
     branches:
+      - main
       - website-redesign-v1
       - web-ds-v2-home
       - web-ds-v2-6-dashboard
