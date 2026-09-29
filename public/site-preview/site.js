@@ -3,6 +3,50 @@ const SUPABASE_PUBLISHABLE_KEY="sb_publishable_rCJL18_zLNtWH-ON1DTnDA_3quoGH3Q";
 
 const SESSION_KEY="genesis_reader_session_v1";
 const TIER_EXP_THRESHOLD=2000;
+const READ_STATE_KEY="genesis_reader_exact_progress_v2";
+const NOTIFICATION_READ_KEY="genesis_notification_read_v1";
+
+function sitePath(path){
+  const clean=String(path||"/").startsWith("/")?String(path||"/"):"/"+String(path||"");
+  return location.pathname.startsWith("/site-preview/")?"/site-preview"+clean:clean;
+}
+function readerUrl(episode=null,part=null){
+  const u=new URL(sitePath("/read/"),location.origin);
+  if(episode!==null&&episode!==undefined&&episode!=="")u.searchParams.set("episode",String(episode));
+  if(part!==null&&part!==undefined&&part!=="")u.searchParams.set("part",String(part));
+  return u.pathname+u.search;
+}
+function readLocalProgress(){
+  try{return JSON.parse(localStorage.getItem(READ_STATE_KEY)||"null")}catch{return null}
+}
+function saveLocalProgress(value){
+  try{localStorage.setItem(READ_STATE_KEY,JSON.stringify({...value,last_seen_at:new Date().toISOString()}))}catch{}
+}
+function extractAccountProgress(data){
+  const p=data?.reading_progress||data?.latest_read||{};
+  const episode=Number(
+    p.episode_number??p.latest_episode_number??data?.latest_episode_number??data?.highest_episode_read??0
+  );
+  const part=Number(
+    p.part_number??p.latest_part_number??data?.latest_part_number??0
+  );
+  if(!episode||!part)return null;
+  return {
+    episode_number:episode,
+    part_number:part,
+    part_id:p.part_id??p.latest_part_id??data?.latest_part_id??null,
+    progress_pct:Number(p.progress_pct??p.percent??data?.latest_read_progress??0)||0,
+    episode_title:p.episode_title??null,
+    title:p.part_title??p.title??null,
+    source:"account"
+  };
+}
+function formatPhtDate(value){
+  if(!value)return "";
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime()))return "";
+  return new Intl.DateTimeFormat("en-PH",{timeZone:"Asia/Manila",month:"short",day:"numeric",hour:"numeric",minute:"2-digit",hour12:true}).format(d)+" PHT";
+}
 
 function accountPath(){
   return location.pathname.startsWith("/site-preview/")?"/site-preview/account/":"/account/";
@@ -129,21 +173,61 @@ async function edgeFunction(name,body,accessToken){
   return data;
 }
 
-function entityVisual(type){
-  const t=String(type||"").toLowerCase();
-  if(t==="monster")return {label:"BESTIARY",art:"/assets/v27/rewards/young-gnawer.webp",icon:"✦"};
-  if(t==="map"||t==="region"||t==="location")return {label:"ATLAS",art:"/assets/v27/rewards/early-genesis-world-panorama.webp",icon:"◎"};
-  if(t==="weapon"||t==="armor"||t==="equipment")return {label:"ARMORY",art:"/assets/v25/releases/release-duel.png",icon:"⚔"};
-  if(t==="class"||t==="profession"||t==="skill")return {label:"PATH",art:"/assets/v25/destinations/destination-codex.png",icon:"✧"};
-  if(t==="quest")return {label:"QUEST",art:"/assets/v25/releases/release-city.png",icon:"◇"};
-  if(t==="npc")return {label:"PEOPLE",art:"/assets/v25/destinations/destination-fanpage.png",icon:"♙"};
-  if(t==="shop")return {label:"TRADE",art:"/assets/v25/destinations/destination-support.png",icon:"¤"};
-  return {label:"ARCHIVE",art:"/assets/v27/rewards/genesis-awakening.webp",icon:"▣"};
+function stableIndex(seed,length){
+  const s=String(seed||"");
+  let h=2166136261;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}
+  return Math.abs(h>>>0)%Math.max(1,length);
 }
+function entityVisual(type,seed=""){
+  const t=String(type||"").toLowerCase();
+  const pick=(label,icon,arts)=>({label,icon,art:arts[stableIndex(seed||t,arts.length)]});
+  if(t==="monster")return pick("BESTIARY","✦",[
+    "/assets/v27/rewards/young-gnawer.webp",
+    "/assets/v27/rewards/beginner-hunt.webp",
+    "/assets/v27/rewards/flavio-nico-early-party.webp"
+  ]);
+  if(t==="map"||t==="region"||t==="location")return pick("ATLAS","◎",[
+    "/assets/v27/rewards/early-genesis-world-panorama.webp",
+    "/assets/v27/rewards/starter-town-safe-zone.webp",
+    "/assets/v25/releases/release-city.png"
+  ]);
+  if(t==="weapon"||t==="armor"||t==="equipment"||t==="accessory")return pick("ARMORY","⚔",[
+    "/assets/v25/releases/release-duel.png",
+    "/assets/v27/rewards/genesis-awakening.webp",
+    "/assets/v27/rewards/beginner-hunt.webp"
+  ]);
+  if(t==="class"||t==="profession"||t==="skill")return pick("PATH","✧",[
+    "/assets/v25/destinations/destination-codex.png",
+    "/assets/v27/rewards/flavio-reyes.webp",
+    "/assets/v27/rewards/maya-villareal.webp",
+    "/assets/v27/rewards/nico-salazar.webp"
+  ]);
+  if(t==="quest")return pick("QUEST","◇",[
+    "/assets/v25/releases/release-city.png",
+    "/assets/v27/rewards/flavio-nico-early-party.webp",
+    "/assets/v27/rewards/starter-town-safe-zone.webp"
+  ]);
+  if(t==="npc")return pick("PEOPLE","♙",[
+    "/assets/v27/rewards/flavio-reyes.webp",
+    "/assets/v27/rewards/maya-villareal.webp",
+    "/assets/v27/rewards/nico-salazar.webp",
+    "/assets/v25/destinations/destination-fanpage.png"
+  ]);
+  if(t==="shop")return pick("TRADE","¤",[
+    "/assets/v25/destinations/destination-support.png",
+    "/assets/v27/rewards/starter-town-safe-zone.webp"
+  ]);
+  return pick("ARCHIVE","▣",[
+    "/assets/v27/rewards/genesis-awakening.webp",
+    "/assets/v27/rewards/flavio-early-cast-wallpaper.webp"
+  ]);
+}
+
 function entityCard(x,kind="codex"){
   const fields=x?.revealed_fields&&typeof x.revealed_fields==="object"?Object.keys(x.revealed_fields):[];
   const type=String(x?.entity_type||"codex");
-  const v=entityVisual(type);
+  const v=entityVisual(type,x?.entity_code||x?.public_name||type);
   const title=x?.public_name||x?.entity_code||"Revealed entry";
   const desc=x?.short_description||"Revealed GENESIS knowledge.";
   const fieldChips=fields.slice(0,4).map(f=>'<span>'+esc(f.replaceAll("_"," "))+'</span>').join("");
@@ -162,8 +246,22 @@ async function initAuthChrome(){
   const user=session?await getAuthUser(session):null;
   document.querySelectorAll("[data-auth-link]").forEach(link=>{
     link.href=accountPath();
-    link.textContent=user?"Account":"Sign in";
     link.classList.toggle("signed-in",!!user);
+    const label=user?"Reader account":"Sign in";
+    link.setAttribute("aria-label",label);
+    link.setAttribute("title",label);
+    if(link.classList.contains("profile-orb")){
+      let img=link.querySelector("img");
+      if(!img){
+        img=document.createElement("img");
+        link.replaceChildren(img);
+      }
+      img.src=user?.user_metadata?.avatar_url||"/assets/genesis-official-logo-64.png";
+      img.alt="";
+      link.dataset.accountState=user?"signed-in":"signed-out";
+    }else{
+      link.textContent=user?"Account":"Sign in";
+    }
   });
   return {session,user};
 }
@@ -450,73 +548,110 @@ async function activateSupportContact(){
 async function initRead(){
   const releaseMini=document.querySelector("#release-mini");
   try{
-    const clock=firstRow(await rpc("api_release_clock"));
+    const clock=firstRow(await rpc("api_public_release_state_v1"));
     paintReleaseState(document.querySelector("#reader-release-state"),clock);
-  }catch{}
-  try{
-    const p=firstRow(await rpc("api_release_policy"));
-    releaseMini.textContent=(p?.releases_paused?"PAUSED · ":"")+"3 Parts · 8:00 AM / 2:00 PM / 8:00 PM · Mon–Sat · Sunday rest";
-  }catch{}
+    if(releaseMini){
+      const mode=clock?.releases_paused?"PAUSED · ":clock?.launch_authorized===false?"PRE-LAUNCH · ":"";
+      releaseMini.textContent=mode+"3 Parts · 8:00 AM / 2:00 PM / 8:00 PM · Mon–Sat · Sunday rest";
+    }
+  }catch{
+    try{
+      const p=firstRow(await rpc("api_release_policy"));
+      if(releaseMini)releaseMini.textContent=(p?.releases_paused?"PAUSED · ":"")+"3 Parts · 8:00 AM / 2:00 PM / 8:00 PM · Mon–Sat · Sunday rest";
+    }catch{}
+  }
+
   let episodes=[];
   try{episodes=await rpc("api_episode_library")}catch{}
   if(!Array.isArray(episodes)||!episodes.length)return;
-  const list=document.querySelector("#episode-list");
+
+  const params=new URLSearchParams(location.search);
+  const local=readLocalProgress();
+  let requestedEpisode=Number(params.get("episode")||local?.episode_number||episodes[0].episode_number);
+  let requestedPart=Number(params.get("part")||local?.part_number||0);
+  if(!episodes.some(e=>Number(e.episode_number)===requestedEpisode))requestedEpisode=Number(episodes[0].episode_number);
+
+  const episodeList=document.querySelector("#episode-list");
   document.querySelector("#episode-count").textContent=episodes.length+" released";
-  list.innerHTML=episodes.map((e,i)=>
+  episodeList.innerHTML=episodes.map(e=>
     '<button class="episode-button" data-episode="'+esc(e.episode_number)+'"><small>EPISODE '+esc(e.episode_number)+'</small><strong>'+esc(e.title)+'</strong></button>'
   ).join("");
-  async function openEpisode(number){
+
+  async function openEpisode(number,preferredPart=null){
     document.querySelectorAll(".episode-button").forEach(b=>b.classList.toggle("active",b.dataset.episode===String(number)));
     const episode=episodes.find(e=>String(e.episode_number)===String(number));
     const head=document.querySelector("#novel-head");
     head.innerHTML='<p class="eyebrow">EPISODE '+esc(number)+'</p><h2>'+esc(episode?.title||"GENESIS")+'</h2><p>'+esc(episode?.summary_public||"Released Final Canon.")+'</p>';
+
     let parts=[];
     try{parts=await rpc("api_episode_parts_for_reader",{p_episode_number:Number(number)})}catch{}
-    const tabs=document.querySelector("#part-tabs");
-    const body=document.querySelector("#novel-body");
+    const tabs=document.querySelector("#part-tabs"),body=document.querySelector("#novel-body");
     if(!Array.isArray(parts)||!parts.length){
       tabs.innerHTML="";
       body.innerHTML='<div class="empty-state large">No released Parts are available for this Episode yet.</div>';
       return;
     }
-    tabs.innerHTML=parts.map((p,i)=>'<button data-part="'+i+'" class="'+(i===0?"active":"")+'">Part '+esc(p.part_number)+'</button>').join("");
-    const openPart=async(idx)=>{
-      const part=parts[idx];
+
+    let initialIndex=0;
+    if(preferredPart){
+      const found=parts.findIndex(p=>Number(p.part_number)===Number(preferredPart));
+      if(found>=0)initialIndex=found;
+    }
+    tabs.innerHTML=parts.map((p,i)=>'<button data-part="'+i+'" class="'+(i===initialIndex?"active":"")+'">Part '+esc(p.part_number)+'</button>').join("");
+
+    const openPart=async(idx,{restore=true}={})=>{
+      const part=parts[idx];if(!part)return;
       tabs.querySelectorAll("button").forEach((b,i)=>b.classList.toggle("active",i===idx));
       const access=part.access_mode&&part.access_mode!=="PUBLIC"?' · '+part.access_mode+' EARLY ACCESS':'';
       body.innerHTML='<div class="status-chip">Part '+esc(part.part_number)+' · '+esc(part.title||"")+esc(access)+'</div>'+textParagraphs(part.body_text||"");
-      const panel=document.querySelector("#comments-panel");
-      const list=document.querySelector("#part-comments");
+      history.replaceState({},document.title,location.pathname+"?episode="+encodeURIComponent(number)+"&part="+encodeURIComponent(part.part_number));
+
+      const previous=readLocalProgress();
+      const same=previous&&Number(previous.episode_number)===Number(number)&&Number(previous.part_number)===Number(part.part_number);
+      const state={
+        episode_number:Number(number),
+        episode_title:episode?.title||"GENESIS",
+        part_number:Number(part.part_number),
+        part_id:part.part_id||null,
+        title:part.title||episode?.title||"GENESIS",
+        progress_pct:same?Number(previous.progress_pct||0):0,
+        source:"reader"
+      };
+      saveLocalProgress(state);
+      window.__GENESIS_ACTIVE_READING_STATE=state;
+
+      const panel=document.querySelector("#comments-panel"),commentList=document.querySelector("#part-comments");
       panel?.classList.remove("hidden");
-      if(list&&part.part_id){
-        list.innerHTML='<div class="empty-state">Loading comments…</div>';
-        try{
-          const comments=await rpc("api_part_comments",{p_part_id:part.part_id});
-          if(!Array.isArray(comments)||!comments.length){
-            list.innerHTML='<div class="empty-state">No comments yet. Be the first to share a reaction or prediction when reader accounts open.</div>';
-          }else{
-            list.innerHTML=comments.map(c=>'<article class="comment-card"><div class="comment-meta"><strong>'+esc(c.display_name||"Reader")+'</strong>'+(c.badge?'<span class="reader-badge '+(c.badge==="VIP"?"vip":"")+'">'+esc(c.badge)+'</span>':'')+'<small>'+esc(new Date(c.created_at).toLocaleString())+'</small></div><div>'+esc(c.body)+'</div></article>').join("");
-          }
-        }catch{
-          list.innerHTML='<div class="empty-state">Comments are temporarily unavailable.</div>';
-        }
+      if(commentList&&part.part_id){
         const reloadComments=async()=>{
           try{
             const comments=await rpc("api_part_comments",{p_part_id:part.part_id});
-            list.innerHTML=!Array.isArray(comments)||!comments.length
+            commentList.innerHTML=!Array.isArray(comments)||!comments.length
               ?'<div class="empty-state">No comments yet. Be the first to share a reaction or prediction.</div>'
               :comments.map(c=>'<article class="comment-card"><div class="comment-meta"><strong>'+esc(c.display_name||"Reader")+'</strong>'+(c.badge?'<span class="reader-badge '+(c.badge==="VIP"?"vip":"")+'">'+esc(c.badge)+'</span>':'')+'<small>'+esc(new Date(c.created_at).toLocaleString())+'</small></div><div>'+esc(c.body)+'</div></article>').join("");
-          }catch{list.innerHTML='<div class="empty-state">Comments are temporarily unavailable.</div>'}
+          }catch{commentList.innerHTML='<div class="empty-state">Comments are temporarily unavailable.</div>'}
         };
+        commentList.innerHTML='<div class="empty-state">Loading comments…</div>';
+        await reloadComments();
         await renderPartCommentComposer(part.part_id,reloadComments);
       }
-      window.scrollTo({top:0,behavior:"smooth"});
+
+      if(restore&&same&&Number(previous.progress_pct)>0){
+        setTimeout(()=>{
+          const max=Math.max(0,document.documentElement.scrollHeight-innerHeight);
+          window.scrollTo({top:max*Math.min(100,Math.max(0,Number(previous.progress_pct)))/100,behavior:"auto"});
+        },80);
+      }else{
+        window.scrollTo({top:0,behavior:"auto"});
+      }
     };
-    tabs.querySelectorAll("button").forEach((b,i)=>b.addEventListener("click",()=>openPart(i)));
-    openPart(0);
+
+    tabs.querySelectorAll("button").forEach((b,i)=>b.addEventListener("click",()=>openPart(i,{restore:true})));
+    await openPart(initialIndex,{restore:true});
   }
-  list.querySelectorAll(".episode-button").forEach(b=>b.addEventListener("click",()=>openEpisode(b.dataset.episode)));
-  openEpisode(episodes[0].episode_number);
+
+  episodeList.querySelectorAll(".episode-button").forEach(b=>b.addEventListener("click",()=>openEpisode(b.dataset.episode,null)));
+  await openEpisode(requestedEpisode,requestedPart||null);
 }
 
 async function loadWorld(type){
@@ -578,6 +713,8 @@ async function loadCodex(){
   }
 }
 function initCodex(){
+  const q=new URLSearchParams(location.search).get("q");
+  if(q&&document.querySelector("#codex-search"))document.querySelector("#codex-search").value=q;
   document.querySelector("#codex-search-button")?.addEventListener("click",loadCodex);
   document.querySelector("#codex-type")?.addEventListener("change",loadCodex);
   document.querySelector("#codex-search")?.addEventListener("keydown",e=>{if(e.key==="Enter")loadCodex()});
@@ -600,9 +737,223 @@ function initCodex(){
 
 
 
+
+function closeGlobalFlyouts(){
+  const search=document.querySelector("#global-search-panel");
+  const notifications=document.querySelector("#notification-panel");
+  const backdrop=document.querySelector("#global-flyout-backdrop");
+  search?.setAttribute("hidden","");
+  notifications?.setAttribute("hidden","");
+  backdrop?.setAttribute("hidden","");
+  document.querySelector("#global-search-input")?.setAttribute("aria-expanded","false");
+  document.querySelector("#notification-button")?.setAttribute("aria-expanded","false");
+}
+function openFlyout(el,button){
+  closeGlobalFlyouts();
+  el?.removeAttribute("hidden");
+  document.querySelector("#global-flyout-backdrop")?.removeAttribute("hidden");
+  button?.setAttribute("aria-expanded","true");
+}
+async function searchGenesisPublic(query){
+  const q=String(query||"").trim();
+  if(q.length<2)return [];
+  const [episodesRaw,entitiesRaw]=await Promise.allSettled([
+    rpc("api_episode_library"),
+    rpc("api_entity_search",{p_type:null,p_query:q,p_limit:18})
+  ]);
+  const episodes=episodesRaw.status==="fulfilled"&&Array.isArray(episodesRaw.value)
+    ?episodesRaw.value.filter(e=>String(e.title||"").toLowerCase().includes(q.toLowerCase())||String(e.summary_public||"").toLowerCase().includes(q.toLowerCase())||String(e.episode_number)===q).slice(0,6)
+    :[];
+  const entities=entitiesRaw.status==="fulfilled"&&Array.isArray(entitiesRaw.value)?entitiesRaw.value.slice(0,18):[];
+  return [
+    ...episodes.map(e=>({
+      kind:"Story",
+      title:"Episode "+e.episode_number+" · "+(e.title||"GENESIS"),
+      detail:e.summary_public||"Released Final Canon.",
+      href:readerUrl(e.episode_number,null)
+    })),
+    ...entities.map(x=>({
+      kind:String(x.entity_type||"Codex").replaceAll("_"," "),
+      title:x.public_name||x.entity_code||"Revealed entry",
+      detail:x.short_description||"Reader-safe revealed record.",
+      href:sitePath("/codex/")+"?q="+encodeURIComponent(x.public_name||x.entity_code||q)
+    }))
+  ].slice(0,20);
+}
+function initGlobalSearch(){
+  const input=document.querySelector("#global-search-input");
+  const panel=document.querySelector("#global-search-panel");
+  const results=document.querySelector("#global-search-results");
+  if(!input||!panel||!results)return;
+  let timer=null,token=0;
+  const run=()=>{
+    clearTimeout(timer);
+    const q=input.value.trim();
+    if(q.length<2){
+      results.innerHTML='<div class="flyout-empty">Type at least 2 characters to search released story and reader-safe Codex records.</div>';
+      if(q.length===0)closeGlobalFlyouts();
+      return;
+    }
+    openFlyout(panel,input);
+    results.innerHTML='<div class="flyout-empty">Searching reader-safe GENESIS records…</div>';
+    const mine=++token;
+    timer=setTimeout(async()=>{
+      try{
+        const rows=await searchGenesisPublic(q);
+        if(mine!==token)return;
+        results.innerHTML=rows.length?rows.map(x=>
+          '<a class="global-result" href="'+esc(x.href)+'"><small>'+esc(x.kind.toUpperCase())+'</small><strong>'+esc(x.title)+'</strong><span>'+esc(x.detail)+'</span></a>'
+        ).join(""):'<div class="flyout-empty">No released or reader-safe records match “'+esc(q)+'”.</div>';
+      }catch{
+        if(mine===token)results.innerHTML='<div class="flyout-empty">Search is temporarily unavailable.</div>';
+      }
+    },180);
+  };
+  input.addEventListener("input",run);
+  input.addEventListener("focus",()=>{if(input.value.trim().length>=2)run()});
+  input.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){closeGlobalFlyouts();input.blur()}
+    if(e.key==="Enter"){
+      const first=results.querySelector("a");
+      if(first)location.href=first.href;
+    }
+  });
+  document.querySelector("[data-close-search]")?.addEventListener("click",closeGlobalFlyouts);
+}
+
+function getReadNotificationIds(){
+  try{return new Set(JSON.parse(localStorage.getItem(NOTIFICATION_READ_KEY)||"[]"))}catch{return new Set()}
+}
+function saveReadNotificationIds(ids){
+  try{localStorage.setItem(NOTIFICATION_READ_KEY,JSON.stringify([...ids].slice(-200)))}catch{}
+}
+async function buildNotificationFeed(){
+  const items=[];
+  try{
+    const state=firstRow(await rpc("api_public_release_state_v1"));
+    if(state?.releases_paused){
+      items.push({id:"release-paused",kind:"Release",title:"Public releases are paused",detail:"The story queue remains protected until releases resume.",href:sitePath("/read/"),time:"SYSTEM"});
+    }else if(state?.next_part&&state?.next_publish_at){
+      const p=state.next_part;
+      items.push({id:"next-"+(p.part_key||p.episode_number+"-"+p.part_number)+"-"+state.next_publish_at,kind:"Release",title:"Next Part scheduled",detail:"Episode "+p.episode_number+" · Part "+String(p.part_number).padStart(3,"0")+" · "+formatPhtDate(state.next_publish_at),href:sitePath("/read/"),time:"UPCOMING"});
+    }
+  }catch{}
+  try{
+    const episodes=await rpc("api_episode_library");
+    if(Array.isArray(episodes)){
+      for(const ep of episodes.slice(0,3)){
+        let parts=[];
+        try{parts=await rpc("api_episode_parts_for_reader",{p_episode_number:Number(ep.episode_number)})}catch{}
+        if(!Array.isArray(parts))continue;
+        for(const p of parts.slice(-3).reverse()){
+          items.push({
+            id:"release-"+(p.part_id||ep.episode_number+"-"+p.part_number),
+            kind:"New Part",
+            title:"Episode "+ep.episode_number+" · Part "+String(p.part_number).padStart(3,"0"),
+            detail:p.title||ep.title||"Released Final Canon",
+            href:readerUrl(ep.episode_number,p.part_number),
+            time:formatPhtDate(p.publish_at||p.published_at||p.released_at)||"RELEASED"
+          });
+        }
+      }
+    }
+  }catch{}
+  items.push({id:"reader-quest-v1",kind:"Reader Quest",title:"Reader rewards are active",detail:"Reading, sharing and support can earn EXP and collectible rewards.",href:sitePath("/quests/"),time:"ACTIVE"});
+  return items.slice(0,10);
+}
+async function initNotifications(){
+  const button=document.querySelector("#notification-button");
+  const panel=document.querySelector("#notification-panel");
+  const list=document.querySelector("#notification-list");
+  const badge=document.querySelector("#notification-badge");
+  if(!button||!panel||!list||!badge)return;
+  let feed=await buildNotificationFeed();
+  const paint=()=>{
+    const read=getReadNotificationIds();
+    const unread=feed.filter(x=>!read.has(x.id)).length;
+    badge.textContent=String(Math.min(99,unread));
+    badge.classList.toggle("hidden",unread===0);
+    list.innerHTML=feed.length?feed.map(x=>{
+      const isRead=read.has(x.id);
+      return '<a class="notification-item '+(isRead?"read":"unread")+'" data-notification-id="'+esc(x.id)+'" href="'+esc(x.href)+'"><span class="notification-dot"></span><div><small>'+esc(x.kind)+' · '+esc(x.time)+'</small><strong>'+esc(x.title)+'</strong><p>'+esc(x.detail)+'</p></div></a>';
+    }).join(""):'<div class="flyout-empty">No notifications yet.</div>';
+    list.querySelectorAll("[data-notification-id]").forEach(a=>a.addEventListener("click",()=>{
+      const next=getReadNotificationIds();next.add(a.dataset.notificationId);saveReadNotificationIds(next);
+    }));
+  };
+  paint();
+  button.addEventListener("click",()=>{
+    if(panel.hasAttribute("hidden"))openFlyout(panel,button);else closeGlobalFlyouts();
+  });
+  document.querySelector("[data-close-notifications]")?.addEventListener("click",closeGlobalFlyouts);
+  document.querySelector("#notification-mark-all")?.addEventListener("click",()=>{
+    const read=getReadNotificationIds();feed.forEach(x=>read.add(x.id));saveReadNotificationIds(read);paint();
+  });
+}
+function initMobileHomeNav(){
+  const button=document.querySelector(".v2-mobile-menu");
+  const nav=document.querySelector(".v2-primary-nav");
+  if(!button||!nav)return;
+  const drawer=document.createElement("div");
+  drawer.className="v2-mobile-drawer";
+  drawer.innerHTML=
+    '<div class="mobile-drawer-head"><strong>GENESIS</strong><button type="button" aria-label="Close navigation">×</button></div>'+
+    '<label class="mobile-drawer-search"><span class="v25-icon i-search" aria-hidden="true"></span><input type="search" placeholder="Search GENESIS…" autocomplete="off"></label>'+
+    '<div class="mobile-drawer-search-results"></div><nav>'+nav.innerHTML+'</nav>';
+  const backdrop=document.createElement("button");
+  backdrop.type="button";backdrop.className="v2-mobile-drawer-backdrop";backdrop.setAttribute("aria-label","Close navigation");
+  document.body.append(backdrop,drawer);
+  const searchInput=drawer.querySelector(".mobile-drawer-search input");
+  const searchResults=drawer.querySelector(".mobile-drawer-search-results");
+  let searchTimer=null,searchToken=0;
+  const close=()=>{document.body.classList.remove("v2-menu-open");button.setAttribute("aria-expanded","false")};
+  const open=()=>{closeGlobalFlyouts();document.body.classList.add("v2-menu-open");button.setAttribute("aria-expanded","true")};
+  button.setAttribute("aria-expanded","false");
+  button.addEventListener("click",()=>document.body.classList.contains("v2-menu-open")?close():open());
+  drawer.querySelector(".mobile-drawer-head button")?.addEventListener("click",close);
+  backdrop.addEventListener("click",close);
+  drawer.querySelectorAll("nav a").forEach(a=>a.addEventListener("click",close));
+  searchInput?.addEventListener("input",()=>{
+    clearTimeout(searchTimer);
+    const q=searchInput.value.trim();
+    if(q.length<2){searchResults.innerHTML="";return}
+    const mine=++searchToken;
+    searchResults.innerHTML='<div class="mobile-search-empty">Searching…</div>';
+    searchTimer=setTimeout(async()=>{
+      try{
+        const rows=await searchGenesisPublic(q);
+        if(mine!==searchToken)return;
+        searchResults.innerHTML=rows.length?rows.slice(0,8).map(x=>
+          '<a href="'+esc(x.href)+'"><small>'+esc(x.kind.toUpperCase())+'</small><strong>'+esc(x.title)+'</strong></a>'
+        ).join(""):'<div class="mobile-search-empty">No reader-safe matches.</div>';
+      }catch{
+        if(mine===searchToken)searchResults.innerHTML='<div class="mobile-search-empty">Search unavailable.</div>';
+      }
+    },180);
+  });
+}
+function initAmbientOverlay(){
+  if(!document.body.classList.contains("web-ds-v2"))return;
+  if(document.querySelector(".genesis-ambient-overlay"))return;
+  const layer=document.createElement("div");
+  layer.className="genesis-ambient-overlay";
+  layer.setAttribute("aria-hidden","true");
+  layer.innerHTML='<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>';
+  document.body.append(layer);
+}
+async function initSiteChrome(){
+  document.querySelector("#global-flyout-backdrop")?.addEventListener("click",closeGlobalFlyouts);
+  addEventListener("keydown",e=>{if(e.key==="Escape")closeGlobalFlyouts()});
+  initGlobalSearch();
+  await initNotifications();
+  initMobileHomeNav();
+  initAmbientOverlay();
+}
+
 function releaseStateFromClock(clock){
   const now=Date.now();
   const paused=!!clock?.releases_paused;
+  if(clock?.launch_authorized===false)return {code:"PRE-LAUNCH",className:"awaiting",detail:"Public launch is not authorized yet"};
   const publishAt=clock?.next_publish_at?new Date(clock.next_publish_at):null;
   const cycleAt=clock?.next_cycle_at?new Date(clock.next_cycle_at):null;
   if(paused)return {code:"PAUSED",className:"paused",detail:"Public releases are temporarily paused"};
@@ -618,13 +969,58 @@ function paintReleaseState(el,clock){
   el.innerHTML='<span class="state-dot"></span><strong>'+esc(state.code)+'</strong><small>'+esc(state.detail)+'</small>';
 }
 
+
+function paintSystemNotices(releaseState,accountData=null){
+  const list=document.querySelector(".notice-list");
+  if(!list)return;
+  const releaseTitle=releaseState?.releases_paused?"Release queue paused":releaseState?.launch_authorized===false?"Pre-launch protection active":"Three-Part Release Cycle";
+  const releaseCopy=releaseState?.releases_paused
+    ?"No public Part will release while the queue is paused."
+    :releaseState?.launch_authorized===false
+      ?"Production may continue, but public launch remains protected until authorization."
+      :"Monday–Saturday · 8:00 AM, 2:00 PM and 8:00 PM PHT · Sunday rest.";
+  const accessCopy=accountData
+    ?"Your Tier, EXP, rewards and reading progress are loaded from your reader account."
+    :"Sign in to synchronize account rewards and keep a local exact reading resume point.";
+  list.innerHTML=
+    '<div><span class="notice-icon gold"><i class="v25-icon i-release" aria-hidden="true"></i></span><p><strong>'+esc(releaseTitle)+'</strong><small>'+esc(releaseCopy)+'</small></p><time>LIVE</time></div>'+
+    '<div><span class="notice-icon cyan"><i class="v25-icon i-quest" aria-hidden="true"></i></span><p><strong>Reader Quest System</strong><small>Read, share, support and claim eligible rewards through the protected reader account.</small></p><time>ACTIVE</time></div>'+
+    '<div><span class="notice-icon violet"><i class="v25-icon i-profile" aria-hidden="true"></i></span><p><strong>Reader continuity</strong><small>'+esc(accessCopy)+'</small></p><time>SAFE</time></div>';
+}
+async function collectLatestParts(episodes,limit=3){
+  const rows=[];
+  for(const ep of (Array.isArray(episodes)?episodes.slice(0,6):[])){
+    let parts=[];
+    try{parts=await rpc("api_episode_parts_for_reader",{p_episode_number:Number(ep.episode_number)})}catch{}
+    if(!Array.isArray(parts))continue;
+    for(const p of parts){
+      rows.push({...p,episode_number:Number(ep.episode_number),episode_title:ep.title||"GENESIS"});
+    }
+    if(rows.length>=limit*3)break;
+  }
+  rows.sort((a,b)=>{
+    const ad=new Date(a.publish_at||a.published_at||a.released_at||0).getTime();
+    const bd=new Date(b.publish_at||b.published_at||b.released_at||0).getTime();
+    if(ad!==bd)return bd-ad;
+    if(a.episode_number!==b.episode_number)return b.episode_number-a.episode_number;
+    return Number(b.part_number||0)-Number(a.part_number||0);
+  });
+  return rows.slice(0,limit);
+}
+function latestPartCard(part,index){
+  const when=formatPhtDate(part.publish_at||part.published_at||part.released_at)||"Released";
+  return '<a class="release-tile v2-release-tile release-art-'+(index+1)+'" href="'+esc(readerUrl(part.episode_number,part.part_number))+'">'+
+    '<div class="release-thumb"></div><div class="release-info"><small>EPISODE '+esc(part.episode_number)+' · PART '+String(part.part_number).padStart(3,"0")+'</small>'+
+    '<strong>'+esc(part.title||part.episode_title||"GENESIS")+'</strong><span>'+esc(when)+(index===0?' · NEW':'')+'</span></div></a>';
+}
+
 async function initHome(){
   const timeEl=document.querySelector("#home-release-time");
   const partEl=document.querySelector("#home-release-part");
   const hEl=document.querySelector("#cd-hours");
   const mEl=document.querySelector("#cd-minutes");
   const sEl=document.querySelector("#cd-seconds");
-  let nextAt=null;
+  let nextAt=null,releaseState=null,accountData=null;
 
   function nextManilaSlot(){
     const now=new Date();
@@ -634,81 +1030,121 @@ async function initHome(){
     }).formatToParts(now).reduce((o,p)=>(o[p.type]=p.value,o),{});
     const y=Number(parts.year),m=Number(parts.month)-1,d=Number(parts.day);
     const nowLocalSeconds=Number(parts.hour)*3600+Number(parts.minute)*60+Number(parts.second);
-    const slots=[8,14,20];
     for(let dayOffset=0;dayOffset<8;dayOffset++){
       const localDate=new Date(Date.UTC(y,m,d+dayOffset));
-      if(localDate.getUTCDay()===0)continue; // Sunday rest day.
-      for(const hour of slots){
+      if(localDate.getUTCDay()===0)continue;
+      for(const hour of [8,14,20]){
         const slotSeconds=hour*3600;
         if(dayOffset===0&&slotSeconds<=nowLocalSeconds)continue;
-        const target=new Date(Date.UTC(
-          localDate.getUTCFullYear(),localDate.getUTCMonth(),localDate.getUTCDate(),hour-8,0,0
-        ));
-        const label=hour===8?"8:00 AM PHT":hour===14?"2:00 PM PHT":"8:00 PM PHT";
-        return {date:target,label};
+        return {
+          date:new Date(Date.UTC(localDate.getUTCFullYear(),localDate.getUTCMonth(),localDate.getUTCDate(),hour-8,0,0)),
+          label:hour===8?"8:00 AM PHT":hour===14?"2:00 PM PHT":"8:00 PM PHT"
+        };
       }
     }
-    const fallback=new Date(now.getTime()+8*3600*1000);
-    return {date:fallback,label:"Next scheduled Part"};
+    return {date:new Date(now.getTime()+8*3600*1000),label:"Next release"};
   }
   function tick(){
     if(!nextAt)return;
-    const ms=Math.max(0,nextAt.getTime()-Date.now());
-    const t=Math.floor(ms/1000);
+    const ms=Math.max(0,nextAt.getTime()-Date.now()),t=Math.floor(ms/1000);
     if(hEl)hEl.textContent=String(Math.floor(t/3600)).padStart(2,"0");
     if(mEl)mEl.textContent=String(Math.floor((t%3600)/60)).padStart(2,"0");
     if(sEl)sEl.textContent=String(t%60).padStart(2,"0");
-    if(ms<=0)setTimeout(()=>{const n=nextManilaSlot();nextAt=n.date;if(timeEl)timeEl.textContent=n.label},1100);
-  }
-  try{
-    const clock=firstRow(await rpc("api_release_clock"));
-    paintReleaseState(document.querySelector("#home-release-state"),clock);
-  }catch{}
-  const slot=nextManilaSlot(); nextAt=slot.date;
-  if(timeEl)timeEl.textContent=slot.label;
-  tick(); setInterval(tick,1000);
-
-  try{
-    const episodes=await rpc("api_episode_library");
-    if(Array.isArray(episodes)&&episodes.length){
-      const latest=episodes[0];
-      document.querySelector("#home-current-episode").textContent="Episode "+esc(latest.episode_number);
-      document.querySelector("#home-current-title").textContent=latest.title||"Continue Your Journey";
-      document.querySelector("#home-current-summary").textContent=latest.summary_public||"Continue the latest released Final Canon.";
-      let cards=[];
-      for(const [index,ep] of episodes.slice(0,3).entries()){
-        const artClass="release-art-"+(index+1);
-        cards.push('<a class="release-tile v2-release-tile '+artClass+'" href="/site-preview/read/"><div class="release-thumb"></div><div class="release-info"><small>EPISODE '+esc(ep.episode_number)+'</small><strong>'+esc(ep.title||"GENESIS")+'</strong><span>Released Final Canon</span></div></a>');
-      }
-      const box=document.querySelector("#home-latest-releases"); if(box)box.innerHTML=cards.join("");
-      if(partEl)partEl.textContent="Episode "+esc(latest.episode_number)+" · next scheduled Part";
+    if(ms<=0&&releaseState?.launch_authorized&&!releaseState?.releases_paused&&!releaseState?.next_publish_at){
+      const n=nextManilaSlot();nextAt=n.date;if(timeEl)timeEl.textContent=n.label;
     }
-  }catch{}
+  }
 
   try{
-    const session=await getSession();
-    const user=session?await getAuthUser(session):null;
-    if(user){
-      const data=await rpc("api_reader_account",{},session.access_token);
-      const name=data?.display_name||user?.user_metadata?.display_name||"Reader";
+    releaseState=firstRow(await rpc("api_public_release_state_v1"));
+    paintReleaseState(document.querySelector("#home-release-state"),releaseState);
+  }catch{}
+
+  const authoritativeAt=releaseState?.next_publish_at?new Date(releaseState.next_publish_at):null;
+  const authoritativeValid=authoritativeAt&&!Number.isNaN(authoritativeAt.getTime())&&authoritativeAt.getTime()>Date.now();
+  if(authoritativeValid){
+    nextAt=authoritativeAt;
+    if(timeEl)timeEl.textContent=new Intl.DateTimeFormat("en-PH",{timeZone:"Asia/Manila",hour:"numeric",minute:"2-digit",hour12:true}).format(authoritativeAt)+" PHT";
+    if(partEl&&releaseState?.next_part){
+      partEl.textContent="Episode "+releaseState.next_part.episode_number+" · Part "+String(releaseState.next_part.part_number).padStart(3,"0");
+    }
+  }else if(releaseState?.launch_authorized&&!releaseState?.releases_paused){
+    const slot=nextManilaSlot();nextAt=slot.date;if(timeEl)timeEl.textContent=slot.label;
+  }else{
+    if(timeEl)timeEl.textContent=releaseState?.releases_paused?"RELEASES PAUSED":"COMING SOON";
+    if(partEl)partEl.textContent="Waiting for the next verified Part";
+    if(hEl)hEl.textContent="00";if(mEl)mEl.textContent="00";if(sEl)sEl.textContent="00";
+  }
+  tick();setInterval(tick,1000);
+
+  let episodes=[];
+  try{episodes=await rpc("api_episode_library")}catch{}
+  if(Array.isArray(episodes)&&episodes.length){
+    const latestParts=await collectLatestParts(episodes,3);
+    const box=document.querySelector("#home-latest-releases");
+    if(box&&latestParts.length)box.innerHTML=latestParts.map(latestPartCard).join("");
+
+    let resume=readLocalProgress();
+    let session=null,user=null;
+    try{
+      session=await getSession();user=session?await getAuthUser(session):null;
+      if(user){
+        try{accountData=await rpc("api_reader_account_v3",{},session.access_token)}catch{accountData=await rpc("api_reader_account",{},session.access_token)}
+        resume=extractAccountProgress(accountData)||resume;
+      }
+    }catch{}
+
+    const fallbackPart=latestParts[0]||null;
+    if(!resume&&fallbackPart)resume={
+      episode_number:fallbackPart.episode_number,part_number:fallbackPart.part_number,part_id:fallbackPart.part_id,
+      episode_title:fallbackPart.episode_title,title:fallbackPart.title,progress_pct:0,source:"latest"
+    };
+
+    if(resume?.episode_number){
+      const ep=episodes.find(x=>Number(x.episode_number)===Number(resume.episode_number))||episodes[0];
+      let partTitle=resume.title||null,partNumber=Number(resume.part_number||0);
+      if(ep&&partNumber&&!partTitle){
+        try{
+          const parts=await rpc("api_episode_parts_for_reader",{p_episode_number:Number(ep.episode_number)});
+          const p=Array.isArray(parts)?parts.find(x=>Number(x.part_number)===partNumber):null;
+          partTitle=p?.title||null;
+        }catch{}
+      }
+      document.querySelector("#home-current-episode").textContent="Episode "+ep.episode_number+(partNumber?" · Part "+String(partNumber).padStart(3,"0"):"");
+      document.querySelector("#home-current-title").textContent=partTitle||ep.title||"Continue Your Journey";
+      document.querySelector("#home-current-summary").textContent=resume.source==="latest"
+        ?(ep.summary_public||"Begin with the latest released Final Canon.")
+        :"Resume your exact reading position and continue the journey.";
+      document.querySelectorAll(".v2-reading-panel .reading-actions a,.v2-hero-copy .hero-actions a:nth-child(2)").forEach(a=>{
+        if(a.textContent.includes("Continue"))a.href=readerUrl(ep.episode_number,partNumber||null);
+      });
+      const heroContinue=document.querySelector(".v2-hero-copy .hero-actions .ghost");if(heroContinue)heroContinue.href=readerUrl(ep.episode_number,partNumber||null);
+      if(partEl&&!releaseState?.next_part)partEl.textContent="Episode "+episodes[0].episode_number+" · next scheduled Part";
+    }
+
+    if(accountData){
+      const name=accountData?.display_name||user?.user_metadata?.display_name||"Reader";
       document.querySelector("#home-reader-name").textContent=name;
-      const totalExp=Number(data?.reader_exp??data?.total_exp??0);
-      const tier=Math.floor(totalExp/TIER_EXP_THRESHOLD)+1;
-      const within=totalExp%TIER_EXP_THRESHOLD;
+      const totalExp=Number(accountData?.reader_exp??accountData?.total_exp??0);
+      const tier=Math.floor(totalExp/TIER_EXP_THRESHOLD)+1,within=totalExp%TIER_EXP_THRESHOLD;
       document.querySelector("#home-reader-tier").textContent="Tier "+tier;
       document.querySelector("#home-exp-progress").textContent=within.toLocaleString()+" / "+TIER_EXP_THRESHOLD.toLocaleString()+" EXP";
       document.querySelector("#home-exp-total").textContent="Total EXP: "+totalExp.toLocaleString();
       document.querySelector("#home-exp-bar").style.width=Math.min(100,within/TIER_EXP_THRESHOLD*100)+"%";
-      const nextTierEl=document.querySelector("#home-tier-next");
-      if(nextTierEl)nextTierEl.textContent="Next reward in "+(TIER_EXP_THRESHOLD-within).toLocaleString()+" EXP";
-      const support=Number(data?.support?.advance_parts??data?.support?.credit_balance??0);
+      document.querySelector("#home-tier-next").textContent="Next reward in "+(TIER_EXP_THRESHOLD-within).toLocaleString()+" EXP";
+      const support=Number(accountData?.support?.advance_parts??accountData?.support?.credit_balance??0);
       document.querySelector("#home-support-unlocks").textContent="+"+support;
       document.querySelector("#home-access-total").textContent="+"+support+" Parts Ahead";
-      document.querySelector("#home-reader-title").textContent=data?.reader_title||"GENESIS Adventurer";
+      document.querySelector("#home-reader-title").textContent=accountData?.reader_title||accountData?.support?.public_badge||"GENESIS Adventurer";
+      document.querySelector("#home-social-unlocks").textContent="+"+Number(accountData?.social_unlocks??accountData?.social?.unlock_count??0);
+      document.querySelector("#home-active-quests").textContent=Number(accountData?.active_quests??accountData?.quests?.active_count??0)+" Ongoing";
+      document.querySelector("#home-collectibles").textContent=String(accountData?.collection_count??accountData?.collectibles_count??0);
+      const avatar=document.querySelector(".v2-access-panel .profile-avatar img");
+      if(avatar)avatar.src=user?.user_metadata?.avatar_url||"/assets/genesis-official-logo-64.png";
     }
-  }catch{}
+  }
+  paintSystemNotices(releaseState,accountData);
 }
-
 
 function initReaderControls(){
   const shell=document.querySelector(".reader-shell");
@@ -722,12 +1158,24 @@ function initReaderControls(){
   fs?.addEventListener("input",()=>{body.style.fontSize=fs.value+"px";document.querySelector("#font-size-label").textContent=fs.value+"px"});
   ls?.addEventListener("input",()=>{body.style.lineHeight=ls.value;document.querySelector("#line-height-label").textContent=Number(ls.value).toFixed(2)});
   rw?.addEventListener("input",()=>{body.style.maxWidth=rw.value+"px";document.querySelector("#reader-width-label").textContent=rw.value+"px"});
-  const updateProgress=()=>{const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);const pct=Math.min(100,Math.max(0,scrollY/max*100));const fill=document.querySelector("#reader-progress-fill");if(fill)fill.style.width=pct+"%";const pos=document.querySelector("#reader-position");if(pos)pos.textContent=Math.round(pct)+"% read"};
+  let progressTimer=null;
+  const updateProgress=()=>{
+    const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
+    const pct=Math.min(100,Math.max(0,scrollY/max*100));
+    const fill=document.querySelector("#reader-progress-fill");if(fill)fill.style.width=pct+"%";
+    const pos=document.querySelector("#reader-position");if(pos)pos.textContent=Math.round(pct)+"% read";
+    clearTimeout(progressTimer);
+    progressTimer=setTimeout(()=>{
+      const state=window.__GENESIS_ACTIVE_READING_STATE;
+      if(state){state.progress_pct=Math.round(pct*10)/10;saveLocalProgress(state)}
+    },350);
+  };
   addEventListener("scroll",updateProgress,{passive:true});updateProgress();
 }
 
 const page=document.body.dataset.page;
 await initAuthChrome();
+await initSiteChrome();
 if(page==="home")await initHome();
 if(page==="read"){await initRead();initReaderControls();}
 if(page==="world")initWorld();
@@ -742,7 +1190,7 @@ async function initFan(){
   try{
     const rows=await rpc("api_fan_feed",{p_limit:30,p_offset:0});
     if(!Array.isArray(rows)||!rows.length){
-      feed.innerHTML='<div class="empty-state large">No Fan Page posts yet. Reader uploads are prepared but remain disabled during preview.</div>';
+      feed.innerHTML='<div class="empty-state large">No Fan Page posts yet. Community posting is currently closed; the approved feed remains read-only until moderation uploads open.</div>';
       return;
     }
     feed.innerHTML=rows.map(p=>'<article class="fan-post"><div class="fan-media">Image stored privately</div><div class="fan-copy"><div class="fan-author"><strong>'+esc(p.display_name||"Reader")+'</strong>'+(p.badge?'<span class="reader-badge '+(p.badge==="VIP"?"vip":"")+'">'+esc(p.badge)+'</span>':'')+'</div><p>'+esc(p.caption||"")+'</p></div></article>').join("");
