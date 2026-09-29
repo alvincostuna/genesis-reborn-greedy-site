@@ -1,7 +1,11 @@
+# LIVE DEPLOY LAUNCHER: deploy reconciled main f88cedb; trigger 2026-09-30 reader-live
 name: Deploy GENESIS Live Reader
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - ops/deploy-live-reader
 
 permissions:
   contents: read
@@ -19,6 +23,8 @@ jobs:
     steps:
       - name: Checkout live source
         uses: actions/checkout@v6
+        with:
+          ref: main
 
       - name: Set up Node
         uses: actions/setup-node@v4
