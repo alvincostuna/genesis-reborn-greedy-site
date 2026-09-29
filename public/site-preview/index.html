@@ -27,9 +27,9 @@
     </nav>
     <div class="game-nav-actions v2-nav-actions">
       <label class="v2-search" aria-label="Search">
-        <span class="v25-icon i-search" aria-hidden="true"></span><input type="search" placeholder="Search stories, characters…" disabled>
+        <span class="v25-icon i-search" aria-hidden="true"></span><input id="global-search-input" type="search" placeholder="Search stories, characters…" autocomplete="off" aria-label="Search released stories and revealed Codex" aria-expanded="false" aria-controls="global-search-panel">
       </label>
-      <button class="icon-button v2-bell" type="button" aria-label="Notifications"><span class="v25-icon i-bell" aria-hidden="true"></span></button>
+      <button class="icon-button v2-bell" id="notification-button" type="button" aria-label="Updates" aria-expanded="false" aria-controls="notification-panel"><span class="v25-icon i-bell" aria-hidden="true"></span><span id="notification-badge" class="notification-badge hidden">0</span></button>
       <a class="profile-orb" data-auth-link href="/site-preview/account/" aria-label="Reader account">
         <img src="/assets/genesis-official-logo-64.png" alt="">
       </a>
@@ -39,7 +39,7 @@
   <main class="game-shell v2-shell">
     <section class="hero-panel v2-hero">
       <picture class="v25-hero-picture"><source media="(max-width: 900px)" srcset="/assets/v25/hero-home-mobile.webp"><img class="hero-art" src="/assets/v25/hero-home-desktop.webp" alt="GENESIS world key art"></picture>
-      <div class="hero-shade"></div>
+      <div class="hero-shade"></div><div class="hero-atmosphere" aria-hidden="true"><i class="mist mist-a"></i><i class="mist mist-b"></i><i class="spark-field"></i><i class="light-sweep"></i></div>
       <div class="v2-hero-glow" aria-hidden="true"></div>
       <div class="hero-copy v2-hero-copy">
         <img class="hero-logo" src="/assets/genesis-wordmark-v2.svg" alt="GENESIS: REBORN GREEDY">
@@ -129,7 +129,7 @@
 
       <article class="hud-card notices-card v2-panel">
         <div class="card-head"><span><i class="v25-icon i-bell" aria-hidden="true"></i>ANNOUNCEMENTS</span><span>System Notices</span></div>
-        <div class="notice-list">
+        <div class="notice-list" id="home-announcements">
           <div><span class="notice-icon gold"><i class="v25-icon i-home" aria-hidden="true"></i></span><p><strong>Three-Part Release Cycle</strong><small>Monday–Saturday · 8:00 AM, 2:00 PM and 8:00 PM PHT · Sunday rest.</small></p><time>NOW</time></div>
           <div><span class="notice-icon cyan"><i class="v25-icon i-quest" aria-hidden="true"></i></span><p><strong>Reader Quest System</strong><small>Read, share, and support to earn EXP and Tier rewards.</small></p><time>ACTIVE</time></div>
           <div><span class="notice-icon violet"><i class="v25-icon i-support" aria-hidden="true"></i></span><p><strong>Support GENESIS</strong><small>Advance access never changes public chronology.</small></p><time>PREVIEW</time></div>
@@ -145,6 +145,18 @@
       <a class="feature-tile support" href="/site-preview/support/"><i class="v25-icon i-support" aria-hidden="true"></i><div><strong>Support</strong><span>Help the story continue</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
     </section>
   </main>
+
+  <section id="global-search-panel" class="global-search-panel hidden" aria-label="Search results">
+    <div class="global-search-head"><div><small>READER-SAFE SEARCH</small><strong>Search GENESIS</strong></div><button id="global-search-close" type="button" aria-label="Close search">×</button></div>
+    <div id="global-search-results" class="global-search-results"><div class="global-search-empty">Type at least 2 characters to search released stories and revealed World/Codex records.</div></div>
+  </section>
+  <button id="global-search-backdrop" class="global-search-backdrop hidden" type="button" aria-label="Close search"></button>
+
+  <section id="notification-panel" class="notification-panel hidden" aria-label="Updates">
+    <div class="notification-head"><div><small>GENESIS UPDATES</small><strong>Activity</strong></div><button id="notification-close" type="button" aria-label="Close updates">×</button></div>
+    <div id="notification-list" class="notification-list"><div class="notification-empty">Loading current updates…</div></div>
+    <button id="notification-mark-all" class="notification-mark-all" type="button">Mark all as read</button>
+  </section>
 
   <nav class="mobile-bottom-nav v2-mobile-bottom" aria-label="Mobile navigation">
     <a class="active" href="/site-preview/"><span class="v25-icon i-home" aria-hidden="true"></span>Home</a>
