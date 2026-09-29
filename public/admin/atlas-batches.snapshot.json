@@ -1,0 +1,137 @@
+{
+  "schema_version": "GENESIS_ATLAS_VISUAL_BATCH_V1",
+  "batch_id": "ATLAS-A01",
+  "title": "Early Hiraya Atlas Visual Batch",
+  "authority": {
+    "art_manifest_spreadsheet_id": "1s61yK7MqWRrki63bB0xeUxyICcUwnymL4zuRLQQ_9xY",
+    "sheet_name": "Atlas_Batches",
+    "canonical_game_authority": "Supabase"
+  },
+  "safety": {
+    "public_publish_authorized": false,
+    "artwork_never_grants_reader_visibility": true,
+    "reveal_execution_required": true
+  },
+  "items": [
+    {
+      "ordinal": 1,
+      "asset_id": "GRG-AST-0000176",
+      "entity_type": "MAP",
+      "entity_key": "MAP-000001",
+      "display_name": "Hiraya Arrival Plaza",
+      "visual_role": "LOCAL_MAP",
+      "story_anchor": "E004-P01",
+      "drive_folder_id": "1UmO2A_iSSjtU6Dw0KDxlXSQeb04W_Y_t",
+      "approval_status": "NEEDED",
+      "public_visibility": "HIDDEN",
+      "web_export_targets": [
+        "1600x900",
+        "800x450",
+        "400x225"
+      ]
+    },
+    {
+      "ordinal": 2,
+      "asset_id": "GRG-AST-0000001",
+      "entity_type": "MAP",
+      "entity_key": "MAP-000003",
+      "display_name": "East Verge",
+      "visual_role": "LOCAL_MAP",
+      "story_anchor": "E004-P04",
+      "drive_folder_id": "14j4E0vTNvS4fC3xSwl5H_bfBd8cODtcT",
+      "approval_status": "NEEDED",
+      "public_visibility": "HIDDEN",
+      "web_export_targets": [
+        "1600x900",
+        "800x450",
+        "400x225"
+      ]
+    },
+    {
+      "ordinal": 3,
+      "asset_id": "GRG-AST-0000177",
+      "entity_type": "MAP",
+      "entity_key": "MAP-000002",
+      "display_name": "Hiraya Market Ward",
+      "visual_role": "LOCAL_MAP",
+      "story_anchor": "E004-P05",
+      "drive_folder_id": "1GhN0f4mIbeXtidpzObZeW-dKyo6J39Bx",
+      "approval_status": "NEEDED",
+      "public_visibility": "HIDDEN",
+      "web_export_targets": [
+        "1600x900",
+        "800x450",
+        "400x225"
+      ]
+    },
+    {
+      "ordinal": 4,
+      "asset_id": "GRG-AST-0000178",
+      "entity_type": "MAP",
+      "entity_key": "MAP-000004",
+      "display_name": "Old Rice Road",
+      "visual_role": "LOCAL_MAP",
+      "story_anchor": "E008-P01",
+      "drive_folder_id": "1otf_TB1nSIwTtLMqPTfJsqTIADM3pdnB",
+      "approval_status": "NEEDED",
+      "public_visibility": "HIDDEN",
+      "web_export_targets": [
+        "1600x900",
+        "800x450",
+        "400x225"
+      ]
+    },
+    {
+      "ordinal": 5,
+      "asset_id": "GRG-AST-0000179",
+      "entity_type": "MAP",
+      "entity_key": "MAP-000005",
+      "display_name": "Moundwood",
+      "visual_role": "LOCAL_MAP",
+      "story_anchor": "E009-P03",
+      "drive_folder_id": "1-DaslIRnYf21CVLV4Q7i12LK2hOJ_tJb",
+      "approval_status": "NEEDED",
+      "public_visibility": "HIDDEN",
+      "web_export_targets": [
+        "1600x900",
+        "800x450",
+        "400x225"
+      ]
+    },
+    {
+      "ordinal": 6,
+      "asset_id": "GRG-AST-0000002",
+      "entity_type": "MON",
+      "entity_key": "MON-000001",
+      "display_name": "Verge Gnawer",
+      "visual_role": "PROFILE",
+      "story_anchor": "E003-P04",
+      "drive_folder_id": "1mA_zAvkxSNY9UWSToTe8gIVk4AFStJQS",
+      "approval_status": "DRAFT",
+      "public_visibility": "HIDDEN",
+      "web_export_targets": [
+        "1024",
+        "512",
+        "128"
+      ]
+    },
+    {
+      "ordinal": 7,
+      "asset_id": "GRG-AST-0000004",
+      "entity_type": "MON",
+      "entity_key": "MON-000003",
+      "display_name": "Dusk Sigbin",
+      "visual_role": "PROFILE",
+      "story_anchor": "E008-P04",
+      "drive_folder_id": "11OiOkjFLQlJXGdJ2dP1WX10rigwk00Xh",
+      "approval_status": "NEEDED",
+      "public_visibility": "HIDDEN",
+      "web_export_targets": [
+        "1024",
+        "512",
+        "128"
+      ]
+    }
+  ],
+  "release_rule": "Each asset needs art approval + web export. Reader visibility still requires its executed published Final Canon reveal."
+}
