@@ -29,6 +29,7 @@
         <button class="nav" data-view="authority">Authority</button>
         <button class="nav" data-view="access">Access & Audit</button>
         <button class="nav" data-view="database">Game Database</button>
+        <button class="nav" data-view="art-assets">Art Assets</button>
         <button class="nav" data-view="codex">Codex</button>
         <button class="nav" data-view="support">Support</button>
         <button class="nav" data-view="messages">Messages</button>
@@ -147,6 +148,41 @@
         <div id="database-table" class="panel"></div>
         <div id="database-staging" class="panel database-staging"></div>
         <div id="database-proposals" class="panel database-proposals"></div>
+      </section>
+
+
+      <section id="art-assets-view" class="view hidden">
+        <div class="panel section-intro">
+          <strong>Art Assets / Visual Status</strong>
+          <span>Protected read-only view of the GENESIS Art Asset Manifest. Artwork existence never grants public visibility, and this screen cannot publish or alter story production.</span>
+        </div>
+        <div id="art-assets-summary" class="cards"></div>
+        <div class="toolbar">
+          <select id="art-assets-type">
+            <option value="">All asset types</option>
+            <option value="MON">Monsters</option>
+            <option value="MAP">Maps</option>
+            <option value="WPN">Weapons</option>
+            <option value="ARM">Armor</option>
+            <option value="MAT">Materials</option>
+            <option value="MISC">Miscellaneous</option>
+          </select>
+          <select id="art-assets-status">
+            <option value="">All art statuses</option>
+            <option value="NEEDED">NEEDED</option>
+            <option value="DRAFT">DRAFT</option>
+            <option value="REVIEW">REVIEW</option>
+            <option value="APPROVED">APPROVED</option>
+            <option value="WEB_EXPORTED">WEB_EXPORTED</option>
+            <option value="PUBLISHED">PUBLISHED</option>
+            <option value="REVISION_REQUIRED">REVISION_REQUIRED</option>
+            <option value="REJECTED">REJECTED</option>
+            <option value="RETIRED">RETIRED</option>
+          </select>
+          <input id="art-assets-search" type="search" placeholder="Search asset, entity, name or Supabase ID">
+          <button id="refresh-art-assets" type="button">Refresh snapshot</button>
+        </div>
+        <div id="art-assets-table" class="panel"></div>
       </section>
 
 
