@@ -450,7 +450,7 @@ async function activateSupportContact(){
 async function initRead(){
   const releaseMini=document.querySelector("#release-mini");
   try{
-    const clock=firstRow(await rpc("api_release_clock"));
+    const clock=firstRow(await rpc("api_public_release_state_v1"));
     paintReleaseState(document.querySelector("#reader-release-state"),clock);
   }catch{}
   try{
@@ -603,6 +603,7 @@ function initCodex(){
 function releaseStateFromClock(clock){
   const now=Date.now();
   const paused=!!clock?.releases_paused;
+  if(clock?.launch_authorized===false)return {code:"PRE-LAUNCH",className:"awaiting",detail:"Public launch is not authorized yet"};
   const publishAt=clock?.next_publish_at?new Date(clock.next_publish_at):null;
   const cycleAt=clock?.next_cycle_at?new Date(clock.next_cycle_at):null;
   if(paused)return {code:"PAUSED",className:"paused",detail:"Public releases are temporarily paused"};
@@ -660,12 +661,38 @@ async function initHome(){
     if(sEl)sEl.textContent=String(t%60).padStart(2,"0");
     if(ms<=0)setTimeout(()=>{const n=nextManilaSlot();nextAt=n.date;if(timeEl)timeEl.textContent=n.label},1100);
   }
+  let releaseState=null;
   try{
-    const clock=firstRow(await rpc("api_release_clock"));
-    paintReleaseState(document.querySelector("#home-release-state"),clock);
+    releaseState=firstRow(await rpc("api_public_release_state_v1"));
+    paintReleaseState(document.querySelector("#home-release-state"),releaseState);
   }catch{}
-  const slot=nextManilaSlot(); nextAt=slot.date;
-  if(timeEl)timeEl.textContent=slot.label;
+
+  const authoritativeAt=releaseState?.next_publish_at?new Date(releaseState.next_publish_at):null;
+  const authoritativeValid=authoritativeAt&&!Number.isNaN(authoritativeAt.getTime())&&authoritativeAt.getTime()>Date.now();
+
+  if(authoritativeValid){
+    nextAt=authoritativeAt;
+    if(timeEl){
+      timeEl.textContent=new Intl.DateTimeFormat("en-PH",{
+        timeZone:"Asia/Manila",hour:"numeric",minute:"2-digit",hour12:true
+      }).format(authoritativeAt)+" PHT";
+    }
+    if(partEl&&releaseState?.next_part){
+      const p=releaseState.next_part;
+      partEl.textContent="Episode "+esc(p.episode_number)+" · Part "+String(p.part_number).padStart(3,"0");
+    }
+  }else if(releaseState?.launch_authorized&&!releaseState?.releases_paused){
+    const slot=nextManilaSlot();
+    nextAt=slot.date;
+    if(timeEl)timeEl.textContent=slot.label;
+  }else{
+    nextAt=null;
+    if(timeEl)timeEl.textContent=releaseState?.releases_paused?"RELEASES PAUSED":"COMING SOON";
+    if(hEl)hEl.textContent="00";
+    if(mEl)mEl.textContent="00";
+    if(sEl)sEl.textContent="00";
+  }
+
   tick(); setInterval(tick,1000);
 
   try{
@@ -681,7 +708,7 @@ async function initHome(){
         cards.push('<a class="release-tile v2-release-tile '+artClass+'" href="/site-preview/read/"><div class="release-thumb"></div><div class="release-info"><small>EPISODE '+esc(ep.episode_number)+'</small><strong>'+esc(ep.title||"GENESIS")+'</strong><span>Released Final Canon</span></div></a>');
       }
       const box=document.querySelector("#home-latest-releases"); if(box)box.innerHTML=cards.join("");
-      if(partEl)partEl.textContent="Episode "+esc(latest.episode_number)+" · next scheduled Part";
+      if(partEl&&!releaseState?.next_part)partEl.textContent="Episode "+esc(latest.episode_number)+" · next scheduled Part";
     }
   }catch{}
 
