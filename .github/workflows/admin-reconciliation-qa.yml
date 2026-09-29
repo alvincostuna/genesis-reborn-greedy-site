@@ -57,15 +57,12 @@ jobs:
           set -euo pipefail
           git fetch origin main
           CHANGED="$(git diff --name-only origin/main...HEAD)"
-          printf '%s
-' "$CHANGED"
+          printf '%s\\n' "$CHANGED"
 
-          FORBIDDEN="$(printf '%s
-' "$CHANGED" | grep -E '^(public/site-preview/|src/public-worker\.ts$|wrangler\.live\.toml$|\.github/workflows/deploy-live\.yml$|package\.json$)' || true)"
+          FORBIDDEN="$(printf '%s\\n' "$CHANGED" | grep -E '^(public/site-preview/|src/public-worker\.ts$|wrangler\.live\.toml$|\.github/workflows/deploy-live\.yml$|package\.json$)' || true)"
           if [ -n "$FORBIDDEN" ]; then
             echo "::error::R1 reconciliation changed public-reader authority files:"
-            printf '%s
-' "$FORBIDDEN"
+            printf '%s\\n' "$FORBIDDEN"
             exit 1
           fi
 
