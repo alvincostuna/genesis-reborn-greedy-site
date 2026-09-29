@@ -1,0 +1,124 @@
+name: GENESIS Production Readiness Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - website-redteam-readiness-v1
+      - website-production-readiness
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: genesis-production-readiness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-gate:
+    name: Source readiness gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout candidate source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Type-check Worker code
+        run: npm run types
+
+      - name: Check browser JavaScript syntax
+        run: node --check public/site-preview/site.js
+
+      - name: Run red-team production-readiness audit
+        id: readiness
+        continue-on-error: true
+        run: node scripts/production-readiness-audit.mjs --fail-on-s1
+
+      - name: Check Admin/public branch divergence
+        id: admin_divergence
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main feat/admin-manuscript-viewer
+          COUNTS="$(git rev-list --left-right --count origin/main...origin/feat/admin-manuscript-viewer)"
+          MAIN_ONLY="$(printf '%s' "$COUNTS" | awk '{print $1}')"
+          ADMIN_ONLY="$(printf '%s' "$COUNTS" | awk '{print $2}')"
+          mkdir -p readiness-artifacts
+          printf '{"main_only":%s,"admin_only":%s}\n' "$MAIN_ONLY" "$ADMIN_ONLY" | tee readiness-artifacts/admin-divergence.json
+          echo "main_only=$MAIN_ONLY" >> "$GITHUB_OUTPUT"
+          echo "admin_only=$ADMIN_ONLY" >> "$GITHUB_OUTPUT"
+          if [ "$MAIN_ONLY" -gt 0 ] && [ "$ADMIN_ONLY" -gt 0 ]; then
+            echo "::error::S1: protected Admin branch is diverged from main. Reconcile deliberately; do not blind merge."
+            exit 1
+          fi
+
+      - name: Build public-only live assets
+        run: |
+          set -euo pipefail
+          rm -rf .readiness-live-assets
+          mkdir -p .readiness-live-assets/assets
+          cp public/site-preview/index.html .readiness-live-assets/index.html
+          cp public/site-preview/site.css .readiness-live-assets/site.css
+          cp public/site-preview/site.js .readiness-live-assets/site.js
+          for route in read world codex fan-page manga support account quests; do
+            cp -R "public/site-preview/$route" ".readiness-live-assets/$route"
+          done
+          cp public/assets/genesis-official-logo.png .readiness-live-assets/assets/genesis-official-logo.png
+          cp public/assets/genesis-official-logo-64.png .readiness-live-assets/assets/genesis-official-logo-64.png
+          cp public/assets/genesis-wordmark-v2.svg .readiness-live-assets/assets/genesis-wordmark-v2.svg
+          if [ -d public/assets/v25 ]; then cp -R public/assets/v25 .readiness-live-assets/assets/v25; fi
+          if [ -d public/assets/v27 ]; then cp -R public/assets/v27 .readiness-live-assets/assets/v27; fi
+          cp public/assets/master-key-art-split-world-v1.webp .readiness-live-assets/assets/master-key-art-split-world-v1.webp
+          python - <<'PY'
+          from pathlib import Path
+          for p in Path('.readiness-live-assets').rglob('*.html'):
+              text=p.read_text(encoding='utf-8')
+              text=text.replace('/site-preview/','/')
+              text=text.replace('<meta name="robots" content="noindex,nofollow">','')
+              p.write_text(text,encoding='utf-8')
+          PY
+          if grep -R "/site-preview/" .readiness-live-assets --include='*.html'; then
+            echo "::error::Preview-only path leaked into readiness live package"
+            exit 1
+          fi
+          if find .readiness-live-assets -iname '*admin*' -print | grep -q .; then
+            echo "::error::Admin assets leaked into public live package"
+            exit 1
+          fi
+
+      - name: Upload readiness evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: genesis-production-readiness-${{ github.sha }}
+          path: readiness-artifacts/
+          retention-days: 30
+
+      - name: Enforce mandatory gate
+        if: always()
+        shell: bash
+        run: |
+          if [ "${{ steps.readiness.outcome }}" != "success" ]; then
+            echo "::error::Production readiness audit has open S0/S1 findings."
+            exit 1
+          fi
+          if [ "${{ steps.admin_divergence.outcome }}" != "success" ]; then
+            echo "::error::Admin/public branch reconciliation remains an S1 blocker."
+            exit 1
+          fi
+          echo "GENESIS source readiness gate: CANDIDATE_READY"
