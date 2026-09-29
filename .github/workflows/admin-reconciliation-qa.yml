@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - website-admin-reconcile-v1
+      - website-finish-v1
   pull_request:
     branches:
       - main
@@ -51,18 +52,20 @@ jobs:
       - name: Check public JavaScript remains valid
         run: node --check public/site-preview/site.js
 
-      - name: Protect public reader lineage during Admin reconciliation
+      - name: Protect public/Admin authority boundaries after reconciliation
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main
           CHANGED="$(git diff --name-only origin/main...HEAD)"
-          printf '%s\\n' "$CHANGED"
+          printf '%s\n' "$CHANGED"
 
-          FORBIDDEN="$(printf '%s\\n' "$CHANGED" | grep -E '^(public/site-preview/|src/public-worker\.ts$|wrangler\.live\.toml$|\.github/workflows/deploy-live\.yml$|package\.json$)' || true)"
+          # Public UI files may change on the unified completion branch.
+          # These runtime/deployment authorities must not be silently replaced.
+          FORBIDDEN="$(printf '%s\n' "$CHANGED" | grep -E '^(src/public-worker\.ts$|wrangler\.live\.toml$|\.github/workflows/deploy-live\.yml$|package\.json$)' || true)"
           if [ -n "$FORBIDDEN" ]; then
-            echo "::error::R1 reconciliation changed public-reader authority files:"
-            printf '%s\\n' "$FORBIDDEN"
+            echo "::error::Reconciliation crossed a protected public-runtime authority boundary:"
+            printf '%s\n' "$FORBIDDEN"
             exit 1
           fi
 
@@ -98,5 +101,5 @@ jobs:
       - name: R1 result
         run: |
           echo "ADMIN_RECON_R1_PASS"
-          echo "Public reader authority files unchanged."
+          echo "Protected public-runtime authority files unchanged."
           echo "Admin shell/mobile reader/Website Ops wiring validated."
