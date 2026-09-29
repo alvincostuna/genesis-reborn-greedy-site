@@ -6029,3 +6029,41 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .unified-public-page .unified-corner.bl{left:6px;bottom:6px}
   .unified-public-page .unified-corner.br{right:6px;bottom:6px}
 }
+
+
+/* V3.0.1 — mobile Codex overflow containment */
+@media(max-width:560px){
+  .unified-public-page .codex-shell{
+    overflow-x:hidden!important;
+  }
+  .unified-public-page :where(
+    .codex-header,.codex-console,.codex-tools,.codex-results-head,
+    .codex-discovery-strip,.codex-category-strip,#codex-results,.v28-codex-grid
+  ){
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  .unified-public-page .codex-console{
+    width:100%!important;
+    overflow:hidden!important;
+  }
+  .unified-public-page .codex-tools{
+    width:100%!important;
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .unified-public-page .codex-tools>*{
+    min-width:0!important;
+    max-width:100%!important;
+    width:100%!important;
+  }
+  .unified-public-page .codex-discovery-strip,
+  .unified-public-page .codex-category-strip{
+    width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    overscroll-behavior-inline:contain;
+    scrollbar-width:none;
+  }
+  .unified-public-page .codex-discovery-strip::-webkit-scrollbar,
+  .unified-public-page .codex-category-strip::-webkit-scrollbar{display:none}
+}
