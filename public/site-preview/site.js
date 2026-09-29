@@ -896,17 +896,41 @@ function initMobileHomeNav(){
   if(!button||!nav)return;
   const drawer=document.createElement("div");
   drawer.className="v2-mobile-drawer";
-  drawer.innerHTML='<div class="mobile-drawer-head"><strong>GENESIS</strong><button type="button" aria-label="Close navigation">×</button></div><nav>'+nav.innerHTML+'</nav>';
+  drawer.innerHTML=
+    '<div class="mobile-drawer-head"><strong>GENESIS</strong><button type="button" aria-label="Close navigation">×</button></div>'+
+    '<label class="mobile-drawer-search"><span class="v25-icon i-search" aria-hidden="true"></span><input type="search" placeholder="Search GENESIS…" autocomplete="off"></label>'+
+    '<div class="mobile-drawer-search-results"></div><nav>'+nav.innerHTML+'</nav>';
   const backdrop=document.createElement("button");
   backdrop.type="button";backdrop.className="v2-mobile-drawer-backdrop";backdrop.setAttribute("aria-label","Close navigation");
   document.body.append(backdrop,drawer);
+  const searchInput=drawer.querySelector(".mobile-drawer-search input");
+  const searchResults=drawer.querySelector(".mobile-drawer-search-results");
+  let searchTimer=null,searchToken=0;
   const close=()=>{document.body.classList.remove("v2-menu-open");button.setAttribute("aria-expanded","false")};
   const open=()=>{closeGlobalFlyouts();document.body.classList.add("v2-menu-open");button.setAttribute("aria-expanded","true")};
   button.setAttribute("aria-expanded","false");
   button.addEventListener("click",()=>document.body.classList.contains("v2-menu-open")?close():open());
-  drawer.querySelector("button")?.addEventListener("click",close);
+  drawer.querySelector(".mobile-drawer-head button")?.addEventListener("click",close);
   backdrop.addEventListener("click",close);
-  drawer.querySelectorAll("a").forEach(a=>a.addEventListener("click",close));
+  drawer.querySelectorAll("nav a").forEach(a=>a.addEventListener("click",close));
+  searchInput?.addEventListener("input",()=>{
+    clearTimeout(searchTimer);
+    const q=searchInput.value.trim();
+    if(q.length<2){searchResults.innerHTML="";return}
+    const mine=++searchToken;
+    searchResults.innerHTML='<div class="mobile-search-empty">Searching…</div>';
+    searchTimer=setTimeout(async()=>{
+      try{
+        const rows=await searchGenesisPublic(q);
+        if(mine!==searchToken)return;
+        searchResults.innerHTML=rows.length?rows.slice(0,8).map(x=>
+          '<a href="'+esc(x.href)+'"><small>'+esc(x.kind.toUpperCase())+'</small><strong>'+esc(x.title)+'</strong></a>'
+        ).join(""):'<div class="mobile-search-empty">No reader-safe matches.</div>';
+      }catch{
+        if(mine===searchToken)searchResults.innerHTML='<div class="mobile-search-empty">Search unavailable.</div>';
+      }
+    },180);
+  });
 }
 function initAmbientOverlay(){
   if(!document.body.classList.contains("web-ds-v2"))return;
