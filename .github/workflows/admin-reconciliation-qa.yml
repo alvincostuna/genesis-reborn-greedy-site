@@ -82,6 +82,16 @@ jobs:
             exit 1
           fi
 
+      - name: Reject broken manuscript selector regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -Fq '$(" #manuscript-table tbody tr")' public/admin/admin.js; then
+            echo "::error::Admin manuscript table is using a single-element selector where a row collection is required."
+            exit 1
+          fi
+          grep -Fq '$("#manuscript-table tbody tr")' public/admin/admin.js
+
       - name: Check Website Ops contract wiring
         shell: bash
         run: |
