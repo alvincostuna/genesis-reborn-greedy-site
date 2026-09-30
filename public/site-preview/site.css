@@ -6365,7 +6365,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   grid-template-columns:repeat(3,1fr);
   gap:8px;
 }
-.web-ds-v2 .first-visit-path>div{
+.web-ds-v2 .first-visit-path>a{
   min-height:132px;
   padding:15px 13px 13px;
   border:1px solid rgba(73,139,188,.30);
@@ -6389,6 +6389,22 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   color:#89a3b8;
   font-size:8px;
   line-height:1.5;
+}
+.web-ds-v2 .first-visit-path>a{
+  color:inherit;
+  text-decoration:none;
+  transition:border-color .18s ease,transform .18s ease,background .18s ease;
+}
+.web-ds-v2 .first-visit-path>a:hover,
+.web-ds-v2 .first-visit-path>a:focus-visible{
+  transform:translateY(-2px);
+  border-color:rgba(228,187,103,.58);
+  background:linear-gradient(155deg,rgba(12,36,57,.96),rgba(5,17,29,.96));
+}
+.web-ds-v2 #latest-releases,
+.web-ds-v2 #explore-genesis,
+.web-ds-v2 #reader-hub{
+  scroll-margin-top:92px;
 }
 .web-ds-v2 .home-section-heading{
   display:flex;
@@ -6487,7 +6503,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2 .first-visit-path{
     grid-template-columns:1fr;
   }
-  .web-ds-v2 .first-visit-path>div{
+  .web-ds-v2 .first-visit-path>a{
     min-height:0;
   }
   .web-ds-v2 .first-visit-path span{
