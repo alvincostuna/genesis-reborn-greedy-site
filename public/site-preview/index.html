@@ -37,23 +37,81 @@
   </header>
 
   <main class="game-shell v2-shell">
-    <section class="hero-panel v2-hero">
+    <section class="hero-panel v2-hero first-visit-hero">
       <picture class="v25-hero-picture"><source media="(max-width: 900px)" srcset="/assets/v25/hero-home-mobile.webp"><img class="hero-art" src="/assets/v25/hero-home-desktop.webp" alt="GENESIS world key art"></picture>
       <div class="hero-shade"></div>
       <div class="v2-hero-glow" aria-hidden="true"></div>
       <div class="hero-copy v2-hero-copy">
         <img class="hero-logo" src="/assets/genesis-wordmark-v2.svg" alt="GENESIS: REBORN GREEDY">
-        <p>POWER WRITES A DIFFERENT ENDING.</p>
-        <small>SAME WORLD. NEW GREED. A DARKER PATH.</small>
+        <p class="hero-hook">HE DIED AT THIRTY-FIVE. HE WOKE UP AT SEVENTEEN.</p>
+        <small class="hero-premise">Before GENESIS launches, Flavio Reyes gets one impossible second chance. The game he once ignored may become the world where he finally learns to live.</small>
         <div class="hero-actions">
-          <a class="genesis-btn primary" href="/site-preview/read/"><span class="v25-icon i-world" aria-hidden="true"></span> Enter World</a>
-          <a class="genesis-btn ghost" href="/site-preview/read/">Continue Reading</a>
+          <a class="genesis-btn primary hero-start-reading" href="/site-preview/read/"><span class="v25-icon i-read" aria-hidden="true"></span> Start Reading</a>
+        </div>
+        <div class="hero-genres" aria-label="Story themes">
+          <span>Reincarnation</span><span>MMORPG</span><span>Crafting</span><span>Living World</span>
         </div>
       </div>
-      <blockquote>STORIES · CHARACTERS · WORLDS<br><strong>AND EVERYTHING IN BETWEEN.</strong></blockquote>
+      <blockquote>ONE LIFE LOST. ONE WORLD AHEAD.<br><strong>THIS TIME, HE CHOOSES TO ENTER.</strong></blockquote>
       <div class="v2-corner v2-corner-tl"></div><div class="v2-corner v2-corner-tr"></div>
       <div class="v2-corner v2-corner-bl"></div><div class="v2-corner v2-corner-br"></div>
     </section>
+
+    <section class="first-visit-story v2-panel" aria-labelledby="first-visit-title">
+      <div class="first-visit-copy">
+        <p class="first-visit-kicker">NEW TO GENESIS?</p>
+        <h1 id="first-visit-title">Start with Flavio. Discover the world after it matters to you.</h1>
+        <p>Flavio Reyes spent his first life surviving, working, and arriving too late for the moments that mattered. When death sends him back to seventeen—before GENESIS is released—he refuses to repeat the same life. He enters the game he once ignored, carrying only memory, regret, and a second chance.</p>
+      </div>
+      <div class="first-visit-path" aria-label="First visit path">
+        <div><span>01</span><strong>Read the story</strong><small>Meet Flavio and enter GENESIS from the beginning.</small></div>
+        <div><span>02</span><strong>Follow the journey</strong><small>Keep up with released Final Canon Parts in order.</small></div>
+        <div><span>03</span><strong>Explore the world</strong><small>Open the World and Codex once names, places, and discoveries mean something.</small></div>
+      </div>
+    </section>
+
+    <div class="home-section-heading">
+      <div><span>THE STORY NOW</span><h2>Latest from GENESIS</h2></div>
+      <p>Released story first. Systems and world discovery come after.</p>
+    </div>
+
+    <section class="home-row v2-home-row">
+      <article class="hud-card latest-card v2-panel">
+        <div class="card-head"><span><i class="v25-icon i-release" aria-hidden="true"></i>LATEST RELEASES</span><a href="/site-preview/read/">View All ›</a></div>
+        <div class="release-cards v2-release-cards" id="home-latest-releases">
+          <div class="release-tile v2-release-tile skeleton art-one"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 01</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
+          <div class="release-tile v2-release-tile skeleton art-two"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 02</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
+          <div class="release-tile v2-release-tile skeleton art-three"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 03</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
+        </div>
+      </article>
+
+      <article class="hud-card notices-card v2-panel">
+        <div class="card-head"><span><i class="v25-icon i-bell" aria-hidden="true"></i>SYSTEM NOTICES</span><span>Live State</span></div>
+        <div class="notice-list">
+          <div><span class="notice-icon gold"><i class="v25-icon i-home" aria-hidden="true"></i></span><p><strong>Three-Part Release Cycle</strong><small>Monday–Saturday · 8:00 AM, 2:00 PM and 8:00 PM PHT · Sunday rest.</small></p><time>NOW</time></div>
+          <div><span class="notice-icon cyan"><i class="v25-icon i-quest" aria-hidden="true"></i></span><p><strong>Reader Quest System</strong><small>Read, share, and support to earn EXP and Tier rewards.</small></p><time>ACTIVE</time></div>
+          <div><span class="notice-icon violet"><i class="v25-icon i-support" aria-hidden="true"></i></span><p><strong>Support GENESIS</strong><small>Advance access never changes public chronology.</small></p><time>PREVIEW</time></div>
+        </div>
+      </article>
+    </section>
+
+    <div class="home-section-heading">
+      <div><span>BEYOND THE CHAPTERS</span><h2>Explore GENESIS</h2></div>
+      <p>Discover the world without letting the database overwhelm the story.</p>
+    </div>
+
+    <section class="feature-grid v2-feature-grid">
+      <a class="feature-tile world" href="/site-preview/world/"><i class="v25-icon i-world" aria-hidden="true"></i><div><strong>World</strong><span>Explore maps, places, routes and living regions</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
+      <a class="feature-tile codex" href="/site-preview/codex/"><i class="v25-icon i-codex" aria-hidden="true"></i><div><strong>Codex</strong><span>Characters, factions, monsters, items and more</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
+      <a class="feature-tile fan" href="/site-preview/fan-page/"><i class="v25-icon i-fan" aria-hidden="true"></i><div><strong>Fan Page</strong><span>Share reactions, theories and discoveries</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
+      <a class="feature-tile manga" href="/site-preview/manga/"><i class="v25-icon i-manga" aria-hidden="true"></i><div><strong>Manga</strong><span>Illustrations and side stories</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
+      <a class="feature-tile support" href="/site-preview/support/"><i class="v25-icon i-support" aria-hidden="true"></i><div><strong>Support</strong><span>Help the story continue</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
+    </section>
+
+    <div class="home-section-heading returning-reader-heading">
+      <div><span>RETURNING READER</span><h2>Your GENESIS hub</h2></div>
+      <p>Release timing, reading progress and account rewards stay available without competing with the first-visit path.</p>
+    </div>
 
     <section class="dashboard-grid v2-dashboard">
       <article class="hud-card release-hud ornate v2-panel v2-release-panel">
@@ -87,7 +145,7 @@
             <h1 id="home-current-title">Continue Your Journey</h1>
             <p id="home-current-summary">Return to the latest released Final Canon and continue from where you left off.</p>
             <div class="reading-actions">
-              <a class="genesis-btn primary" href="/site-preview/read/"><span class="v25-icon i-read" aria-hidden="true"></span> Continue Reading</a>
+              <a class="genesis-btn ghost" href="/site-preview/read/"><span class="v25-icon i-read" aria-hidden="true"></span> Continue Reading</a>
               <a class="genesis-btn ghost" href="/site-preview/read/"><span class="v25-icon i-codex" aria-hidden="true"></span> View Episode</a>
             </div>
           </div>
@@ -115,34 +173,6 @@
           <div><span><i class="v25-icon i-collectible" aria-hidden="true"></i>Collectible Rewards</span><strong id="home-collectibles">0</strong></div>
         </div>
       </article>
-    </section>
-
-    <section class="home-row v2-home-row">
-      <article class="hud-card latest-card v2-panel">
-        <div class="card-head"><span><i class="v25-icon i-release" aria-hidden="true"></i>LATEST RELEASES</span><a href="/site-preview/read/">View All ›</a></div>
-        <div class="release-cards v2-release-cards" id="home-latest-releases">
-          <div class="release-tile v2-release-tile skeleton art-one"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 01</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
-          <div class="release-tile v2-release-tile skeleton art-two"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 02</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
-          <div class="release-tile v2-release-tile skeleton art-three"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 03</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
-        </div>
-      </article>
-
-      <article class="hud-card notices-card v2-panel">
-        <div class="card-head"><span><i class="v25-icon i-bell" aria-hidden="true"></i>SYSTEM NOTICES</span><span>Live State</span></div>
-        <div class="notice-list">
-          <div><span class="notice-icon gold"><i class="v25-icon i-home" aria-hidden="true"></i></span><p><strong>Three-Part Release Cycle</strong><small>Monday–Saturday · 8:00 AM, 2:00 PM and 8:00 PM PHT · Sunday rest.</small></p><time>NOW</time></div>
-          <div><span class="notice-icon cyan"><i class="v25-icon i-quest" aria-hidden="true"></i></span><p><strong>Reader Quest System</strong><small>Read, share, and support to earn EXP and Tier rewards.</small></p><time>ACTIVE</time></div>
-          <div><span class="notice-icon violet"><i class="v25-icon i-support" aria-hidden="true"></i></span><p><strong>Support GENESIS</strong><small>Advance access never changes public chronology.</small></p><time>PREVIEW</time></div>
-        </div>
-      </article>
-    </section>
-
-    <section class="feature-grid v2-feature-grid">
-      <a class="feature-tile world" href="/site-preview/world/"><i class="v25-icon i-world" aria-hidden="true"></i><div><strong>World</strong><span>Explore the lore and vast continents</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
-      <a class="feature-tile codex" href="/site-preview/codex/"><i class="v25-icon i-codex" aria-hidden="true"></i><div><strong>Codex</strong><span>Characters, factions, items and more</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
-      <a class="feature-tile fan" href="/site-preview/fan-page/"><i class="v25-icon i-fan" aria-hidden="true"></i><div><strong>Fan Page</strong><span>Share, discuss and connect</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
-      <a class="feature-tile manga" href="/site-preview/manga/"><i class="v25-icon i-manga" aria-hidden="true"></i><div><strong>Manga</strong><span>Illustrations and side stories</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
-      <a class="feature-tile support" href="/site-preview/support/"><i class="v25-icon i-support" aria-hidden="true"></i><div><strong>Support</strong><span>Help the story continue</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
     </section>
   </main>
 
