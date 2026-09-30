@@ -2,6 +2,21 @@ name: Deploy GENESIS Live Reader
 
 on:
   workflow_dispatch:
+    inputs:
+      deploy_ref:
+        description: "Optional exact commit SHA/ref to deploy. Leave blank to deploy the selected workflow ref."
+        required: false
+        type: string
+  workflow_call:
+    inputs:
+      deploy_ref:
+        description: "Exact merge commit SHA/ref approved by the auto-deploy gate."
+        required: true
+        type: string
+      source_pr:
+        description: "Merged pull request number that authorized this deployment."
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -17,8 +32,23 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Checkout live source
+      - name: Checkout exact live source
         uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.deploy_ref || github.sha }}
+          persist-credentials: false
+
+      - name: Verify exact deployment source
+        env:
+          EXPECTED_REF: ${{ inputs.deploy_ref || github.sha }}
+          SOURCE_PR: ${{ inputs.source_pr || '' }}
+        run: |
+          set -euo pipefail
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          EXPECTED_SHA="$(git rev-parse "$EXPECTED_REF^{commit}")"
+          echo "Deployment source PR: ${SOURCE_PR:-manual}"
+          echo "Deployment source SHA: $ACTUAL_SHA"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
 
       - name: Set up Node
         uses: actions/setup-node@v4
