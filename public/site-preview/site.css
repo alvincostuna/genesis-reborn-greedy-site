@@ -248,7 +248,28 @@ button,input,select{font:inherit}
 .game-nav.compact{height:66px}
 .reader-shell,.profile-shell{width:min(1600px,100%);margin:0 auto;padding:18px 20px 88px}
 .reader-commandbar{display:grid;grid-template-columns:1fr auto auto;gap:16px;align-items:end;margin-bottom:14px}
-.reader-commandbar h1{margin:2px 0 0;font:600 34px Georgia,serif}.reader-quick-controls{display:flex;gap:8px}
+.reader-commandbar h1{margin:2px 0 0;font:600 34px Georgia,serif}
+.reader-start-handoff{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:7px;
+  padding:6px 9px;
+  border:1px solid rgba(216,179,109,.30);
+  border-radius:999px;
+  background:rgba(9,24,38,.80);
+}
+.reader-start-handoff.hidden{display:none}
+.reader-start-handoff span{
+  color:#79cbff;
+  font:800 8px/1 Arial,sans-serif;
+  letter-spacing:.14em;
+}
+.reader-start-handoff strong{
+  color:#d8c58f;
+  font:600 9px/1.2 Arial,sans-serif;
+}
+.reader-quick-controls{display:flex;gap:8px}
 .reader-quick-controls button,.reader-bottom-controls button{border:1px solid #294a68;background:#091725;color:#dbeaff;border-radius:8px;padding:10px 13px;cursor:pointer}
 .reader-game-layout{display:grid;grid-template-columns:265px minmax(0,1fr) 250px;gap:14px;align-items:start}
 .game-rail,.reader-tools-panel,.game-manuscript{border:1px solid #24425f;background:linear-gradient(155deg,rgba(10,23,37,.98),rgba(5,13,22,.98));border-radius:9px;box-shadow:0 14px 35px rgba(0,0,0,.2)}
@@ -932,8 +953,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   font-size:10px;color:#8eacc4;
 }
 .web-ds-v2 .v2-bell{
+  display:grid;
+  place-items:center;
+  padding:0;
   border-color:rgba(228,187,103,.36);
   color:#f2deac;
+}
+.web-ds-v2 .v2-bell .v25-icon{
+  margin:0;
+  vertical-align:0;
+}
+.web-ds-v2 .v2-bell:hover{
+  border-color:rgba(228,187,103,.68);
+  background:rgba(16,35,51,.94);
+  box-shadow:0 0 15px rgba(228,187,103,.10),inset 0 0 12px rgba(228,187,103,.04);
 }
 .web-ds-v2 .profile-orb{
   width:43px;height:43px;
@@ -6443,6 +6476,46 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .web-ds-v2 .home-section-heading + .v2-dashboard{
   margin-top:0;
 }
+.web-ds-v2 .hero-start-note{
+  display:block;
+  margin-top:7px;
+  color:#809bb0!important;
+  font:600 8px/1.25 Arial,sans-serif!important;
+  letter-spacing:.05em!important;
+}
+.web-ds-v2 .home-flow-transition{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:10px;
+  margin:13px 2px 2px;
+  padding:8px 10px;
+  border-top:1px solid rgba(84,149,196,.18);
+  border-bottom:1px solid rgba(84,149,196,.10);
+  color:inherit;
+  text-decoration:none;
+  background:linear-gradient(90deg,transparent,rgba(12,34,52,.30),transparent);
+}
+.web-ds-v2 .home-flow-transition span{
+  color:#6fc9ff;
+  font:800 7px/1 Arial,sans-serif;
+  letter-spacing:.16em;
+}
+.web-ds-v2 .home-flow-transition strong{
+  color:#aebfd0;
+  font:600 10px/1.25 Georgia,serif;
+}
+.web-ds-v2 .home-flow-transition i{
+  color:#d9b866;
+  font-style:normal;
+  font-size:14px;
+}
+.web-ds-v2 .home-flow-transition:hover strong{
+  color:#f5e4b4;
+}
+.web-ds-v2 .home-flow-transition:hover i{
+  transform:translateY(2px);
+}
 
 @media(max-width:1180px){
   .web-ds-v2 .first-visit-story{
@@ -6487,6 +6560,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     margin-top:7px;
     max-width:none;
     text-align:left;
+  }
+  .web-ds-v2 .home-flow-transition{
+    grid-template-columns:1fr auto;
+    gap:4px 10px;
+    padding:9px 4px;
+  }
+  .web-ds-v2 .home-flow-transition span{
+    grid-column:1/-1;
   }
 }
 @media(max-width:620px){
