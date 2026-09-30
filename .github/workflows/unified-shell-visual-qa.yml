@@ -3,6 +3,7 @@ name: GENESIS Unified Shell QA
 on:
   push:
     branches:
+      - main
       - website-unified-shell-v1
   pull_request:
     branches:
