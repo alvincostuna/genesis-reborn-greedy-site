@@ -3,12 +3,14 @@ name: GENESIS Unified Shell QA
 on:
   push:
     branches:
+      - main
       - website-unified-shell-v1
   pull_request:
     branches:
       - main
     paths:
       - "public/site-preview/**"
+      - "public/assets/**"
       - "scripts/public-shell-consistency-audit.mjs"
       - ".github/workflows/unified-shell-visual-qa.yml"
   workflow_dispatch:
