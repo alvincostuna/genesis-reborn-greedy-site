@@ -6621,7 +6621,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .web-ds-v2 .cinematic-hero-media{
   position:relative;
   width:100%;
-  aspect-ratio:2 / 1;
+  aspect-ratio:16 / 9;
   overflow:hidden;
   background:#02060b;
   isolation:isolate;
@@ -6635,10 +6635,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   height:100%;
   object-fit:cover;
   object-position:center;
-  transform:scale(1.008);
-  transform-origin:50% 52%;
-  filter:saturate(1.035) contrast(1.02) brightness(.985);
-  will-change:transform,filter,opacity;
+  transform:none;
+  filter:none;
+  image-rendering:auto;
+  image-rendering:-webkit-optimize-contrast;
+  will-change:opacity;
   transition:opacity .45s ease;
 }
 .web-ds-v2 .cinematic-hero-video{
@@ -6689,25 +6690,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 @media (min-width:901px) and (prefers-reduced-motion:no-preference){
-  .web-ds-v2 .cinematic-hero-poster{
-    animation:genesis-cinematic-drift 14s ease-in-out infinite alternate;
-  }
   .web-ds-v2 .cinematic-hero-warm{
     animation:genesis-warm-breathe 7.5s ease-in-out infinite alternate;
   }
   .web-ds-v2 .cinematic-hero-cold{
     animation:genesis-cold-breathe 9s ease-in-out infinite alternate;
-  }
-}
-
-@keyframes genesis-cinematic-drift{
-  0%{
-    transform:scale(1.008) translate3d(0,0,0);
-    filter:saturate(1.025) contrast(1.015) brightness(.98);
-  }
-  100%{
-    transform:scale(1.028) translate3d(0,-.28%,0);
-    filter:saturate(1.055) contrast(1.025) brightness(1);
   }
 }
 
@@ -6808,12 +6795,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   }
 
   .web-ds-v2 .cinematic-hero-media{
-    aspect-ratio:2 / 1;
+    aspect-ratio:16 / 9;
   }
 
   .web-ds-v2 .cinematic-hero-poster{
     transform:none;
-    filter:saturate(1.025) contrast(1.015) brightness(.985);
+    filter:none;
   }
 
   .web-ds-v2 .cinematic-hero-warm,
