@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - "public/site-preview/**"
+      - "public/assets/**"
       - "scripts/public-shell-consistency-audit.mjs"
       - ".github/workflows/unified-shell-visual-qa.yml"
   workflow_dispatch:
