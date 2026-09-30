@@ -227,12 +227,15 @@ jobs:
           grep -q '/assets/genesis-wordmark-v2.svg' /tmp/candidate-home.html \
             && echo "PASS: GENESIS wordmark reference" \
             || { echo "::error::FAIL: GENESIS wordmark reference missing"; exit 1; }
-          grep -q '/assets/v25/hero-home-desktop.webp' /tmp/candidate-home.html \
-            && echo "PASS: V2.5 desktop hero reference" \
-            || { echo "::error::FAIL: V2.5 desktop hero reference missing"; exit 1; }
-          grep -q '/assets/v25/hero-home-mobile.webp' /tmp/candidate-home.html \
-            && echo "PASS: V2.5 mobile hero reference" \
-            || { echo "::error::FAIL: V2.5 mobile hero reference missing"; exit 1; }
+          grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/candidate-home.html \
+            && echo "PASS: cinematic split-world hero reference" \
+            || { echo "::error::FAIL: cinematic split-world hero reference missing"; exit 1; }
+          if grep -qE '/assets/v25/hero-home-(desktop|mobile)\.webp' /tmp/candidate-home.html; then
+            echo "::error::FAIL: retired V2.5 hero reference still present"
+            exit 1
+          else
+            echo "PASS: retired V2.5 hero references absent"
+          fi
 
           verify_candidate_asset() {
             ASSET_PATH="$1"
@@ -252,8 +255,7 @@ jobs:
           }
 
           verify_candidate_asset "/assets/genesis-wordmark-v2.svg" "GENESIS wordmark asset"
-          verify_candidate_asset "/assets/v25/hero-home-desktop.webp" "V2.5 desktop hero asset"
-          verify_candidate_asset "/assets/v25/hero-home-mobile.webp" "V2.5 mobile hero asset"
+          verify_candidate_asset "/assets/master-key-art-split-world-v1.webp" "Cinematic split-world hero asset"
 
           if grep -q '/site-preview/' /tmp/candidate-home.html; then
             echo "::error::FAIL: preview-only path leaked into live candidate"
@@ -324,12 +326,12 @@ jobs:
             if grep -q 'data-page="home"' /tmp/home.html \
               && grep -q 'NEXT RELEASE' /tmp/home.html \
               && grep -q '/assets/genesis-wordmark-v2.svg' /tmp/home.html \
-              && grep -q '/assets/v25/hero-home-desktop.webp' /tmp/home.html \
-              && grep -q '/assets/v25/hero-home-mobile.webp' /tmp/home.html; then
+              && grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/home.html \
+              && ! grep -qE '/assets/v25/hero-home-(desktop|mobile)\.webp' /tmp/home.html; then
               CONTENT_OK=1
               break
             fi
-            echo "Live V2.5 content propagation attempt $attempt not complete yet."
+            echo "Live cinematic split-hero propagation attempt $attempt not complete yet."
             sleep 2
           done
           test "$CONTENT_OK" = "1"
@@ -351,8 +353,7 @@ jobs:
             return 1
           }
           verify_live_asset "/assets/genesis-wordmark-v2.svg" "Live GENESIS wordmark asset"
-          verify_live_asset "/assets/v25/hero-home-desktop.webp" "Live V2.5 desktop hero asset"
-          verify_live_asset "/assets/v25/hero-home-mobile.webp" "Live V2.5 mobile hero asset"
+          verify_live_asset "/assets/master-key-art-split-world-v1.webp" "Live cinematic split-world hero asset"
 
           ADMIN_STATUS="000"
           for attempt in 1 2 3 4 5; do
