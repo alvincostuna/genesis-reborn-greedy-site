@@ -90,23 +90,27 @@ jobs:
 
           echo "eligible=$eligible" >> "$GITHUB_OUTPUT"
 
-      - name: Checkout exact merge commit
-        if: steps.scope.outputs.eligible == 'true'
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ steps.meta.outputs.merge_sha }}
-          fetch-depth: 0
-          persist-credentials: false
-
       - name: Verify merge commit is on current main
         if: steps.scope.outputs.eligible == 'true'
         env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
           MERGE_SHA: ${{ steps.meta.outputs.merge_sha }}
         run: |
           set -euo pipefail
-          git fetch --no-tags origin main
-          git merge-base --is-ancestor "$MERGE_SHA" origin/main
-          echo "PASS: exact deployment SHA is reachable from current main."
+          CURRENT_MAIN="$(gh api "repos/$REPO/commits/main" --jq '.sha')"
+          STATUS="$(gh api "repos/$REPO/compare/$MERGE_SHA...$CURRENT_MAIN" --jq '.status')"
+          echo "Current main: $CURRENT_MAIN"
+          echo "Merge ancestry status: $STATUS"
+          case "$STATUS" in
+            identical|ahead)
+              echo "PASS: exact deployment SHA is reachable from current main."
+              ;;
+            *)
+              echo "::error::Merge SHA $MERGE_SHA is not an ancestor of current main $CURRENT_MAIN."
+              exit 1
+              ;;
+          esac
 
       - name: Wait for all main-commit QA gates
         if: steps.scope.outputs.eligible == 'true'
