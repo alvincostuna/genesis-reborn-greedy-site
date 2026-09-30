@@ -1,11 +1,9 @@
 name: Auto Deploy GENESIS Official Website
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-    types:
-      - closed
 
 permissions:
   contents: read
@@ -18,37 +16,50 @@ concurrency:
 
 jobs:
   gate:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
       eligible: ${{ steps.scope.outputs.eligible }}
       merge_sha: ${{ steps.meta.outputs.merge_sha }}
-      pr_number: ${{ steps.meta.outputs.pr_number }}
+      pr_number: ${{ steps.scope.outputs.pr_number }}
     steps:
-      - name: Capture immutable merge metadata
+      - name: Capture immutable main commit
         id: meta
         env:
-          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          MERGE_SHA: ${{ github.sha }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-          test "$BASE_REF" = "main"
+          test "$REF_NAME" = "main"
           test -n "$MERGE_SHA"
-          test "$MERGE_SHA" != "null"
           echo "merge_sha=$MERGE_SHA" >> "$GITHUB_OUTPUT"
-          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-          echo "Merged PR #$PR_NUMBER -> $MERGE_SHA"
+          echo "Main candidate SHA: $MERGE_SHA"
 
-      - name: Classify changed files — public website only
+      - name: Resolve merged PR and classify changed files
         id: scope
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MERGE_SHA: ${{ steps.meta.outputs.merge_sha }}
         run: |
           set -euo pipefail
+          PRS="$(gh api -H "Accept: application/vnd.github+json" "repos/$REPO/commits/$MERGE_SHA/pulls?per_page=20")"
+          mapfile -t MATCHES < <(printf '%s' "$PRS" | jq -r --arg sha "$MERGE_SHA" '.[] | select(.base.ref=="main" and .merged_at!=null and .merge_commit_sha==$sha) | .number')
+
+          if [ "${#MATCHES[@]}" -eq 0 ]; then
+            echo "::notice::Main commit $MERGE_SHA is not the exact merge commit of a merged PR. Automatic deployment skipped."
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            echo "pr_number=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "${#MATCHES[@]}" -ne 1 ]; then
+            echo "::error::Expected exactly one merged PR for $MERGE_SHA; found ${#MATCHES[@]}."
+            exit 1
+          fi
+
+          PR_NUMBER="${MATCHES[0]}"
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
           mapfile -t FILES < <(gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files?per_page=100" --jq '.[].filename')
 
           if [ "${#FILES[@]}" -eq 0 ]; then
@@ -60,7 +71,7 @@ jobs:
           deployable=false
           blocked=()
 
-          printf 'Changed files:\n'
+          printf 'Merged PR #%s changed files:\n' "$PR_NUMBER"
           printf '  %s\n' "${FILES[@]}"
 
           for file in "${FILES[@]}"; do
@@ -80,9 +91,9 @@ jobs:
           fi
 
           if [ "$eligible" = "true" ]; then
-            echo "PASS: PR is public-site-only and eligible for automatic deployment."
+            echo "PASS: merged PR #$PR_NUMBER is public-site-only and eligible for automatic deployment."
           else
-            echo "::notice::Automatic live deployment skipped. Only public/site-preview/** and public/assets/** are auto-deployable."
+            echo "::notice::Automatic deployment skipped. Only public/site-preview/** and public/assets/** are auto-deployable."
             if [ "${#blocked[@]}" -gt 0 ]; then
               printf 'Blocked/manual-only path: %s\n' "${blocked[@]}"
             fi
@@ -90,29 +101,7 @@ jobs:
 
           echo "eligible=$eligible" >> "$GITHUB_OUTPUT"
 
-      - name: Verify merge commit is on current main
-        if: steps.scope.outputs.eligible == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          MERGE_SHA: ${{ steps.meta.outputs.merge_sha }}
-        run: |
-          set -euo pipefail
-          CURRENT_MAIN="$(gh api "repos/$REPO/commits/main" --jq '.sha')"
-          STATUS="$(gh api "repos/$REPO/compare/$MERGE_SHA...$CURRENT_MAIN" --jq '.status')"
-          echo "Current main: $CURRENT_MAIN"
-          echo "Merge ancestry status: $STATUS"
-          case "$STATUS" in
-            identical|ahead)
-              echo "PASS: exact deployment SHA is reachable from current main."
-              ;;
-            *)
-              echo "::error::Merge SHA $MERGE_SHA is not an ancestor of current main $CURRENT_MAIN."
-              exit 1
-              ;;
-          esac
-
-      - name: Wait for all main-commit QA gates
+      - name: Wait for all exact-SHA QA gates
         if: steps.scope.outputs.eligible == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -130,7 +119,7 @@ jobs:
             runs="$(gh api "repos/$REPO/actions/runs?head_sha=$MERGE_SHA&event=push&per_page=100")"
             all_green=true
 
-            echo "QA poll $attempt/45 for merge $MERGE_SHA"
+            echo "QA poll $attempt/45 for main commit $MERGE_SHA"
             for name in "${required[@]}"; do
               row="$(printf '%s' "$runs" | jq -r --arg name "$name" '
                 [.workflow_runs[] | select(.name == $name)]
@@ -143,7 +132,7 @@ jobs:
 
               if [ "$status" = "completed" ]; then
                 if [ "$conclusion" != "success" ]; then
-                  echo "::error::$name failed for merge $MERGE_SHA ($conclusion). $url"
+                  echo "::error::$name failed for main commit $MERGE_SHA ($conclusion). $url"
                   exit 1
                 fi
               else
@@ -152,14 +141,31 @@ jobs:
             done
 
             if [ "$all_green" = "true" ]; then
-              echo "PASS: all three QA gates succeeded on the exact main merge commit."
+              echo "PASS: all three QA gates succeeded on the exact main commit."
               exit 0
             fi
             sleep 20
           done
 
-          echo "::error::Timed out waiting for all three QA gates on merge $MERGE_SHA."
+          echo "::error::Timed out waiting for all three QA gates on $MERGE_SHA."
           exit 1
+
+      - name: Fail closed if main advanced before deployment
+        if: steps.scope.outputs.eligible == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          MERGE_SHA: ${{ steps.meta.outputs.merge_sha }}
+        run: |
+          set -euo pipefail
+          CURRENT_MAIN="$(gh api "repos/$REPO/commits/main" --jq '.sha')"
+          echo "Candidate:    $MERGE_SHA"
+          echo "Current main: $CURRENT_MAIN"
+          if [ "$CURRENT_MAIN" != "$MERGE_SHA" ]; then
+            echo "::error::Main advanced while QA was running. Refusing to deploy a stale merge; the newer main run will decide deployment."
+            exit 1
+          fi
+          echo "PASS: candidate is still the current main commit."
 
   deploy-official:
     needs: gate
