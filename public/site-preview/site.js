@@ -1398,7 +1398,7 @@ function initCinematicHeroMedia(){
   video.loop=true;
   video.playsInline=true;
   video.preload="metadata";
-  video.poster="/assets/master-key-art-split-world-v1.webp";
+  video.poster="/assets/master-key-art-split-world-v1.webp?v=20260930-hq";
   video.src=src;
 
   video.addEventListener("canplay",()=>{
