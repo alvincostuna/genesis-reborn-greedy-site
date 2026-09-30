@@ -577,9 +577,12 @@ async function initRead(){
   if(!Array.isArray(episodes)||!episodes.length)return;
 
   const params=new URLSearchParams(location.search);
-  const local=readLocalProgress();
-  let requestedEpisode=Number(params.get("episode")||local?.episode_number||episodes[0].episode_number);
-  let requestedPart=Number(params.get("part")||local?.part_number||0);
+  const startFromBeginning=params.get("start")==="1";
+  const local=startFromBeginning?null:readLocalProgress();
+  const handoff=document.querySelector("#reader-start-handoff");
+  if(handoff)handoff.classList.toggle("hidden",!startFromBeginning);
+  let requestedEpisode=Number(startFromBeginning?episodes[0].episode_number:(params.get("episode")||local?.episode_number||episodes[0].episode_number));
+  let requestedPart=Number(startFromBeginning?0:(params.get("part")||local?.part_number||0));
   if(!episodes.some(e=>Number(e.episode_number)===requestedEpisode))requestedEpisode=Number(episodes[0].episode_number);
 
   const episodeList=document.querySelector("#episode-list");
@@ -588,7 +591,7 @@ async function initRead(){
     '<button class="episode-button" data-episode="'+esc(e.episode_number)+'"><small>EPISODE '+esc(e.episode_number)+'</small><strong>'+esc(e.title)+'</strong></button>'
   ).join("");
 
-  async function openEpisode(number,preferredPart=null){
+  async function openEpisode(number,preferredPart=null,{restore=true}={}){
     document.querySelectorAll(".episode-button").forEach(b=>b.classList.toggle("active",b.dataset.episode===String(number)));
     const episode=episodes.find(e=>String(e.episode_number)===String(number));
     const head=document.querySelector("#novel-head");
@@ -658,11 +661,11 @@ async function initRead(){
     };
 
     tabs.querySelectorAll("button").forEach((b,i)=>b.addEventListener("click",()=>openPart(i,{restore:true})));
-    await openPart(initialIndex,{restore:true});
+    await openPart(initialIndex,{restore});
   }
 
-  episodeList.querySelectorAll(".episode-button").forEach(b=>b.addEventListener("click",()=>openEpisode(b.dataset.episode,null)));
-  await openEpisode(requestedEpisode,requestedPart||null);
+  episodeList.querySelectorAll(".episode-button").forEach(b=>b.addEventListener("click",()=>openEpisode(b.dataset.episode,null,{restore:true})));
+  await openEpisode(requestedEpisode,requestedPart||null,{restore:!startFromBeginning});
 }
 
 
