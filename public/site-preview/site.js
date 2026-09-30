@@ -1381,10 +1381,42 @@ function initReaderControls(){
   addEventListener("scroll",updateProgress,{passive:true});updateProgress();
 }
 
+function initCinematicHeroMedia(){
+  const media=document.querySelector(".cinematic-hero-media");
+  if(!media||media.dataset.videoEnabled!=="true")return;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  if(navigator.connection?.saveData)return;
+
+  const useMobile=innerWidth<=900;
+  const src=useMobile?media.dataset.videoMobile:media.dataset.videoDesktop;
+  if(!src)return;
+
+  const video=document.createElement("video");
+  video.className="cinematic-hero-video";
+  video.muted=true;
+  video.autoplay=true;
+  video.loop=true;
+  video.playsInline=true;
+  video.preload="metadata";
+  video.poster="/assets/master-key-art-split-world-v1.webp";
+  video.src=src;
+
+  video.addEventListener("canplay",()=>{
+    media.classList.add("has-video");
+    video.play().catch(()=>{});
+  },{once:true});
+  video.addEventListener("error",()=>{
+    media.classList.remove("has-video");
+    video.remove();
+  },{once:true});
+
+  media.prepend(video);
+}
+
 const page=document.body.dataset.page;
 await initAuthChrome();
 await initSiteChrome();
-if(page==="home")await initHome();
+if(page==="home"){initCinematicHeroMedia();await initHome();}
 if(page==="read"){await initRead();initReaderControls();}
 if(page==="world")initWorld();
 if(page==="map-detail")await initMapDetail();
