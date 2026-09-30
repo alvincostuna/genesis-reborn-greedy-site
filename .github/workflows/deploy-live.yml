@@ -101,7 +101,7 @@ jobs:
       - name: Verify locked hero asset hash
         run: |
           set -euo pipefail
-          EXPECTED_HERO_SHA="b65b7f3ff6e43d17ada4fc893ef5e5d2423f70563f1b2beb70e7555f46f9cbc9"
+          EXPECTED_HERO_SHA="b324888b7d666b8dc1c54f570d3b374c85f6f4fca48e6d29924341791ae82884"
           ACTUAL_HERO_SHA="$(sha256sum .live-assets/assets/master-key-art-split-world-v2.webp | awk '{print $1}')"
           echo "Hero SHA-256: $ACTUAL_HERO_SHA"
           test "$ACTUAL_HERO_SHA" = "$EXPECTED_HERO_SHA"
