@@ -7418,3 +7418,376 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     padding-top:11px;
   }
 }
+
+
+/* ========================================================================== */
+/* DESTINATION V3.1 — CINEMATIC HERO RECONSTRUCTION                           */
+/* Atlas, Codex, Fan Page, Manga. Unique optimized art + art-directed mobile.  */
+/* ========================================================================== */
+
+.unified-public-page .destination-hero{
+  position:relative;
+  min-height:580px;
+  overflow:hidden;
+  isolation:isolate;
+  border:1px solid rgba(216,179,109,.42);
+  border-radius:11px;
+  background:#07111b;
+  box-shadow:0 24px 56px rgba(0,0,0,.28);
+}
+.unified-public-page .destination-hero:after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:10px;
+  pointer-events:none;
+  border:1px solid rgba(255,232,174,.08);
+  border-radius:6px;
+}
+
+/* Unique fast-loading destination artwork. */
+.unified-public-page .atlas-v1-hero .world-hero-art,
+.unified-public-page .v28-codex-hero .codex-hero-art,
+.unified-public-page .fan-hero .fan-hero-art,
+.unified-public-page .manga-hero .manga-hero-art{
+  position:absolute;
+  inset:0;
+  background-repeat:no-repeat;
+  background-size:cover;
+  filter:none;
+  transform:none;
+}
+.unified-public-page .atlas-v1-hero .world-hero-art{
+  background-image:url("/assets/v30/destination-heroes/genesis-atlas-hero.webp");
+  background-position:center 28%;
+}
+.unified-public-page .v28-codex-hero .codex-hero-art{
+  background-image:url("/assets/v30/destination-heroes/genesis-codex-hero.webp");
+  background-position:center 31%;
+}
+.unified-public-page .fan-hero .fan-hero-art{
+  background-image:url("/assets/v30/destination-heroes/genesis-fan-hero.webp");
+  background-position:center 27%;
+}
+.unified-public-page .manga-hero .manga-hero-art{
+  background-image:url("/assets/v30/destination-heroes/genesis-manga-hero.webp");
+  background-position:center 25%;
+}
+
+/* Directional readability, not a full-image blackout. */
+.unified-public-page .atlas-v1-hero .world-hero-shade,
+.unified-public-page .v28-codex-hero .codex-hero-shade,
+.unified-public-page .fan-hero .fan-hero-shade,
+.unified-public-page .manga-hero .manga-hero-shade{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:
+    linear-gradient(90deg,
+      rgba(2,8,14,.78) 0%,
+      rgba(2,8,14,.60) 24%,
+      rgba(2,8,14,.32) 43%,
+      rgba(2,8,14,.08) 67%,
+      rgba(2,8,14,.06) 100%),
+    linear-gradient(180deg,
+      rgba(2,8,14,.04) 0%,
+      rgba(2,8,14,.02) 58%,
+      rgba(2,8,14,.24) 100%);
+}
+.unified-public-page .manga-hero .manga-hero-shade{
+  background:
+    linear-gradient(90deg,
+      rgba(2,8,14,.80) 0%,
+      rgba(2,8,14,.62) 25%,
+      rgba(2,8,14,.34) 43%,
+      rgba(2,8,14,.10) 66%,
+      rgba(2,8,14,.04) 100%),
+    linear-gradient(180deg,rgba(2,8,14,.03),rgba(2,8,14,.22));
+}
+
+.unified-public-page .atlas-v1-hero .world-hero-copy,
+.unified-public-page .v28-codex-hero .codex-hero-copy,
+.unified-public-page .fan-hero .fan-hero-copy,
+.unified-public-page .manga-hero .manga-copy{
+  position:relative;
+  z-index:3;
+  width:min(650px,48%);
+  max-width:650px;
+  align-self:center;
+  padding:72px 52px 64px;
+  text-shadow:0 2px 16px rgba(0,0,0,.52);
+}
+.unified-public-page .destination-hero .eyebrow{
+  margin-bottom:11px;
+  color:#f0c973;
+  font-size:10px;
+  letter-spacing:.19em;
+}
+.unified-public-page .atlas-v1-hero .world-hero-copy h1,
+.unified-public-page .v28-codex-hero .codex-hero-copy h1,
+.unified-public-page .fan-hero .fan-hero-copy h1,
+.unified-public-page .manga-hero .manga-copy h1{
+  margin:0 0 15px;
+  color:#fff4dc;
+  font:700 clamp(55px,5.3vw,82px)/.94 Georgia,"Times New Roman",serif;
+  letter-spacing:-.025em;
+  text-shadow:0 3px 22px rgba(0,0,0,.68);
+}
+.unified-public-page .atlas-v1-hero .world-hero-copy>p:not(.eyebrow),
+.unified-public-page .v28-codex-hero .codex-hero-copy>p:not(.eyebrow),
+.unified-public-page .fan-hero .fan-hero-copy>p:not(.eyebrow),
+.unified-public-page .manga-hero .manga-copy>p:not(.eyebrow){
+  max-width:610px;
+  margin:0;
+  color:#dce7ee;
+  font-size:14px;
+  line-height:1.67;
+  text-shadow:0 2px 12px rgba(0,0,0,.74);
+}
+
+.unified-public-page .world-hero-actions,
+.unified-public-page .manga-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:22px;
+}
+.unified-public-page .world-hero-actions a,
+.unified-public-page .manga-actions a{
+  min-height:43px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 16px;
+  border:1px solid rgba(216,179,109,.50);
+  border-radius:7px;
+  background:rgba(5,20,32,.70);
+  backdrop-filter:blur(8px);
+  color:#f4dfae;
+  font-size:10px;
+  font-weight:800;
+}
+.unified-public-page .world-hero-actions a:hover,
+.unified-public-page .manga-actions a:hover{
+  border-color:rgba(244,207,121,.82);
+  background:rgba(8,29,45,.86);
+}
+.unified-public-page .world-hero-actions .atlas-action-primary{
+  border-color:rgba(233,194,104,.76);
+  background:linear-gradient(180deg,rgba(98,74,27,.42),rgba(25,37,43,.72));
+}
+.unified-public-page .codex-hero-meta,
+.unified-public-page .fan-hero-meta{
+  margin-top:19px;
+}
+.unified-public-page .codex-hero-meta span,
+.unified-public-page .fan-hero-meta span{
+  padding:6px 9px;
+  border-color:rgba(170,215,244,.30);
+  background:rgba(4,16,25,.50);
+  color:#d0e4f1;
+  backdrop-filter:blur(6px);
+  font-size:9px;
+}
+
+/* System state remains available but stops acting like the hero's focal point. */
+.unified-public-page .destination-signal{
+  position:absolute!important;
+  z-index:4!important;
+  right:24px!important;
+  bottom:22px!important;
+  left:auto!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:205px;
+  padding:9px 11px!important;
+  border:1px solid rgba(216,179,109,.28)!important;
+  border-radius:7px!important;
+  background:rgba(3,12,19,.58)!important;
+  backdrop-filter:blur(10px);
+  text-align:left!important;
+  box-shadow:none!important;
+}
+.unified-public-page .destination-signal span,
+.unified-public-page .destination-signal small{
+  display:block;
+  color:#a2b5c3!important;
+  font-size:8px!important;
+  line-height:1.35;
+}
+.unified-public-page .destination-signal>span:first-child,
+.unified-public-page .destination-signal>small:first-child{
+  color:#d9be7b!important;
+  letter-spacing:.10em;
+  font-weight:800;
+}
+.unified-public-page .destination-signal strong{
+  display:block;
+  margin:3px 0!important;
+  color:#d9ecf8!important;
+  font-size:12px!important;
+  line-height:1.15;
+}
+
+/* Editorial bridge: hero sells the destination; tools below do the work. */
+.unified-public-page .destination-section-intro{
+  display:grid;
+  grid-template-columns:minmax(300px,.82fr) minmax(0,1.18fr);
+  gap:42px;
+  align-items:end;
+  margin:23px 4px 13px;
+  padding:0 4px 17px;
+  border-bottom:1px solid rgba(216,179,109,.17);
+}
+.unified-public-page .destination-section-intro span{
+  display:block;
+  margin-bottom:7px;
+  color:#6bc9fb;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.18em;
+}
+.unified-public-page .destination-section-intro h2{
+  margin:0;
+  color:#f2dfb4;
+  font:700 clamp(24px,2.3vw,34px)/1.08 Georgia,"Times New Roman",serif;
+}
+.unified-public-page .destination-section-intro p{
+  max-width:730px;
+  margin:0;
+  color:#9eb2c2;
+  font-size:12px;
+  line-height:1.68;
+}
+
+/* Reduce the "stacked HUD cards" feeling directly below the cinematic heroes. */
+.unified-public-page .atlas-v1-strip,
+.unified-public-page .codex-discovery-strip{
+  margin-top:0;
+}
+.unified-public-page .manga-roadmap{
+  margin-top:8px;
+}
+
+/* Mobile uses separate ~85–119KB art-directed crops. */
+@media(max-width:820px){
+  .unified-public-page .destination-hero{
+    min-height:590px!important;
+    border-radius:8px;
+  }
+  .unified-public-page .atlas-v1-hero .world-hero-art{
+    background-image:url("/assets/v30/destination-heroes/genesis-atlas-hero-mobile.webp");
+    background-position:center 30%;
+  }
+  .unified-public-page .v28-codex-hero .codex-hero-art{
+    background-image:url("/assets/v30/destination-heroes/genesis-codex-hero-mobile.webp");
+    background-position:center 32%;
+  }
+  .unified-public-page .fan-hero .fan-hero-art{
+    background-image:url("/assets/v30/destination-heroes/genesis-fan-hero-mobile.webp");
+    background-position:center 28%;
+  }
+  .unified-public-page .manga-hero .manga-hero-art{
+    background-image:url("/assets/v30/destination-heroes/genesis-manga-hero-mobile.webp");
+    background-position:center 26%;
+  }
+
+  .unified-public-page .atlas-v1-hero .world-hero-shade,
+  .unified-public-page .v28-codex-hero .codex-hero-shade,
+  .unified-public-page .fan-hero .fan-hero-shade,
+  .unified-public-page .manga-hero .manga-hero-shade{
+    background:
+      linear-gradient(180deg,
+        rgba(2,8,14,.03) 0%,
+        rgba(2,8,14,.05) 39%,
+        rgba(2,8,14,.46) 59%,
+        rgba(2,8,14,.88) 82%,
+        rgba(2,8,14,.96) 100%),
+      linear-gradient(90deg,rgba(2,8,14,.15),rgba(2,8,14,.02) 72%);
+  }
+
+  .unified-public-page .atlas-v1-hero .world-hero-copy,
+  .unified-public-page .v28-codex-hero .codex-hero-copy,
+  .unified-public-page .fan-hero .fan-hero-copy,
+  .unified-public-page .manga-hero .manga-copy{
+    width:100%;
+    max-width:none;
+    align-self:end;
+    padding:300px 22px 28px!important;
+  }
+  .unified-public-page .atlas-v1-hero .world-hero-copy h1,
+  .unified-public-page .v28-codex-hero .codex-hero-copy h1,
+  .unified-public-page .fan-hero .fan-hero-copy h1,
+  .unified-public-page .manga-hero .manga-copy h1{
+    font-size:50px;
+  }
+  .unified-public-page .atlas-v1-hero .world-hero-copy>p:not(.eyebrow),
+  .unified-public-page .v28-codex-hero .codex-hero-copy>p:not(.eyebrow),
+  .unified-public-page .fan-hero .fan-hero-copy>p:not(.eyebrow),
+  .unified-public-page .manga-hero .manga-copy>p:not(.eyebrow){
+    font-size:12px;
+    line-height:1.58;
+  }
+  .unified-public-page .destination-signal{
+    display:none!important;
+  }
+  .unified-public-page .destination-section-intro{
+    grid-template-columns:1fr;
+    gap:8px;
+    margin:16px 2px 10px;
+    padding:0 4px 13px;
+  }
+  .unified-public-page .destination-section-intro h2{
+    font-size:26px;
+  }
+  .unified-public-page .destination-section-intro p{
+    font-size:11px;
+  }
+}
+
+@media(max-width:560px){
+  .unified-public-page .destination-hero{
+    min-height:565px!important;
+  }
+  .unified-public-page .atlas-v1-hero .world-hero-copy,
+  .unified-public-page .v28-codex-hero .codex-hero-copy,
+  .unified-public-page .fan-hero .fan-hero-copy,
+  .unified-public-page .manga-hero .manga-copy{
+    padding:286px 18px 22px!important;
+  }
+  .unified-public-page .atlas-v1-hero .world-hero-copy h1,
+  .unified-public-page .v28-codex-hero .codex-hero-copy h1,
+  .unified-public-page .fan-hero .fan-hero-copy h1,
+  .unified-public-page .manga-hero .manga-copy h1{
+    font-size:44px;
+  }
+  .unified-public-page .world-hero-actions,
+  .unified-public-page .manga-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    margin-top:16px;
+  }
+  .unified-public-page .world-hero-actions .atlas-action-primary{
+    grid-column:1/-1;
+  }
+  .unified-public-page .world-hero-actions a,
+  .unified-public-page .manga-actions a{
+    min-height:40px;
+    padding:0 10px;
+    font-size:9px;
+  }
+  .unified-public-page .codex-hero-meta span,
+  .unified-public-page .fan-hero-meta span{
+    font-size:8px;
+  }
+}
+
+
+/* Destination V3.1.1 — Codex legacy first-child max-width neutralization */
+.unified-public-page .v28-codex-hero > .codex-hero-art{
+  width:auto!important;
+  max-width:none!important;
+  left:0!important;
+  right:0!important;
+}
