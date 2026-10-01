@@ -38,7 +38,7 @@
   </header>
 
   <main class="game-shell v2-shell">
-    <section class="hero-panel v2-hero first-visit-hero cinematic-split-hero" aria-label="GENESIS: REBORN GREEDY — a second life, one future to forge" aria-describedby="first-visit-title">
+    <section class="hero-panel v2-hero first-visit-hero cinematic-split-hero" aria-label="GENESIS: REBORN GREEDY — a second life, one future to forge" aria-describedby="lean-story-title">
       <div class="cinematic-hero-frame">
         <div class="cinematic-hero-media" data-motion-mode="ambient-poster" data-video-enabled="false" data-video-desktop="/assets/v30/hero-split-ambient-desktop.webm" data-video-mobile="" aria-hidden="true">
           <img class="cinematic-hero-poster" src="/assets/master-key-art-split-world-v1.webp?v=20260930-hq" width="960" height="540" loading="eager" decoding="async" fetchpriority="high" alt="">
@@ -56,140 +56,71 @@
         <div class="v2-corner v2-corner-bl"></div><div class="v2-corner v2-corner-br"></div>
       </div>
 
-      <div class="cinematic-hero-rail">
+      <div class="cinematic-hero-rail lean-hero-rail">
         <div class="cinematic-hero-rail-copy">
           <span>OFFICIAL LIGHT NOVEL</span>
           <strong>Begin Flavio's second life.</strong>
         </div>
         <div class="cinematic-hero-rail-action">
-          <a class="genesis-btn primary hero-start-reading" href="/site-preview/read/?start=1"><span class="v25-icon i-read" aria-hidden="true"></span> Start Reading</a>
+          <div class="lean-hero-actions">
+            <a class="genesis-btn primary hero-start-reading" href="/site-preview/read/?start=1"><span class="v25-icon i-read" aria-hidden="true"></span> Start Reading</a>
+            <a class="genesis-btn ghost" href="/site-preview/world/"><span class="v25-icon i-world" aria-hidden="true"></span> Explore the World</a>
+          </div>
           <small>Begins at the first released Part.</small>
         </div>
       </div>
     </section>
 
-    <section class="first-visit-story v2-panel" aria-labelledby="first-visit-title">
-      <div class="first-visit-copy">
-        <p class="first-visit-kicker">NEW TO GENESIS?</p>
-        <h1 id="first-visit-title">One second chance. One future to forge.</h1>
-        <p>Flavio Reyes dies at thirty-five with a life full of work and unfinished promises. He wakes at seventeen—before GENESIS launches—and finally enters the world he once ignored.</p>
+    <section class="lean-story-section v2-panel" aria-labelledby="lean-story-title">
+      <div class="lean-story-copy">
+        <p class="first-visit-kicker">THE STORY</p>
+        <h1 id="lean-story-title">He spent one life surviving. This time, he intends to live.</h1>
+        <p>Flavio Reyes dies at thirty-five after giving nearly everything to work, debt, and unfinished promises. Then he wakes at seventeen—before GENESIS has launched. With the memories of the life he wasted still intact, he finally enters the world he once ignored and begins forging a future of his own.</p>
+        <a class="lean-text-link" href="/site-preview/read/?start=1">Begin from Episode 1 <span aria-hidden="true">→</span></a>
       </div>
-      <nav class="first-visit-path" aria-label="Homepage guide">
-        <a href="#latest-releases"><span>01</span><strong>Latest Releases</strong><small>Read what just became public.</small></a>
-        <a href="#explore-genesis"><span>02</span><strong>World &amp; Codex</strong><small>Explore what the story has revealed.</small></a>
-        <a href="#reader-hub"><span>03</span><strong>Reader Hub</strong><small>Pick up where you left off.</small></a>
-      </nav>
+      <div class="lean-story-emblem" aria-hidden="true">
+        <span>GENESIS</span>
+        <strong>A SECOND LIFE.<br>ONE FUTURE TO FORGE.</strong>
+        <small>LIVE MORE.</small>
+      </div>
     </section>
 
-    <div class="home-section-heading" id="latest-releases">
-      <div><span>THE STORY NOW</span><h2>Latest from GENESIS</h2></div>
-      <p>Read the newest public Final Canon—or start from the beginning above.</p>
-    </div>
-
-    <section class="home-row v2-home-row">
-      <article class="hud-card latest-card v2-panel">
-        <div class="card-head"><span><i class="v25-icon i-release" aria-hidden="true"></i>LATEST RELEASES</span><a href="/site-preview/read/">View All ›</a></div>
-        <div class="release-cards v2-release-cards" id="home-latest-releases">
-          <div class="release-tile v2-release-tile skeleton art-one"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 01</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
-          <div class="release-tile v2-release-tile skeleton art-two"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 02</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
-          <div class="release-tile v2-release-tile skeleton art-three"><div class="release-thumb"></div><div class="release-info"><small>RELEASE SLOT 03</small><strong>Awaiting Final Canon</strong><span>Public chronology protected</span></div></div>
-        </div>
-      </article>
-
-      <article class="hud-card notices-card v2-panel">
-        <div class="card-head"><span><i class="v25-icon i-bell" aria-hidden="true"></i>SYSTEM NOTICES</span><span>Live State</span></div>
-        <div class="notice-list">
-          <div><span class="notice-icon gold"><i class="v25-icon i-home" aria-hidden="true"></i></span><p><strong>Three-Part Release Cycle</strong><small>Monday–Saturday · 8:00 AM, 2:00 PM and 8:00 PM PHT · Sunday rest.</small></p><time>NOW</time></div>
-          <div><span class="notice-icon cyan"><i class="v25-icon i-quest" aria-hidden="true"></i></span><p><strong>Reader Quest System</strong><small>Read, share, and support to earn EXP and Tier rewards.</small></p><time>ACTIVE</time></div>
-          <div><span class="notice-icon violet"><i class="v25-icon i-support" aria-hidden="true"></i></span><p><strong>Support GENESIS</strong><small>Advance access never changes public chronology.</small></p><time>PREVIEW</time></div>
-        </div>
-      </article>
+    <section id="latest-release-section" class="lean-home-section lean-latest-section" hidden>
+      <div class="lean-section-heading">
+        <div><span>THE STORY NOW</span><h2>Latest Release</h2></div>
+        <a href="/site-preview/read/">View all episodes <span aria-hidden="true">→</span></a>
+      </div>
+      <a id="home-latest-release" class="lean-latest-card" href="/site-preview/read/"></a>
     </section>
 
-    <a class="home-flow-transition" href="#explore-genesis"><span>CAUGHT UP?</span><strong>Explore what the story has revealed</strong><i aria-hidden="true">↓</i></a>
-
-    <div class="home-section-heading" id="explore-genesis">
-      <div><span>BEYOND THE CHAPTERS</span><h2>Explore GENESIS</h2></div>
-      <p>Caught up? Open the maps, characters, monsters, factions and items the story has revealed.</p>
-    </div>
-
-    <section class="feature-grid v2-feature-grid">
-      <a class="feature-tile world" href="/site-preview/world/"><i class="v25-icon i-world" aria-hidden="true"></i><div><strong>World</strong><span>Explore maps, places, routes and living regions</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
-      <a class="feature-tile codex" href="/site-preview/codex/"><i class="v25-icon i-codex" aria-hidden="true"></i><div><strong>Codex</strong><span>Characters, factions, monsters, items and more</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
-      <a class="feature-tile fan" href="/site-preview/fan-page/"><i class="v25-icon i-fan" aria-hidden="true"></i><div><strong>Fan Page</strong><span>Share reactions, theories and discoveries</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
-      <a class="feature-tile manga" href="/site-preview/manga/"><i class="v25-icon i-manga" aria-hidden="true"></i><div><strong>Manga</strong><span>Illustrations and side stories</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
-      <a class="feature-tile support" href="/site-preview/support/"><i class="v25-icon i-support" aria-hidden="true"></i><div><strong>Support</strong><span>Help the story continue</span></div><b><span class="v25-icon i-arrow-right" aria-hidden="true"></span></b></a>
+    <section id="explore-genesis" class="lean-world-teaser">
+      <div class="lean-world-media" aria-hidden="true"></div>
+      <div class="lean-world-copy">
+        <span>BEYOND THE STORY</span>
+        <h2>The world grows as the story reveals it.</h2>
+        <p>Explore the places, characters, monsters, factions, equipment, and discoveries already revealed in GENESIS—without exposing what readers have not reached yet.</p>
+        <a class="genesis-btn ghost" href="/site-preview/world/"><span class="v25-icon i-world" aria-hidden="true"></span> Enter the Atlas</a>
+      </div>
     </section>
 
-    <a class="home-flow-transition" href="#reader-hub"><span>RETURNING?</span><strong>Continue from your reader hub</strong><i aria-hidden="true">↓</i></a>
-
-    <div class="home-section-heading returning-reader-heading" id="reader-hub">
-      <div><span>RETURNING READER</span><h2>Your GENESIS hub</h2></div>
-      <p>Resume reading, check the next release, and track EXP and account rewards.</p>
-    </div>
-
-    <section class="dashboard-grid v2-dashboard">
-      <article class="hud-card release-hud ornate v2-panel v2-release-panel">
-        <div class="v2-panel-rune"><span class="v25-icon i-release" aria-hidden="true"></span></div>
-        <div class="card-kicker">NEXT RELEASE</div>
-        <div class="release-time" id="home-release-time">8:00 AM PHT</div>
-        <div class="release-part" id="home-release-part">Next verified Part</div>
-        <div id="home-release-state" class="release-state-banner scheduled"><span class="state-dot"></span><strong>SCHEDULED</strong><small>Canonical queue healthy</small></div>
-        <div class="countdown-row" aria-live="polite">
-          <div><strong id="cd-hours">--</strong><small>HOURS</small></div>
-          <span>:</span>
-          <div><strong id="cd-minutes">--</strong><small>MINUTES</small></div>
-          <span>:</span>
-          <div><strong id="cd-seconds">--</strong><small>SECONDS</small></div>
-        </div>
-        <div class="v2-cycle-title">DAILY RELEASE CYCLE</div>
-        <div class="cycle-rule">
-          <div><span class="moon v25-icon i-moon" aria-hidden="true"></span><strong>8:00 AM</strong><small>1st Part of the Day</small></div>
-          <div><span class="sun v25-icon i-sunrise" aria-hidden="true"></span><strong>2:00 PM</strong><small>2nd Part of the Day</small></div>
-          <div><span class="sun v25-icon i-sunrise" aria-hidden="true"></span><strong>8:00 PM</strong><small>3rd Part of the Day</small></div>
-        </div>
-        <small class="timezone-note">3 Parts daily · 8:00 AM / 2:00 PM / 8:00 PM · Monday–Saturday · Sunday rest · PHT</small>
-      </article>
-
-      <article class="hud-card reading-hud v2-panel v2-reading-panel">
-        <div class="card-head"><span><i class="v25-icon i-read" aria-hidden="true"></i>CURRENTLY READING</span><a href="/site-preview/read/">View Library ›</a></div>
-        <div class="reading-feature">
-          <div class="reading-art v2-reading-art"><span class="reading-art-label">CURRENT ARC</span><b class="reading-art-title">GENESIS</b></div>
-          <div class="reading-copy">
-            <small id="home-current-episode">GENESIS</small>
-            <h1 id="home-current-title">Continue Your Journey</h1>
-            <p id="home-current-summary">Return to the latest released Final Canon and continue from where you left off.</p>
-            <div class="reading-actions">
-              <a class="genesis-btn ghost" href="/site-preview/read/"><span class="v25-icon i-read" aria-hidden="true"></span> Continue Reading</a>
-              <a class="genesis-btn ghost" href="/site-preview/read/"><span class="v25-icon i-codex" aria-hidden="true"></span> View Episode</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="hud-card access-hud v2-panel v2-access-panel">
-        <div class="card-head"><span><i class="v25-icon i-profile" aria-hidden="true"></i>YOUR ACCESS</span><a href="/site-preview/account/">View Details ›</a></div>
-        <div class="access-identity"><span class="access-kicker">ADVENTURER PROFILE</span><div class="profile-row">
-          <div class="profile-avatar"><img src="/assets/genesis-official-logo-64.png" alt=""></div>
-          <div class="v2-profile-copy">
-            <strong id="home-reader-name">Reader</strong>
-            <small id="home-reader-title">GENESIS Adventurer</small>
-            <span class="tier-pill" id="home-reader-tier">Tier 1</span>
-          </div>
-        </div></div>
-        <div class="access-progress-head"><span>Tier Progress</span><strong id="home-tier-next">Next reward at 2,000 EXP</strong></div>
-        <div class="exp-track"><span id="home-exp-bar" style="width:0%"></span></div>
-        <div class="exp-copy"><span id="home-exp-progress">0 / 2,000 EXP</span><span id="home-exp-total">Total EXP: 0</span></div>
-        <div class="access-list">
-          <div><span><i class="v25-icon i-access" aria-hidden="true"></i>Advance Access</span><strong id="home-access-total">+0 Parts Ahead</strong></div>
-          <div><span><i class="v25-icon i-support-unlock" aria-hidden="true"></i>Support Unlocks</span><strong id="home-support-unlocks">+0</strong></div>
-          <div><span><i class="v25-icon i-social" aria-hidden="true"></i>Social Unlocks</span><strong id="home-social-unlocks">+0</strong></div>
-          <div><span><i class="v25-icon i-quest" aria-hidden="true"></i>Active Quests</span><strong id="home-active-quests">0 Ongoing</strong></div>
-          <div><span><i class="v25-icon i-collectible" aria-hidden="true"></i>Collectible Rewards</span><strong id="home-collectibles">0</strong></div>
-        </div>
-      </article>
+    <section class="lean-final-cta" aria-label="Start reading GENESIS">
+      <span>YOUR SECOND LIFE STARTS HERE</span>
+      <h2>Enter GENESIS from the beginning.</h2>
+      <a class="genesis-btn primary" href="/site-preview/read/?start=1"><span class="v25-icon i-read" aria-hidden="true"></span> Start Reading</a>
     </section>
   </main>
+
+  <footer class="lean-home-footer">
+    <small>GENESIS: REBORN GREEDY · Official Light Novel</small>
+    <nav aria-label="Footer">
+      <a href="/site-preview/read/">Read</a>
+      <a href="/site-preview/world/">World</a>
+      <a href="/site-preview/codex/">Codex</a>
+      <a href="/site-preview/manga/">Manga</a>
+      <a href="/site-preview/fan-page/">Fan Page</a>
+      <a href="/site-preview/support/">Support</a>
+    </nav>
+  </footer>
 
   <nav class="mobile-bottom-nav v2-mobile-bottom" aria-label="Mobile navigation">
     <a class="active" href="/site-preview/"><span class="v25-icon i-home" aria-hidden="true"></span>Home</a>

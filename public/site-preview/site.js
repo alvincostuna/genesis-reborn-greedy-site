@@ -1223,135 +1223,28 @@ function latestPartCard(part,index){
 }
 
 async function initHome(){
-  const timeEl=document.querySelector("#home-release-time");
-  const partEl=document.querySelector("#home-release-part");
-  const hEl=document.querySelector("#cd-hours");
-  const mEl=document.querySelector("#cd-minutes");
-  const sEl=document.querySelector("#cd-seconds");
-  let nextAt=null,releaseState=null,accountData=null;
-
-  function nextManilaSlot(){
-    const now=new Date();
-    const parts=new Intl.DateTimeFormat("en-US",{
-      timeZone:"Asia/Manila",year:"numeric",month:"2-digit",day:"2-digit",
-      hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
-    }).formatToParts(now).reduce((o,p)=>(o[p.type]=p.value,o),{});
-    const y=Number(parts.year),m=Number(parts.month)-1,d=Number(parts.day);
-    const nowLocalSeconds=Number(parts.hour)*3600+Number(parts.minute)*60+Number(parts.second);
-    for(let dayOffset=0;dayOffset<8;dayOffset++){
-      const localDate=new Date(Date.UTC(y,m,d+dayOffset));
-      if(localDate.getUTCDay()===0)continue;
-      for(const hour of [8,14,20]){
-        const slotSeconds=hour*3600;
-        if(dayOffset===0&&slotSeconds<=nowLocalSeconds)continue;
-        return {
-          date:new Date(Date.UTC(localDate.getUTCFullYear(),localDate.getUTCMonth(),localDate.getUTCDate(),hour-8,0,0)),
-          label:hour===8?"8:00 AM PHT":hour===14?"2:00 PM PHT":"8:00 PM PHT"
-        };
-      }
-    }
-    return {date:new Date(now.getTime()+8*3600*1000),label:"Next release"};
-  }
-  function tick(){
-    if(!nextAt)return;
-    const ms=Math.max(0,nextAt.getTime()-Date.now()),t=Math.floor(ms/1000);
-    if(hEl)hEl.textContent=String(Math.floor(t/3600)).padStart(2,"0");
-    if(mEl)mEl.textContent=String(Math.floor((t%3600)/60)).padStart(2,"0");
-    if(sEl)sEl.textContent=String(t%60).padStart(2,"0");
-    if(ms<=0&&releaseState?.launch_authorized&&!releaseState?.releases_paused&&!releaseState?.next_publish_at){
-      const n=nextManilaSlot();nextAt=n.date;if(timeEl)timeEl.textContent=n.label;
-    }
-  }
-
-  try{
-    releaseState=firstRow(await rpc("api_public_release_state_v1"));
-    paintReleaseState(document.querySelector("#home-release-state"),releaseState);
-  }catch{}
-
-  const authoritativeAt=releaseState?.next_publish_at?new Date(releaseState.next_publish_at):null;
-  const authoritativeValid=authoritativeAt&&!Number.isNaN(authoritativeAt.getTime())&&authoritativeAt.getTime()>Date.now();
-  if(authoritativeValid){
-    nextAt=authoritativeAt;
-    if(timeEl)timeEl.textContent=new Intl.DateTimeFormat("en-PH",{timeZone:"Asia/Manila",hour:"numeric",minute:"2-digit",hour12:true}).format(authoritativeAt)+" PHT";
-    if(partEl&&releaseState?.next_part){
-      partEl.textContent="Episode "+releaseState.next_part.episode_number+" · Part "+String(releaseState.next_part.part_number).padStart(3,"0");
-    }
-  }else if(releaseState?.launch_authorized&&!releaseState?.releases_paused){
-    const slot=nextManilaSlot();nextAt=slot.date;if(timeEl)timeEl.textContent=slot.label;
-  }else{
-    if(timeEl)timeEl.textContent=releaseState?.releases_paused?"RELEASES PAUSED":"COMING SOON";
-    if(partEl)partEl.textContent="Waiting for the next verified Part";
-    if(hEl)hEl.textContent="00";if(mEl)mEl.textContent="00";if(sEl)sEl.textContent="00";
-  }
-  tick();setInterval(tick,1000);
-
   let episodes=[];
   try{episodes=await rpc("api_episode_library")}catch{}
-  if(Array.isArray(episodes)&&episodes.length){
-    const latestParts=await collectLatestParts(episodes,3);
-    const box=document.querySelector("#home-latest-releases");
-    if(box&&latestParts.length)box.innerHTML=latestParts.map(latestPartCard).join("");
+  if(!Array.isArray(episodes)||!episodes.length)return;
 
-    let resume=readLocalProgress();
-    let session=null,user=null;
-    try{
-      session=await getSession();user=session?await getAuthUser(session):null;
-      if(user){
-        try{accountData=await rpc("api_reader_account_v3",{},session.access_token)}catch{accountData=await rpc("api_reader_account",{},session.access_token)}
-        resume=extractAccountProgress(accountData)||resume;
-      }
-    }catch{}
+  const latestParts=await collectLatestParts(episodes,1);
+  const latest=latestParts[0]||null;
+  const section=document.querySelector("#latest-release-section");
+  const card=document.querySelector("#home-latest-release");
 
-    const fallbackPart=latestParts[0]||null;
-    if(!resume&&fallbackPart)resume={
-      episode_number:fallbackPart.episode_number,part_number:fallbackPart.part_number,part_id:fallbackPart.part_id,
-      episode_title:fallbackPart.episode_title,title:fallbackPart.title,progress_pct:0,source:"latest"
-    };
-
-    if(resume?.episode_number){
-      const ep=episodes.find(x=>Number(x.episode_number)===Number(resume.episode_number))||episodes[0];
-      let partTitle=resume.title||null,partNumber=Number(resume.part_number||0);
-      if(ep&&partNumber&&!partTitle){
-        try{
-          const parts=await rpc("api_episode_parts_for_reader",{p_episode_number:Number(ep.episode_number)});
-          const p=Array.isArray(parts)?parts.find(x=>Number(x.part_number)===partNumber):null;
-          partTitle=p?.title||null;
-        }catch{}
-      }
-      document.querySelector("#home-current-episode").textContent="Episode "+ep.episode_number+(partNumber?" · Part "+String(partNumber).padStart(3,"0"):"");
-      document.querySelector("#home-current-title").textContent=partTitle||ep.title||"Continue Your Journey";
-      document.querySelector("#home-current-summary").textContent=resume.source==="latest"
-        ?(ep.summary_public||"Begin with the latest released Final Canon.")
-        :"Resume your exact reading position and continue the journey.";
-      document.querySelectorAll(".v2-reading-panel .reading-actions a,.v2-hero-copy .hero-actions a:nth-child(2)").forEach(a=>{
-        if(a.textContent.includes("Continue"))a.href=readerUrl(ep.episode_number,partNumber||null);
-      });
-      const heroContinue=document.querySelector(".v2-hero-copy .hero-actions .ghost");if(heroContinue)heroContinue.href=readerUrl(ep.episode_number,partNumber||null);
-      if(partEl&&!releaseState?.next_part)partEl.textContent="Episode "+episodes[0].episode_number+" · next scheduled Part";
-    }
-
-    if(accountData){
-      const name=accountData?.display_name||user?.user_metadata?.display_name||"Reader";
-      document.querySelector("#home-reader-name").textContent=name;
-      const totalExp=Number(accountData?.reader_exp??accountData?.total_exp??0);
-      const tier=Math.floor(totalExp/TIER_EXP_THRESHOLD)+1,within=totalExp%TIER_EXP_THRESHOLD;
-      document.querySelector("#home-reader-tier").textContent="Tier "+tier;
-      document.querySelector("#home-exp-progress").textContent=within.toLocaleString()+" / "+TIER_EXP_THRESHOLD.toLocaleString()+" EXP";
-      document.querySelector("#home-exp-total").textContent="Total EXP: "+totalExp.toLocaleString();
-      document.querySelector("#home-exp-bar").style.width=Math.min(100,within/TIER_EXP_THRESHOLD*100)+"%";
-      document.querySelector("#home-tier-next").textContent="Next reward in "+(TIER_EXP_THRESHOLD-within).toLocaleString()+" EXP";
-      const support=Number(accountData?.support?.advance_parts??accountData?.support?.credit_balance??0);
-      document.querySelector("#home-support-unlocks").textContent="+"+support;
-      document.querySelector("#home-access-total").textContent="+"+support+" Parts Ahead";
-      document.querySelector("#home-reader-title").textContent=accountData?.reader_title||accountData?.support?.public_badge||"GENESIS Adventurer";
-      document.querySelector("#home-social-unlocks").textContent="+"+Number(accountData?.social_unlocks??accountData?.social?.unlock_count??0);
-      document.querySelector("#home-active-quests").textContent=Number(accountData?.active_quests??accountData?.quests?.active_count??0)+" Ongoing";
-      document.querySelector("#home-collectibles").textContent=String(accountData?.collection_count??accountData?.collectibles_count??0);
-      const avatar=document.querySelector(".v2-access-panel .profile-avatar img");
-      if(avatar)avatar.src=user?.user_metadata?.avatar_url||"/assets/genesis-official-logo-64.png";
-    }
+  if(latest&&section&&card){
+    const when=formatPhtDate(latest.publish_at||latest.published_at||latest.released_at)||"Released";
+    card.href=readerUrl(latest.episode_number,latest.part_number);
+    card.innerHTML=
+      '<div class="lean-latest-art" aria-hidden="true"></div>'+
+      '<div class="lean-latest-copy">'+
+      '<small>EPISODE '+esc(latest.episode_number)+' · PART '+String(latest.part_number).padStart(3,"0")+'</small>'+
+      '<h3>'+esc(latest.title||latest.episode_title||"GENESIS")+'</h3>'+
+      '<p>'+esc(when)+' · Read the newest public Final Canon.</p>'+
+      '<strong>Read Now <span aria-hidden="true">→</span></strong>'+
+      '</div>';
+    section.hidden=false;
   }
-  paintSystemNotices(releaseState,accountData);
 }
 
 function initReaderControls(){

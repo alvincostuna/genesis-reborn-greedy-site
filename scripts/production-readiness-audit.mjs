@@ -50,9 +50,9 @@ add('S1-NOTIFICATIONS','S1','Notification center has read/unread state and live 
   /id=["']notification-panel["']/.test(home)&&/NOTIFICATION_READ_KEY/.test(js)&&/function buildNotificationFeed\(/.test(js)&&/notification-mark-all/.test(home),
   'Notification panel, badge, local read state, mark-all-read, release/quest sources are implemented.');
 
-add('S1-RELEASE-AUTHORITY','S1','Backend scheduled release overrides client fallback',
-  /api_public_release_state_v1/.test(js)&&/authoritativeAt/.test(js)&&/releaseState\?\.launch_authorized&&!releaseState\?\.releases_paused/.test(js)&&/next_publish_at/.test(js),
-  'Public release-state RPC is read first; local Manila schedule is conditional fallback only.');
+add('S1-RELEASE-AUTHORITY','S1','Release timing remains backend-authoritative where it is shown',
+  /api_public_release_state_v1/.test(js)&&/async function initRead\(/.test(js)&&/function buildNotificationFeed\(/.test(js)&&/next_publish_at/.test(js),
+  'The lean homepage no longer fabricates release timing; Read and Notifications continue to consume the backend public release state.');
 
 add('S1-EXACT-RESUME','S1','Reader resume stores exact Episode, Part and progress',
   /READ_STATE_KEY/.test(js)&&/saveLocalProgress/.test(js)&&/progress_pct/.test(js)&&/searchParams\.set\("episode"/.test(js)&&/searchParams\.set\("part"/.test(js),
@@ -63,12 +63,12 @@ add('S1-PART-LEVEL-LATEST','S1','Latest Releases uses real Part records',
   'Homepage flattens released Parts and renders Episode + Part chronology.');
 
 add('S2-ACCOUNT-ORB','S2','Profile orb remains visual after authentication',
-  /link\.classList\.contains\("profile-orb"\)/.test(js)&&/user_metadata\?\.avatar_url/.test(js)&&!/link\.textContent=user\?"Account":"Sign in";/.test(js),
-  'Auth chrome preserves the circular image treatment.');
+  /if\(link\.classList\.contains\("profile-orb"\)\)/.test(js)&&/img\.src=user\?\.user_metadata\?\.avatar_url/.test(js)&&/else\{\s*link\.textContent=user\?"Account":"Sign in";/.test(js),
+  'Auth chrome preserves the circular image treatment while non-orb auth links may use text.');
 
-add('S2-SYSTEM-NOTICES','S2','Homepage notices are live-state notices, not fake editorial announcements',
-  /SYSTEM NOTICES/.test(home)&&/function paintSystemNotices\(/.test(js),
-  'Homepage notices are generated from release/account state and labeled System Notices.');
+add('S2-SYSTEM-NOTICES','S2','Live notices stay in Notifications instead of duplicating a homepage dashboard',
+  !/SYSTEM NOTICES/.test(home)&&/function buildNotificationFeed\(/.test(js)&&/api_public_release_state_v1/.test(js)&&/notification-panel/.test(home),
+  'The lean homepage omits the System Notices card; live release and reader notices remain in the notification center.');
 
 add('S2-CODEX-VISUALS','S2','World/Codex visuals vary by entity seed',
   /function stableIndex\(/.test(js)&&/entityVisual\(type,x\?\.entity_code/.test(js),
