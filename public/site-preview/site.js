@@ -1710,27 +1710,90 @@ async function initHomeAccessPanel(){
 
 async function initHome(){
   const episodes=await getHomeEpisodes();
-  if(!episodes.length)return;
+  const latestGrid=document.querySelector("#home-latest-releases");
+  const announcements=document.querySelector("#home-announcements");
+  const readingEpisode=document.querySelector("#home-reading-episode");
+  const readingTitle=document.querySelector("#home-reading-title");
+  const readingSummary=document.querySelector("#home-reading-summary");
+  const readingArt=document.querySelector("#home-reading-art");
+  const readingContinue=document.querySelector("#home-reading-continue");
+  const readingEpisodeLink=document.querySelector("#home-reading-view-episode");
 
-  const latestParts=await collectLatestParts(episodes,1);
-  const latest=latestParts[0]||null;
-  const section=document.querySelector("#latest-release-section");
-  const card=document.querySelector("#home-latest-release");
+  const relativeAge=value=>{
+    const d=validDate(value);
+    if(!d)return "";
+    const seconds=Math.max(0,Math.floor((Date.now()-d.getTime())/1000));
+    if(seconds<60)return "now";
+    if(seconds<3600)return Math.floor(seconds/60)+"m ago";
+    if(seconds<86400)return Math.floor(seconds/3600)+"h ago";
+    return Math.floor(seconds/86400)+"d ago";
+  };
+  const epLabel=(episode,part)=>"EPISODE "+String(episode).padStart(3,"0")+" · PART "+String(part).padStart(3,"0");
 
-  if(latest&&section&&card){
-    const when=formatPhtDate(latest.publish_at||latest.published_at||latest.released_at)||"Released";
-    card.href=readerUrl(latest.episode_number,latest.part_number);
-    card.innerHTML=
-      '<div class="lean-latest-art" aria-hidden="true"></div>'+
-      '<div class="lean-latest-copy">'+
-      '<small>EPISODE '+esc(latest.episode_number)+' · PART '+String(latest.part_number).padStart(3,"0")+'</small>'+
-      '<h3>'+esc(latest.title||latest.episode_title||"GENESIS")+'</h3>'+
-      '<p>'+esc(when)+' · Read the newest public Final Canon.</p>'+
-      '<strong>Read Now <span aria-hidden="true">→</span></strong>'+
-      '</div>';
-    section.hidden=false;
-  }else if(section){
-    section.hidden=true;
+  if(!episodes.length){
+    if(latestGrid)latestGrid.innerHTML='<a class="deck-release-card is-loading" href="/site-preview/read/"><span>Released story data is temporarily unavailable.</span></a>';
+    if(announcements)announcements.innerHTML=
+      '<div class="deck-announcement-row"><span class="deck-announcement-icon">◆</span><p><strong>Release status unavailable</strong><small>The public reader remains fail-closed until verified data returns.</small></p><time>System</time></div>'+
+      '<div class="deck-announcement-row"><span class="deck-announcement-icon">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div>'+
+      '<a class="deck-announcement-row" href="/site-preview/support/"><span class="deck-announcement-icon">◇</span><p><strong>Support GENESIS</strong><small>Reader support and account options remain available.</small></p><time>Open</time></a>';
+    return;
+  }
+
+  const latestParts=await collectLatestParts(episodes,3);
+  if(latestGrid){
+    latestGrid.innerHTML=latestParts.length?latestParts.map((part,index)=>{
+      const when=formatPhtDate(part.publish_at||part.published_at||part.released_at)||"Released";
+      const label=epLabel(part.episode_number,part.part_number);
+      const title=part.title||part.episode_title||"GENESIS";
+      return '<a class="deck-release-card deck-release-card-'+(index+1)+'" href="'+readerUrl(part.episode_number,part.part_number)+'">'+
+        '<span class="deck-release-thumb" aria-hidden="true"></span>'+
+        '<span class="deck-release-copy"><small>'+esc(label)+'</small><strong>'+esc(title)+'</strong><em>'+esc(when)+'</em></span>'+
+        '<b aria-hidden="true">›</b></a>';
+    }).join(""):'<a class="deck-release-card is-loading" href="/site-preview/read/"><span>No public release is available yet.</span></a>';
+  }
+
+  let readingTarget=null;
+  let hasProgress=false;
+  const local=typeof readLocalProgress==="function"?readLocalProgress():null;
+  if(local?.episode_number){
+    try{
+      const ep=episodes.find(e=>Number(e.episode_number)===Number(local.episode_number));
+      const parts=await rpc("api_episode_parts_for_reader",{p_episode_number:Number(local.episode_number)});
+      const match=Array.isArray(parts)?parts.find(p=>Number(p.part_number)===Number(local.part_number)):null;
+      if(match){
+        readingTarget={...match,episode_title:ep?.title,summary_public:match?.summary_public||ep?.summary_public};
+        hasProgress=true;
+      }
+    }catch{}
+  }
+  if(!readingTarget&&latestParts[0]){
+    const ep=episodes.find(e=>Number(e.episode_number)===Number(latestParts[0].episode_number));
+    readingTarget={...latestParts[0],episode_title:latestParts[0].episode_title||ep?.title,summary_public:latestParts[0].summary_public||ep?.summary_public};
+  }
+
+  if(readingTarget){
+    const href=hasProgress?readerUrl(readingTarget.episode_number,readingTarget.part_number):"/site-preview/read/?start=1";
+    const episodeHref=readerUrl(readingTarget.episode_number,readingTarget.part_number);
+    if(readingEpisode)readingEpisode.textContent=epLabel(readingTarget.episode_number,readingTarget.part_number);
+    if(readingTitle)readingTitle.textContent=readingTarget.title||readingTarget.episode_title||"GENESIS";
+    if(readingSummary)readingSummary.textContent=readingTarget.summary_public||"Continue through the released Final Canon and pick up from your reader-safe progress.";
+    if(readingArt)readingArt.href=episodeHref;
+    if(readingContinue){
+      readingContinue.href=href;
+      readingContinue.innerHTML='<span aria-hidden="true">▣</span> '+(hasProgress?"Continue Reading":"Start Reading");
+    }
+    if(readingEpisodeLink)readingEpisodeLink.href=episodeHref;
+  }
+
+  if(announcements){
+    const latest=latestParts[0]||null;
+    const latestRow=latest
+      ?'<a class="deck-announcement-row" href="'+readerUrl(latest.episode_number,latest.part_number)+'"><span class="deck-announcement-icon">⌂</span><p><strong>Latest public release</strong><small>'+esc(epLabel(latest.episode_number,latest.part_number))+' · '+esc(latest.title||latest.episode_title||"GENESIS")+'</small></p><time>'+esc(relativeAge(latest.publish_at||latest.published_at||latest.released_at)||"Released")+'</time></a>'
+      :'<div class="deck-announcement-row"><span class="deck-announcement-icon">⌂</span><p><strong>No public Part yet</strong><small>The reader will update after a verified release.</small></p><time>System</time></div>';
+    announcements.innerHTML=
+      latestRow+
+      '<div class="deck-announcement-row"><span class="deck-announcement-icon">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div>'+
+      '<a class="deck-announcement-row" href="/site-preview/support/"><span class="deck-announcement-icon">◇</span><p><strong>Support GENESIS</strong><small>Reader support, access, and account options.</small></p><time>Open</time></a>';
   }
 }
 
