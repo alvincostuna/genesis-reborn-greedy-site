@@ -150,15 +150,36 @@ jobs:
                   status:200,
                   contentType:'application/json',
                   body:JSON.stringify([{
-                    contract_version:'QA',
-                    launch_authorized:false,
-                    releases_paused:true,
+                    contract_version:'QA-HOME-RELEASE',
+                    server_now:'2026-10-02T10:00:00+08:00',
+                    timezone:'Asia/Manila',
+                    launch_authorized:true,
+                    releases_paused:false,
                     daily_slots:['08:00','14:00','20:00'],
+                    release_days:['MON','TUE','WED','THU','FRI','SAT'],
                     sunday_rest:true,
-                    next_publish_at:null,
-                    next_part:null,
-                    released_parts:0
+                    next_publish_at:'2026-10-02T14:00:00+08:00',
+                    next_cycle_at:'2026-10-02T14:00:00+08:00',
+                    next_part:{episode_number:1,part_number:2},
+                    released_parts:1
                   }])
+                });
+              }
+              if(url.includes('/rest/v1/rpc/api_release_clock_v2')){
+                return route.fulfill({
+                  status:200,
+                  contentType:'application/json',
+                  body:JSON.stringify({
+                    contract_version:'QA',
+                    timezone:'Asia/Manila',
+                    daily_slots:['08:00','14:00','20:00'],
+                    release_days:['MON','TUE','WED','THU','FRI','SAT'],
+                    sunday_rest:true,
+                    next_publish_at:'2026-10-02T14:00:00+08:00',
+                    next_cycle_at:'2026-10-02T14:00:00+08:00',
+                    launch_authorized:true,
+                    releases_paused:false
+                  })
                 });
               }
               if(url.includes('/rest/v1/rpc/')){
@@ -317,6 +338,50 @@ jobs:
                     ).join('');
                   }
                 });
+              }
+              if(name==='home'){
+                const design=await page.evaluate(({mode})=>{
+                  const visible=el=>!!el&&getComputedStyle(el).display!=='none'&&getComputedStyle(el).visibility!=='hidden';
+                  const hero=document.querySelector('.cinematic-hero-frame');
+                  const media=document.querySelector('.cinematic-hero-media');
+                  const command=document.querySelector('#home-release-command');
+                  const left=document.querySelector('.home-release-cycle-panel');
+                  const right=document.querySelector('.home-live-panel');
+                  const slots=[...document.querySelectorAll('[data-release-slot]')];
+                  const start=document.querySelector('.home-release-actions .hero-start-reading');
+                  const world=document.querySelector('.home-release-actions a[href*="/world/"]');
+                  const issues=[];
+                  if(!visible(command))issues.push('release command missing');
+                  if(document.querySelector('.lean-story-section'))issues.push('redundant story panel still present');
+                  if(document.querySelector('.lean-world-teaser'))issues.push('redundant world teaser still present');
+                  if(slots.length!==3)issues.push('release slot count is not 3');
+                  if(!visible(start)||!visible(world))issues.push('hero CTAs missing');
+                  if(!hero||!media||!command||!left||!right)return {issues:[...issues,'home overlay structure incomplete']};
+
+                  const hr=hero.getBoundingClientRect();
+                  const mr=media.getBoundingClientRect();
+                  const cr=command.getBoundingClientRect();
+                  const lr=left.getBoundingClientRect();
+                  const rr=right.getBoundingClientRect();
+
+                  if(mode==='desktop-1440'){
+                    if(lr.width>hr.width*.32||rr.width>hr.width*.32)issues.push('desktop overlay panel too wide');
+                    if(lr.right>hr.left+hr.width*.38)issues.push('left overlay invades center safe zone');
+                    if(rr.left<hr.left+hr.width*.62)issues.push('right overlay invades center safe zone');
+                    if(lr.height>250||rr.height>250)issues.push('desktop overlay panel too tall');
+                  }else{
+                    if(cr.top<mr.bottom-2)issues.push('mobile/tablet release command overlays artwork');
+                    if(mode.startsWith('mobile-')&&cr.height>240)issues.push('phone release command taller than 240px');
+                    if(mode==='tablet-768'&&cr.height>235)issues.push('tablet release command taller than 235px');
+                    if(mode.startsWith('mobile-')){
+                      for(const a of document.querySelectorAll('.home-release-actions a')){
+                        if(a.getBoundingClientRect().height<43)issues.push('phone CTA below 44px tap target');
+                      }
+                    }
+                  }
+                  return {issues,hero:{w:hr.width,h:hr.height},command:{w:cr.width,h:cr.height}};
+                },{mode});
+                for(const issue of design.issues)errors.push('design: '+issue);
               }
               await page.screenshot({path:`visual-qa/${name}-${mode}.png`,fullPage:true});
               const body=await page.locator('body').boundingBox();
