@@ -10649,3 +10649,54 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     line-height:1!important;
   }
 }
+
+
+/* RED TEAM visual repair: neutralize retired V4 grid-area bindings inside the V1 release header. */
+.web-ds-v2 .genesis-command-deck .deck-release-title{
+  grid-template-columns:1fr!important;
+  grid-template-rows:auto auto auto!important;
+  grid-template-areas:none!important;
+  align-content:center!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-state,
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-time,
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-part{
+  grid-area:auto!important;
+  position:static!important;
+  inset:auto!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-time{
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+
+/* Use existing reader-safe GENESIS artwork so the command deck matches the approved reference more closely. */
+.web-ds-v2 .genesis-command-deck .deck-reading-art{
+  background:
+    linear-gradient(90deg,rgba(5,13,22,.08),rgba(5,13,22,.12)),
+    url('/assets/v25/releases/release-city.png') center/cover!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-card-1 .deck-release-thumb{
+  background:
+    linear-gradient(180deg,rgba(2,8,14,.02),rgba(2,8,14,.28)),
+    url('/assets/v25/releases/release-duel.png') center/cover!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-card-2 .deck-release-thumb{
+  background:
+    linear-gradient(180deg,rgba(2,8,14,.02),rgba(2,8,14,.28)),
+    url('/assets/v25/releases/release-city.png') center/cover!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-card-3 .deck-release-thumb{
+  background:
+    linear-gradient(180deg,rgba(2,8,14,.02),rgba(2,8,14,.28)),
+    url('/assets/v27/rewards/early-genesis-world-panorama.webp') center/cover!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row:nth-child(2) .deck-announcement-icon{
+  border-color:rgba(114,201,255,.62);color:#72c9ff;background:rgba(18,62,82,.72);
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row:nth-child(3) .deck-announcement-icon{
+  border-color:rgba(184,130,255,.58);color:#c79cff;background:rgba(49,29,77,.62);
+}
