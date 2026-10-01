@@ -47,109 +47,138 @@
           <span class="cinematic-hero-vignette"></span>
         </div>
 
-        <div id="home-release-command" class="home-release-command">
-          <section class="home-release-panel home-release-cycle-panel home-ornate-card" aria-label="Next release">
-            <div class="home-ornate-corner home-ornate-corner-tl" aria-hidden="true"></div>
-            <div class="home-ornate-corner home-ornate-corner-tr" aria-hidden="true"></div>
-            <div class="home-ornate-corner home-ornate-corner-bl" aria-hidden="true"></div>
-            <div class="home-ornate-corner home-ornate-corner-br" aria-hidden="true"></div>
-
-            <header class="home-next-header">
-              <span class="home-next-emblem" aria-hidden="true">⌛</span>
-              <div class="home-next-title">
-                <span id="home-release-state" aria-live="polite">CHECKING RELEASE</span>
-                <strong id="home-release-time">-- PHT</strong>
-                <small id="home-release-part">Next verified Part</small>
-              </div>
-              <a class="home-next-arrow" href="/site-preview/read/?start=1" aria-label="Open Reader">›</a>
-            </header>
-
-            <div class="home-countdown-grid" aria-label="Release countdown">
-              <div><span>HOURS</span><strong id="home-countdown-hours">--</strong></div>
-              <div><span>MINUTES</span><strong id="home-countdown-minutes">--</strong></div>
-              <div><span>SECONDS</span><strong id="home-countdown-seconds">--</strong></div>
-            </div>
-
-            <div class="home-cycle-divider"><span>DAILY RELEASE CYCLE</span></div>
-            <div class="home-release-slots" aria-label="Release times">
-              <div class="home-release-slot" data-release-slot="08:00"><strong>8:00 AM</strong><span>—</span></div>
-              <div class="home-release-slot" data-release-slot="14:00"><strong>2:00 PM</strong><span>—</span></div>
-              <div class="home-release-slot" data-release-slot="20:00"><strong>8:00 PM</strong><span>—</span></div>
-            </div>
-            <footer class="home-release-card-footer">
-              <span id="home-release-detail">3 Parts · Monday–Saturday</span>
-              <span>Asia/Manila (PHT)</span>
-            </footer>
-          </section>
-
-          <section class="home-release-panel home-live-panel home-access-panel home-ornate-card" aria-label="Your reader access">
-            <div class="home-ornate-corner home-ornate-corner-tl" aria-hidden="true"></div>
-            <div class="home-ornate-corner home-ornate-corner-tr" aria-hidden="true"></div>
-            <div class="home-ornate-corner home-ornate-corner-bl" aria-hidden="true"></div>
-            <div class="home-ornate-corner home-ornate-corner-br" aria-hidden="true"></div>
-
-            <header class="home-access-head">
-              <span>YOUR ACCESS</span>
-              <a href="/site-preview/account/">View Details ›</a>
-            </header>
-
-            <div id="home-access-guest" class="home-access-guest">
-              <div class="home-access-profile">
-                <div class="home-access-avatar"><img src="/assets/genesis-official-logo-64.png" alt=""></div>
-                <div class="home-access-identity">
-                  <strong>GENESIS Reader</strong>
-                  <span>Sign in to view your progress and access.</span>
-                </div>
-              </div>
-              <div class="home-access-guest-preview" aria-hidden="true">
-                <div><span>Advance Access</span><strong>Sign in to view</strong></div>
-                <div><span>Reader EXP</span><strong>Sign in to view</strong></div>
-                <div><span>Collectible Rewards</span><strong>Sign in to view</strong></div>
-              </div>
-              <div class="home-access-guest-actions">
-                <a class="genesis-btn primary" href="/site-preview/account/">Sign In</a>
-                <a class="genesis-btn ghost" href="/site-preview/read/?start=1">Start Reading</a>
-              </div>
-            </div>
-
-            <div id="home-access-reader" class="home-access-reader" hidden>
-              <div class="home-access-profile">
-                <div class="home-access-avatar"><img id="home-access-avatar" src="/assets/genesis-official-logo-64.png" alt=""></div>
-                <div class="home-access-identity">
-                  <strong id="home-access-name">Reader</strong>
-                  <span id="home-access-title">GENESIS Adventurer</span>
-                  <b id="home-access-tier">Tier 1</b>
-                </div>
-              </div>
-
-              <div class="home-access-exp">
-                <div class="home-access-exp-bar"><i id="home-access-exp-fill"></i></div>
-                <div><span id="home-access-exp-total">0 / 2,000 EXP</span><span id="home-access-next-tier">Next Tier in 2,000</span></div>
-              </div>
-
-              <div class="home-access-stats">
-                <div><span>Advance Access</span><strong id="home-access-advance">0 Parts Ahead</strong></div>
-                <div><span>Support Status</span><strong id="home-access-support">Standard</strong></div>
-                <div><span>Reader EXP</span><strong id="home-access-reader-exp">0 EXP</strong></div>
-                <div><span>Story Progress</span><strong id="home-access-progress">Not started</strong></div>
-                <div><span>Collectible Rewards</span><strong id="home-access-collectibles">0 Unlocked</strong></div>
-              </div>
-            </div>
-          </section>
-        </div>
-
         <div class="v2-corner v2-corner-tl"></div><div class="v2-corner v2-corner-tr"></div>
         <div class="v2-corner v2-corner-bl"></div><div class="v2-corner v2-corner-br"></div>
       </div>
     </section>
 
-    <section id="latest-release-section" class="lean-home-section lean-latest-section" hidden>
-      <div class="lean-section-heading">
-        <div><span>THE STORY NOW</span><h2>Latest Release</h2></div>
-        <a href="/site-preview/read/">View all episodes <span aria-hidden="true">→</span></a>
+    <section id="home-command-deck" class="genesis-command-deck" data-command-deck-contract="v1" aria-label="GENESIS reader command deck">
+      <div id="home-release-command" class="genesis-command-top home-release-command">
+        <section class="deck-panel deck-release-panel home-release-cycle-panel home-ornate-card" aria-label="Next release">
+          <span class="deck-corner deck-corner-tl" aria-hidden="true"></span><span class="deck-corner deck-corner-tr" aria-hidden="true"></span><span class="deck-corner deck-corner-bl" aria-hidden="true"></span><span class="deck-corner deck-corner-br" aria-hidden="true"></span>
+          <header class="deck-release-head">
+            <span class="deck-release-emblem" aria-hidden="true">⌛</span>
+            <div class="deck-release-title">
+              <span id="home-release-state" aria-live="polite">CHECKING RELEASE</span>
+              <strong id="home-release-time">-- PHT</strong>
+              <small id="home-release-part">Next verified Part</small>
+            </div>
+            <a class="deck-release-arrow" href="/site-preview/read/?start=1" aria-label="Open Reader">›</a>
+          </header>
+          <div class="home-countdown-grid" aria-label="Release countdown">
+            <div><span>HOURS</span><strong id="home-countdown-hours">--</strong></div>
+            <div><span>MINUTES</span><strong id="home-countdown-minutes">--</strong></div>
+            <div><span>SECONDS</span><strong id="home-countdown-seconds">--</strong></div>
+          </div>
+          <div class="home-cycle-divider"><span>DAILY RELEASE CYCLE</span></div>
+          <div class="home-release-slots" aria-label="Release times">
+            <div class="home-release-slot" data-release-slot="08:00"><strong>8:00 AM</strong><span>—</span></div>
+            <div class="home-release-slot" data-release-slot="14:00"><strong>2:00 PM</strong><span>—</span></div>
+            <div class="home-release-slot" data-release-slot="20:00"><strong>8:00 PM</strong><span>—</span></div>
+          </div>
+          <footer class="home-release-card-footer">
+            <span id="home-release-detail">3 Parts · Monday–Saturday</span>
+            <span>Asia/Manila (PHT)</span>
+          </footer>
+        </section>
+
+        <section class="deck-panel deck-reading-panel home-ornate-card" aria-label="Currently reading">
+          <span class="deck-corner deck-corner-tl" aria-hidden="true"></span><span class="deck-corner deck-corner-tr" aria-hidden="true"></span><span class="deck-corner deck-corner-bl" aria-hidden="true"></span><span class="deck-corner deck-corner-br" aria-hidden="true"></span>
+          <header class="deck-panel-header">
+            <span><b aria-hidden="true">▣</b> CURRENTLY READING</span>
+            <a href="/site-preview/read/">View Library ›</a>
+          </header>
+          <div class="deck-reading-body">
+            <div class="deck-reading-copy">
+              <small id="home-reading-episode">READER PROGRESS</small>
+              <h2 id="home-reading-title">Open your next released Part</h2>
+              <p id="home-reading-summary">Your reader-safe progress and the latest public Final Canon appear here.</p>
+            </div>
+            <a id="home-reading-art" class="deck-reading-art" href="/site-preview/read/?start=1" aria-label="Open current reading"></a>
+          </div>
+          <div class="deck-reading-actions">
+            <a id="home-reading-continue" class="genesis-btn primary" href="/site-preview/read/?start=1"><span aria-hidden="true">▣</span> Start Reading</a>
+            <a id="home-reading-view-episode" class="genesis-btn ghost" href="/site-preview/read/"><span aria-hidden="true">☰</span> View Episode</a>
+          </div>
+        </section>
+
+        <section class="deck-panel deck-access-panel home-access-panel home-ornate-card" aria-label="Your reader access">
+          <span class="deck-corner deck-corner-tl" aria-hidden="true"></span><span class="deck-corner deck-corner-tr" aria-hidden="true"></span><span class="deck-corner deck-corner-bl" aria-hidden="true"></span><span class="deck-corner deck-corner-br" aria-hidden="true"></span>
+          <header class="deck-panel-header home-access-head">
+            <span><b aria-hidden="true">♙</b> YOUR ACCESS</span>
+            <a href="/site-preview/account/">View Details ›</a>
+          </header>
+
+          <div id="home-access-guest" class="home-access-guest">
+            <div class="home-access-profile">
+              <div class="home-access-avatar"><img src="/assets/genesis-official-logo-64.png" alt=""></div>
+              <div class="home-access-identity">
+                <strong>GENESIS Reader</strong>
+                <span>Sign in to track progress, EXP, access, and rewards.</span>
+                <b>Reader Account</b>
+              </div>
+            </div>
+            <div class="home-access-guest-preview">
+              <div><span>Advance Access</span><strong>Sign in to view</strong></div>
+              <div><span>Reader EXP</span><strong>Sign in to view</strong></div>
+              <div><span>Story Progress</span><strong>Sign in to view</strong></div>
+              <div><span>Collectible Rewards</span><strong>Sign in to view</strong></div>
+            </div>
+            <div class="home-access-guest-actions">
+              <a class="genesis-btn primary" href="/site-preview/account/">Sign In</a>
+              <a class="genesis-btn ghost" href="/site-preview/read/?start=1">Start Reading</a>
+            </div>
+          </div>
+
+          <div id="home-access-reader" class="home-access-reader" hidden>
+            <div class="home-access-profile">
+              <div class="home-access-avatar"><img id="home-access-avatar" src="/assets/genesis-official-logo-64.png" alt=""></div>
+              <div class="home-access-identity">
+                <strong id="home-access-name">Reader</strong>
+                <span id="home-access-title">GENESIS Adventurer</span>
+                <b id="home-access-tier">Tier 1</b>
+              </div>
+              <span class="deck-access-crest" aria-hidden="true">✦</span>
+            </div>
+            <div class="home-access-exp">
+              <div class="home-access-exp-bar"><i id="home-access-exp-fill"></i></div>
+              <div><span id="home-access-exp-total">0 / 2,000 EXP</span><span id="home-access-next-tier">Next Tier in 2,000</span></div>
+            </div>
+            <div class="home-access-stats">
+              <div><span><b aria-hidden="true">⌂</b> Advance Access</span><strong id="home-access-advance">0 Parts Ahead</strong></div>
+              <div><span><b aria-hidden="true">♔</b> Support Status</span><strong id="home-access-support">Standard</strong></div>
+              <div><span><b aria-hidden="true">◎</b> Reader EXP</span><strong id="home-access-reader-exp">0 EXP</strong></div>
+              <div><span><b aria-hidden="true">◇</b> Story Progress</span><strong id="home-access-progress">Not started</strong></div>
+              <div><span><b aria-hidden="true">✥</b> Collectible Rewards</span><strong id="home-access-collectibles">0 Unlocked</strong></div>
+            </div>
+          </div>
+        </section>
       </div>
-      <a id="home-latest-release" class="lean-latest-card" href="/site-preview/read/"></a>
+
+      <div class="genesis-command-bottom">
+        <section class="deck-panel deck-latest-panel home-ornate-card" aria-label="Latest releases">
+          <header class="deck-panel-header">
+            <span><b aria-hidden="true">☼</b> LATEST RELEASES</span>
+            <a href="/site-preview/read/">View All ›</a>
+          </header>
+          <div id="home-latest-releases" class="deck-latest-grid" aria-live="polite">
+            <a class="deck-release-card is-loading" href="/site-preview/read/"><span>Loading latest public releases…</span></a>
+          </div>
+        </section>
+
+        <section class="deck-panel deck-announcements-panel home-ornate-card" aria-label="Announcements">
+          <header class="deck-panel-header">
+            <span><b aria-hidden="true">◆</b> ANNOUNCEMENTS</span>
+            <a href="/site-preview/support/">View All ›</a>
+          </header>
+          <div id="home-announcements" class="deck-announcement-list" aria-live="polite">
+            <div class="deck-announcement-row"><span class="deck-announcement-icon">◆</span><p><strong>GENESIS system notices</strong><small>Reader-safe release and website notices appear here.</small></p><time>Live</time></div>
+          </div>
+        </section>
+      </div>
     </section>
+
+
 
   </main>
 

@@ -131,7 +131,7 @@ jobs:
             ['manga','/manga/']
           ];
           const viewports=[
-            ['desktop-1440',{width:1440,height:1100}],
+            ['desktop-1440',{width:1440,height:900}],
             ['tablet-768',{width:768,height:1024}],
             ['mobile-430',{width:430,height:932}],
             ['mobile-390',{width:390,height:844}]
@@ -340,47 +340,94 @@ jobs:
                 });
               }
               if(name==='home'){
+                await page.evaluate(()=>{
+                  const set=(selector,value)=>{const el=document.querySelector(selector);if(el)el.textContent=value};
+                  set('#home-reading-episode','EPISODE 012 · PART 004');
+                  set('#home-reading-title','The Path Widens');
+                  set('#home-reading-summary','Representative reader-safe copy used only to validate the approved command-deck hierarchy, spacing, and typography.');
+                  const cont=document.querySelector('#home-reading-continue');if(cont)cont.innerHTML='<span aria-hidden="true">▣</span> Continue Reading';
+                  const guest=document.querySelector('#home-access-guest');
+                  const reader=document.querySelector('#home-access-reader');
+                  if(guest)guest.hidden=true;
+                  if(reader)reader.hidden=false;
+                  set('#home-access-name','QA Reader');
+                  set('#home-access-title','Genesis Veteran');
+                  set('#home-access-tier','Tier 10');
+                  set('#home-access-exp-total','1,350 / 2,000 EXP');
+                  set('#home-access-next-tier','Next Tier in 650');
+                  set('#home-access-advance','17 Parts Ahead');
+                  set('#home-access-support','Veteran');
+                  set('#home-access-reader-exp','1,350 EXP');
+                  set('#home-access-progress','Episode 012 · Part 004');
+                  set('#home-access-collectibles','12 / 24');
+                  const fill=document.querySelector('#home-access-exp-fill');if(fill)fill.style.width='67.5%';
+                  const latest=document.querySelector('#home-latest-releases');
+                  if(latest)latest.innerHTML=
+                    '<a class="deck-release-card deck-release-card-1" href="#"><span class="deck-release-thumb"></span><span class="deck-release-copy"><small>EPISODE 012 · PART 003</small><strong>Unexpected Allies</strong><em>Sep 27, 2026 · 8:00 AM</em></span><b>›</b></a>'+
+                    '<a class="deck-release-card deck-release-card-2" href="#"><span class="deck-release-thumb"></span><span class="deck-release-copy"><small>EPISODE 012 · PART 002</small><strong>The Hidden Path</strong><em>Sep 26, 2026 · 8:00 PM</em></span><b>›</b></a>'+
+                    '<a class="deck-release-card deck-release-card-3" href="#"><span class="deck-release-thumb"></span><span class="deck-release-copy"><small>EPISODE 012 · PART 001</small><strong>A New Direction</strong><em>Sep 26, 2026 · 8:00 AM</em></span><b>›</b></a>';
+                  const announcements=document.querySelector('#home-announcements');
+                  if(announcements)announcements.innerHTML=
+                    '<div class="deck-announcement-row"><span class="deck-announcement-icon">⌂</span><p><strong>Latest public release</strong><small>Episode 012 · Part 004 · QA fixture</small></p><time>2h ago</time></div>'+
+                    '<div class="deck-announcement-row"><span class="deck-announcement-icon">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div>'+
+                    '<div class="deck-announcement-row"><span class="deck-announcement-icon">◇</span><p><strong>Support GENESIS</strong><small>Reader support and access options.</small></p><time>Open</time></div>';
+                });
+
                 const design=await page.evaluate(({mode})=>{
                   const visible=el=>!!el&&getComputedStyle(el).display!=='none'&&getComputedStyle(el).visibility!=='hidden';
-                  const hero=document.querySelector('.cinematic-hero-frame');
+                  const rect=el=>el?.getBoundingClientRect();
+                  const hero=document.querySelector('.cinematic-split-hero');
                   const media=document.querySelector('.cinematic-hero-media');
-                  const command=document.querySelector('#home-release-command');
-                  const left=document.querySelector('.home-release-cycle-panel');
-                  const right=document.querySelector('.home-access-panel');
+                  const deck=document.querySelector('.genesis-command-deck');
+                  const top=document.querySelector('.genesis-command-top');
+                  const left=document.querySelector('.deck-release-panel');
+                  const center=document.querySelector('.deck-reading-panel');
+                  const right=document.querySelector('.deck-access-panel');
+                  const latest=document.querySelector('.deck-latest-panel');
+                  const announcements=document.querySelector('.deck-announcements-panel');
                   const slots=[...document.querySelectorAll('[data-release-slot]')];
                   const countdown=[...document.querySelectorAll('.home-countdown-grid>div')];
-                  const accessDetails=document.querySelector('.home-access-head a[href*="/account/"]');
-                  const signIn=document.querySelector('.home-access-guest .genesis-btn.primary');
                   const issues=[];
-                  if(!visible(command))issues.push('release command missing');
+                  if(!visible(deck))issues.push('command deck missing');
                   if(document.querySelector('.lean-story-section'))issues.push('redundant story panel still present');
                   if(document.querySelector('.lean-world-teaser'))issues.push('redundant world teaser still present');
+                  if(document.querySelector('#latest-release-section'))issues.push('legacy latest-release section still present');
                   if(slots.length!==3)issues.push('release slot count is not 3');
                   if(countdown.length!==3)issues.push('countdown cell count is not 3');
-                  if(!visible(accessDetails))issues.push('access details link missing');
-                  if(!hero||!media||!command||!left||!right)return {issues:[...issues,'home overlay structure incomplete']};
+                  if(!hero||!media||!deck||!top||!left||!center||!right||!latest||!announcements)return {issues:[...issues,'command deck structure incomplete']};
 
-                  const hr=hero.getBoundingClientRect();
-                  const mr=media.getBoundingClientRect();
-                  const cr=command.getBoundingClientRect();
-                  const lr=left.getBoundingClientRect();
-                  const rr=right.getBoundingClientRect();
+                  const hr=rect(hero),mr=rect(media),dr=rect(deck),lr=rect(left),cr=rect(center),rr=rect(right),lwr=rect(latest),ar=rect(announcements);
+                  if(dr.top<hr.bottom-2)issues.push('command deck overlaps cinematic hero');
 
                   if(mode==='desktop-1440'){
-                    if(lr.width>hr.width*.30||rr.width>hr.width*.30)issues.push('desktop HUD card too wide');
-                    if(lr.right>hr.left+hr.width*.38)issues.push('left HUD invades center safe zone');
-                    if(rr.left<hr.left+hr.width*.62)issues.push('right HUD invades center safe zone');
-                    if(lr.height>250||rr.height>250)issues.push('desktop HUD card too tall');
-                    if(Math.abs((hr.bottom-lr.bottom)-24)>6)issues.push('left HUD is not bottom anchored');
-                    if(Math.abs((hr.bottom-rr.bottom)-24)>6)issues.push('right HUD is not bottom anchored');
-                    if(Math.abs(lr.bottom-rr.bottom)>3)issues.push('desktop HUD cards do not share bottom baseline');
+                    const near=(actual,target,tolerance,label)=>{if(Math.abs(actual-target)>tolerance)issues.push(label+' '+actual.toFixed(1)+'px != '+target+'±'+tolerance+'px')};
+                    near(dr.width,1400,4,'deck width');
+                    near(dr.height,500,6,'deck height');
+                    near(lr.width,400,5,'next release width');
+                    near(cr.width,520,5,'currently reading width');
+                    near(rr.width,440,5,'your access width');
+                    near(lwr.width,860,5,'latest releases width');
+                    near(ar.width,510,5,'announcements width');
+                    near(cr.left-lr.right,10,2,'left/center gap');
+                    near(rr.left-cr.right,10,2,'center/right gap');
+                    near(ar.left-lwr.right,10,2,'lower gap');
+                    if(cr.width<=lr.width||cr.width<=rr.width)issues.push('currently reading is not the largest upper panel');
+                    const releaseSize=parseFloat(getComputedStyle(document.querySelector('#home-release-time')).fontSize);
+                    const readingSize=parseFloat(getComputedStyle(document.querySelector('#home-reading-title')).fontSize);
+                    near(releaseSize,34,1,'release time font');
+                    near(readingSize,26,1,'reading title font');
+                    const tiny=[...deck.querySelectorAll('span,strong,small,p,h2,a,time,em')]
+                      .filter(el=>visible(el)&&el.textContent.trim()&&parseFloat(getComputedStyle(el).fontSize)<9.95)
+                      .map(el=>el.textContent.trim().slice(0,28));
+                    if(tiny.length)issues.push('meaningful desktop text below 10px: '+tiny.slice(0,5).join(' | '));
+                    if(lr.height<300||cr.height<300||rr.height<300)issues.push('upper panels shorter than contract');
+                    if(lwr.height<154||ar.height<154)issues.push('lower panels shorter than contract');
                   }else{
-                    if(cr.top<mr.bottom-2)issues.push('mobile/tablet command overlays artwork');
-                    if(mode.startsWith('mobile-')&&cr.height>270)issues.push('phone command taller than 270px');
-                    if(mode==='tablet-768'&&cr.height>190)issues.push('tablet command taller than 190px');
-                    if(mode.startsWith('mobile-')&&visible(signIn)&&signIn.getBoundingClientRect().height<39)issues.push('phone sign-in target below 40px');
+                    if(dr.top<mr.bottom-2)issues.push('mobile/tablet command overlaps artwork');
+                    const primary=document.querySelector('.deck-reading-actions .genesis-btn.primary');
+                    if(mode.startsWith('mobile-')&&visible(primary)&&primary.getBoundingClientRect().height<40)issues.push('phone primary target below 40px');
                   }
-                  return {issues,hero:{w:hr.width,h:hr.height},command:{w:cr.width,h:cr.height}};
+                  return {issues,hero:{w:hr.width,h:hr.height},deck:{w:dr.width,h:dr.height}};
                 },{mode});
                 for(const issue of design.issues)errors.push('design: '+issue);
               }
