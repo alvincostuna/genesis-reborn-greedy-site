@@ -7362,3 +7362,59 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2 .v2-brand:before{left:-1px}
   .web-ds-v2 .v2-brand:after{right:-1px}
 }
+
+
+/* ========================================================================== */
+/* HOMEPAGE V1.1 — MOBILE REPETITION TRIM + COMPACT CLOSING                  */
+/* Hero keeps the primary Start Reading CTA; Story keeps Begin Episode 1.     */
+/* No third large reading CTA at the bottom of the homepage.                  */
+/* ========================================================================== */
+.web-ds-v2 .cinematic-mobile-taglines{
+  display:none!important;
+}
+
+.web-ds-v2 .lean-closing-note{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin:18px 0 2px;
+  padding:13px 8px;
+  border-top:1px solid rgba(216,179,109,.16);
+  color:#738da3;
+  text-align:center;
+}
+.web-ds-v2 .lean-closing-note span{
+  color:#d9bd7a;
+  font:800 8px/1 Arial,sans-serif;
+  letter-spacing:.20em;
+  white-space:nowrap;
+}
+.web-ds-v2 .lean-closing-note p{
+  margin:0;
+  color:#7890a3;
+  font-size:9px;
+  line-height:1.45;
+}
+
+@media(max-width:620px){
+  .web-ds-v2 .cinematic-hero-rail{
+    padding:10px 12px 11px;
+    gap:8px;
+  }
+  .web-ds-v2 .lean-closing-note{
+    margin:12px 0 0;
+    padding:11px 6px 8px;
+    border-top-color:rgba(216,179,109,.12);
+  }
+  .web-ds-v2 .lean-closing-note p{
+    display:none;
+  }
+  .web-ds-v2 .lean-closing-note span{
+    font-size:7px;
+    letter-spacing:.18em;
+  }
+  .lean-home-footer{
+    padding-top:11px;
+  }
+}
