@@ -1,23 +1,94 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 150" role="img" aria-labelledby="t d">
-<title id="t">GENESIS REBORN GREEDY</title><desc id="d">Gold fantasy wordmark for GENESIS REBORN GREEDY.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 190" role="img" aria-labelledby="title desc">
+<title id="title">GENESIS REBORN GREEDY</title>
+<desc id="desc">Premium dark-fantasy light-novel wordmark with a silver GENESIS title, ivory REBORN, crimson GREEDY, and a luminous diamond sigil.</desc>
 <defs>
-  <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#fff1b8"/><stop offset=".38" stop-color="#e7bd66"/>
-    <stop offset=".72" stop-color="#9d6b25"/><stop offset="1" stop-color="#f4d887"/>
+  <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fffdf5"/>
+    <stop offset=".20" stop-color="#f1ead9"/>
+    <stop offset=".48" stop-color="#b9c0c9"/>
+    <stop offset=".68" stop-color="#737b87"/>
+    <stop offset=".82" stop-color="#d8d5c8"/>
+    <stop offset="1" stop-color="#fbf2da"/>
   </linearGradient>
-  <filter id="glow" x="-30%" y="-50%" width="160%" height="200%">
-    <feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  <linearGradient id="ivory" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff2cc"/>
+    <stop offset=".55" stop-color="#ead6a8"/>
+    <stop offset="1" stop-color="#bca06b"/>
+  </linearGradient>
+  <linearGradient id="crimson" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#ff5a52"/>
+    <stop offset=".42" stop-color="#d8242f"/>
+    <stop offset=".72" stop-color="#7c0d16"/>
+    <stop offset="1" stop-color="#d92931"/>
+  </linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#5e4621"/>
+    <stop offset=".26" stop-color="#d8b36d"/>
+    <stop offset=".50" stop-color="#fff0b0"/>
+    <stop offset=".74" stop-color="#d8b36d"/>
+    <stop offset="1" stop-color="#5e4621"/>
+  </linearGradient>
+  <radialGradient id="sigilGlow">
+    <stop offset="0" stop-color="#fff9e8" stop-opacity=".95"/>
+    <stop offset=".42" stop-color="#d9e8ff" stop-opacity=".64"/>
+    <stop offset="1" stop-color="#8ccfff" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="titleGlow" x="-20%" y="-35%" width="140%" height="170%">
+    <feGaussianBlur stdDeviation="2.4" result="blur"/>
+    <feColorMatrix in="blur" type="matrix"
+      values="1 0 0 0 0.70  0 1 0 0 0.74  0 0 1 0 0.82  0 0 0 .55 0" result="soft"/>
+    <feMerge><feMergeNode in="soft"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="redGlow" x="-20%" y="-40%" width="140%" height="180%">
+    <feGaussianBlur stdDeviation="2" result="r"/>
+    <feMerge><feMergeNode in="r"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
 </defs>
-<g fill="none" stroke="url(#g)" opacity=".88">
-  <path d="M14 69h48M498 69h48" stroke-width="2"/>
-  <path d="M53 69l18-18M507 69l-18-18M53 69l18 18M507 69l-18 18" stroke-width="1.4"/>
-  <path d="M280 8l8 12-8 12-8-12z" fill="url(#g)" stroke="none"/>
+
+<!-- Subtle HUD brackets -->
+<g fill="none" stroke="url(#gold)" opacity=".72">
+  <path d="M20 84H76l18-18" stroke-width="2"/>
+  <path d="M660 84h-56l-18-18" stroke-width="2"/>
+  <path d="M20 95H65" stroke-width="1"/>
+  <path d="M660 95h-45" stroke-width="1"/>
+  <path d="M92 157h122M466 157h122" stroke-width="1.3"/>
 </g>
-<text x="280" y="78" text-anchor="middle" fill="url(#g)" filter="url(#glow)"
-      font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" letter-spacing="3">GENESIS</text>
-<text x="280" y="111" text-anchor="middle" fill="#f1db9d"
-      font-family="Georgia, 'Times New Roman', serif" font-size="23" font-weight="700" letter-spacing="10">REBORN</text>
-<text x="280" y="139" text-anchor="middle" fill="#c99539"
-      font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="700" letter-spacing="8">GREEDY</text>
+
+<!-- Luminous diamond sigil -->
+<ellipse cx="340" cy="34" rx="56" ry="34" fill="url(#sigilGlow)" opacity=".40"/>
+<g transform="translate(340 34)" fill="none" stroke-linejoin="miter" stroke-linecap="square">
+  <path d="M0-23 9-9 24 0 9 9 0 24-9 9-24 0-9-9Z"
+        stroke="#fffaf0" stroke-width="3.2" filter="url(#titleGlow)"/>
+  <path d="M0-13 5-5 13 0 5 5 0 13-5 5-13 0-5-5Z"
+        stroke="#d9b36d" stroke-width="1.8"/>
+  <path d="M0-23V24M-24 0H24" stroke="#b8dfff" stroke-width=".8" opacity=".72"/>
+</g>
+
+<!-- Main title -->
+<text x="340" y="103" text-anchor="middle"
+      fill="url(#silver)" stroke="#11131a" stroke-width="3.4" paint-order="stroke fill"
+      filter="url(#titleGlow)"
+      font-family="Georgia, 'Times New Roman', serif"
+      font-size="72" font-weight="700" letter-spacing="3.5">GENESIS</text>
+
+<!-- Reborn Greedy kept on one line to match the approved identity -->
+<g font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="700" letter-spacing="5">
+  <text x="331" y="139" text-anchor="end"
+        fill="url(#ivory)" stroke="#15110a" stroke-width="1.7" paint-order="stroke fill">REBORN</text>
+  <text x="349" y="139" text-anchor="start"
+        fill="url(#crimson)" stroke="#23080b" stroke-width="1.8" paint-order="stroke fill"
+        filter="url(#redGlow)">GREEDY</text>
+</g>
+
+<!-- Small official descriptor retained for desktop; becomes a texture detail on mobile -->
+<text x="340" y="166" text-anchor="middle"
+      fill="#e7dcc3"
+      font-family="Georgia, 'Times New Roman', serif"
+      font-size="13" font-weight="700" letter-spacing="6">OFFICIAL LIGHT NOVEL</text>
+
+<!-- lower interface jewel -->
+<g transform="translate(340 157)">
+  <path d="M0-8 8 0 0 8-8 0Z" fill="#08131f" stroke="#d8b36d" stroke-width="1.5"/>
+  <path d="M0-3.5 3.5 0 0 3.5-3.5 0Z" fill="#d7eefb"/>
+</g>
 </svg>
