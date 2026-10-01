@@ -9481,3 +9481,370 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     padding-left:14px!important;
   }
 }
+
+
+/* ========================================================================== */
+/* HOMEPAGE V4 — GENESIS LIVE RELEASE COMMAND                                */
+/* Cinematic hero carries release utility; redundant story/world panels gone. */
+/* ========================================================================== */
+.web-ds-v2 .cinematic-hero-frame{
+  position:relative;
+}
+
+.web-ds-v2 .home-release-command{
+  position:absolute;
+  z-index:5;
+  inset:0;
+  pointer-events:none;
+}
+
+.web-ds-v2 .home-release-panel{
+  position:absolute;
+  top:3.2%;
+  width:min(29%,410px);
+  min-height:214px;
+  padding:15px 16px 14px;
+  display:grid;
+  align-content:start;
+  gap:10px;
+  overflow:hidden;
+  pointer-events:auto;
+  border:1px solid rgba(228,187,103,.54);
+  border-radius:10px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(62,148,216,.10),transparent 42%),
+    linear-gradient(155deg,rgba(3,12,21,.72),rgba(3,10,18,.66));
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.28),
+    inset 0 1px rgba(255,255,255,.025);
+  -webkit-backdrop-filter:blur(7px) saturate(1.05);
+  backdrop-filter:blur(7px) saturate(1.05);
+}
+
+.web-ds-v2 .home-release-cycle-panel{left:2.4%}
+.web-ds-v2 .home-live-panel{right:2.4%}
+
+.web-ds-v2 .home-release-kicker,
+.web-ds-v2 .home-live-heading span,
+.web-ds-v2 .home-world-ratio span{
+  margin:0;
+  color:#efc96f;
+  font:800 8px/1 Arial,sans-serif;
+  letter-spacing:.18em;
+}
+
+.web-ds-v2 .home-release-slots{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+}
+
+.web-ds-v2 .home-release-slot{
+  min-width:0;
+  min-height:58px;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:4px;
+  padding:7px 5px;
+  border:1px solid rgba(105,156,193,.35);
+  border-radius:8px;
+  background:rgba(3,13,22,.72);
+  text-align:center;
+}
+
+.web-ds-v2 .home-release-slot strong{
+  color:#f1d490;
+  font:700 17px/1 Georgia,"Times New Roman",serif;
+}
+
+.web-ds-v2 .home-release-slot span{
+  color:#8299ac;
+  font:800 7px/1 Arial,sans-serif;
+  letter-spacing:.08em;
+}
+
+.web-ds-v2 .home-release-slot.is-released{
+  border-color:rgba(211,177,102,.45);
+}
+.web-ds-v2 .home-release-slot.is-released span{color:#d7bd7c}
+.web-ds-v2 .home-release-slot.is-next{
+  border-color:#7bcef8;
+  background:linear-gradient(180deg,rgba(19,69,101,.58),rgba(4,20,32,.78));
+  box-shadow:0 0 18px rgba(78,185,247,.16),inset 0 0 16px rgba(78,185,247,.07);
+}
+.web-ds-v2 .home-release-slot.is-next strong,
+.web-ds-v2 .home-release-slot.is-next span{color:#8cdbff}
+.web-ds-v2 .home-release-slot.is-delayed{
+  border-color:rgba(200,76,81,.62);
+  background:rgba(63,15,20,.46);
+}
+.web-ds-v2 .home-release-slot.is-delayed strong,
+.web-ds-v2 .home-release-slot.is-delayed span{color:#ef9999}
+.web-ds-v2 .home-release-slot.is-paused{
+  opacity:.58;
+}
+.web-ds-v2 .home-release-slot.is-upcoming span{color:#7f96a8}
+
+.web-ds-v2 .home-next-release{
+  min-width:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-areas:
+    "state countdown"
+    "part countdown"
+    "detail detail";
+  column-gap:12px;
+  row-gap:3px;
+  align-items:end;
+}
+
+.web-ds-v2 #home-release-state{
+  grid-area:state;
+  color:#71cfff;
+  font:800 8px/1 Arial,sans-serif;
+  letter-spacing:.15em;
+}
+.web-ds-v2 #home-release-part{
+  grid-area:part;
+  min-width:0;
+  overflow:hidden;
+  color:#f5e0af;
+  font:700 16px/1.15 Georgia,"Times New Roman",serif;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.web-ds-v2 #home-release-countdown{
+  grid-area:countdown;
+  color:#f8e3ae;
+  font:700 clamp(20px,1.9vw,30px)/1 Georgia,"Times New Roman",serif;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.025em;
+  white-space:nowrap;
+}
+.web-ds-v2 #home-release-detail{
+  grid-area:detail;
+  min-height:1.25em;
+  color:#859db0;
+  font:600 8px/1.25 Arial,sans-serif;
+}
+
+.web-ds-v2 .home-live-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.web-ds-v2 .home-live-heading small{
+  color:#73cdf9;
+  font:800 8px/1 Arial,sans-serif;
+  letter-spacing:.14em;
+}
+.web-ds-v2 .home-live-clock{
+  color:#f7e1aa;
+  font:700 clamp(28px,3vw,46px)/.98 Georgia,"Times New Roman",serif;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.035em;
+  text-shadow:0 0 20px rgba(228,187,103,.10);
+}
+.web-ds-v2 .home-live-date{
+  margin-top:-5px;
+  color:#94aabc;
+  font:700 8px/1.2 Arial,sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.web-ds-v2 .home-world-ratio{
+  display:grid;
+  gap:4px;
+  padding-top:8px;
+  border-top:1px solid rgba(216,179,109,.22);
+}
+.web-ds-v2 .home-world-ratio strong{
+  color:#d9c390;
+  font:700 12px/1.2 Georgia,"Times New Roman",serif;
+  letter-spacing:.035em;
+}
+.web-ds-v2 .home-release-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:auto;
+}
+.web-ds-v2 .home-release-actions .genesis-btn{
+  min-width:0;
+  min-height:40px;
+  justify-content:center;
+  padding-inline:9px;
+  font-size:9px;
+}
+.web-ds-v2 .home-release-actions .hero-start-reading{
+  border-color:#7bcfff;
+  box-shadow:0 0 18px rgba(47,156,237,.16),inset 0 0 10px rgba(255,255,255,.05);
+}
+
+/* The release command replaces the old hero rail and both redundant homepage explainer panels. */
+.web-ds-v2 .cinematic-split-hero{
+  border-top:1px solid rgba(228,187,103,.58);
+  border-radius:8px;
+}
+.web-ds-v2 .cinematic-split-hero + .lean-home-section{
+  margin-top:18px;
+}
+
+/* Tablet: artwork first, then one compact two-column command strip. */
+@media(min-width:621px) and (max-width:900px){
+  .web-ds-v2 .home-release-command{
+    position:relative;
+    inset:auto;
+    display:grid;
+    grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
+    pointer-events:auto;
+    border-top:1px solid rgba(216,179,109,.32);
+    background:linear-gradient(180deg,#071522,#04101a);
+  }
+  .web-ds-v2 .home-release-panel{
+    position:relative;
+    inset:auto;
+    width:auto;
+    min-height:0;
+    padding:12px 13px;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+  .web-ds-v2 .home-release-cycle-panel{
+    border-right:1px solid rgba(216,179,109,.18);
+  }
+  .web-ds-v2 .home-release-slots{gap:6px}
+  .web-ds-v2 .home-release-slot{
+    min-height:48px;
+    padding:6px 4px;
+  }
+  .web-ds-v2 .home-release-slot strong{font-size:14px}
+  .web-ds-v2 .home-next-release{column-gap:8px}
+  .web-ds-v2 #home-release-part{font-size:14px}
+  .web-ds-v2 #home-release-countdown{font-size:23px}
+  .web-ds-v2 .home-live-clock{font-size:29px}
+  .web-ds-v2 .home-world-ratio strong{font-size:10px}
+  .web-ds-v2 .home-release-actions .genesis-btn{
+    min-height:38px;
+    font-size:8px;
+  }
+}
+
+/* Phone: one compact command surface below the image; never a squeezed desktop HUD. */
+@media(max-width:620px){
+  .web-ds-v2 .home-release-command{
+    position:relative;
+    inset:auto;
+    display:grid;
+    grid-template-columns:1fr;
+    pointer-events:auto;
+    border-top:1px solid rgba(216,179,109,.28);
+    background:linear-gradient(180deg,#071522,#04101a);
+  }
+  .web-ds-v2 .home-release-panel{
+    position:relative;
+    inset:auto;
+    width:auto;
+    min-height:0;
+    padding:9px 10px;
+    gap:7px;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+  .web-ds-v2 .home-release-cycle-panel{
+    border-bottom:1px solid rgba(216,179,109,.16);
+  }
+  .web-ds-v2 .home-release-kicker{
+    font-size:7px;
+    letter-spacing:.15em;
+  }
+  .web-ds-v2 .home-release-slots{gap:5px}
+  .web-ds-v2 .home-release-slot{
+    min-height:44px;
+    padding:5px 3px;
+    border-radius:6px;
+  }
+  .web-ds-v2 .home-release-slot strong{font-size:13px}
+  .web-ds-v2 .home-release-slot span{font-size:6.5px}
+  .web-ds-v2 .home-next-release{
+    grid-template-columns:minmax(0,1fr) auto;
+    column-gap:8px;
+  }
+  .web-ds-v2 #home-release-state{font-size:7px}
+  .web-ds-v2 #home-release-part{font-size:13px}
+  .web-ds-v2 #home-release-countdown{font-size:21px}
+  .web-ds-v2 #home-release-detail{
+    max-width:100%;
+    overflow:hidden;
+    font-size:7px;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+  }
+  .web-ds-v2 .home-live-panel{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    grid-template-areas:
+      "heading clock"
+      "ratio ratio"
+      "actions actions";
+    align-items:center;
+    column-gap:8px;
+  }
+  .web-ds-v2 .home-live-heading{
+    grid-area:heading;
+    justify-content:flex-start;
+    gap:5px;
+  }
+  .web-ds-v2 .home-live-heading span{font-size:7px}
+  .web-ds-v2 .home-live-heading small{font-size:7px}
+  .web-ds-v2 .home-live-clock{
+    grid-area:clock;
+    justify-self:end;
+    font:700 16px/1 Arial,sans-serif;
+    letter-spacing:.02em;
+  }
+  .web-ds-v2 .home-live-date{display:none}
+  .web-ds-v2 .home-world-ratio{
+    grid-area:ratio;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    padding-top:6px;
+  }
+  .web-ds-v2 .home-world-ratio span{display:none}
+  .web-ds-v2 .home-world-ratio strong{
+    font-size:8px;
+    line-height:1;
+    letter-spacing:.05em;
+  }
+  .web-ds-v2 .home-release-actions{
+    grid-area:actions;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+    margin-top:0;
+  }
+  .web-ds-v2 .home-release-actions .genesis-btn{
+    min-height:44px;
+    font-size:8.5px;
+  }
+  .web-ds-v2 .cinematic-split-hero + .lean-home-section{
+    margin-top:12px;
+  }
+}
+
+@media(max-width:380px){
+  .web-ds-v2 .home-release-actions{
+    grid-template-columns:1fr;
+  }
+}
