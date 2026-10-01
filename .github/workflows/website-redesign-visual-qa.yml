@@ -346,16 +346,18 @@ jobs:
                   const media=document.querySelector('.cinematic-hero-media');
                   const command=document.querySelector('#home-release-command');
                   const left=document.querySelector('.home-release-cycle-panel');
-                  const right=document.querySelector('.home-live-panel');
+                  const right=document.querySelector('.home-access-panel');
                   const slots=[...document.querySelectorAll('[data-release-slot]')];
-                  const start=document.querySelector('.home-release-actions .hero-start-reading');
-                  const world=document.querySelector('.home-release-actions a[href*="/world/"]');
+                  const countdown=[...document.querySelectorAll('.home-countdown-grid>div')];
+                  const accessDetails=document.querySelector('.home-access-head a[href*="/account/"]');
+                  const signIn=document.querySelector('.home-access-guest .genesis-btn.primary');
                   const issues=[];
                   if(!visible(command))issues.push('release command missing');
                   if(document.querySelector('.lean-story-section'))issues.push('redundant story panel still present');
                   if(document.querySelector('.lean-world-teaser'))issues.push('redundant world teaser still present');
                   if(slots.length!==3)issues.push('release slot count is not 3');
-                  if(!visible(start)||!visible(world))issues.push('hero CTAs missing');
+                  if(countdown.length!==3)issues.push('countdown cell count is not 3');
+                  if(!visible(accessDetails))issues.push('access details link missing');
                   if(!hero||!media||!command||!left||!right)return {issues:[...issues,'home overlay structure incomplete']};
 
                   const hr=hero.getBoundingClientRect();
@@ -365,19 +367,18 @@ jobs:
                   const rr=right.getBoundingClientRect();
 
                   if(mode==='desktop-1440'){
-                    if(lr.width>hr.width*.32||rr.width>hr.width*.32)issues.push('desktop overlay panel too wide');
-                    if(lr.right>hr.left+hr.width*.38)issues.push('left overlay invades center safe zone');
-                    if(rr.left<hr.left+hr.width*.62)issues.push('right overlay invades center safe zone');
-                    if(lr.height>250||rr.height>250)issues.push('desktop overlay panel too tall');
+                    if(lr.width>hr.width*.30||rr.width>hr.width*.30)issues.push('desktop HUD card too wide');
+                    if(lr.right>hr.left+hr.width*.38)issues.push('left HUD invades center safe zone');
+                    if(rr.left<hr.left+hr.width*.62)issues.push('right HUD invades center safe zone');
+                    if(lr.height>250||rr.height>250)issues.push('desktop HUD card too tall');
+                    if(Math.abs((hr.bottom-lr.bottom)-24)>6)issues.push('left HUD is not bottom anchored');
+                    if(Math.abs((hr.bottom-rr.bottom)-24)>6)issues.push('right HUD is not bottom anchored');
+                    if(Math.abs(lr.bottom-rr.bottom)>3)issues.push('desktop HUD cards do not share bottom baseline');
                   }else{
-                    if(cr.top<mr.bottom-2)issues.push('mobile/tablet release command overlays artwork');
-                    if(mode.startsWith('mobile-')&&cr.height>240)issues.push('phone release command taller than 240px');
-                    if(mode==='tablet-768'&&cr.height>235)issues.push('tablet release command taller than 235px');
-                    if(mode.startsWith('mobile-')){
-                      for(const a of document.querySelectorAll('.home-release-actions a')){
-                        if(a.getBoundingClientRect().height<43)issues.push('phone CTA below 44px tap target');
-                      }
-                    }
+                    if(cr.top<mr.bottom-2)issues.push('mobile/tablet command overlays artwork');
+                    if(mode.startsWith('mobile-')&&cr.height>270)issues.push('phone command taller than 270px');
+                    if(mode==='tablet-768'&&cr.height>190)issues.push('tablet command taller than 190px');
+                    if(mode.startsWith('mobile-')&&visible(signIn)&&signIn.getBoundingClientRect().height<39)issues.push('phone sign-in target below 40px');
                   }
                   return {issues,hero:{w:hr.width,h:hr.height},command:{w:cr.width,h:cr.height}};
                 },{mode});
