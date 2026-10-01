@@ -574,7 +574,30 @@ async function initRead(){
 
   let episodes=[];
   try{episodes=await rpc("api_episode_library")}catch{}
-  if(!Array.isArray(episodes)||!episodes.length)return;
+
+  const episodeList=document.querySelector("#episode-list");
+  const episodeSelect=document.querySelector("#reader-episode-select");
+  const partSelect=document.querySelector("#reader-part-select");
+  const episodeCount=document.querySelector("#episode-count");
+  const tabs=document.querySelector("#part-tabs");
+  const body=document.querySelector("#novel-body");
+  const prevButton=document.querySelector("#reader-prev");
+  const nextButton=document.querySelector("#reader-next");
+
+  if(!Array.isArray(episodes)||!episodes.length){
+    if(episodeCount)episodeCount.textContent="No public Episodes";
+    if(episodeSelect){
+      episodeSelect.innerHTML='<option>No released Episodes yet</option>';
+      episodeSelect.disabled=true;
+    }
+    if(partSelect){
+      partSelect.innerHTML='<option>No released Parts yet</option>';
+      partSelect.disabled=true;
+    }
+    if(prevButton)prevButton.disabled=true;
+    if(nextButton)nextButton.disabled=true;
+    return;
+  }
 
   const params=new URLSearchParams(location.search);
   const startFromBeginning=params.get("start")==="1";
@@ -585,39 +608,85 @@ async function initRead(){
   let requestedPart=Number(startFromBeginning?0:(params.get("part")||local?.part_number||0));
   if(!episodes.some(e=>Number(e.episode_number)===requestedEpisode))requestedEpisode=Number(episodes[0].episode_number);
 
-  const episodeList=document.querySelector("#episode-list");
-  document.querySelector("#episode-count").textContent=episodes.length+" released";
-  episodeList.innerHTML=episodes.map(e=>
-    '<button class="episode-button" data-episode="'+esc(e.episode_number)+'"><small>EPISODE '+esc(e.episode_number)+'</small><strong>'+esc(e.title)+'</strong></button>'
-  ).join("");
+  if(episodeCount)episodeCount.textContent=episodes.length+" released";
+  if(episodeList){
+    episodeList.innerHTML=episodes.map(e=>
+      '<button class="episode-button" data-episode="'+esc(e.episode_number)+'"><small>EPISODE '+esc(e.episode_number)+'</small><strong>'+esc(e.title)+'</strong></button>'
+    ).join("");
+  }
+  if(episodeSelect){
+    episodeSelect.innerHTML=episodes.map(e=>
+      '<option value="'+esc(e.episode_number)+'">Episode '+String(e.episode_number).padStart(3,"0")+' — '+esc(e.title||"GENESIS")+'</option>'
+    ).join("");
+    episodeSelect.disabled=false;
+  }
+
+  let currentEpisodeNumber=null;
+  let currentParts=[];
+  let currentPartIndex=0;
+  let currentOpenPart=null;
+
+  const refreshNavButtons=()=>{
+    const episodeIndex=episodes.findIndex(e=>Number(e.episode_number)===Number(currentEpisodeNumber));
+    const hasPrev=currentPartIndex>0||episodeIndex>0;
+    const hasNext=currentPartIndex<currentParts.length-1||episodeIndex<episodes.length-1;
+    if(prevButton)prevButton.disabled=!hasPrev;
+    if(nextButton)nextButton.disabled=!hasNext;
+  };
 
   async function openEpisode(number,preferredPart=null,{restore=true}={}){
+    currentEpisodeNumber=Number(number);
     document.querySelectorAll(".episode-button").forEach(b=>b.classList.toggle("active",b.dataset.episode===String(number)));
+    if(episodeSelect)episodeSelect.value=String(number);
+
     const episode=episodes.find(e=>String(e.episode_number)===String(number));
     const head=document.querySelector("#novel-head");
-    head.innerHTML='<p class="eyebrow">EPISODE '+esc(number)+'</p><h2>'+esc(episode?.title||"GENESIS")+'</h2><p>'+esc(episode?.summary_public||"Released Final Canon.")+'</p>';
+    if(head){
+      head.innerHTML='<p class="eyebrow">EPISODE '+esc(number)+'</p><h2>'+esc(episode?.title||"GENESIS")+'</h2><p>'+esc(episode?.summary_public||"Released Final Canon.")+'</p>';
+    }
 
     let parts=[];
     try{parts=await rpc("api_episode_parts_for_reader",{p_episode_number:Number(number)})}catch{}
-    const tabs=document.querySelector("#part-tabs"),body=document.querySelector("#novel-body");
-    if(!Array.isArray(parts)||!parts.length){
-      tabs.innerHTML="";
-      body.innerHTML='<div class="empty-state large">No released Parts are available for this Episode yet.</div>';
+    currentParts=Array.isArray(parts)?parts:[];
+
+    if(!currentParts.length){
+      if(tabs)tabs.innerHTML="";
+      if(body)body.innerHTML='<div class="empty-state large reader-empty-state"><strong>No released Parts yet.</strong><span>This Episode has no public Final Canon Parts available.</span></div>';
+      if(partSelect){
+        partSelect.innerHTML='<option>No released Parts yet</option>';
+        partSelect.disabled=true;
+      }
+      currentPartIndex=0;
+      currentOpenPart=null;
+      refreshNavButtons();
       return;
     }
 
     let initialIndex=0;
     if(preferredPart){
-      const found=parts.findIndex(p=>Number(p.part_number)===Number(preferredPart));
+      const found=currentParts.findIndex(p=>Number(p.part_number)===Number(preferredPart));
       if(found>=0)initialIndex=found;
     }
-    tabs.innerHTML=parts.map((p,i)=>'<button data-part="'+i+'" class="'+(i===initialIndex?"active":"")+'">Part '+esc(p.part_number)+'</button>').join("");
+
+    if(tabs){
+      tabs.innerHTML=currentParts.map((p,i)=>'<button data-part="'+i+'" class="'+(i===initialIndex?"active":"")+'">Part '+esc(p.part_number)+'</button>').join("");
+    }
+    if(partSelect){
+      partSelect.disabled=false;
+      partSelect.innerHTML=currentParts.map((p,i)=>
+        '<option value="'+i+'">Part '+String(p.part_number).padStart(3,"0")+(p.title?' — '+esc(p.title):'')+'</option>'
+      ).join("");
+      partSelect.value=String(initialIndex);
+    }
 
     const openPart=async(idx,{restore=true}={})=>{
-      const part=parts[idx];if(!part)return;
-      tabs.querySelectorAll("button").forEach((b,i)=>b.classList.toggle("active",i===idx));
+      const part=currentParts[idx];if(!part)return;
+      currentPartIndex=idx;
+      currentOpenPart=openPart;
+      if(tabs)tabs.querySelectorAll("button").forEach((b,i)=>b.classList.toggle("active",i===idx));
+      if(partSelect)partSelect.value=String(idx);
       const access=part.access_mode&&part.access_mode!=="PUBLIC"?' · '+part.access_mode+' EARLY ACCESS':'';
-      body.innerHTML='<div class="status-chip">Part '+esc(part.part_number)+' · '+esc(part.title||"")+esc(access)+'</div>'+textParagraphs(part.body_text||"");
+      if(body)body.innerHTML='<div class="status-chip">Part '+esc(part.part_number)+' · '+esc(part.title||"")+esc(access)+'</div>'+textParagraphs(part.body_text||"");
       history.replaceState({},document.title,location.pathname+"?episode="+encodeURIComponent(number)+"&part="+encodeURIComponent(part.part_number));
 
       const previous=readLocalProgress();
@@ -633,6 +702,7 @@ async function initRead(){
       };
       saveLocalProgress(state);
       window.__GENESIS_ACTIVE_READING_STATE=state;
+      refreshNavButtons();
 
       const panel=document.querySelector("#comments-panel"),commentList=document.querySelector("#part-comments");
       panel?.classList.remove("hidden");
@@ -655,19 +725,49 @@ async function initRead(){
           const max=Math.max(0,document.documentElement.scrollHeight-innerHeight);
           window.scrollTo({top:max*Math.min(100,Math.max(0,Number(previous.progress_pct)))/100,behavior:"auto"});
         },80);
+      }else if(innerWidth<=820){
+        document.querySelector("#novel-panel")?.scrollIntoView({block:"start",behavior:"auto"});
       }else{
         window.scrollTo({top:0,behavior:"auto"});
       }
     };
 
-    tabs.querySelectorAll("button").forEach((b,i)=>b.addEventListener("click",()=>openPart(i,{restore:true})));
+    if(tabs)tabs.querySelectorAll("button").forEach((b,i)=>b.addEventListener("click",()=>openPart(i,{restore:true})));
     await openPart(initialIndex,{restore});
   }
 
-  episodeList.querySelectorAll(".episode-button").forEach(b=>b.addEventListener("click",()=>openEpisode(b.dataset.episode,null,{restore:true})));
+  const navigateRelative=async(delta)=>{
+    if(!currentParts.length)return;
+    const target=currentPartIndex+delta;
+    if(target>=0&&target<currentParts.length){
+      await currentOpenPart?.(target,{restore:false});
+      return;
+    }
+    const episodeIndex=episodes.findIndex(e=>Number(e.episode_number)===Number(currentEpisodeNumber));
+    const targetEpisodeIndex=episodeIndex+(delta>0?1:-1);
+    if(targetEpisodeIndex<0||targetEpisodeIndex>=episodes.length)return;
+    const targetEpisode=episodes[targetEpisodeIndex];
+    if(delta>0){
+      await openEpisode(targetEpisode.episode_number,null,{restore:false});
+      return;
+    }
+    let previousParts=[];
+    try{previousParts=await rpc("api_episode_parts_for_reader",{p_episode_number:Number(targetEpisode.episode_number)})}catch{}
+    const last=Array.isArray(previousParts)&&previousParts.length?previousParts[previousParts.length-1]:null;
+    await openEpisode(targetEpisode.episode_number,last?.part_number||null,{restore:false});
+  };
+
+  episodeList?.querySelectorAll(".episode-button").forEach(b=>b.addEventListener("click",async()=>{
+    await openEpisode(b.dataset.episode,null,{restore:true});
+    document.querySelector(".reader-shell")?.classList.remove("mobile-library-open");
+  }));
+  episodeSelect?.addEventListener("change",()=>openEpisode(episodeSelect.value,null,{restore:false}));
+  partSelect?.addEventListener("change",()=>currentOpenPart?.(Number(partSelect.value),{restore:false}));
+  prevButton?.addEventListener("click",()=>navigateRelative(-1));
+  nextButton?.addEventListener("click",()=>navigateRelative(1));
+
   await openEpisode(requestedEpisode,requestedPart||null,{restore:!startFromBeginning});
 }
-
 
 function atlasArt(seed=""){
   const v=entityVisual("map",seed);
@@ -1262,15 +1362,47 @@ async function initHome(){
 function initReaderControls(){
   const shell=document.querySelector(".reader-shell");
   const body=document.querySelector("#novel-body");
+  const backdrop=document.querySelector("#reader-drawer-backdrop");
   if(!shell||!body)return;
+
+  const closeDrawers=()=>{
+    shell.classList.remove("mobile-library-open","mobile-tools-open");
+    backdrop?.setAttribute("hidden","");
+    document.querySelector("#reader-library-toggle")?.setAttribute("aria-expanded","false");
+    document.querySelector("#reader-tools-toggle")?.setAttribute("aria-expanded","false");
+  };
+  const openDrawer=(type)=>{
+    if(innerWidth>820)return;
+    shell.classList.toggle(type==="library"?"mobile-library-open":"mobile-tools-open");
+    if(type==="library")shell.classList.remove("mobile-tools-open");
+    else shell.classList.remove("mobile-library-open");
+    const open=shell.classList.contains(type==="library"?"mobile-library-open":"mobile-tools-open");
+    if(open)backdrop?.removeAttribute("hidden");else backdrop?.setAttribute("hidden","");
+    document.querySelector("#reader-library-toggle")?.setAttribute("aria-expanded",String(shell.classList.contains("mobile-library-open")));
+    document.querySelector("#reader-tools-toggle")?.setAttribute("aria-expanded",String(shell.classList.contains("mobile-tools-open")));
+  };
   const bind=(id,fn)=>document.querySelector(id)?.addEventListener("click",fn);
-  bind("#reader-library-toggle",()=>{ if(innerWidth<=820){shell.classList.toggle("mobile-library-open")}else shell.classList.toggle("library-collapsed") });
-  bind("#reader-tools-toggle",()=>{ if(innerWidth<=820){shell.classList.toggle("mobile-tools-open")}else shell.classList.toggle("tools-collapsed") });
-  bind("#reader-fullscreen",async()=>{ shell.classList.toggle("fullscreen-reader"); try{ if(shell.classList.contains("fullscreen-reader")) await document.documentElement.requestFullscreen?.(); else if(document.fullscreenElement) await document.exitFullscreen?.(); }catch{} });
-  const fs=document.querySelector("#font-size-range"), ls=document.querySelector("#line-height-range"), rw=document.querySelector("#reader-width-range");
+
+  bind("#reader-library-toggle",()=>{ if(innerWidth<=820)openDrawer("library"); else shell.classList.toggle("library-collapsed") });
+  bind("#reader-tools-toggle",()=>{ if(innerWidth<=820)openDrawer("tools"); else shell.classList.toggle("tools-collapsed") });
+  bind("#reader-library-close",closeDrawers);
+  bind("#reader-tools-close",closeDrawers);
+  bind("#reader-drawer-backdrop",closeDrawers);
+  addEventListener("resize",()=>{if(innerWidth>820)closeDrawers()});
+
+  bind("#reader-fullscreen",async()=>{
+    shell.classList.toggle("fullscreen-reader");
+    try{
+      if(shell.classList.contains("fullscreen-reader"))await document.documentElement.requestFullscreen?.();
+      else if(document.fullscreenElement)await document.exitFullscreen?.();
+    }catch{}
+  });
+
+  const fs=document.querySelector("#font-size-range"),ls=document.querySelector("#line-height-range"),rw=document.querySelector("#reader-width-range");
   fs?.addEventListener("input",()=>{body.style.fontSize=fs.value+"px";document.querySelector("#font-size-label").textContent=fs.value+"px"});
   ls?.addEventListener("input",()=>{body.style.lineHeight=ls.value;document.querySelector("#line-height-label").textContent=Number(ls.value).toFixed(2)});
   rw?.addEventListener("input",()=>{body.style.maxWidth=rw.value+"px";document.querySelector("#reader-width-label").textContent=rw.value+"px"});
+
   let progressTimer=null;
   const updateProgress=()=>{
     const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
@@ -1283,7 +1415,8 @@ function initReaderControls(){
       if(state){state.progress_pct=Math.round(pct*10)/10;saveLocalProgress(state)}
     },350);
   };
-  addEventListener("scroll",updateProgress,{passive:true});updateProgress();
+  addEventListener("scroll",updateProgress,{passive:true});
+  updateProgress();
 }
 
 function initCinematicHeroMedia(){
