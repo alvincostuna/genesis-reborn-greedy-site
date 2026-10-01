@@ -8162,8 +8162,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 
 /* ========================================================================== */
-/* SUPPORT V3.3 — CENTERED 50/50 BALANCED DASHBOARD                          */
-/* Two equal columns through tablet widths; phone stacks paired mechanics.     */
+/* SUPPORT V3.4 — FINAL CENTERED 50/50 SUPPORT CONTRACT                      */
+/* Desktop/tablet stay symmetrical; phone stacks paired mechanics below 560.  */
 /* ========================================================================== */
 .unified-public-page .support-dashboard-shell{
   width:min(1180px,calc(100% - 20px))!important;
@@ -8175,18 +8175,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .unified-public-page .support-dashboard{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
+  gap:12px;
   align-items:stretch;
 }
 
 .unified-public-page .support-dashboard-card{
   position:relative;
   min-width:0;
-  min-height:102px;
+  min-height:124px;
   display:grid;
   place-items:center;
   overflow:hidden;
-  padding:12px 16px;
+  padding:18px 20px;
   border:1px solid rgba(216,179,109,.46);
   border-radius:9px;
   background:
@@ -8215,54 +8215,81 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   display:grid;
   justify-items:center;
   align-content:center;
-  gap:4px;
+  gap:5px;
   margin:auto;
 }
+
 .unified-public-page .support-intro-card,
 .unified-public-page .support-quest-card{
-  min-height:118px;
+  min-height:150px;
+}
+.unified-public-page .support-tier-card,
+.unified-public-page .support-mechanic-card{
+  min-height:124px!important;
 }
 .unified-public-page .support-contact-card,
 .unified-public-page .support-help-card{
-  min-height:120px;
+  min-height:132px;
 }
 
+/* Typography hierarchy: serif only for major headings/prices, sans for UI text. */
 .unified-public-page .support-kicker{
   margin:0;
   color:#e2bd70;
-  font:800 8px/1.1 Arial,sans-serif;
+  font:800 9px/1.1 Arial,sans-serif;
   letter-spacing:.17em;
 }
 .unified-public-page .support-dashboard h1{
   margin:2px 0 3px;
   color:#f7e8c4;
-  font:700 clamp(28px,3vw,38px)/1 Georgia,"Times New Roman",serif;
+  font:700 38px/1 Georgia,"Times New Roman",serif;
   letter-spacing:-.018em;
 }
 .unified-public-page .support-dashboard h2{
   margin:1px 0 3px;
   color:#f5dfad;
-  font:700 clamp(17px,1.7vw,22px)/1.04 Georgia,"Times New Roman",serif;
+  font:700 22px/1.04 Georgia,"Times New Roman",serif;
 }
 .unified-public-page .support-card-copy{
   max-width:480px;
   margin:0;
   color:#9db0c0;
-  font-size:10px;
-  line-height:1.42;
+  font:400 11px/1.42 Arial,sans-serif;
 }
 .unified-public-page .support-benefit{
   margin:0;
   color:#efd18b;
-  font-size:10px;
-  font-weight:800;
-  line-height:1.25;
+  font:800 11px/1.25 Arial,sans-serif;
+}
+.unified-public-page .support-tier-value{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  gap:9px;
+  margin:0;
+}
+.unified-public-page .support-tier-value strong{
+  color:#f7e3b3;
+  font:700 30px/1 Georgia,"Times New Roman",serif;
+}
+.unified-public-page .support-tier-value span{
+  color:#dfe8ef;
+  font:800 11px/1.15 Arial,sans-serif;
+}
+.unified-public-page .support-reward-chip{
+  padding:3px 7px;
+  border:1px solid rgba(73,146,194,.45);
+  border-radius:999px;
+  background:#071725;
+  color:#78d2ff;
+  font:800 9px/1.1 Arial,sans-serif;
 }
 
+/* Live support state stays inside the Support card instead of consuming a row. */
 .unified-public-page .support-status-inline{
   max-width:470px;
-  margin-top:4px;
-  padding:4px 7px;
+  margin-top:5px;
+  padding:5px 8px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -8275,12 +8302,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .unified-public-page .support-status-inline strong{
   flex:0 0 auto;
   color:#efcb76;
-  font-size:8px;
+  font:800 9px/1.1 Arial,sans-serif;
 }
 .unified-public-page .support-status-inline span{
   min-width:0;
   color:#8299ad;
-  font-size:7.5px;
+  font:400 9px/1.25 Arial,sans-serif;
 }
 
 .unified-public-page .support-quest-card{
@@ -8290,27 +8317,26 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .unified-public-page .support-card-symbol{
   display:grid;
   place-items:center;
-  width:26px;
-  height:26px;
+  width:28px;
+  height:28px;
   margin-bottom:1px;
   color:#f0cf78;
   font-size:18px;
   filter:drop-shadow(0 0 9px rgba(240,207,120,.18));
 }
 .unified-public-page .support-inline-action{
-  margin-top:3px;
+  margin-top:4px;
   color:#7fd1ff;
-  font-size:9px;
-  font-weight:800;
+  font:800 10px/1.15 Arial,sans-serif;
 }
 .unified-public-page .support-quest-card:hover{
   border-color:rgba(216,179,109,.72);
 }
 
+/* Left-column advance cards. */
 .unified-public-page .support-tier-card.support-game-card,
 .unified-public-page .support-tier-card.support-game-card.featured{
-  min-height:102px!important;
-  padding:10px 13px!important;
+  padding:18px 20px!important;
   display:grid!important;
   place-items:center!important;
   transform:none!important;
@@ -8322,53 +8348,27 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   display:none;
 }
 .unified-public-page .support-tier-card .support-tier-icon{
-  width:26px;
-  height:26px;
+  width:28px;
+  height:28px;
   margin:0 0 1px;
   color:#77ceff;
-  font-size:8px;
+  font:700 9px/1 Arial,sans-serif;
 }
-.unified-public-page .support-tier-value{
-  display:flex;
-  align-items:baseline;
-  justify-content:center;
-  gap:9px;
-  margin:0;
-}
-.unified-public-page .support-tier-value strong{
-  color:#f7e3b3;
-  font:700 29px/1 Georgia,"Times New Roman",serif;
-}
-.unified-public-page .support-tier-value span{
-  color:#dfe8ef;
-  font-size:10px;
-  font-weight:800;
-}
-.unified-public-page .support-reward-chip{
-  padding:3px 7px;
-  border:1px solid rgba(73,146,194,.45);
-  border-radius:999px;
-  background:#071725;
-  color:#78d2ff;
-  font-size:8px;
-  font-weight:800;
-  line-height:1.1;
-}
+
+/* Actions share one compact size system. */
 .unified-public-page .support-dashboard-card button,
 .unified-public-page .support-inline-button{
-  min-height:30px;
-  min-width:126px;
-  margin-top:3px;
-  padding:5px 10px;
+  min-height:34px;
+  min-width:138px;
+  margin-top:7px;
+  padding:7px 12px;
   display:inline-grid;
   place-items:center;
   border:1px solid #31516d;
   border-radius:6px;
   background:#0d1a26;
   color:#8da0b2;
-  font-size:8.5px;
-  font-weight:700;
-  line-height:1.15;
+  font:700 10px/1.15 Arial,sans-serif;
   text-align:center;
 }
 .unified-public-page .support-dashboard-card button:disabled{
@@ -8378,36 +8378,42 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   text-decoration:none;
 }
 
-.unified-public-page .support-mechanic-card{
-  min-height:102px;
-}
+/* Right-column mechanics. */
 .unified-public-page .support-mechanic-card .support-card-center{
-  gap:4px;
+  gap:5px;
 }
 .unified-public-page .support-amount-label{
-  margin-top:1px;
+  margin-top:5px;
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:6px;
+  gap:7px;
   color:#8197aa;
-  font-size:8px;
+  font:400 9px/1.15 Arial,sans-serif;
 }
 .unified-public-page .support-amount-input{
-  width:90px;
-  height:28px;
+  width:110px;
+  height:30px;
   margin:0;
-  padding:4px 7px;
+  padding:5px 8px;
   border:1px solid #31516d;
   border-radius:6px;
   background:#071522;
   color:#cbd9e4;
-  font-size:9px;
+  font:400 10px/1 Arial,sans-serif;
   text-align:center;
 }
 
+/* Utility row: same pair height, quieter visual weight. */
+.unified-public-page .support-contact-card,
+.unified-public-page .support-help-card{
+  border-color:rgba(101,147,181,.34);
+  background:
+    radial-gradient(circle at 50% -20%,rgba(65,154,226,.045),transparent 44%),
+    linear-gradient(155deg,rgba(8,21,34,.985),rgba(4,12,21,.995));
+}
 .unified-public-page .support-contact-form{
-  width:min(100%,470px);
+  width:min(100%,500px);
   display:grid;
   grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr) auto;
   gap:6px;
@@ -8417,109 +8423,163 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .unified-public-page .support-contact-form textarea{
   width:100%;
   min-width:0;
-  min-height:32px;
-  padding:6px 8px;
+  min-height:34px;
+  padding:7px 8px;
   border:1px solid #294860;
   border-radius:6px;
   background:#071522;
   color:#d4dfe8;
-  font-size:9px;
-  line-height:1.25;
+  font:400 10px/1.25 Arial,sans-serif;
   resize:none;
 }
 .unified-public-page .support-contact-form textarea{
-  height:32px;
+  height:34px;
 }
 .unified-public-page .support-contact-form button{
-  min-width:108px;
-  min-height:32px;
+  min-width:112px;
+  min-height:34px;
   margin:0;
 }
-
 .unified-public-page .support-help-links{
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
   gap:6px;
-  margin-top:3px;
+  margin-top:7px;
 }
 .unified-public-page .support-help-links a{
-  min-height:30px;
-  padding:6px 10px;
+  min-height:34px;
+  padding:7px 11px;
   display:inline-grid;
   place-items:center;
   border:1px solid rgba(78,145,191,.42);
   border-radius:6px;
   background:#071725;
   color:#9dccec;
-  font-size:8.5px;
-  font-weight:700;
+  font:700 10px/1.15 Arial,sans-serif;
   text-decoration:none;
 }
-
 .unified-public-page .support-dashboard-shell>.support-fineprint{
   max-width:920px;
-  margin:9px auto 0!important;
+  margin:10px auto 0!important;
   color:#708699;
-  font-size:8px!important;
-  line-height:1.35;
+  font:400 9px/1.4 Arial,sans-serif!important;
   text-align:center;
 }
 
-/* Keep the balanced 50/50 presentation through tablet/large-phone widths. */
-@media(max-width:900px){
+/* 1024–1199: 50/50, slightly tighter. */
+@media(min-width:1024px) and (max-width:1199px){
+  .unified-public-page .support-dashboard{gap:10px}
+  .unified-public-page .support-dashboard-card{padding:16px 18px}
+  .unified-public-page .support-tier-card.support-game-card,
+  .unified-public-page .support-tier-card.support-game-card.featured{padding:16px 18px!important}
+  .unified-public-page .support-intro-card,
+  .unified-public-page .support-quest-card{min-height:142px}
+  .unified-public-page .support-tier-card,
+  .unified-public-page .support-mechanic-card{min-height:118px!important}
+  .unified-public-page .support-contact-card,
+  .unified-public-page .support-help-card{min-height:126px}
+  .unified-public-page .support-dashboard h1{font-size:34px}
+  .unified-public-page .support-dashboard h2{font-size:20px}
+  .unified-public-page .support-tier-value strong{font-size:28px}
+  .unified-public-page .support-kicker{font-size:8px}
+  .unified-public-page .support-benefit,
+  .unified-public-page .support-card-copy{font-size:10px}
+  .unified-public-page .support-reward-chip{font-size:8px}
+  .unified-public-page .support-dashboard-card button,
+  .unified-public-page .support-inline-button,
+  .unified-public-page .support-help-links a{font-size:9px}
+}
+
+/* 768–1023: compact tablet, still exact 50/50. */
+@media(min-width:768px) and (max-width:1023px){
   .unified-public-page .support-dashboard-shell{
     width:100%!important;
-    padding:7px 7px 76px!important;
+    padding:9px 9px 82px!important;
   }
-  .unified-public-page .support-dashboard{
-    gap:6px;
-  }
-  .unified-public-page .support-dashboard-card{
-    min-height:96px;
-    padding:9px 10px;
-  }
+  .unified-public-page .support-dashboard{gap:8px}
+  .unified-public-page .support-dashboard-card{padding:13px 14px}
+  .unified-public-page .support-tier-card.support-game-card,
+  .unified-public-page .support-tier-card.support-game-card.featured{padding:13px 14px!important}
   .unified-public-page .support-intro-card,
-  .unified-public-page .support-quest-card{
-    min-height:110px;
-  }
+  .unified-public-page .support-quest-card{min-height:132px}
+  .unified-public-page .support-tier-card,
+  .unified-public-page .support-mechanic-card{min-height:112px!important}
   .unified-public-page .support-contact-card,
-  .unified-public-page .support-help-card{
-    min-height:112px;
-  }
-  .unified-public-page .support-dashboard h1{
-    font-size:29px!important;
-  }
-  .unified-public-page .support-dashboard h2{
-    font-size:17px!important;
-  }
-  .unified-public-page .support-card-copy{
-    font-size:8.5px;
-  }
-  .unified-public-page .support-tier-value strong{
-    font-size:25px;
-  }
+  .unified-public-page .support-help-card{min-height:118px}
+  .unified-public-page .support-dashboard h1{font-size:34px!important}
+  .unified-public-page .support-dashboard h2{font-size:20px!important}
+  .unified-public-page .support-tier-value strong{font-size:28px}
   .unified-public-page .support-tier-value span,
-  .unified-public-page .support-benefit{
-    font-size:8.5px;
-  }
+  .unified-public-page .support-benefit,
+  .unified-public-page .support-card-copy{font-size:10px}
+  .unified-public-page .support-kicker{font-size:8px}
+  .unified-public-page .support-reward-chip{font-size:8px}
+  .unified-public-page .support-dashboard-card button,
+  .unified-public-page .support-inline-button,
+  .unified-public-page .support-help-links a{font-size:9px}
   .unified-public-page .support-contact-form{
     grid-template-columns:1fr 1fr;
   }
   .unified-public-page .support-contact-form button{
     grid-column:1 / -1;
     width:100%;
-    min-height:28px;
-  }
-  .unified-public-page .support-contact-form input,
-  .unified-public-page .support-contact-form textarea{
-    min-height:29px;
-    height:29px;
+    margin:0;
   }
 }
 
-/* True phone mode: preserve pair order but stack for readable tap targets. */
+/* 561–767: dense 50/50 mode; still centered and equal-row. */
+@media(min-width:561px) and (max-width:767px){
+  .unified-public-page .support-dashboard-shell{
+    width:100%!important;
+    padding:7px 7px 80px!important;
+  }
+  .unified-public-page .support-dashboard{gap:6px}
+  .unified-public-page .support-dashboard-card{padding:10px}
+  .unified-public-page .support-tier-card.support-game-card,
+  .unified-public-page .support-tier-card.support-game-card.featured{padding:10px!important}
+  .unified-public-page .support-intro-card,
+  .unified-public-page .support-quest-card{min-height:118px}
+  .unified-public-page .support-tier-card,
+  .unified-public-page .support-mechanic-card{min-height:102px!important}
+  .unified-public-page .support-contact-card,
+  .unified-public-page .support-help-card{min-height:108px}
+  .unified-public-page .support-dashboard h1{font-size:29px!important}
+  .unified-public-page .support-dashboard h2{font-size:17px!important}
+  .unified-public-page .support-tier-value strong{font-size:24px}
+  .unified-public-page .support-tier-value span,
+  .unified-public-page .support-benefit,
+  .unified-public-page .support-card-copy{font-size:8.5px}
+  .unified-public-page .support-kicker{font-size:7px}
+  .unified-public-page .support-reward-chip{font-size:7px}
+  .unified-public-page .support-status-inline span{
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+    font-size:8px;
+  }
+  .unified-public-page .support-dashboard-card button,
+  .unified-public-page .support-inline-button,
+  .unified-public-page .support-help-links a{
+    min-height:30px;
+    font-size:8px;
+  }
+  .unified-public-page .support-contact-form{
+    grid-template-columns:1fr;
+  }
+  .unified-public-page .support-contact-form button{
+    width:100%;
+    margin:0;
+  }
+}
+
+/* <=560: true phone mode. Stack the existing pair order; never squeeze 50/50. */
 @media(max-width:560px){
+  .unified-public-page .support-dashboard-shell{
+    width:100%!important;
+    padding:7px 7px 78px!important;
+  }
   .unified-public-page .support-dashboard{
     grid-template-columns:1fr;
     gap:6px;
@@ -8527,34 +8587,74 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .unified-public-page .support-dashboard-card,
   .unified-public-page .support-intro-card,
   .unified-public-page .support-quest-card,
+  .unified-public-page .support-tier-card,
+  .unified-public-page .support-mechanic-card,
   .unified-public-page .support-contact-card,
   .unified-public-page .support-help-card,
   .unified-public-page .support-tier-card.support-game-card,
-  .unified-public-page .support-tier-card.support-game-card.featured,
-  .unified-public-page .support-mechanic-card{
-    min-height:92px!important;
+  .unified-public-page .support-tier-card.support-game-card.featured{
+    min-height:96px!important;
+    padding:12px 14px!important;
   }
-  .unified-public-page .support-dashboard h1{
-    font-size:27px!important;
-  }
-  .unified-public-page .support-dashboard h2{
-    font-size:18px!important;
-  }
-  .unified-public-page .support-card-copy{
-    font-size:9px;
-  }
-  .unified-public-page .support-contact-form{
-    grid-template-columns:1fr;
-    width:min(100%,360px);
-  }
-  .unified-public-page .support-contact-form button{
-    grid-column:auto;
-  }
+  .unified-public-page .support-dashboard h1{font-size:28px!important}
+  .unified-public-page .support-dashboard h2{font-size:19px!important}
+  .unified-public-page .support-tier-value strong{font-size:27px}
+  .unified-public-page .support-kicker{font-size:8px}
+  .unified-public-page .support-tier-value span,
+  .unified-public-page .support-benefit,
+  .unified-public-page .support-card-copy{font-size:9.5px}
+  .unified-public-page .support-reward-chip{font-size:8px}
   .unified-public-page .support-status-inline{
+    max-width:100%;
     border-radius:7px;
     align-items:flex-start;
   }
   .unified-public-page .support-status-inline span{
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
     text-align:left;
+    font-size:8px;
   }
+  .unified-public-page .support-dashboard-card button,
+  .unified-public-page .support-inline-button,
+  .unified-public-page .support-help-links a{
+    width:min(100%,280px);
+    min-height:38px;
+    margin-top:7px;
+    font-size:9px;
+  }
+  .unified-public-page .support-amount-input{
+    width:110px;
+  }
+  .unified-public-page .support-contact-form{
+    width:min(100%,360px);
+    grid-template-columns:1fr;
+  }
+  .unified-public-page .support-contact-form button{
+    grid-column:auto;
+    width:100%;
+    margin:0;
+  }
+}
+
+/* <=420: smallest phone refinement only; preserve readable text and tap areas. */
+@media(max-width:420px){
+  .unified-public-page .support-dashboard{gap:5px}
+  .unified-public-page .support-dashboard-card,
+  .unified-public-page .support-intro-card,
+  .unified-public-page .support-quest-card,
+  .unified-public-page .support-tier-card,
+  .unified-public-page .support-mechanic-card,
+  .unified-public-page .support-contact-card,
+  .unified-public-page .support-help-card,
+  .unified-public-page .support-tier-card.support-game-card,
+  .unified-public-page .support-tier-card.support-game-card.featured{
+    padding:11px 12px!important;
+  }
+  .unified-public-page .support-dashboard h1{font-size:27px!important}
+  .unified-public-page .support-dashboard h2{font-size:18px!important}
+  .unified-public-page .support-card-copy,
+  .unified-public-page .support-benefit{font-size:9px}
 }
