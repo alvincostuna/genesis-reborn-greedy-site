@@ -10620,3 +10620,32 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2 .deck-latest-panel{min-height:184px}.web-ds-v2 .deck-latest-grid{grid-template-columns:repeat(3,minmax(260px,1fr));overflow-x:auto;padding-bottom:5px}
   .web-ds-v2 .deck-announcement-row{grid-template-columns:30px minmax(0,1fr)}.web-ds-v2 .deck-announcement-row time{display:none}
 }
+
+
+/* Command Deck V1.0 typography hardening against retired V5 micro-type rules. */
+@media(min-width:901px){
+  .web-ds-v2 .genesis-command-deck .home-release-card-footer,
+  .web-ds-v2 .genesis-command-deck .home-release-card-footer span{
+    font:600 10px/1 Inter,Arial,sans-serif!important;
+  }
+  .web-ds-v2 .genesis-command-deck .home-access-head>span{
+    color:var(--gx-gold-hi)!important;
+    font:700 15px/1 Georgia,"Times New Roman",serif!important;
+    letter-spacing:.035em!important;
+  }
+  .web-ds-v2 .genesis-command-deck .home-access-head>a{
+    color:#b7ccdc!important;
+    font:700 10px/1 Inter,Arial,sans-serif!important;
+    letter-spacing:0!important;
+  }
+  .web-ds-v2 .genesis-command-deck .home-access-stats span,
+  .web-ds-v2 .genesis-command-deck .home-access-stats strong{
+    font-size:12px!important;
+    line-height:1!important;
+  }
+  .web-ds-v2 .genesis-command-deck .home-access-guest-preview span,
+  .web-ds-v2 .genesis-command-deck .home-access-guest-preview strong{
+    font-size:10px!important;
+    line-height:1!important;
+  }
+}
