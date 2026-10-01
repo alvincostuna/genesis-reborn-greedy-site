@@ -8159,3 +8159,402 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     font-size:6.5px;
   }
 }
+
+
+/* ========================================================================== */
+/* SUPPORT V3.3 — CENTERED 50/50 BALANCED DASHBOARD                          */
+/* Two equal columns through tablet widths; phone stacks paired mechanics.     */
+/* ========================================================================== */
+.unified-public-page .support-dashboard-shell{
+  width:min(1180px,calc(100% - 20px))!important;
+  max-width:1180px!important;
+  margin:0 auto!important;
+  padding-top:14px!important;
+}
+
+.unified-public-page .support-dashboard{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  align-items:stretch;
+}
+
+.unified-public-page .support-dashboard-card{
+  position:relative;
+  min-width:0;
+  min-height:102px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  padding:12px 16px;
+  border:1px solid rgba(216,179,109,.46);
+  border-radius:9px;
+  background:
+    radial-gradient(circle at 50% -20%,rgba(65,154,226,.075),transparent 44%),
+    linear-gradient(155deg,rgba(10,25,40,.99),rgba(4,12,21,.995));
+  box-shadow:
+    inset 0 0 0 1px rgba(94,156,202,.04),
+    0 10px 28px rgba(0,0,0,.22);
+  text-align:center;
+}
+.unified-public-page .support-dashboard-card:before{
+  content:"";
+  position:absolute;
+  left:18%;
+  right:18%;
+  top:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(234,202,126,.58),transparent);
+  opacity:.72;
+}
+.unified-public-page .support-card-center{
+  position:relative;
+  z-index:1;
+  width:min(100%,520px);
+  min-width:0;
+  display:grid;
+  justify-items:center;
+  align-content:center;
+  gap:4px;
+  margin:auto;
+}
+.unified-public-page .support-intro-card,
+.unified-public-page .support-quest-card{
+  min-height:118px;
+}
+.unified-public-page .support-contact-card,
+.unified-public-page .support-help-card{
+  min-height:120px;
+}
+
+.unified-public-page .support-kicker{
+  margin:0;
+  color:#e2bd70;
+  font:800 8px/1.1 Arial,sans-serif;
+  letter-spacing:.17em;
+}
+.unified-public-page .support-dashboard h1{
+  margin:2px 0 3px;
+  color:#f7e8c4;
+  font:700 clamp(28px,3vw,38px)/1 Georgia,"Times New Roman",serif;
+  letter-spacing:-.018em;
+}
+.unified-public-page .support-dashboard h2{
+  margin:1px 0 3px;
+  color:#f5dfad;
+  font:700 clamp(17px,1.7vw,22px)/1.04 Georgia,"Times New Roman",serif;
+}
+.unified-public-page .support-card-copy{
+  max-width:480px;
+  margin:0;
+  color:#9db0c0;
+  font-size:10px;
+  line-height:1.42;
+}
+.unified-public-page .support-benefit{
+  margin:0;
+  color:#efd18b;
+  font-size:10px;
+  font-weight:800;
+  line-height:1.25;
+}
+
+.unified-public-page .support-status-inline{
+  max-width:470px;
+  margin-top:4px;
+  padding:4px 7px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border:1px solid rgba(97,160,204,.28);
+  border-radius:999px;
+  background:rgba(4,16,27,.74);
+  line-height:1.2;
+}
+.unified-public-page .support-status-inline strong{
+  flex:0 0 auto;
+  color:#efcb76;
+  font-size:8px;
+}
+.unified-public-page .support-status-inline span{
+  min-width:0;
+  color:#8299ad;
+  font-size:7.5px;
+}
+
+.unified-public-page .support-quest-card{
+  color:inherit;
+  text-decoration:none;
+}
+.unified-public-page .support-card-symbol{
+  display:grid;
+  place-items:center;
+  width:26px;
+  height:26px;
+  margin-bottom:1px;
+  color:#f0cf78;
+  font-size:18px;
+  filter:drop-shadow(0 0 9px rgba(240,207,120,.18));
+}
+.unified-public-page .support-inline-action{
+  margin-top:3px;
+  color:#7fd1ff;
+  font-size:9px;
+  font-weight:800;
+}
+.unified-public-page .support-quest-card:hover{
+  border-color:rgba(216,179,109,.72);
+}
+
+.unified-public-page .support-tier-card.support-game-card,
+.unified-public-page .support-tier-card.support-game-card.featured{
+  min-height:102px!important;
+  padding:10px 13px!important;
+  display:grid!important;
+  place-items:center!important;
+  transform:none!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(94,156,202,.04),
+    0 10px 28px rgba(0,0,0,.22)!important;
+}
+.unified-public-page .support-tier-card.support-game-card:before{
+  display:none;
+}
+.unified-public-page .support-tier-card .support-tier-icon{
+  width:26px;
+  height:26px;
+  margin:0 0 1px;
+  color:#77ceff;
+  font-size:8px;
+}
+.unified-public-page .support-tier-value{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  gap:9px;
+  margin:0;
+}
+.unified-public-page .support-tier-value strong{
+  color:#f7e3b3;
+  font:700 29px/1 Georgia,"Times New Roman",serif;
+}
+.unified-public-page .support-tier-value span{
+  color:#dfe8ef;
+  font-size:10px;
+  font-weight:800;
+}
+.unified-public-page .support-reward-chip{
+  padding:3px 7px;
+  border:1px solid rgba(73,146,194,.45);
+  border-radius:999px;
+  background:#071725;
+  color:#78d2ff;
+  font-size:8px;
+  font-weight:800;
+  line-height:1.1;
+}
+.unified-public-page .support-dashboard-card button,
+.unified-public-page .support-inline-button{
+  min-height:30px;
+  min-width:126px;
+  margin-top:3px;
+  padding:5px 10px;
+  display:inline-grid;
+  place-items:center;
+  border:1px solid #31516d;
+  border-radius:6px;
+  background:#0d1a26;
+  color:#8da0b2;
+  font-size:8.5px;
+  font-weight:700;
+  line-height:1.15;
+  text-align:center;
+}
+.unified-public-page .support-dashboard-card button:disabled{
+  opacity:.58;
+}
+.unified-public-page .support-inline-button{
+  text-decoration:none;
+}
+
+.unified-public-page .support-mechanic-card{
+  min-height:102px;
+}
+.unified-public-page .support-mechanic-card .support-card-center{
+  gap:4px;
+}
+.unified-public-page .support-amount-label{
+  margin-top:1px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  color:#8197aa;
+  font-size:8px;
+}
+.unified-public-page .support-amount-input{
+  width:90px;
+  height:28px;
+  margin:0;
+  padding:4px 7px;
+  border:1px solid #31516d;
+  border-radius:6px;
+  background:#071522;
+  color:#cbd9e4;
+  font-size:9px;
+  text-align:center;
+}
+
+.unified-public-page .support-contact-form{
+  width:min(100%,470px);
+  display:grid;
+  grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr) auto;
+  gap:6px;
+  align-items:stretch;
+}
+.unified-public-page .support-contact-form input,
+.unified-public-page .support-contact-form textarea{
+  width:100%;
+  min-width:0;
+  min-height:32px;
+  padding:6px 8px;
+  border:1px solid #294860;
+  border-radius:6px;
+  background:#071522;
+  color:#d4dfe8;
+  font-size:9px;
+  line-height:1.25;
+  resize:none;
+}
+.unified-public-page .support-contact-form textarea{
+  height:32px;
+}
+.unified-public-page .support-contact-form button{
+  min-width:108px;
+  min-height:32px;
+  margin:0;
+}
+
+.unified-public-page .support-help-links{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px;
+  margin-top:3px;
+}
+.unified-public-page .support-help-links a{
+  min-height:30px;
+  padding:6px 10px;
+  display:inline-grid;
+  place-items:center;
+  border:1px solid rgba(78,145,191,.42);
+  border-radius:6px;
+  background:#071725;
+  color:#9dccec;
+  font-size:8.5px;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.unified-public-page .support-dashboard-shell>.support-fineprint{
+  max-width:920px;
+  margin:9px auto 0!important;
+  color:#708699;
+  font-size:8px!important;
+  line-height:1.35;
+  text-align:center;
+}
+
+/* Keep the balanced 50/50 presentation through tablet/large-phone widths. */
+@media(max-width:900px){
+  .unified-public-page .support-dashboard-shell{
+    width:100%!important;
+    padding:7px 7px 76px!important;
+  }
+  .unified-public-page .support-dashboard{
+    gap:6px;
+  }
+  .unified-public-page .support-dashboard-card{
+    min-height:96px;
+    padding:9px 10px;
+  }
+  .unified-public-page .support-intro-card,
+  .unified-public-page .support-quest-card{
+    min-height:110px;
+  }
+  .unified-public-page .support-contact-card,
+  .unified-public-page .support-help-card{
+    min-height:112px;
+  }
+  .unified-public-page .support-dashboard h1{
+    font-size:29px!important;
+  }
+  .unified-public-page .support-dashboard h2{
+    font-size:17px!important;
+  }
+  .unified-public-page .support-card-copy{
+    font-size:8.5px;
+  }
+  .unified-public-page .support-tier-value strong{
+    font-size:25px;
+  }
+  .unified-public-page .support-tier-value span,
+  .unified-public-page .support-benefit{
+    font-size:8.5px;
+  }
+  .unified-public-page .support-contact-form{
+    grid-template-columns:1fr 1fr;
+  }
+  .unified-public-page .support-contact-form button{
+    grid-column:1 / -1;
+    width:100%;
+    min-height:28px;
+  }
+  .unified-public-page .support-contact-form input,
+  .unified-public-page .support-contact-form textarea{
+    min-height:29px;
+    height:29px;
+  }
+}
+
+/* True phone mode: preserve pair order but stack for readable tap targets. */
+@media(max-width:560px){
+  .unified-public-page .support-dashboard{
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+  .unified-public-page .support-dashboard-card,
+  .unified-public-page .support-intro-card,
+  .unified-public-page .support-quest-card,
+  .unified-public-page .support-contact-card,
+  .unified-public-page .support-help-card,
+  .unified-public-page .support-tier-card.support-game-card,
+  .unified-public-page .support-tier-card.support-game-card.featured,
+  .unified-public-page .support-mechanic-card{
+    min-height:92px!important;
+  }
+  .unified-public-page .support-dashboard h1{
+    font-size:27px!important;
+  }
+  .unified-public-page .support-dashboard h2{
+    font-size:18px!important;
+  }
+  .unified-public-page .support-card-copy{
+    font-size:9px;
+  }
+  .unified-public-page .support-contact-form{
+    grid-template-columns:1fr;
+    width:min(100%,360px);
+  }
+  .unified-public-page .support-contact-form button{
+    grid-column:auto;
+  }
+  .unified-public-page .support-status-inline{
+    border-radius:7px;
+    align-items:flex-start;
+  }
+  .unified-public-page .support-status-inline span{
+    text-align:left;
+  }
+}
