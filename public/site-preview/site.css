@@ -7782,3 +7782,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     font-size:8px;
   }
 }
+
+
+/* Destination V3.1.1 — Codex legacy first-child max-width neutralization */
+.unified-public-page .v28-codex-hero > .codex-hero-art{
+  width:auto!important;
+  max-width:none!important;
+  left:0!important;
+  right:0!important;
+}
