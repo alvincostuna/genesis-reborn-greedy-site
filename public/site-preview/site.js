@@ -627,6 +627,11 @@ async function initRead(){
   let currentOpenPart=null;
 
   const refreshNavButtons=()=>{
+    if(!currentParts.length){
+      if(prevButton)prevButton.disabled=true;
+      if(nextButton)nextButton.disabled=true;
+      return;
+    }
     const episodeIndex=episodes.findIndex(e=>Number(e.episode_number)===Number(currentEpisodeNumber));
     const hasPrev=currentPartIndex>0||episodeIndex>0;
     const hasNext=currentPartIndex<currentParts.length-1||episodeIndex<episodes.length-1;
