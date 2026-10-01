@@ -529,31 +529,37 @@ async function renderPartCommentComposer(partId,reload){
 }
 
 async function activateSupportContact(){
-  const form=document.querySelector("#contact-form");
-  if(!form)return;
+  const forms=[...document.querySelectorAll("#contact-form,[data-support-contact]")];
+  if(!forms.length)return;
   const session=await getSession();
   const user=session?await getAuthUser(session):null;
-  const subject=document.querySelector("#contact-subject");
-  const body=document.querySelector("#contact-body");
-  const button=document.querySelector("#contact-submit");
-  if(!user){
-    subject.disabled=true;body.disabled=true;button.disabled=true;
-    button.textContent="Reader sign-in required";
-    return;
-  }
-  subject.disabled=false;body.disabled=false;button.disabled=false;
-  button.textContent="Send message to Admin";
-  form.addEventListener("submit",async e=>{
-    e.preventDefault();
-    const s=subject.value.trim(),b=body.value.trim();
-    if(!s||!b)return;
-    button.disabled=true;button.textContent="Sending…";
-    try{
-      await rpc("reader_contact_admin",{p_subject:s,p_body:b},session.access_token);
-      subject.value="";body.value="";button.textContent="Message sent";
-    }catch{button.textContent="Could not send — try again"}
-    finally{setTimeout(()=>{button.disabled=false;button.textContent="Send message to Admin"},1500)}
-  },{once:true});
+
+  forms.forEach(form=>{
+    const subject=form.querySelector("#contact-subject,[data-contact-subject]");
+    const body=form.querySelector("#contact-body,[data-contact-body]");
+    const button=form.querySelector("#contact-submit,[data-contact-submit]");
+    if(!subject||!body||!button)return;
+
+    if(!user){
+      subject.disabled=true;body.disabled=true;button.disabled=true;
+      button.textContent="Reader sign-in required";
+      return;
+    }
+
+    subject.disabled=false;body.disabled=false;button.disabled=false;
+    button.textContent="Send message to Admin";
+    form.addEventListener("submit",async e=>{
+      e.preventDefault();
+      const subjectText=subject.value.trim(),bodyText=body.value.trim();
+      if(!subjectText||!bodyText)return;
+      button.disabled=true;button.textContent="Sending…";
+      try{
+        await rpc("reader_contact_admin",{p_subject:subjectText,p_body:bodyText},session.access_token);
+        subject.value="";body.value="";button.textContent="Message sent";
+      }catch{button.textContent="Could not send — try again"}
+      finally{setTimeout(()=>{button.disabled=false;button.textContent="Send message to Admin"},1500)}
+    },{once:true});
+  });
 }
 
 async function initRead(){
@@ -1587,15 +1593,16 @@ async function initQuests(){
 }
 
 async function initSupport(){
-  const notice=document.querySelector("#support-status");
+  const notices=[...document.querySelectorAll("#support-status,[data-support-status]")];
+  const paintSupportNotice=(html)=>notices.forEach(n=>{n.innerHTML=html});
   await activateSupportContact();
 
   const params=new URLSearchParams(location.search);
   const paymentReturn=params.get("payment");
-  if(paymentReturn==="success"&&notice){
-    notice.innerHTML='<strong>Payment submitted</strong><span>PayMongo returned you to GENESIS. Advance access is granted only after the signed payment webhook is confirmed.</span>';
-  }else if(paymentReturn==="cancelled"&&notice){
-    notice.innerHTML='<strong>Checkout cancelled</strong><span>No reward is granted for an incomplete PayMongo checkout.</span>';
+  if(paymentReturn==="success"&&notices.length){
+    paintSupportNotice('<strong>Payment submitted</strong><span>PayMongo returned you to GENESIS. Advance access is granted only after the signed payment webhook is confirmed.</span>');
+  }else if(paymentReturn==="cancelled"&&notices.length){
+    paintSupportNotice('<strong>Checkout cancelled</strong><span>No reward is granted for an incomplete PayMongo checkout.</span>');
   }
 
   try{
@@ -1607,15 +1614,15 @@ async function initSupport(){
     const session=await getSession();
     const user=session?await getAuthUser(session):null;
 
-    if(notice&&!paymentReturn){
+    if(notices.length&&!paymentReturn){
       const enabled=providerReady&&(!!s.payments_enabled||!!s.pure_support_enabled||!!s.share_rewards_enabled);
-      notice.innerHTML='<strong>'+(enabled?(testMode?'PayMongo TEST MODE active':'Secure PayMongo checkout ready'):'PayMongo preparation mode')+'</strong><span>'+
+      paintSupportNotice('<strong>'+(enabled?(testMode?'PayMongo TEST MODE active':'Secure PayMongo checkout ready'):'PayMongo preparation mode')+'</strong><span>'+
         (enabled
           ?(testMode
             ?'Testing only — no GENESIS live entitlement sales are active. Do not scan a QR Ph test code with a real banking or e-wallet app; use PayMongo\'s test simulation controls.'
             :'Payments are verified server-side before credits, VIP, or Supporter eligibility are granted.')
           :'PayMongo is selected and wired, but collection remains disabled until merchant keys, webhook signing, and test-mode verification pass.')+
-        '</span>';
+        '</span>');
     }
 
     const startCheckout=async(button,ruleKey,amountPhp=null)=>{
@@ -1636,7 +1643,7 @@ async function initSupport(){
       }catch(e){
         button.disabled=false;
         button.textContent=original;
-        if(notice)notice.innerHTML='<strong>Checkout unavailable</strong><span>'+esc(String(e.message||e))+'</span>';
+        if(notices.length)paintSupportNotice('<strong>Checkout unavailable</strong><span>'+esc(String(e.message||e))+'</span>');
       }
     };
 
@@ -1655,15 +1662,15 @@ async function initSupport(){
         :(testMode&&!testRuleAllowed?"Locked until next test phase":"PayMongo not live yet");
 
       if(pure){
-        const amount=document.querySelector("#pure-support-amount");
-        if(amount)amount.disabled=!ready;
+        document.querySelectorAll("#pure-support-amount,[data-pure-support-amount]").forEach(amount=>{amount.disabled=!ready});
       }
 
       if(ready){
         button.addEventListener("click",()=>{
-          const amount=pure?Number(document.querySelector("#pure-support-amount")?.value||0):null;
+          const amountInput=pure?(button.closest(".support-mobile-card,.support-system-card")?.querySelector("[data-pure-support-amount],#pure-support-amount")||document.querySelector("#pure-support-amount,[data-pure-support-amount]")):null;
+          const amount=pure?Number(amountInput?.value||0):null;
           if(pure&&(!Number.isFinite(amount)||amount<1)){
-            if(notice)notice.innerHTML='<strong>Enter an amount</strong><span>Pure support starts at ₱1 and grants no Advance Parts or VIP.</span>';
+            if(notices.length)paintSupportNotice('<strong>Enter an amount</strong><span>Pure support starts at ₱1 and grants no Advance Parts or VIP.</span>');
             return;
           }
           startCheckout(button,ruleKey,amount);
@@ -1671,8 +1678,8 @@ async function initSupport(){
       }
     });
   }catch(e){
-    if(notice&&!paymentReturn){
-      notice.innerHTML='<strong>Support status unavailable</strong><span>Payment collection remains closed.</span>';
+    if(notices.length&&!paymentReturn){
+      paintSupportNotice('<strong>Support status unavailable</strong><span>Payment collection remains closed.</span>');
     }
   }
 }

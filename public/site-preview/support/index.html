@@ -29,7 +29,8 @@
     </div>
   </header>
 <main class="support-shell">
-  <section class="support-hero support-hero-compact">
+  <div class="support-desktop-layout">
+<section class="support-hero support-hero-compact">
     <div class="support-hero-copy"><p class="eyebrow">SUPPORT GENESIS</p><h1>Support the Journey</h1><p>Support is optional. Public story releases continue normally on the official schedule whether or not a reader supports the project.</p></div>
     <a class="quest-entry" href="/site-preview/quests/"><span>✦</span><div><strong>Quest & Rewards</strong><small>EXP · Tier rewards · collectible draws</small></div><b>›</b></a>
   </section>
@@ -63,6 +64,92 @@
   </section>
 
   <section class="contact-panel game-contact"><div><p class="eyebrow">CONTACT ADMIN</p><h2>Need help?</h2><p>Questions about reader accounts, support, advance access, or community features can be sent directly to GENESIS Admin.</p></div><form id="contact-form" class="contact-form"><input id="contact-subject" placeholder="Subject" disabled><textarea id="contact-body" rows="6" placeholder="Your message…" disabled></textarea><button id="contact-submit" disabled>Reader sign-in required</button></form></section>
+  </div>
+
+  <section class="support-mobile-dashboard" aria-label="GENESIS mobile support dashboard">
+    <article class="support-mobile-card support-mobile-intro">
+      <p class="support-kicker">SUPPORT GENESIS</p>
+      <h1>Support the Journey</h1>
+      <p>Support is optional. Public story releases continue normally.</p>
+      <div class="support-mobile-status" data-support-status><strong>Preview mode</strong><span>Payments and share rewards remain disabled until launch controls are explicitly enabled.</span></div>
+    </article>
+
+    <a class="support-mobile-card support-mobile-quest" href="/site-preview/quests/">
+      <span class="support-card-symbol" aria-hidden="true">✦</span>
+      <p class="support-kicker">QUEST SYSTEM</p>
+      <h2>Quest &amp; Rewards</h2>
+      <p>EXP · tier rewards · collectible draws</p>
+      <strong>Open Quest Board →</strong>
+    </a>
+
+    <article class="support-mobile-card support-mobile-tier">
+      <div class="support-tier-icon">Ⅰ</div>
+      <p class="support-kicker">1-DAY ADVANCE</p>
+      <div class="support-tier-value"><strong>₱9</strong><span>+2 Parts</span></div>
+      <div class="support-reward-chip">+100 EXP</div>
+      <button data-paymongo-rule="SUPPORT_9" disabled>Pay with PayMongo</button>
+    </article>
+
+    <article class="support-mobile-card support-mobile-mechanic">
+      <p class="support-kicker">SHARE QUEST</p>
+      <h2>Share GENESIS</h2>
+      <strong>+200 EXP · +1 Part advance</strong>
+      <small>1/day · 5/week</small>
+      <button disabled>Share rewards not enabled yet</button>
+    </article>
+
+    <article class="support-mobile-card support-mobile-tier">
+      <div class="support-tier-icon">Ⅶ</div>
+      <p class="support-kicker">7-DAY ADVANCE</p>
+      <div class="support-tier-value"><strong>₱49</strong><span>+14 Parts</span></div>
+      <div class="support-reward-chip">+500 EXP</div>
+      <button data-paymongo-rule="SUPPORT_49" disabled>Pay with PayMongo</button>
+    </article>
+
+    <article class="support-mobile-card support-mobile-mechanic">
+      <p class="support-kicker">PURE SUPPORT</p>
+      <h2>Give Any Amount</h2>
+      <strong>No advance reward required</strong>
+      <label>Amount (PHP)<input data-pure-support-amount type="number" min="1" step="0.01" placeholder="100.00" disabled></label>
+      <button data-paymongo-rule="PURE_SUPPORT_ANY" disabled>Give through PayMongo</button>
+    </article>
+
+    <article class="support-mobile-card support-mobile-tier">
+      <div class="support-tier-icon">XXX</div>
+      <p class="support-kicker">30-DAY ADVANCE</p>
+      <div class="support-tier-value"><strong>₱189</strong><span>+60 Parts</span></div>
+      <div class="support-reward-chip">+2,000 EXP · 1 Tier Up</div>
+      <button data-paymongo-rule="SUPPORT_189" disabled>Pay with PayMongo</button>
+    </article>
+
+    <article class="support-mobile-card support-mobile-mechanic">
+      <p class="support-kicker">PROFILE RECOGNITION</p>
+      <h2>Badges &amp; Portfolio</h2>
+      <strong>Cosmetic supporter recognition</strong>
+      <a href="/site-preview/account/">Open Profile</a>
+    </article>
+
+    <article class="support-mobile-card support-mobile-contact">
+      <p class="support-kicker">CONTACT ADMIN</p>
+      <h2>Contact Admin</h2>
+      <form data-support-contact>
+        <input data-contact-subject placeholder="Subject" disabled>
+        <textarea data-contact-body rows="2" placeholder="Your message…" disabled></textarea>
+        <button data-contact-submit disabled>Reader sign-in required</button>
+      </form>
+    </article>
+
+    <article class="support-mobile-card support-mobile-help">
+      <p class="support-kicker">READER SUPPORT</p>
+      <h2>Need Help?</h2>
+      <p>Accounts, advance access, rewards, and support mechanics.</p>
+      <div class="support-mobile-help-links">
+        <a href="/site-preview/account/">Account &amp; Access</a>
+        <a href="/site-preview/quests/">Rewards Guide</a>
+      </div>
+    </article>
+  </section>
+
   <p class="support-fineprint">Advance access never exposes AI drafts, unfinished manuscripts, or unscheduled material. It only reveals verified Final Canon that is already eligible for protected release scheduling.</p>
 </main>
 <nav class="mobile-bottom-nav v2-mobile-bottom" aria-label="Mobile navigation">
