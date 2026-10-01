@@ -1318,16 +1318,30 @@ function paintSystemNotices(releaseState,accountData=null){
     '<div><span class="notice-icon cyan"><i class="v25-icon i-quest" aria-hidden="true"></i></span><p><strong>Reader Quest System</strong><small>Read, share, support and claim eligible rewards through the protected reader account.</small></p><time>ACTIVE</time></div>'+
     '<div><span class="notice-icon violet"><i class="v25-icon i-profile" aria-hidden="true"></i></span><p><strong>Reader continuity</strong><small>'+esc(accessCopy)+'</small></p><time>SAFE</time></div>';
 }
+let homeEpisodesPromise=null;
+async function getHomeEpisodes({refresh=false}={}){
+  if(refresh)homeEpisodesPromise=null;
+  if(!homeEpisodesPromise){
+    homeEpisodesPromise=rpc("api_episode_library")
+      .then(rows=>Array.isArray(rows)?rows:[])
+      .catch(()=>[]);
+  }
+  return homeEpisodesPromise;
+}
+
 async function collectLatestParts(episodes,limit=3){
   const rows=[];
-  for(const ep of (Array.isArray(episodes)?episodes.slice(0,6):[])){
+  const scope=(Array.isArray(episodes)?[...episodes]:[])
+    .sort((a,b)=>Number(b.episode_number||0)-Number(a.episode_number||0))
+    .slice(0,8);
+  for(const ep of scope){
     let parts=[];
     try{parts=await rpc("api_episode_parts_for_reader",{p_episode_number:Number(ep.episode_number)})}catch{}
     if(!Array.isArray(parts))continue;
     for(const p of parts){
       rows.push({...p,episode_number:Number(ep.episode_number),episode_title:ep.title||"GENESIS"});
     }
-    if(rows.length>=limit*3)break;
+    if(rows.length>=Math.max(limit*3,24))break;
   }
   rows.sort((a,b)=>{
     const ad=new Date(a.publish_at||a.published_at||a.released_at||0).getTime();
@@ -1345,10 +1359,273 @@ function latestPartCard(part,index){
     '<strong>'+esc(part.title||part.episode_title||"GENESIS")+'</strong><span>'+esc(when)+(index===0?' · NEW':'')+'</span></div></a>';
 }
 
+const HOME_RELEASE_SLOTS=["08:00","14:00","20:00"];
+
+function validDate(value){
+  if(!value)return null;
+  const d=new Date(value);
+  return Number.isNaN(d.getTime())?null:d;
+}
+function phtParts(value){
+  const d=value instanceof Date?value:new Date(value);
+  if(Number.isNaN(d.getTime()))return null;
+  const parts=new Intl.DateTimeFormat("en-US",{
+    timeZone:"Asia/Manila",
+    year:"numeric",month:"2-digit",day:"2-digit",
+    weekday:"short",hour:"2-digit",minute:"2-digit",hourCycle:"h23"
+  }).formatToParts(d);
+  const out={};
+  for(const part of parts)if(part.type!=="literal")out[part.type]=part.value;
+  return out;
+}
+function phtDateKey(value){
+  const p=phtParts(value);
+  return p?p.year+"-"+p.month+"-"+p.day:"";
+}
+function phtMinuteOfDay(value){
+  const p=phtParts(value);
+  return p?Number(p.hour)*60+Number(p.minute):-1;
+}
+function slotForPhtTime(value){
+  const minute=phtMinuteOfDay(value);
+  if(minute<0)return null;
+  const slots=[[8*60,"08:00"],[14*60,"14:00"],[20*60,"20:00"]];
+  let chosen=null;
+  for(const [slotMinute,key] of slots){
+    if(minute>=slotMinute)chosen=key;
+  }
+  return chosen;
+}
+function releasePartIdentity(part){
+  const episode=Number(part?.episode_number);
+  const number=Number(part?.part_number);
+  if(!Number.isInteger(episode)||episode<1||!Number.isInteger(number)||number<1)return null;
+  return {episode_number:episode,part_number:number};
+}
+function releasePartLabel(part){
+  const p=releasePartIdentity(part);
+  return p?"Episode "+String(p.episode_number).padStart(3,"0")+" · Part "+String(p.part_number).padStart(3,"0"):"Next verified Part";
+}
+function formatCountdown(ms){
+  const total=Math.max(0,Math.floor(ms/1000));
+  const hours=Math.floor(total/3600);
+  const minutes=Math.floor((total%3600)/60);
+  const seconds=total%60;
+  return String(hours).padStart(2,"0")+" : "+String(minutes).padStart(2,"0")+" : "+String(seconds).padStart(2,"0");
+}
+function formatPhtClock(value){
+  return new Intl.DateTimeFormat("en-PH",{
+    timeZone:"Asia/Manila",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true
+  }).format(value);
+}
+function formatPhtLongDate(value){
+  return new Intl.DateTimeFormat("en-PH",{
+    timeZone:"Asia/Manila",weekday:"short",month:"short",day:"numeric",year:"numeric"
+  }).format(value).toUpperCase();
+}
+
+async function fetchHomeReleaseAuthority(){
+  let primary=null,clock=null;
+  try{primary=firstRow(await rpc("api_public_release_state_v1"))}catch{}
+  try{clock=firstRow(await rpc("api_release_clock_v2"))}catch{}
+  if(!primary&&!clock)throw new Error("RELEASE_AUTHORITY_UNAVAILABLE");
+  return {...(clock||{}),...(primary||{}),timezone:"Asia/Manila"};
+}
+
+function normalizeHomeReleaseModel(raw,recentParts=[]){
+  const serverNow=validDate(raw?.server_now||raw?.current_time||raw?.now);
+  const clockOffset=serverNow?serverNow.getTime()-Date.now():0;
+  const now=new Date(Date.now()+clockOffset);
+  const nextPublish=validDate(raw?.next_publish_at);
+  const nextCycle=validDate(raw?.next_cycle_at);
+  const nextPart=releasePartIdentity(raw?.next_part);
+  const launchAuthorized=typeof raw?.launch_authorized==="boolean"?raw.launch_authorized:false;
+  const paused=typeof raw?.releases_paused==="boolean"?raw.releases_paused:true;
+  const todayKey=phtDateKey(now);
+  const phtNow=phtParts(now);
+  const sunday=phtNow?.weekday==="Sun";
+
+  const publicParts=(Array.isArray(recentParts)?recentParts:[])
+    .filter(part=>{
+      const published=validDate(part?.publish_at||part?.published_at||part?.released_at);
+      return published&&published.getTime()<=now.getTime();
+    })
+    .sort((a,b)=>{
+      const ad=validDate(a.publish_at||a.published_at||a.released_at)?.getTime()||0;
+      const bd=validDate(b.publish_at||b.published_at||b.released_at)?.getTime()||0;
+      return bd-ad;
+    });
+  const latestPart=publicParts[0]||null;
+  const latestPublishedAt=latestPart?validDate(latestPart.publish_at||latestPart.published_at||latestPart.released_at):null;
+  const publishedSlots=new Set();
+  for(const part of publicParts){
+    const published=validDate(part.publish_at||part.published_at||part.released_at);
+    if(!published||phtDateKey(published)!==todayKey)continue;
+    const slot=slotForPhtTime(published);
+    if(slot)publishedSlots.add(slot);
+  }
+
+  let state="AWAITING_VERIFIED_PART";
+  if(!launchAuthorized)state="PRE_LAUNCH";
+  else if(paused)state="PAUSED";
+  else if(nextPublish&&nextPublish.getTime()<now.getTime()-60000)state="DELAYED";
+  else if(latestPublishedAt&&now.getTime()-latestPublishedAt.getTime()<=90000)state="RELEASED";
+  else if(sunday&&(!nextPublish||phtDateKey(nextPublish)!==todayKey))state="REST_DAY";
+  else if(nextPublish&&nextPublish.getTime()>now.getTime()&&nextPart)state="SCHEDULED";
+
+  return {
+    state,
+    clockOffset,
+    now,
+    nextPublish,
+    nextCycle,
+    nextPart,
+    nextPartLabel:releasePartLabel(nextPart),
+    latestPart,
+    latestPartLabel:releasePartLabel(latestPart),
+    publishedSlots
+  };
+}
+
+function homeSlotState(model,slot){
+  if(model.state==="PRE_LAUNCH")return {state:"paused",label:"CLOSED"};
+  if(model.state==="PAUSED")return {state:"paused",label:"PAUSED"};
+  if(model.state==="REST_DAY")return {state:"paused",label:"REST"};
+  if(model.publishedSlots.has(slot))return {state:"released",label:"✓ RELEASED"};
+
+  const nextSlot=model.nextPublish?slotForPhtTime(model.nextPublish):null;
+  if(nextSlot===slot){
+    if(model.state==="DELAYED")return {state:"delayed",label:"DELAYED"};
+    if(model.state==="SCHEDULED")return {state:"next",label:"NEXT"};
+  }
+
+  const nowMinutes=phtMinuteOfDay(new Date(Date.now()+model.clockOffset));
+  const slotMinutes=Number(slot.slice(0,2))*60;
+  if(slotMinutes>nowMinutes)return {state:"upcoming",label:"UPCOMING"};
+  return {state:"unknown",label:"—"};
+}
+
+function renderHomeReleaseModel(model){
+  const command=document.querySelector("#home-release-command");
+  if(!command)return;
+  command.dataset.releaseState=model.state;
+
+  const stateEl=document.querySelector("#home-release-state");
+  const partEl=document.querySelector("#home-release-part");
+  const countdown=document.querySelector("#home-release-countdown");
+  const detail=document.querySelector("#home-release-detail");
+
+  const stateCopy={
+    PRE_LAUNCH:["PUBLIC LAUNCH NOT YET OPEN","Release schedule protected","Public Final Canon remains protected until launch authorization."],
+    PAUSED:["RELEASES PAUSED","Release queue protected","No public Part will release while the queue is paused."],
+    DELAYED:["NEXT PART DELAYED",model.nextPartLabel,"Later Parts will not skip the delayed canonical Part."],
+    RELEASED:["NEW PART AVAILABLE",model.latestPartLabel,"Public Final Canon confirmed."],
+    REST_DAY:["SUNDAY · REST DAY",model.nextPart?model.nextPartLabel:"Next release resumes Monday","Sunday is the official GENESIS rest day."],
+    SCHEDULED:["NEXT RELEASE",model.nextPartLabel,"Authoritative release queue · Asia/Manila"],
+    AWAITING_VERIFIED_PART:["AWAITING VERIFIED PART","Next verified Part","Waiting for the next canonical Part to enter the protected queue."],
+    API_ERROR:["RELEASE STATUS UNAVAILABLE","8 AM · 2 PM · 8 PM PHT","Monday–Saturday · Sunday rest."]
+  };
+  const copy=stateCopy[model.state]||stateCopy.AWAITING_VERIFIED_PART;
+  if(stateEl)stateEl.textContent=copy[0];
+  if(partEl)partEl.textContent=copy[1];
+  if(detail)detail.textContent=copy[2];
+
+  if(countdown){
+    if((model.state==="SCHEDULED"||model.state==="REST_DAY")&&model.nextPublish){
+      countdown.dateTime=model.nextPublish.toISOString();
+      countdown.textContent=formatCountdown(model.nextPublish.getTime()-(Date.now()+model.clockOffset));
+    }else if(model.state==="RELEASED"){
+      countdown.removeAttribute("datetime");
+      countdown.textContent="LIVE";
+    }else if(model.state==="DELAYED"){
+      countdown.removeAttribute("datetime");
+      countdown.textContent="DELAYED";
+    }else{
+      countdown.removeAttribute("datetime");
+      countdown.textContent="—";
+    }
+  }
+
+  document.querySelectorAll("[data-release-slot]").forEach(el=>{
+    const value=homeSlotState(model,el.dataset.releaseSlot);
+    el.classList.remove("is-released","is-next","is-upcoming","is-delayed","is-paused","is-unknown");
+    el.classList.add("is-"+value.state);
+    const label=el.querySelector("span");
+    if(label)label.textContent=value.label;
+  });
+}
+
+async function initHomeReleaseOverlay(){
+  const command=document.querySelector("#home-release-command");
+  if(!command)return;
+
+  let model=null;
+  let checking=false;
+  let refreshTimer=null;
+
+  const recentParts=async(refresh=false)=>{
+    const episodes=await getHomeEpisodes({refresh});
+    if(!episodes.length)return [];
+    return collectLatestParts(episodes,24);
+  };
+
+  const refresh=async({refreshEpisodes=false}={})=>{
+    if(checking)return;
+    checking=true;
+    try{
+      const [authority,parts]=await Promise.all([
+        fetchHomeReleaseAuthority(),
+        recentParts(refreshEpisodes)
+      ]);
+      model=normalizeHomeReleaseModel(authority,parts);
+      renderHomeReleaseModel(model);
+    }catch{
+      model={
+        state:"API_ERROR",
+        clockOffset:0,
+        nextPublish:null,
+        nextPart:null,
+        publishedSlots:new Set()
+      };
+      renderHomeReleaseModel(model);
+    }finally{
+      checking=false;
+    }
+  };
+
+  const tick=()=>{
+    const correctedNow=new Date(Date.now()+(model?.clockOffset||0));
+    const clockEl=document.querySelector("#home-live-clock");
+    const dateEl=document.querySelector("#home-live-date");
+    if(clockEl)clockEl.textContent=formatPhtClock(correctedNow);
+    if(dateEl)dateEl.textContent=formatPhtLongDate(correctedNow);
+
+    if(!model)return;
+    const countdown=document.querySelector("#home-release-countdown");
+    if((model.state==="SCHEDULED"||model.state==="REST_DAY")&&model.nextPublish&&countdown){
+      const remaining=model.nextPublish.getTime()-correctedNow.getTime();
+      if(remaining>0){
+        countdown.textContent=formatCountdown(remaining);
+      }else if(!checking){
+        countdown.textContent="CHECKING…";
+        refresh({refreshEpisodes:true}).then(()=>initHome());
+      }
+    }
+  };
+
+  await refresh();
+  tick();
+  window.setInterval(tick,1000);
+  refreshTimer=window.setInterval(()=>refresh(),60000);
+  document.addEventListener("visibilitychange",()=>{
+    if(document.visibilityState==="visible")refresh();
+  });
+  addEventListener("pagehide",()=>{if(refreshTimer)clearInterval(refreshTimer)},{once:true});
+}
+
 async function initHome(){
-  let episodes=[];
-  try{episodes=await rpc("api_episode_library")}catch{}
-  if(!Array.isArray(episodes)||!episodes.length)return;
+  const episodes=await getHomeEpisodes();
+  if(!episodes.length)return;
 
   const latestParts=await collectLatestParts(episodes,1);
   const latest=latestParts[0]||null;
@@ -1367,6 +1644,8 @@ async function initHome(){
       '<strong>Read Now <span aria-hidden="true">→</span></strong>'+
       '</div>';
     section.hidden=false;
+  }else if(section){
+    section.hidden=true;
   }
 }
 
@@ -1465,7 +1744,7 @@ function initCinematicHeroMedia(){
 const page=document.body.dataset.page;
 await initAuthChrome();
 await initSiteChrome();
-if(page==="home"){initCinematicHeroMedia();await initHome();}
+if(page==="home"){initCinematicHeroMedia();await initHomeReleaseOverlay();await initHome();}
 if(page==="read"){await initRead();initReaderControls();}
 if(page==="world")initWorld();
 if(page==="map-detail")await initMapDetail();
