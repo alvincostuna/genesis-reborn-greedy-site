@@ -28,42 +28,113 @@
       </a>
     </div>
   </header>
-<main class="support-shell">
-  <section class="support-hero support-hero-compact">
-    <div class="support-hero-copy"><p class="eyebrow">SUPPORT GENESIS</p><h1>Support the Journey</h1><p>Support is optional. Public story releases continue normally on the official schedule whether or not a reader supports the project.</p></div>
-    <a class="quest-entry" href="/site-preview/quests/"><span>✦</span><div><strong>Quest & Rewards</strong><small>EXP · Tier rewards · collectible draws</small></div><b>›</b></a>
-  </section>
-  <section id="support-status" class="support-notice support-notice-compact"><strong>Preview mode</strong><span>Payments and share rewards remain disabled until launch controls are explicitly enabled.</span></section>
-
-  <section class="support-tier-grid support-tier-compact" aria-label="Advance support options">
-    <article class="support-game-card">
-      <div class="support-tier-icon">Ⅰ</div>
-      <div class="support-tier-main"><small>1-DAY ADVANCE</small><h2>₱9</h2><strong>+2 Parts</strong><div class="reward-line">+100 EXP</div></div>
-      <p>Unlock the next two verified scheduled Parts. Once legitimately unlocked, they stay readable on your account.</p>
-      <button class="paymongo-button" data-paymongo-rule="SUPPORT_9" disabled>Pay with PayMongo</button>
+<main class="support-shell support-dashboard-shell">
+  <section class="support-dashboard" aria-label="GENESIS support mechanics">
+    <article class="support-dashboard-card support-intro-card">
+      <div class="support-card-center">
+        <p class="support-kicker">SUPPORT GENESIS</p>
+        <h1>Support the Journey</h1>
+        <p class="support-card-copy">Support is optional. Public story releases continue normally on the official schedule.</p>
+        <div id="support-status" class="support-status-inline"><strong>Preview mode</strong><span>Payments and share rewards remain disabled until launch controls are explicitly enabled.</span></div>
+      </div>
     </article>
-    <article class="support-game-card featured">
-      <div class="support-tier-icon">Ⅶ</div>
-      <div class="support-tier-main"><small>7-DAY ADVANCE</small><h2>₱49</h2><strong>+14 Parts</strong><div class="reward-line">+500 EXP</div></div>
-      <p>Advance access is allocated only from verified scheduled Final Canon and does not change the public release cycle.</p>
-      <button class="paymongo-button" data-paymongo-rule="SUPPORT_49" disabled>Pay with PayMongo</button>
+
+    <a class="support-dashboard-card support-quest-card" href="/site-preview/quests/">
+      <div class="support-card-center">
+        <span class="support-card-symbol" aria-hidden="true">✦</span>
+        <p class="support-kicker">QUEST SYSTEM</p>
+        <h2>Quest &amp; Rewards</h2>
+        <p class="support-card-copy">Earn EXP, tier rewards, and collectible draws while reading and participating.</p>
+        <span class="support-inline-action">Open Quest Board →</span>
+      </div>
+    </a>
+
+    <article class="support-dashboard-card support-tier-card support-game-card">
+      <div class="support-card-center">
+        <div class="support-tier-icon">Ⅰ</div>
+        <p class="support-kicker">1-DAY ADVANCE</p>
+        <div class="support-tier-value"><strong>₱9</strong><span>+2 Parts</span></div>
+        <div class="support-reward-chip">+100 EXP</div>
+        <button class="paymongo-button" data-paymongo-rule="SUPPORT_9" disabled>Pay with PayMongo</button>
+      </div>
     </article>
-    <article class="support-game-card legendary">
-      <div class="support-tier-icon">XXX</div>
-      <div class="support-tier-main"><small>30-DAY ADVANCE</small><h2>₱189</h2><strong>+60 Parts</strong><div class="reward-line">+2,000 EXP · 1 Tier Up</div></div>
-      <p>Advance access remains a fixed entitlement. Unused entitlement waits for future verified scheduled Parts.</p>
-      <button class="paymongo-button" data-paymongo-rule="SUPPORT_189" disabled>Pay with PayMongo</button>
+
+    <article class="support-dashboard-card support-mechanic-card">
+      <div class="support-card-center">
+        <p class="support-kicker">SHARE QUEST</p>
+        <h2>Share GENESIS</h2>
+        <p class="support-benefit">+200 EXP · +1 Part advance</p>
+        <p class="support-card-copy">Maximum 1 rewarded share per day and 5 per week.</p>
+        <button disabled>Share rewards not enabled yet</button>
+      </div>
+    </article>
+
+    <article class="support-dashboard-card support-tier-card support-game-card featured">
+      <div class="support-card-center">
+        <div class="support-tier-icon">Ⅶ</div>
+        <p class="support-kicker">7-DAY ADVANCE</p>
+        <div class="support-tier-value"><strong>₱49</strong><span>+14 Parts</span></div>
+        <div class="support-reward-chip">+500 EXP</div>
+        <button class="paymongo-button" data-paymongo-rule="SUPPORT_49" disabled>Pay with PayMongo</button>
+      </div>
+    </article>
+
+    <article class="support-dashboard-card support-mechanic-card">
+      <div class="support-card-center">
+        <p class="support-kicker">PURE SUPPORT</p>
+        <h2>Give Any Amount</h2>
+        <p class="support-benefit">No advance reward required</p>
+        <label class="support-amount-label">Amount (PHP)<input id="pure-support-amount" class="support-amount-input" type="number" min="1" step="0.01" placeholder="100.00" disabled></label>
+        <button id="pure-support-button" class="paymongo-button" data-paymongo-rule="PURE_SUPPORT_ANY" disabled>Give through PayMongo</button>
+      </div>
+    </article>
+
+    <article class="support-dashboard-card support-tier-card support-game-card legendary">
+      <div class="support-card-center">
+        <div class="support-tier-icon">XXX</div>
+        <p class="support-kicker">30-DAY ADVANCE</p>
+        <div class="support-tier-value"><strong>₱189</strong><span>+60 Parts</span></div>
+        <div class="support-reward-chip">+2,000 EXP · 1 Tier Up</div>
+        <button class="paymongo-button" data-paymongo-rule="SUPPORT_189" disabled>Pay with PayMongo</button>
+      </div>
+    </article>
+
+    <article class="support-dashboard-card support-mechanic-card">
+      <div class="support-card-center">
+        <p class="support-kicker">PROFILE RECOGNITION</p>
+        <h2>Badges &amp; Portfolio</h2>
+        <p class="support-benefit">Cosmetic supporter recognition</p>
+        <p class="support-card-copy">Payment amount stays private. Reader Tier and verified story progress remain independent.</p>
+        <a class="support-card-link support-inline-button" href="/site-preview/account/">Open Profile</a>
+      </div>
+    </article>
+
+    <article class="support-dashboard-card support-contact-card">
+      <div class="support-card-center">
+        <p class="support-kicker">CONTACT ADMIN</p>
+        <h2>Contact Admin</h2>
+        <form id="contact-form" class="support-contact-form">
+          <input id="contact-subject" placeholder="Subject" disabled>
+          <textarea id="contact-body" rows="2" placeholder="Your message…" disabled></textarea>
+          <button id="contact-submit" disabled>Reader sign-in required</button>
+        </form>
+      </div>
+    </article>
+
+    <article class="support-dashboard-card support-help-card">
+      <div class="support-card-center">
+        <p class="support-kicker">READER SUPPORT</p>
+        <h2>Need Help?</h2>
+        <p class="support-card-copy">Questions about accounts, advance access, rewards, or support mechanics can be checked here.</p>
+        <div class="support-help-links">
+          <a href="/site-preview/account/">Account &amp; Access</a>
+          <a href="/site-preview/quests/">Rewards Guide</a>
+        </div>
+      </div>
     </article>
   </section>
 
-  <section class="support-secondary-grid support-mechanics-compact" aria-label="Other support mechanics">
-    <article class="hud-card support-system-card"><div class="card-head"><span>SHARE QUEST</span><span>Daily</span></div><div class="support-system-body"><div class="support-system-summary"><h3>Share GENESIS</h3><strong>+200 EXP · +1 Part advance</strong></div><p>Maximum 1 rewarded share per day and 5 rewarded shares per week.</p><button disabled>Share rewards not enabled yet</button></div></article>
-    <article class="hud-card support-system-card"><div class="card-head"><span>PURE SUPPORT</span><span>Optional</span></div><div class="support-system-body"><div class="support-system-summary"><h3>Give Any Amount</h3><strong>No advance reward required</strong></div><p>For readers who simply want to help the project continue.</p><label>Amount (PHP)<input id="pure-support-amount" class="support-amount-input" type="number" min="1" step="0.01" placeholder="100.00" disabled></label><button id="pure-support-button" class="paymongo-button" data-paymongo-rule="PURE_SUPPORT_ANY" disabled>Give through PayMongo</button></div></article>
-    <article class="hud-card support-system-card"><div class="card-head"><span>PROFILE</span><span>Cosmetic</span></div><div class="support-system-body"><div class="support-system-summary"><h3>Badges & Portfolio</h3><strong>Supporter status can be displayed</strong></div><p>Payment amount stays private. Reader Tier and verified story progress remain independent from supporter status.</p><a class="support-card-link" href="/site-preview/account/">Open Profile</a></div></article>
-  </section>
-
-  <section class="contact-panel game-contact"><div><p class="eyebrow">CONTACT ADMIN</p><h2>Need help?</h2><p>Questions about reader accounts, support, advance access, or community features can be sent directly to GENESIS Admin.</p></div><form id="contact-form" class="contact-form"><input id="contact-subject" placeholder="Subject" disabled><textarea id="contact-body" rows="6" placeholder="Your message…" disabled></textarea><button id="contact-submit" disabled>Reader sign-in required</button></form></section>
-  <p class="support-fineprint">Advance access never exposes AI drafts, unfinished manuscripts, or unscheduled material. It only reveals verified Final Canon that is already eligible for protected release scheduling.</p>
+  <p class="support-fineprint">Advance access never exposes AI drafts, unfinished manuscripts, or unscheduled material. It only reveals verified Final Canon already eligible for protected release scheduling.</p>
 </main>
 <nav class="mobile-bottom-nav v2-mobile-bottom" aria-label="Mobile navigation">
     <a href="/site-preview/"><span class="v25-icon i-home" aria-hidden="true"></span>Home</a>
