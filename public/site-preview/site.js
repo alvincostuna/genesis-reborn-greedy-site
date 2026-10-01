@@ -271,7 +271,7 @@ async function initAuthChrome(){
       img.alt="";
       link.dataset.accountState=user?"signed-in":"signed-out";
     }else{
-      link.textContent=user?"Account":"Sign in";
+      link.textContent = user ? "Account" : "Sign in";
     }
   });
   return {session,user};
@@ -1013,10 +1013,22 @@ function getReadNotificationIds(){
 function saveReadNotificationIds(ids){
   try{localStorage.setItem(NOTIFICATION_READ_KEY,JSON.stringify([...ids].slice(-200)))}catch{}
 }
+async function readPublicReleaseAuthority(){
+  let releaseState=null;
+  try{releaseState=firstRow(await rpc("api_public_release_state_v1"))}catch{}
+  const authoritativeAt=releaseState?.next_publish_at?new Date(releaseState.next_publish_at):null;
+  const authoritativeValid=authoritativeAt&&!Number.isNaN(authoritativeAt.getTime())&&authoritativeAt.getTime()>Date.now();
+  if(authoritativeValid)return {releaseState,authoritativeAt};
+  if(releaseState?.launch_authorized&&!releaseState?.releases_paused){
+    return {releaseState,authoritativeAt:null};
+  }
+  return {releaseState,authoritativeAt:null};
+}
+
 async function buildNotificationFeed(){
   const items=[];
   try{
-    const state=firstRow(await rpc("api_public_release_state_v1"));
+    const {releaseState:state}=await readPublicReleaseAuthority();
     if(state?.releases_paused){
       items.push({id:"release-paused",kind:"Release",title:"Public releases are paused",detail:"The story queue remains protected until releases resume.",href:sitePath("/read/"),time:"SYSTEM"});
     }else if(state?.next_part&&state?.next_publish_at){
