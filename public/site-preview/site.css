@@ -7791,3 +7791,371 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   left:0!important;
   right:0!important;
 }
+
+
+/* ========================================================================== */
+/* HOMEPAGE V1.2 — ATLAS-SPECIFIC WORLD BRIDGE                               */
+/* Secondary homepage art must not repeat the master split-world hero.         */
+/* ========================================================================== */
+.web-ds-v2 .lean-world-teaser{
+  min-height:260px;
+  grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);
+  margin-top:24px;
+}
+.web-ds-v2 .lean-world-media{
+  min-height:260px;
+  background:
+    linear-gradient(90deg,rgba(3,9,15,.03),rgba(3,9,15,.34) 72%,rgba(3,9,15,.62)),
+    url('/assets/v27/destination-heroes/genesis-atlas-hero.webp') center 42%/cover no-repeat;
+}
+.web-ds-v2 .lean-world-copy{
+  padding:28px 32px;
+}
+.web-ds-v2 .lean-world-copy h2{
+  max-width:500px;
+  font-size:clamp(24px,2.1vw,32px);
+}
+.web-ds-v2 .lean-world-copy p{
+  margin:10px 0 17px;
+  line-height:1.6;
+}
+@media(max-width:900px){
+  .web-ds-v2 .lean-world-teaser{
+    grid-template-columns:1fr;
+    min-height:0;
+  }
+  .web-ds-v2 .lean-world-media{
+    min-height:225px;
+    background-image:
+      linear-gradient(180deg,rgba(3,9,15,.02),rgba(3,9,15,.22)),
+      url('/assets/v27/destination-heroes/genesis-atlas-hero-mobile.webp');
+    background-position:center 38%;
+  }
+}
+@media(max-width:620px){
+  .web-ds-v2 .lean-world-teaser{
+    margin-top:18px;
+  }
+  .web-ds-v2 .lean-world-media{
+    min-height:178px;
+  }
+  .web-ds-v2 .lean-world-copy{
+    padding:18px 18px 20px;
+  }
+  .web-ds-v2 .lean-world-copy h2{
+    font-size:23px;
+    line-height:1.08;
+  }
+  .web-ds-v2 .lean-world-copy p{
+    margin:9px 0 14px;
+    font-size:10px;
+  }
+  .web-ds-v2 .lean-world-copy .genesis-btn{
+    min-height:39px;
+  }
+}
+
+/* ========================================================================== */
+/* SUPPORT V3.2 — MOBILE ONE-SCREEN MECHANICS                                */
+/* Desktop keeps premium cards; mobile converts them to dense actionable rows. */
+/* ========================================================================== */
+.support-tier-main{
+  position:relative;
+  z-index:1;
+}
+.support-tier-main>strong{
+  display:block;
+  color:#e7eef6;
+  font-size:14px;
+}
+.support-hero-compact{
+  min-height:240px;
+}
+.support-notice-compact{
+  min-height:0;
+}
+@media(max-width:820px){
+  .unified-public-page .support-shell{
+    padding:7px 7px 78px!important;
+  }
+
+  .unified-public-page .support-hero-compact{
+    min-height:0!important;
+    display:grid!important;
+    grid-template-columns:1fr;
+    gap:9px;
+    padding:14px 13px!important;
+    background-position:58% center;
+  }
+  .unified-public-page .support-hero-compact .support-hero-copy{
+    max-width:none;
+  }
+  .unified-public-page .support-hero-compact .eyebrow{
+    margin:0 0 4px;
+    font-size:7px;
+    letter-spacing:.16em;
+  }
+  .unified-public-page .support-hero-compact h1{
+    margin:0 0 6px;
+    font-size:31px!important;
+    line-height:1;
+  }
+  .unified-public-page .support-hero-compact .support-hero-copy>p:last-child{
+    margin:0;
+    max-width:620px;
+    color:#aec0ce;
+    font-size:9px;
+    line-height:1.4;
+  }
+  .unified-public-page .support-hero-compact>.quest-entry{
+    position:static!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    margin:0!important;
+    width:100%;
+    min-width:0!important;
+    min-height:42px;
+    grid-template-columns:25px 1fr auto;
+    gap:7px;
+    padding:7px 9px;
+    border-radius:7px;
+  }
+  .unified-public-page .support-hero-compact>.quest-entry>span{
+    font-size:18px;
+  }
+  .unified-public-page .support-hero-compact>.quest-entry strong{
+    font-size:10px;
+  }
+  .unified-public-page .support-hero-compact>.quest-entry small{
+    margin-top:1px;
+    font-size:7px;
+  }
+  .unified-public-page .support-hero-compact>.quest-entry b{
+    font-size:17px;
+  }
+
+  .unified-public-page .support-notice-compact{
+    margin:6px 0!important;
+    padding:7px 9px!important;
+    display:grid!important;
+    grid-template-columns:auto minmax(0,1fr);
+    gap:7px!important;
+    align-items:center!important;
+    border-radius:7px;
+  }
+  .unified-public-page .support-notice-compact strong{
+    white-space:nowrap;
+    font-size:9px;
+  }
+  .unified-public-page .support-notice-compact span{
+    min-width:0;
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    font-size:8px;
+    line-height:1.25;
+  }
+
+  .unified-public-page .support-tier-compact{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:5px!important;
+    margin:6px 0!important;
+  }
+  .unified-public-page .support-tier-compact .support-game-card,
+  .unified-public-page .support-tier-compact .support-game-card.featured{
+    min-height:0!important;
+    display:grid!important;
+    grid-template-columns:35px minmax(0,1fr) minmax(82px,96px);
+    grid-template-areas:"tier-icon tier-main tier-action";
+    align-items:center;
+    gap:8px;
+    padding:8px 9px!important;
+    transform:none!important;
+    border-radius:7px;
+    box-shadow:none;
+  }
+  .unified-public-page .support-tier-compact .support-game-card:before{
+    display:none;
+  }
+  .unified-public-page .support-tier-compact .support-tier-icon{
+    grid-area:tier-icon;
+    width:32px;
+    height:32px;
+    margin:0;
+    font-size:10px;
+  }
+  .unified-public-page .support-tier-compact .support-tier-main{
+    grid-area:tier-main;
+    min-width:0;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:
+      "tier-label tier-price"
+      "tier-benefit tier-reward";
+    column-gap:8px;
+    row-gap:2px;
+    align-items:center;
+  }
+  .unified-public-page .support-tier-compact .support-tier-main small{
+    grid-area:tier-label;
+    min-width:0;
+    font-size:7px;
+    letter-spacing:.09em;
+    white-space:nowrap;
+  }
+  .unified-public-page .support-tier-compact .support-tier-main h2{
+    grid-area:tier-price;
+    margin:0!important;
+    color:#f4e1b8;
+    font-size:21px!important;
+    line-height:1;
+  }
+  .unified-public-page .support-tier-compact .support-tier-main>strong{
+    grid-area:tier-benefit;
+    min-width:0;
+    font-size:8px!important;
+    white-space:nowrap;
+  }
+  .unified-public-page .support-tier-compact .reward-line{
+    grid-area:tier-reward;
+    margin:0!important;
+    padding:2px 5px!important;
+    border-radius:4px;
+    font-size:7px!important;
+    line-height:1.2;
+    white-space:nowrap;
+  }
+  .unified-public-page .support-tier-compact .support-game-card>p{
+    display:none!important;
+  }
+  .unified-public-page .support-tier-compact .support-game-card>button{
+    grid-area:tier-action;
+    width:100%!important;
+    min-width:0;
+    min-height:38px!important;
+    margin:0!important;
+    padding:6px!important;
+    font-size:7px;
+    line-height:1.15;
+    white-space:normal;
+  }
+
+  .unified-public-page .support-mechanics-compact{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:5px!important;
+    margin-top:6px;
+  }
+  .unified-public-page .support-mechanics-compact .support-system-card{
+    min-height:0;
+    border-radius:7px;
+  }
+  .unified-public-page .support-mechanics-compact .card-head{
+    display:none!important;
+  }
+  .unified-public-page .support-mechanics-compact .support-system-body{
+    min-height:48px;
+    padding:7px 9px!important;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(86px,108px);
+    grid-template-rows:auto auto;
+    gap:4px 8px;
+    align-items:center;
+  }
+  .unified-public-page .support-mechanics-compact .support-system-summary{
+    min-width:0;
+  }
+  .unified-public-page .support-mechanics-compact .support-system-summary h3{
+    margin:0 0 2px;
+    font-size:11px!important;
+    line-height:1.05;
+  }
+  .unified-public-page .support-mechanics-compact .support-system-summary strong{
+    display:block;
+    min-width:0;
+    color:#d8bd7f;
+    font-size:7px!important;
+    line-height:1.2;
+  }
+  .unified-public-page .support-mechanics-compact .support-system-body>p{
+    display:none!important;
+  }
+  .unified-public-page .support-mechanics-compact .support-system-body>button,
+  .unified-public-page .support-mechanics-compact .support-system-body>.support-card-link{
+    grid-column:2;
+    grid-row:1 / span 2;
+    align-self:center;
+    width:100%!important;
+    min-height:34px;
+    margin:0!important;
+    padding:6px!important;
+    display:grid;
+    place-items:center;
+    border:1px solid #31516d;
+    border-radius:6px;
+    background:#0d1a26;
+    color:#8da0b2;
+    font-size:7px;
+    line-height:1.15;
+    text-align:center;
+  }
+  .unified-public-page .support-mechanics-compact .support-system-body>label{
+    grid-column:1;
+    grid-row:2;
+    margin:0;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-size:7px!important;
+    line-height:1;
+  }
+  .unified-public-page .support-mechanics-compact .support-amount-input{
+    min-width:0;
+    width:72px;
+    height:26px;
+    margin:0;
+    padding:4px 6px;
+    font-size:8px;
+  }
+
+  .unified-public-page .game-contact{
+    margin-top:8px!important;
+  }
+  .unified-public-page .support-fineprint{
+    margin-top:10px!important;
+    font-size:8px!important;
+    line-height:1.35;
+  }
+}
+@media(max-width:420px){
+  .unified-public-page .support-hero-compact{
+    padding:12px 11px!important;
+  }
+  .unified-public-page .support-hero-compact h1{
+    font-size:28px!important;
+  }
+  .unified-public-page .support-tier-compact .support-game-card,
+  .unified-public-page .support-tier-compact .support-game-card.featured{
+    grid-template-columns:31px minmax(0,1fr) 78px;
+    gap:6px;
+    padding:7px!important;
+  }
+  .unified-public-page .support-tier-compact .support-tier-icon{
+    width:28px;height:28px;font-size:9px;
+  }
+  .unified-public-page .support-tier-compact .support-tier-main h2{
+    font-size:18px!important;
+  }
+  .unified-public-page .support-tier-compact .support-tier-main small,
+  .unified-public-page .support-tier-compact .support-tier-main>strong,
+  .unified-public-page .support-tier-compact .reward-line{
+    font-size:6.5px!important;
+  }
+  .unified-public-page .support-tier-compact .support-game-card>button{
+    min-height:34px!important;
+    font-size:6.5px;
+  }
+}
