@@ -10420,3 +10420,53 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     width:100%;
   }
 }
+
+
+/* V5.1 polish: match approved card references more closely. */
+@media(min-width:901px){
+  .web-ds-v2 .home-next-header{
+    min-height:55px;
+  }
+  .web-ds-v2 .home-next-title{
+    gap:2px;
+  }
+  .web-ds-v2 #home-release-state{
+    line-height:1.1!important;
+  }
+  .web-ds-v2 #home-release-time{
+    line-height:1.03;
+  }
+  .web-ds-v2 #home-release-part{
+    line-height:1.15!important;
+  }
+}
+.web-ds-v2 .home-access-guest-preview{
+  overflow:hidden;
+  margin:2px 4px 0;
+  border:1px solid rgba(65,121,160,.24);
+  border-radius:5px;
+  background:rgba(4,17,28,.38);
+}
+.web-ds-v2 .home-access-guest-preview>div{
+  min-height:19px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:3px 7px;
+  border-bottom:1px solid rgba(67,122,162,.17);
+}
+.web-ds-v2 .home-access-guest-preview>div:last-child{border-bottom:0}
+.web-ds-v2 .home-access-guest-preview span{
+  color:#91a9ba;
+  font:600 6.7px/1 Arial,sans-serif;
+}
+.web-ds-v2 .home-access-guest-preview strong{
+  color:#c4d5e1;
+  font:700 6.7px/1 Arial,sans-serif;
+}
+@media(max-width:900px){
+  .web-ds-v2 .home-access-guest-preview{
+    display:none;
+  }
+}
