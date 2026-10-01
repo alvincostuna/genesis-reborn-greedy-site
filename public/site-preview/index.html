@@ -48,29 +48,87 @@
         </div>
 
         <div id="home-release-command" class="home-release-command">
-          <section class="home-release-panel home-release-cycle-panel" aria-label="Public release cycle">
-            <p class="home-release-kicker">PUBLIC RELEASE CYCLE</p>
+          <section class="home-release-panel home-release-cycle-panel home-ornate-card" aria-label="Next release">
+            <div class="home-ornate-corner home-ornate-corner-tl" aria-hidden="true"></div>
+            <div class="home-ornate-corner home-ornate-corner-tr" aria-hidden="true"></div>
+            <div class="home-ornate-corner home-ornate-corner-bl" aria-hidden="true"></div>
+            <div class="home-ornate-corner home-ornate-corner-br" aria-hidden="true"></div>
+
+            <header class="home-next-header">
+              <span class="home-next-emblem" aria-hidden="true">⌛</span>
+              <div class="home-next-title">
+                <span id="home-release-state" aria-live="polite">CHECKING RELEASE</span>
+                <strong id="home-release-time">-- PHT</strong>
+                <small id="home-release-part">Next verified Part</small>
+              </div>
+              <a class="home-next-arrow" href="/site-preview/read/?start=1" aria-label="Open Reader">›</a>
+            </header>
+
+            <div class="home-countdown-grid" aria-label="Release countdown">
+              <div><span>HOURS</span><strong id="home-countdown-hours">--</strong></div>
+              <div><span>MINUTES</span><strong id="home-countdown-minutes">--</strong></div>
+              <div><span>SECONDS</span><strong id="home-countdown-seconds">--</strong></div>
+            </div>
+
+            <div class="home-cycle-divider"><span>DAILY RELEASE CYCLE</span></div>
             <div class="home-release-slots" aria-label="Release times">
-              <div class="home-release-slot" data-release-slot="08:00"><strong>8 AM</strong><span>—</span></div>
-              <div class="home-release-slot" data-release-slot="14:00"><strong>2 PM</strong><span>—</span></div>
-              <div class="home-release-slot" data-release-slot="20:00"><strong>8 PM</strong><span>—</span></div>
+              <div class="home-release-slot" data-release-slot="08:00"><strong>8:00 AM</strong><span>—</span></div>
+              <div class="home-release-slot" data-release-slot="14:00"><strong>2:00 PM</strong><span>—</span></div>
+              <div class="home-release-slot" data-release-slot="20:00"><strong>8:00 PM</strong><span>—</span></div>
             </div>
-            <div class="home-next-release">
-              <span id="home-release-state" aria-live="polite">CHECKING RELEASE</span>
-              <strong id="home-release-part">Next verified Part</strong>
-              <time id="home-release-countdown" datetime="">-- : -- : --</time>
-              <small id="home-release-detail">Loading authoritative release state…</small>
-            </div>
+            <footer class="home-release-card-footer">
+              <span id="home-release-detail">3 Parts · Monday–Saturday</span>
+              <span>Asia/Manila (PHT)</span>
+            </footer>
           </section>
 
-          <section class="home-release-panel home-live-panel" aria-label="GENESIS live clock">
-            <div class="home-live-heading"><span>GENESIS LIVE</span><small id="home-live-zone">PHT</small></div>
-            <time id="home-live-clock" class="home-live-clock">-- : -- : --</time>
-            <div id="home-live-date" class="home-live-date">Asia/Manila</div>
-            <div class="home-world-ratio"><span>WORLD TIME RATIO</span><strong>1 REAL DAY = 3 GENESIS DAYS</strong></div>
-            <div class="home-release-actions">
-              <a class="genesis-btn primary hero-start-reading" href="/site-preview/read/?start=1"><span class="v25-icon i-read" aria-hidden="true"></span> Start Reading</a>
-              <a class="genesis-btn ghost" href="/site-preview/world/"><span class="v25-icon i-world" aria-hidden="true"></span> Explore World</a>
+          <section class="home-release-panel home-live-panel home-access-panel home-ornate-card" aria-label="Your reader access">
+            <div class="home-ornate-corner home-ornate-corner-tl" aria-hidden="true"></div>
+            <div class="home-ornate-corner home-ornate-corner-tr" aria-hidden="true"></div>
+            <div class="home-ornate-corner home-ornate-corner-bl" aria-hidden="true"></div>
+            <div class="home-ornate-corner home-ornate-corner-br" aria-hidden="true"></div>
+
+            <header class="home-access-head">
+              <span>YOUR ACCESS</span>
+              <a href="/site-preview/account/">View Details ›</a>
+            </header>
+
+            <div id="home-access-guest" class="home-access-guest">
+              <div class="home-access-profile">
+                <div class="home-access-avatar"><img src="/assets/genesis-official-logo-64.png" alt=""></div>
+                <div class="home-access-identity">
+                  <strong>GENESIS Reader</strong>
+                  <span>Sign in to view your progress and access.</span>
+                </div>
+              </div>
+              <div class="home-access-guest-actions">
+                <a class="genesis-btn primary" href="/site-preview/account/">Sign In</a>
+                <a class="genesis-btn ghost" href="/site-preview/read/?start=1">Start Reading</a>
+              </div>
+            </div>
+
+            <div id="home-access-reader" class="home-access-reader" hidden>
+              <div class="home-access-profile">
+                <div class="home-access-avatar"><img id="home-access-avatar" src="/assets/genesis-official-logo-64.png" alt=""></div>
+                <div class="home-access-identity">
+                  <strong id="home-access-name">Reader</strong>
+                  <span id="home-access-title">GENESIS Adventurer</span>
+                  <b id="home-access-tier">Tier 1</b>
+                </div>
+              </div>
+
+              <div class="home-access-exp">
+                <div class="home-access-exp-bar"><i id="home-access-exp-fill"></i></div>
+                <div><span id="home-access-exp-total">0 / 2,000 EXP</span><span id="home-access-next-tier">Next Tier in 2,000</span></div>
+              </div>
+
+              <div class="home-access-stats">
+                <div><span>Advance Access</span><strong id="home-access-advance">0 Parts Ahead</strong></div>
+                <div><span>Support Status</span><strong id="home-access-support">Standard</strong></div>
+                <div><span>Reader EXP</span><strong id="home-access-reader-exp">0 EXP</strong></div>
+                <div><span>Story Progress</span><strong id="home-access-progress">Not started</strong></div>
+                <div><span>Collectible Rewards</span><strong id="home-access-collectibles">0 Unlocked</strong></div>
+              </div>
             </div>
           </section>
         </div>
