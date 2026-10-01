@@ -1505,45 +1505,70 @@ function homeSlotState(model,slot){
   return {state:"unknown",label:"—"};
 }
 
+function formatHomeReleaseTime(value){
+  const d=validDate(value);
+  if(!d)return "—";
+  return new Intl.DateTimeFormat("en-PH",{
+    timeZone:"Asia/Manila",hour:"numeric",minute:"2-digit",hour12:true
+  }).format(d).toUpperCase()+" PHT";
+}
+function setHomeCountdown(ms,{released=false,delayed=false}={}){
+  const h=document.querySelector("#home-countdown-hours");
+  const m=document.querySelector("#home-countdown-minutes");
+  const s=document.querySelector("#home-countdown-seconds");
+  if(!h||!m||!s)return;
+  if(released){h.textContent="00";m.textContent="00";s.textContent="LIVE";return}
+  if(delayed){h.textContent="--";m.textContent="--";s.textContent="!!";return}
+  if(!Number.isFinite(ms)||ms<0){h.textContent="--";m.textContent="--";s.textContent="--";return}
+  const total=Math.max(0,Math.floor(ms/1000));
+  h.textContent=String(Math.floor(total/3600)).padStart(2,"0");
+  m.textContent=String(Math.floor((total%3600)/60)).padStart(2,"0");
+  s.textContent=String(total%60).padStart(2,"0");
+}
+
 function renderHomeReleaseModel(model){
   const command=document.querySelector("#home-release-command");
   if(!command)return;
   command.dataset.releaseState=model.state;
 
   const stateEl=document.querySelector("#home-release-state");
+  const timeEl=document.querySelector("#home-release-time");
   const partEl=document.querySelector("#home-release-part");
-  const countdown=document.querySelector("#home-release-countdown");
   const detail=document.querySelector("#home-release-detail");
 
+  const nextTime=model.nextPublish?formatHomeReleaseTime(model.nextPublish):"8 AM · 2 PM · 8 PM";
   const stateCopy={
-    PRE_LAUNCH:["PUBLIC LAUNCH NOT YET OPEN","Release schedule protected","Public Final Canon remains protected until launch authorization."],
-    PAUSED:["RELEASES PAUSED","Release queue protected","No public Part will release while the queue is paused."],
-    DELAYED:["NEXT PART DELAYED",model.nextPartLabel,"Later Parts will not skip the delayed canonical Part."],
-    RELEASED:["NEW PART AVAILABLE",model.latestPartLabel,"Public Final Canon confirmed."],
-    REST_DAY:["SUNDAY · REST DAY",model.nextPart?model.nextPartLabel:"Next release resumes Monday","Sunday is the official GENESIS rest day."],
-    SCHEDULED:["NEXT RELEASE",model.nextPartLabel,"Authoritative release queue · Asia/Manila"],
-    AWAITING_VERIFIED_PART:["AWAITING VERIFIED PART","Next verified Part","Waiting for the next canonical Part to enter the protected queue."],
-    API_ERROR:["RELEASE STATUS UNAVAILABLE","8 AM · 2 PM · 8 PM PHT","Monday–Saturday · Sunday rest."]
+    PRE_LAUNCH:["PUBLIC LAUNCH NOT YET OPEN","RELEASE SCHEDULE LOCKED","Public Final Canon remains protected."],
+    PAUSED:["RELEASES PAUSED","QUEUE PROTECTED","No public Part releases while paused."],
+    DELAYED:["NEXT RELEASE DELAYED",nextTime,model.nextPartLabel],
+    RELEASED:["NEW PART AVAILABLE","AVAILABLE NOW",model.latestPartLabel],
+    REST_DAY:["SUNDAY · REST DAY",model.nextPublish?nextTime:"NEXT RELEASE MONDAY",model.nextPart?model.nextPartLabel:"Official weekly rest day."],
+    SCHEDULED:["NEXT RELEASE",nextTime,model.nextPartLabel],
+    AWAITING_VERIFIED_PART:["AWAITING VERIFIED PART","8 AM · 2 PM · 8 PM","Waiting for the next canonical Part."],
+    API_ERROR:["RELEASE STATUS UNAVAILABLE","8 AM · 2 PM · 8 PM","Monday–Saturday · Sunday rest."]
   };
   const copy=stateCopy[model.state]||stateCopy.AWAITING_VERIFIED_PART;
   if(stateEl)stateEl.textContent=copy[0];
-  if(partEl)partEl.textContent=copy[1];
-  if(detail)detail.textContent=copy[2];
+  if(timeEl)timeEl.textContent=copy[1];
+  if(partEl)partEl.textContent=copy[2];
+  if(detail){
+    detail.textContent=model.state==="DELAYED"
+      ?"Later Parts will not skip the delayed canonical Part."
+      :model.state==="REST_DAY"
+        ?"Sunday rest · release cycle resumes on the next valid slot."
+        :model.state==="API_ERROR"
+          ?"3 Parts · Monday–Saturday"
+          :"3 Parts · Monday–Saturday";
+  }
 
-  if(countdown){
-    if((model.state==="SCHEDULED"||model.state==="REST_DAY")&&model.nextPublish){
-      countdown.dateTime=model.nextPublish.toISOString();
-      countdown.textContent=formatCountdown(model.nextPublish.getTime()-(Date.now()+model.clockOffset));
-    }else if(model.state==="RELEASED"){
-      countdown.removeAttribute("datetime");
-      countdown.textContent="LIVE";
-    }else if(model.state==="DELAYED"){
-      countdown.removeAttribute("datetime");
-      countdown.textContent="DELAYED";
-    }else{
-      countdown.removeAttribute("datetime");
-      countdown.textContent="—";
-    }
+  if((model.state==="SCHEDULED"||model.state==="REST_DAY")&&model.nextPublish){
+    setHomeCountdown(model.nextPublish.getTime()-(Date.now()+model.clockOffset));
+  }else if(model.state==="RELEASED"){
+    setHomeCountdown(0,{released:true});
+  }else if(model.state==="DELAYED"){
+    setHomeCountdown(0,{delayed:true});
+  }else{
+    setHomeCountdown(NaN);
   }
 
   document.querySelectorAll("[data-release-slot]").forEach(el=>{
@@ -1594,20 +1619,16 @@ async function initHomeReleaseOverlay(){
   };
 
   const tick=()=>{
-    const correctedNow=new Date(Date.now()+(model?.clockOffset||0));
-    const clockEl=document.querySelector("#home-live-clock");
-    const dateEl=document.querySelector("#home-live-date");
-    if(clockEl)clockEl.textContent=formatPhtClock(correctedNow);
-    if(dateEl)dateEl.textContent=formatPhtLongDate(correctedNow);
-
     if(!model)return;
-    const countdown=document.querySelector("#home-release-countdown");
-    if((model.state==="SCHEDULED"||model.state==="REST_DAY")&&model.nextPublish&&countdown){
+    const correctedNow=new Date(Date.now()+(model?.clockOffset||0));
+    if((model.state==="SCHEDULED"||model.state==="REST_DAY")&&model.nextPublish){
       const remaining=model.nextPublish.getTime()-correctedNow.getTime();
       if(remaining>0){
-        countdown.textContent=formatCountdown(remaining);
+        setHomeCountdown(remaining);
       }else if(!checking){
-        countdown.textContent="CHECKING…";
+        const stateEl=document.querySelector("#home-release-state");
+        if(stateEl)stateEl.textContent="CHECKING RELEASE…";
+        setHomeCountdown(0);
         refresh({refreshEpisodes:true}).then(()=>initHome());
       }
     }
@@ -1615,12 +1636,76 @@ async function initHomeReleaseOverlay(){
 
   await refresh();
   tick();
-  window.setInterval(tick,1000);
+  const tickTimer=window.setInterval(tick,1000);
   refreshTimer=window.setInterval(()=>refresh(),60000);
   document.addEventListener("visibilitychange",()=>{
     if(document.visibilityState==="visible")refresh();
   });
-  addEventListener("pagehide",()=>{if(refreshTimer)clearInterval(refreshTimer)},{once:true});
+  addEventListener("pagehide",()=>{
+    clearInterval(tickTimer);
+    if(refreshTimer)clearInterval(refreshTimer);
+  },{once:true});
+}
+
+async function initHomeAccessPanel(){
+  const guest=document.querySelector("#home-access-guest");
+  const reader=document.querySelector("#home-access-reader");
+  if(!guest||!reader)return;
+
+  const session=await getSession();
+  const user=session?await getAuthUser(session):null;
+  if(!session||!user){
+    guest.hidden=false;
+    reader.hidden=true;
+    return;
+  }
+
+  let data=null;
+  try{data=await rpc("api_reader_account_v3",{},session.access_token)}catch{}
+  if(!data){
+    try{data=await rpc("api_reader_account",{},session.access_token)}catch{}
+  }
+  if(!data){
+    guest.hidden=false;
+    reader.hidden=true;
+    return;
+  }
+
+  const totalExp=Number(data?.reader_exp??data?.total_exp??0)||0;
+  const threshold=Number(data?.tier_exp_threshold??TIER_EXP_THRESHOLD)||TIER_EXP_THRESHOLD;
+  const tier=Number(data?.tier)||Math.floor(totalExp/threshold)+1;
+  const within=Number(data?.exp_into_tier);
+  const expInto=Number.isFinite(within)?within:(totalExp%threshold);
+  const expToNext=Number(data?.exp_to_next_tier);
+  const nextTier=Number.isFinite(expToNext)?expToNext:Math.max(0,threshold-expInto);
+  const advance=Math.max(0,Number(data?.support?.credit_balance??data?.support?.advance_credit_balance??0)||0);
+  const supportLabel=data?.support?.vip_active
+    ?"VIP Active"
+    :(data?.support?.public_badge||"Standard");
+  const progress=data?.latest_read_label||data?.reading_progress?.latest_label||"Not started";
+  const collectibles=Math.max(0,Number(data?.collection_count??0)||0);
+  const title=data?.reader_title||data?.support?.public_badge||"GENESIS Adventurer";
+
+  const set=(id,value)=>{const el=document.querySelector(id);if(el)el.textContent=value};
+  const avatar=document.querySelector("#home-access-avatar");
+  if(avatar)avatar.src=user?.user_metadata?.avatar_url||"/assets/genesis-official-logo-64.png";
+
+  set("#home-access-name",data?.display_name||user?.user_metadata?.display_name||"Reader");
+  set("#home-access-title",title);
+  set("#home-access-tier","Tier "+tier);
+  set("#home-access-exp-total",expInto.toLocaleString()+" / "+threshold.toLocaleString()+" EXP");
+  set("#home-access-next-tier","Next Tier in "+nextTier.toLocaleString());
+  set("#home-access-advance",advance+" Part"+(advance===1?"":"s")+" Ahead");
+  set("#home-access-support",supportLabel);
+  set("#home-access-reader-exp",totalExp.toLocaleString()+" EXP");
+  set("#home-access-progress",progress);
+  set("#home-access-collectibles",collectibles+" Unlocked");
+
+  const fill=document.querySelector("#home-access-exp-fill");
+  if(fill)fill.style.width=Math.min(100,Math.max(0,expInto/threshold*100))+"%";
+
+  guest.hidden=true;
+  reader.hidden=false;
 }
 
 async function initHome(){
@@ -1744,7 +1829,7 @@ function initCinematicHeroMedia(){
 const page=document.body.dataset.page;
 await initAuthChrome();
 await initSiteChrome();
-if(page==="home"){initCinematicHeroMedia();await initHomeReleaseOverlay();await initHome();}
+if(page==="home"){initCinematicHeroMedia();await Promise.all([initHomeReleaseOverlay(),initHomeAccessPanel()]);await initHome();}
 if(page==="read"){await initRead();initReaderControls();}
 if(page==="world")initWorld();
 if(page==="map-detail")await initMapDetail();
