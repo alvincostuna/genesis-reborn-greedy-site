@@ -7256,3 +7256,109 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     gap:13px;
   }
 }
+
+
+/* ========================================================================== */
+/* BRAND V3 — APPROVED GENESIS SILVER / CRIMSON GAME-INTERFACE WORDMARK      */
+/* Keeps the reference identity: luminous sigil, silver GENESIS, ivory REBORN, */
+/* crimson GREEDY. The nav frame adds restrained MMORPG HUD ornament only.     */
+/* ========================================================================== */
+.web-ds-v2 .v2-brand{
+  position:relative;
+  isolation:isolate;
+  justify-content:center;
+  border-radius:8px;
+  background:
+    radial-gradient(ellipse at 50% 55%,rgba(214,228,244,.075),transparent 58%),
+    linear-gradient(90deg,transparent,rgba(228,187,103,.035),transparent);
+}
+.web-ds-v2 .v2-brand:before,
+.web-ds-v2 .v2-brand:after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  top:50%;
+  width:18px;
+  height:30px;
+  border-top:1px solid rgba(228,187,103,.58);
+  border-bottom:1px solid rgba(228,187,103,.34);
+  transform:translateY(-50%);
+  opacity:.82;
+  pointer-events:none;
+}
+.web-ds-v2 .v2-brand:before{
+  left:-3px;
+  border-left:1px solid rgba(228,187,103,.62);
+  clip-path:polygon(0 0,100% 50%,0 100%);
+}
+.web-ds-v2 .v2-brand:after{
+  right:-3px;
+  border-right:1px solid rgba(228,187,103,.62);
+  clip-path:polygon(100% 0,0 50%,100% 100%);
+}
+.web-ds-v2 .v2-brand img{
+  object-position:center!important;
+  filter:
+    drop-shadow(0 3px 2px rgba(0,0,0,.78))
+    drop-shadow(0 0 9px rgba(210,224,240,.20))
+    drop-shadow(0 0 14px rgba(205,44,52,.08))!important;
+  transform:translateZ(0);
+}
+.web-ds-v2 .v2-brand:hover img{
+  filter:
+    drop-shadow(0 3px 2px rgba(0,0,0,.78))
+    drop-shadow(0 0 13px rgba(226,235,247,.32))
+    drop-shadow(0 0 16px rgba(216,50,58,.12))!important;
+}
+.web-ds-v2 .v2-brand:focus-visible{
+  outline:1px solid rgba(127,220,255,.68);
+  outline-offset:4px;
+}
+
+/* Desktop: enough scale for the OFFICIAL LIGHT NOVEL descriptor to remain visible. */
+@media(min-width:901px){
+  .web-ds-v2 .v2-nav{
+    grid-template-columns:300px minmax(0,1fr) 340px;
+  }
+  .web-ds-v2 .v2-brand{
+    width:292px;
+    min-width:292px;
+    height:82px;
+  }
+  .web-ds-v2 .v2-brand img{
+    width:278px!important;
+    height:auto!important;
+    max-height:78px!important;
+  }
+}
+
+/* Tablet/mobile: preserve title readability, keep framing subordinate to navigation. */
+@media(max-width:900px){
+  .web-ds-v2 .v2-brand{
+    width:min(218px,100%);
+    min-width:0;
+    height:62px;
+  }
+  .web-ds-v2 .v2-brand img{
+    width:min(205px,100%)!important;
+    max-height:60px!important;
+  }
+  .web-ds-v2 .v2-brand:before,
+  .web-ds-v2 .v2-brand:after{
+    width:13px;
+    height:24px;
+    opacity:.62;
+  }
+}
+@media(max-width:520px){
+  .web-ds-v2 .v2-brand{
+    width:min(178px,100%);
+    height:58px;
+  }
+  .web-ds-v2 .v2-brand img{
+    width:min(170px,100%)!important;
+    max-height:56px!important;
+  }
+  .web-ds-v2 .v2-brand:before{left:-1px}
+  .web-ds-v2 .v2-brand:after{right:-1px}
+}
