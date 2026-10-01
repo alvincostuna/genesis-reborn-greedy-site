@@ -1251,7 +1251,7 @@ function initUnifiedPublicFrames(){
     ".world-hero",".world-sidebar",".world-map-stage",
     ".codex-header",".codex-console",
     ".fan-hero",".fan-feed-shell",
-    ".manga-hero",".support-hero",
+    ".manga-hero",".support-hero",".support-intro-card",
     ".profile-hero-card",".quest-hero"
   ];
   for(const el of document.querySelectorAll(selectors.join(","))){
