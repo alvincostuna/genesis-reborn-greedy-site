@@ -131,8 +131,10 @@ jobs:
             ['manga','/manga/']
           ];
           const viewports=[
-            ['desktop',{width:1440,height:1100}],
-            ['mobile',{width:390,height:844}]
+            ['desktop-1440',{width:1440,height:1100}],
+            ['tablet-768',{width:768,height:1024}],
+            ['mobile-430',{width:430,height:932}],
+            ['mobile-390',{width:390,height:844}]
           ];
           const browser=await chromium.launch({headless:true});
           const report=[];
