@@ -183,7 +183,17 @@ jobs:
                   const tabs=document.querySelector('#part-tabs');
                   const list=document.querySelector('#episode-list');
                   const count=document.querySelector('#episode-count');
+                  const episodeSelect=document.querySelector('#reader-episode-select');
+                  const partSelect=document.querySelector('#reader-part-select');
                   if(count)count.textContent='QA · 3 Episodes';
+                  if(episodeSelect){
+                    episodeSelect.disabled=false;
+                    episodeSelect.innerHTML='<option>Episode 001 — Released Episode</option><option>Episode 002 — Released Episode</option><option>Episode 003 — Released Episode</option>';
+                  }
+                  if(partSelect){
+                    partSelect.disabled=false;
+                    partSelect.innerHTML='<option>Part 001 — Reader Typography QA</option><option>Part 002</option><option>Part 003</option>';
+                  }
                   if(list)list.innerHTML=
                     '<button class="episode-button active"><small>EPISODE 001</small><strong>Released Episode</strong></button>'+
                     '<button class="episode-button"><small>EPISODE 002</small><strong>Released Episode</strong></button>'+
