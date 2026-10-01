@@ -7458,19 +7458,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   transform:none;
 }
 .unified-public-page .atlas-v1-hero .world-hero-art{
-  background-image:url("/assets/v30/destination-heroes/genesis-atlas-hero.webp");
+  background-image:url("/assets/v27/destination-heroes/genesis-atlas-hero.webp");
   background-position:center 28%;
 }
 .unified-public-page .v28-codex-hero .codex-hero-art{
-  background-image:url("/assets/v30/destination-heroes/genesis-codex-hero.webp");
+  background-image:url("/assets/v27/destination-heroes/genesis-codex-hero.webp");
   background-position:center 31%;
 }
 .unified-public-page .fan-hero .fan-hero-art{
-  background-image:url("/assets/v30/destination-heroes/genesis-fan-hero.webp");
+  background-image:url("/assets/v27/destination-heroes/genesis-fan-hero.webp");
   background-position:center 27%;
 }
 .unified-public-page .manga-hero .manga-hero-art{
-  background-image:url("/assets/v30/destination-heroes/genesis-manga-hero.webp");
+  background-image:url("/assets/v27/destination-heroes/genesis-manga-hero.webp");
   background-position:center 25%;
 }
 
@@ -7676,19 +7676,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     border-radius:8px;
   }
   .unified-public-page .atlas-v1-hero .world-hero-art{
-    background-image:url("/assets/v30/destination-heroes/genesis-atlas-hero-mobile.webp");
+    background-image:url("/assets/v27/destination-heroes/genesis-atlas-hero-mobile.webp");
     background-position:center 30%;
   }
   .unified-public-page .v28-codex-hero .codex-hero-art{
-    background-image:url("/assets/v30/destination-heroes/genesis-codex-hero-mobile.webp");
+    background-image:url("/assets/v27/destination-heroes/genesis-codex-hero-mobile.webp");
     background-position:center 32%;
   }
   .unified-public-page .fan-hero .fan-hero-art{
-    background-image:url("/assets/v30/destination-heroes/genesis-fan-hero-mobile.webp");
+    background-image:url("/assets/v27/destination-heroes/genesis-fan-hero-mobile.webp");
     background-position:center 28%;
   }
   .unified-public-page .manga-hero .manga-hero-art{
-    background-image:url("/assets/v30/destination-heroes/genesis-manga-hero-mobile.webp");
+    background-image:url("/assets/v27/destination-heroes/genesis-manga-hero-mobile.webp");
     background-position:center 26%;
   }
 
