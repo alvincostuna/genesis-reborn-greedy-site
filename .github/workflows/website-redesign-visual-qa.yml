@@ -128,8 +128,9 @@ jobs:
           if marker not in css:
               raise SystemExit("V3 logo-alignment marker missing")
           start=css.index(marker)
-          next_section=css.find("/* ========================================================================== */", start+len(marker))
-          block=css[start:next_section if next_section != -1 else len(css)]
+          end_marker="WEB-DS V3.3 — LOGO MATERIAL HIERARCHY"
+          end=css.find(end_marker,start+len(marker))
+          block=css[start:end if end != -1 else len(css)]
           required=[
               '--gx3-gold:#D5AE58',
               '--gx3-gold-hi:#F0D488',
