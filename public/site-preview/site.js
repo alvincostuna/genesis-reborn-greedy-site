@@ -856,7 +856,7 @@ function renderAtlasBoard(maps,contract){
     board.innerHTML='<div class="atlas-fog-state">'+
       '<div class="atlas-fog-orb">?</div>'+
       '<strong>The Atlas is still under full fog-of-war.</strong>'+
-      '<p>No map has an executed published Final Canon reveal yet. The world database remains private until the story opens it.</p>'+
+      '<p>This place has not been revealed by the published story yet. The Atlas will open it when readers reach that discovery.</p>'+
       '<span class="atlas-fog-rule">Backend existence ≠ reader visibility</span>'+
     '</div>';
     const filter=document.querySelector("#atlas-region-filter");if(filter)filter.innerHTML="";
@@ -1169,7 +1169,7 @@ async function buildNotificationFeed(){
             id:"release-"+(p.part_id||ep.episode_number+"-"+p.part_number),
             kind:"New Part",
             title:"Episode "+ep.episode_number+" · Part "+String(p.part_number).padStart(3,"0"),
-            detail:p.title||ep.title||"Released Final Canon",
+            detail:p.title||ep.title||"Published Part",
             href:readerUrl(ep.episode_number,p.part_number),
             time:formatPhtDate(p.publish_at||p.published_at||p.released_at)||"RELEASED"
           });
