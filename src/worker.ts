@@ -769,18 +769,24 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
 
   if (path === "/admin/api/database/summary") {
     await requirePermission(email, env, "DATABASE_VIEW");
-    const data = await rpc(env, "genesis_admin_game_database_summary");
+    const data = await rpc(env, "genesis_admin_game_database_summary_v2", { p_actor: email });
     return json({ ok: true, data });
   }
 
   if (path === "/admin/api/database") {
     await requirePermission(email, env, "DATABASE_VIEW");
     const domain = String(url.searchParams.get("domain") || "").trim().toLowerCase();
-    const allowed = new Set(["monsters","classes","professions","skills","loot","maps","items","npcs","quests","crafting","companions"]);
+    const allowed = new Set([
+      "monsters","classes","professions","skills","loot","maps","items","npcs","quests","crafting","companions",
+      "monster_catalog","equipment_catalog","shops","routes","civilizations","races","settlements",
+      "transport_modes","transport_vehicles","transport_nodes","freight_corridors","competitions",
+      "currencies","economy_levels","guild_skills","guild_facilities","sea_corridors","maritime_rates"
+    ]);
     if (!allowed.has(domain)) {
       throw new HttpError(400, "INVALID_DATABASE_DOMAIN", "Invalid game database domain.");
     }
-    const data = await rpc(env, "genesis_admin_game_database_list", {
+    const data = await rpc(env, "genesis_admin_game_database_list_v2", {
+      p_actor: email,
       p_domain: domain,
       p_query: url.searchParams.get("q") || null,
       p_limit: intParam(url.searchParams.get("limit"), 50, 1, 200),
