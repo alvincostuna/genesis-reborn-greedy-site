@@ -55,6 +55,39 @@ jobs:
       - name: Audit shared public shell consistency
         run: node scripts/public-shell-consistency-audit.mjs
 
+      - name: Guard WEB-DS V3 token-sheet parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          live=Path("public/site-preview/site.css").read_text(encoding="utf-8")
+          ref=Path("docs/WEB-DS-V3.0-TOKEN-SHEET.css").read_text(encoding="utf-8")
+          tokens=[
+              "--gx3-page:#02070D",
+              "--gx3-shell:#050D16",
+              "--gx3-panel:#081624",
+              "--gx3-gold:#D5AE58",
+              "--gx3-gold-hi:#F0D488",
+              "--gx3-ivory:#F2EEE5",
+              "--gx3-silver:#CBD3DA",
+              "--gx3-steel:#899BAA",
+              "--gx3-blue:#5EA7D9",
+              "--gx3-blue-hi:#8BD5FF",
+              "--gx3-red:#A92521",
+              "--gx3-red-hi:#D04238",
+          ]
+          normalized_live=live.replace(" ","")
+          normalized_ref=ref.replace(" ","")
+          missing_live=[t for t in tokens if t not in normalized_live]
+          missing_ref=[t for t in tokens if t not in normalized_ref]
+          if missing_live:
+              raise SystemExit("Live V3 CSS drifted from locked tokens: "+", ".join(missing_live))
+          if missing_ref:
+              raise SystemExit("V3 token sheet missing locked tokens: "+", ".join(missing_ref))
+          print("PASS: WEB-DS V3 token-sheet parity")
+          PY
+
       - name: Guard WEB-DS V3 logo-alignment contract
         shell: bash
         run: |

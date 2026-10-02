@@ -1,0 +1,208 @@
+/*
+ * GENESIS WEB-DS V3.0 — CSS TOKEN SHEET
+ * Status: LOCKED REFERENCE
+ *
+ * This file documents the approved live visual language.
+ * It is NOT loaded by the public site directly; live values remain in site.css.
+ * Do not import this file into production without a separate approved refactor.
+ */
+
+:root {
+  /* ------------------------------------------------------------
+     Brand surfaces
+     ------------------------------------------------------------ */
+  --gx3-page: #02070D;
+  --gx3-shell: #050D16;
+  --gx3-panel: #081624;
+  --gx3-panel-raised: #0A1C2C;
+
+  /* ------------------------------------------------------------
+     Metallic / literary hierarchy
+     ------------------------------------------------------------ */
+  --gx3-gold: #D5AE58;
+  --gx3-gold-hi: #F0D488;
+  --gx3-gold-dark: #756033;
+  --gx3-ivory: #F2EEE5;
+  --gx3-silver: #CBD3DA;
+  --gx3-steel: #899BAA;
+
+  /* ------------------------------------------------------------
+     Secondary magic / information light
+     ------------------------------------------------------------ */
+  --gx3-blue: #5EA7D9;
+  --gx3-blue-hi: #8BD5FF;
+
+  /* ------------------------------------------------------------
+     GREEDY narrative accent — rare by rule
+     ------------------------------------------------------------ */
+  --gx3-red: #A92521;
+  --gx3-red-hi: #D04238;
+
+  /* ------------------------------------------------------------
+     Typography
+     No external webfont dependency is required.
+     ------------------------------------------------------------ */
+  --gx3-display: "Cinzel", Georgia, "Times New Roman", serif;
+  --gx3-story: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --gx3-ui: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+
+  --gx3-font-panel-title-desktop: 15px;
+  --gx3-font-panel-title-mobile: 13px;
+  --gx3-font-story-title-desktop: 28px;
+  --gx3-font-story-title-mobile: 24px;
+  --gx3-font-release-time-desktop: 33px;
+  --gx3-font-release-time-mobile: 29px;
+  --gx3-font-access-title-desktop: 19px;
+  --gx3-font-access-title-mobile: 17px;
+  --gx3-font-meta-min: 10px;
+
+  --gx3-weight-display: 600;
+  --gx3-weight-story: 600;
+  --gx3-weight-ui: 500;
+  --gx3-weight-ui-strong: 700;
+
+  --gx3-track-panel-title: .055em;
+  --gx3-track-kicker: .085em;
+  --gx3-track-release-kicker: .115em;
+  --gx3-track-button: .025em;
+
+  /* ------------------------------------------------------------
+     Geometry / spacing
+     ------------------------------------------------------------ */
+  --gx3-deck-ratio: 2.8;
+  --gx3-gap: 10px;
+  --gx3-panel-pad-x: 16px;
+  --gx3-panel-pad-x-mobile: 12px;
+  --gx3-header-height-desktop: 38px;
+  --gx3-header-height-mobile: 36px;
+  --gx3-corner-size-desktop: 28px;
+  --gx3-corner-size-mobile: 21px;
+  --gx3-touch-min: 44px;
+  --gx3-primary-button-height-desktop: 46px;
+  --gx3-primary-button-height-mobile: 44px;
+
+  /* ------------------------------------------------------------
+     Borders
+     ------------------------------------------------------------ */
+  --gx3-border-panel: rgba(213,174,88,.72);
+  --gx3-border-panel-soft: rgba(117,96,51,.46);
+  --gx3-border-inner: rgba(94,167,217,.20);
+  --gx3-border-blue-info: rgba(94,167,217,.48);
+  --gx3-border-secondary: rgba(119,153,177,.50);
+  --gx3-border-secondary-hover: rgba(213,174,88,.68);
+  --gx3-separator: rgba(97,130,153,.22);
+
+  /* ------------------------------------------------------------
+     Shadows
+     ------------------------------------------------------------ */
+  --gx3-shadow-deck:
+    inset 0 0 0 1px rgba(213,174,88,.74),
+    inset 0 0 0 5px rgba(73,98,118,.12),
+    0 18px 42px rgba(0,0,0,.38);
+
+  --gx3-shadow-panel:
+    inset 0 1px rgba(255,240,196,.035),
+    inset 0 0 28px rgba(50,111,155,.035),
+    0 12px 32px rgba(0,0,0,.34);
+
+  --gx3-shadow-primary:
+    inset 0 1px rgba(255,232,168,.10),
+    inset 0 0 18px rgba(213,174,88,.035);
+
+  --gx3-shadow-primary-hover:
+    inset 0 1px rgba(255,239,191,.13),
+    0 0 14px rgba(213,174,88,.16);
+
+  --gx3-shadow-crest:
+    0 0 0 2px #07111B,
+    0 0 12px rgba(213,174,88,.12);
+
+  /* ------------------------------------------------------------
+     Background recipes
+     ------------------------------------------------------------ */
+  --gx3-bg-deck:
+    radial-gradient(circle at 50% -14%, rgba(213,174,88,.065), transparent 34%),
+    linear-gradient(180deg, #050D16 0%, #02070D 100%);
+
+  --gx3-bg-panel:
+    radial-gradient(circle at 50% -12%, rgba(213,174,88,.070), transparent 38%),
+    linear-gradient(155deg, #0A1B2A 0%, #071421 55%, #040C14 100%);
+
+  --gx3-bg-countdown:
+    linear-gradient(180deg, rgba(10,29,45,.90), rgba(4,13,22,.98));
+
+  --gx3-bg-slot:
+    linear-gradient(180deg, rgba(8,20,31,.94), rgba(3,11,18,.98));
+
+  --gx3-bg-slot-next:
+    radial-gradient(circle at 50% 0%, rgba(213,174,88,.08), transparent 60%),
+    linear-gradient(180deg, rgba(18,29,36,.95), rgba(5,14,22,.98));
+
+  --gx3-bg-cta-primary:
+    linear-gradient(180deg, #162738 0%, #0B1927 52%, #07111B 100%);
+
+  --gx3-bg-cta-secondary:
+    rgba(5,15,25,.72);
+
+  --gx3-bg-cta-secondary-hover:
+    rgba(18,28,35,.88);
+
+  --gx3-bg-reader-chip:
+    linear-gradient(180deg, #E3BF6C, #B68735);
+
+  --gx3-bg-release-card:
+    linear-gradient(180deg, rgba(8,22,34,.94), rgba(4,13,21,.98));
+
+  /* ------------------------------------------------------------
+     Divider / ornament recipes
+     ------------------------------------------------------------ */
+  --gx3-divider-header:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(213,174,88,.42) 12%,
+      rgba(94,167,217,.25) 50%,
+      rgba(213,174,88,.42) 88%,
+      transparent
+    );
+
+  --gx3-divider-gold:
+    linear-gradient(90deg, transparent, #D5AE58 18%, #F0D488 50%, #D5AE58 82%, transparent);
+
+  --gx3-corner-horizontal:
+    linear-gradient(90deg, #D5AE58, rgba(213,174,88,.08));
+
+  --gx3-corner-vertical:
+    linear-gradient(180deg, #D5AE58, rgba(213,174,88,.08));
+
+  --gx3-story-red-accent:
+    linear-gradient(90deg, transparent, #A92521, transparent);
+
+  /* ------------------------------------------------------------
+     Semantic aliases
+     ------------------------------------------------------------ */
+  --gx3-text-heading: var(--gx3-gold-hi);
+  --gx3-text-title: var(--gx3-ivory);
+  --gx3-text-body: var(--gx3-silver);
+  --gx3-text-meta: var(--gx3-steel);
+  --gx3-text-information: var(--gx3-blue-hi);
+  --gx3-text-danger: var(--gx3-red-hi);
+
+  --gx3-border-primary: var(--gx3-border-panel);
+  --gx3-border-info: var(--gx3-border-blue-info);
+
+  /* ------------------------------------------------------------
+     Rules that are not representable as raw CSS values
+     ------------------------------------------------------------
+     1. Gold is the dominant structural accent.
+     2. Arcane blue is secondary and informational.
+     3. GREEDY red is rare; roughly <=5% visible UI.
+     4. Body copy stays sans-serif.
+     5. Story/display emphasis uses serif stacks.
+     6. Meaningful text never renders below 10px.
+     7. No V3 decorative asset URL is permitted.
+     8. No new >500 KB decorative raster may be introduced.
+     9. Mobile and desktop must remain one design family.
+     10. Geometry changes require a separate approved contract.
+     ------------------------------------------------------------ */
+}
