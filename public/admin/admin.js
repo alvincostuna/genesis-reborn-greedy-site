@@ -441,7 +441,7 @@ async function loadReleases(){
 
 function compactMeta(meta){
   if(!meta||typeof meta!=="object")return "—";
-  const preferred=["family","species","rank","tier","role","type","region","map_type","category","subtype","rarity","quest_type","source_name","visibility","mode","first_roadmap_use"];
+  const preferred=["family","species","rank","tier","role","type","region","map_type","category","subtype","rarity","quest_type","source_name","visibility","mode","race_family","civilization","settlement_kind","route_kind","mode_family","movement_domain","vehicle_class","runtime_enabled","runtime_authorized","canon_status","website_status","reveal_state","first_roadmap_use"];
   const pairs=[];
   for(const k of preferred){
     if(meta[k]!==undefined&&meta[k]!==null&&meta[k]!==""&&pairs.length<4){
@@ -464,12 +464,19 @@ async function loadDatabaseSummary(){
   root.innerHTML='<div class="card"><span>Database</span><strong>Loading…</strong></div>';
   try{
     const data=await api("/admin/api/database/summary");
-    const counts=data.counts||{};
+    const core=data.core_counts||data.counts||{};
+    const expanded=data.expanded_counts||{};
+    const projection=data.public_projection||{};
+    const readerSafeNow=Object.values(projection).reduce((sum,row)=>sum+Number(row?.reader_safe_now||0),0);
     const groups=[
-      ["Monsters",counts.monsters??0],["Classes",counts.classes??0],
-      ["Professions",counts.professions??0],["Skills",counts.skills??0],
-      ["Maps",counts.maps??0],["Items",counts.items??0],
-      ["NPCs",counts.npcs??0],["Recipes",counts.recipes??0]
+      ["Core Monsters",core.monsters??0],["Bestiary Projection",expanded.monster_catalog??0],
+      ["Core Items",core.items??0],["Equipment Registry",expanded.equipment_catalog??0],
+      ["Maps",core.maps??0],["Routes",expanded.routes??0],
+      ["Shops",expanded.shops??0],["Transport Nodes",expanded.transport_nodes??0],
+      ["Civilizations",expanded.civilizations??0],["Race Structures",expanded.races??0],
+      ["Settlements",expanded.settlements??0],["Freight Corridors",expanded.freight_corridors??0],
+      ["Currencies",expanded.currencies??0],["Guild Skills",expanded.guild_skills??0],
+      ["Competition Venues",expanded.competitions??0],["Reader-safe Now",readerSafeNow]
     ];
     root.innerHTML=groups.map(([k,v])=>
       '<div class="card"><span>'+escapeHtml(k)+'</span><strong>'+escapeHtml(v)+'</strong></div>'
@@ -489,19 +496,21 @@ async function loadDatabase(){
   try{
     const data=await api("/admin/api/database?"+q.toString());
     const items=data.items||[];
+    const readOnly=Boolean(data.read_only);
+    items.forEach(item=>{item._readOnly=readOnly;item._layer=data.layer||"";});
     if(!items.length){
       table.innerHTML='<div class="empty"><strong>No records.</strong><br>'+escapeHtml(domain)+' returned no matching rows.</div>';
       return;
     }
     table.innerHTML=
-      '<div class="database-head"><span>'+escapeHtml(domain.toUpperCase())+'</span><small>'+escapeHtml(data.total??items.length)+' total records</small></div>'+
+      '<div class="database-head"><span>'+escapeHtml(domain.toUpperCase())+(readOnly?' · READ-ONLY DESIGN':' · CORE')+'</span><small>'+escapeHtml(data.total??items.length)+' total records</small></div>'+
       '<div class="table-scroll"><table><thead><tr><th>Name</th><th>Code</th><th>Status</th><th>Key metadata</th><th>Detail</th></tr></thead><tbody>'+
       items.map((x)=>
         '<tr><td><strong>'+escapeHtml(x.name||"—")+'</strong></td>'+
         '<td><code>'+escapeHtml(x.code||"—")+'</code></td>'+
         '<td><span class="status review">'+escapeHtml(x.status||"—")+'</span></td>'+
         '<td class="meta-text">'+escapeHtml(compactMeta(x.meta))+'</td>'+
-        '<td><button class="db-stage-button" data-db-code="'+escapeHtml(x.code||"")+'">'+(hasPermission("DATABASE_EDIT")?'Open detail / stage':'View detail')+'</button></td></tr>'
+        '<td><button class="db-stage-button" data-db-code="'+escapeHtml(x.code||"")+'">'+(x._readOnly?'View read-only design':(hasPermission("DATABASE_EDIT")?'Open detail / stage':'View detail'))+'</button></td></tr>'
       ).join("")+
       '</tbody></table></div>';
 
@@ -931,6 +940,21 @@ async function renderDatabaseStaging(domain,record){
   state.activeDatabaseRecord={domain,record};
   const root=$("#database-staging");
   const allowed=state.databaseAllowedFields?.[domain]||[];
+
+  if(record?._readOnly){
+    root.innerHTML=
+      '<div class="database-head"><span>Protected Design Registry · '+escapeHtml(record.name||record.code||domain)+'</span><small>READ-ONLY · '+escapeHtml(record._layer||"EXPANDED_DESIGN_REGISTRY")+'</small></div>'+
+      '<div class="admin-note compact"><strong>Dormant/design data does not equal runtime or public canon.</strong><p>This expanded record is exposed to Admin for database alignment only. This screen cannot stage edits, activate runtime behavior, change story production, or publish the record to readers.</p></div>'+
+      '<div class="runtime">'+
+        '<div><small>Domain</small><strong>'+escapeHtml(domain)+'</strong></div>'+
+        '<div><small>Status</small><strong>'+escapeHtml(record.status||"—")+'</strong></div>'+
+        '<div><small>Code / key</small><strong><code>'+escapeHtml(record.code||"—")+'</code></strong></div>'+
+        '<div><small>Runtime</small><strong>'+escapeHtml(record.meta?.runtime_enabled===true||record.meta?.runtime_authorized===true?"AUTHORIZED / ENABLED":"NOT AUTHORIZED")+'</strong></div>'+
+      '</div>'+
+      '<div class="db-stage-body"><div><small>Curated protected metadata</small><pre class="db-json-preview">'+escapeHtml(JSON.stringify(record.meta||{},null,2))+'</pre></div></div>';
+    return;
+  }
+
   root.innerHTML='<div class="empty">Loading protected detail, Atlas gates and Visual Status…</div>';
 
   let atlas=null;
