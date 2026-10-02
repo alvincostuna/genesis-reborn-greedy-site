@@ -12923,3 +12923,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* DEPLOY RETRY: WEB-DS V3.6 COMMAND INTERFACE — 2026-10-02 */
 
 /* DEPLOY RETRY 2: WEB-DS V3.6 COMMAND INTERFACE — QA RUNNER UPDATED */
+
+
+/* ==========================================================================
+   WEB-DS V3.6.1 — QA TYPOGRAPHY FINISH
+   Real render fixes from PR #101 screenshot QA.
+   ========================================================================== */
+.web-ds-v2 .game-console-head{
+  font-family:Georgia,"Times New Roman",serif;
+}
+.web-ds-v2 .console-crown small{
+  font-size:8px!important;
+}
+.web-ds-v2 .world-navigation-hub>header small{
+  font-size:8px!important;
+}
+/* DEPLOY MARKER: WEB-DS V3.6.1 QA TYPOGRAPHY FINISH */
