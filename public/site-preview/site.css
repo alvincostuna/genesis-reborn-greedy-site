@@ -14853,3 +14853,21 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   }
 }
 /* DEPLOY MARKER: WEB-DS V3.9.3 HERO OVERLAY */
+
+
+/* WEB-DS V3.9.4 — HERO CLEANUP + NAV BRAND DE-DUPLICATION */
+.web-ds-v2.genesis-home .shell-wordmark-compat{
+  display:none!important;
+}
+@media(min-width:901px){
+  .web-ds-v2.genesis-home .cinematic-hero-media::before{
+    content:"";
+    position:absolute;
+    z-index:5;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(ellipse 34% 58% at 50% 70%,rgba(1,5,9,.88) 0%,rgba(1,5,9,.73) 42%,rgba(1,5,9,.35) 66%,rgba(1,5,9,0) 100%);
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.9.4 HERO CLEANUP */
