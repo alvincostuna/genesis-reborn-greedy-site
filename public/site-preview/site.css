@@ -11748,3 +11748,244 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       0 8px 22px rgba(0,0,0,.28)!important;
   }
 }
+
+
+/* ==========================================================================
+   WEB-DS V3.4 — SAFE FINISH / MATERIAL RHYTHM
+   Final polish layer after V3.1 rollback. CSS-only, geometry-preserving.
+   Official desktop + mobile. No asset, runtime, data, or delivery changes.
+   ========================================================================== */
+.web-ds-v2{
+  --gx34-silver:#E4E7E8;
+  --gx34-silver-soft:#BBC5CD;
+  --gx34-gold:#D5AE58;
+  --gx34-gold-hi:#EFD487;
+  --gx34-line:rgba(213,174,88,.40);
+  --gx34-line-soft:rgba(190,202,211,.13);
+}
+
+/* Calm the outer deck while preserving the approved V1.1 geometry. */
+.web-ds-v2 .genesis-command-deck{
+  background:
+    radial-gradient(circle at 50% -18%,rgba(213,174,88,.055),transparent 35%),
+    radial-gradient(circle at 82% 18%,rgba(63,124,168,.032),transparent 30%),
+    linear-gradient(180deg,#050d16 0%,#02070d 100%)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel{
+  border-color:var(--gx34-line)!important;
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.025),
+    inset 0 0 0 1px rgba(190,202,211,.028),
+    0 10px 28px rgba(0,0,0,.31)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel::before{
+  border-color:var(--gx34-line-soft)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel::after{
+  opacity:.46!important;
+}
+
+/* Titles read first; ornament reads second. */
+.web-ds-v2 .genesis-command-deck .deck-panel-header,
+.web-ds-v2 .genesis-command-deck .deck-panel-header>span,
+.web-ds-v2 .genesis-command-deck .home-access-head>span{
+  color:var(--gx34-silver)!important;
+  letter-spacing:.032em!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header{
+  background:
+    linear-gradient(90deg,rgba(228,231,232,.027),rgba(213,174,88,.014) 48%,transparent 84%)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header::before{
+  left:16px!important;
+  right:16px!important;
+  opacity:.72;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header a,
+.web-ds-v2 .genesis-command-deck .home-access-head>a{
+  color:#AEBCC7!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header a:hover,
+.web-ds-v2 .genesis-command-deck .home-access-head>a:hover{
+  color:var(--gx34-gold-hi)!important;
+}
+
+/* The center reading card stays the focal point without becoming brighter than the logo. */
+.web-ds-v2 .genesis-command-deck .deck-reading-panel{
+  border-color:rgba(228,231,232,.29)!important;
+  background:
+    radial-gradient(circle at 62% 10%,rgba(228,231,232,.025),transparent 34%),
+    linear-gradient(155deg,#091824 0%,#06131e 58%,#030b12 100%)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-copy h2{
+  color:#F4F1E9!important;
+  line-height:1.02!important;
+  text-wrap:balance;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-copy p{
+  color:#C2CCD3!important;
+  line-height:1.48!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-art{
+  position:relative;
+  overflow:hidden;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-art::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(3,9,15,.15),transparent 24%,transparent 78%,rgba(3,9,15,.18)),
+    linear-gradient(180deg,rgba(255,245,215,.025),transparent 22%,rgba(2,7,12,.10));
+  box-shadow:inset 0 0 0 1px rgba(239,212,135,.06);
+}
+
+/* Release card: official timing is gold; secondary information is silver. */
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-time{
+  color:var(--gx34-gold-hi)!important;
+  text-shadow:0 1px 0 #000,0 0 10px rgba(213,174,88,.08)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-part{
+  color:#B7C3CB!important;
+}
+.web-ds-v2 .genesis-command-deck .home-countdown-grid>div{
+  border-color:rgba(94,167,217,.38)!important;
+  box-shadow:inset 0 0 12px rgba(94,167,217,.03)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-countdown-grid strong{
+  color:#A9DDF8!important;
+  text-shadow:none!important;
+}
+.web-ds-v2 .genesis-command-deck .home-release-slot{
+  border-color:rgba(117,96,51,.48)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-release-slot.is-next{
+  border-color:rgba(213,174,88,.70)!important;
+  box-shadow:inset 0 0 0 1px rgba(239,212,135,.035)!important;
+}
+
+/* Access card: crest identity, then ledger detail. */
+.web-ds-v2 .genesis-command-deck .home-access-avatar{
+  border-color:rgba(228,231,232,.38)!important;
+  box-shadow:
+    0 0 0 1px rgba(213,174,88,.42),
+    0 0 0 3px #07111b,
+    0 0 12px rgba(213,174,88,.07)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-identity strong{
+  color:#F4F1E9!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-guest-preview>div,
+.web-ds-v2 .genesis-command-deck .home-access-stats>div{
+  background:linear-gradient(90deg,rgba(228,231,232,.013),transparent 46%)!important;
+  border-bottom-color:rgba(190,202,211,.10)!important;
+}
+
+/* Buttons feel engraved rather than app-like. */
+.web-ds-v2 .genesis-command-deck .genesis-btn{
+  border-radius:4px!important;
+}
+.web-ds-v2 .genesis-command-deck .genesis-btn.primary{
+  border-color:rgba(213,174,88,.54)!important;
+  background:
+    linear-gradient(180deg,rgba(246,243,236,.030),transparent 34%),
+    linear-gradient(180deg,#111f2b 0%,#091621 58%,#050d15 100%)!important;
+}
+.web-ds-v2 .genesis-command-deck .genesis-btn.primary:hover{
+  border-color:rgba(239,212,135,.80)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.07),0 0 10px rgba(213,174,88,.08)!important;
+}
+
+/* Lower chronicle: quieter cards, stronger headings, less dashboard feel. */
+.web-ds-v2 .genesis-command-deck .deck-latest-panel,
+.web-ds-v2 .genesis-command-deck .deck-announcements-panel{
+  border-color:rgba(213,174,88,.36)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-card{
+  border-color:rgba(190,202,211,.13)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-copy strong,
+.web-ds-v2 .genesis-command-deck .deck-announcement-row strong{
+  color:#E8E8E3!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row{
+  border-bottom-color:rgba(190,202,211,.09)!important;
+}
+
+/* Shared public navigation: trim glow and keep the logo in visual control. */
+@media(min-width:901px){
+  .web-ds-v2 .v2-primary-nav a{
+    color:#C3D0DA!important;
+  }
+  .web-ds-v2 .v2-primary-nav a:hover{
+    background:linear-gradient(180deg,rgba(18,39,56,.50),rgba(7,21,33,.25))!important;
+    box-shadow:none!important;
+  }
+  .web-ds-v2 .v2-primary-nav a.active{
+    color:#F0D488!important;
+    background:
+      radial-gradient(circle at 50% 8%,rgba(213,174,88,.13),transparent 50%),
+      linear-gradient(180deg,rgba(35,34,27,.42),rgba(9,22,33,.30))!important;
+    box-shadow:inset 0 1px rgba(255,232,173,.05)!important;
+  }
+}
+
+/* Keyboard focus is explicit but restrained across official surfaces. */
+.web-ds-v2 :where(a,button,input,select,textarea):focus-visible{
+  outline:2px solid rgba(139,213,255,.72);
+  outline-offset:2px;
+}
+.web-ds-v2 .genesis-command-deck :where(a,button):focus-visible{
+  outline-color:rgba(239,212,135,.82);
+}
+
+/* Mobile: preserve current composition, increase readability/touch certainty, add no new panels. */
+@media(max-width:900px){
+  .web-ds-v2 .v2-mobile-bottom,
+  .unified-public-page .mobile-bottom-nav.v2-mobile-bottom{
+    border-top-color:rgba(213,174,88,.40)!important;
+    background:linear-gradient(180deg,rgba(7,20,32,.955),rgba(2,9,16,.985))!important;
+    box-shadow:0 -8px 22px rgba(0,0,0,.36),inset 0 1px rgba(255,255,255,.018)!important;
+  }
+  .web-ds-v2 .v2-mobile-bottom a,
+  .unified-public-page .mobile-bottom-nav.v2-mobile-bottom a{
+    touch-action:manipulation;
+  }
+}
+
+@media(max-width:620px){
+  .web-ds-v2 .genesis-command-deck{
+    box-shadow:
+      inset 0 0 0 1px rgba(213,174,88,.52),
+      0 10px 28px rgba(0,0,0,.30)!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-panel{
+    border-color:rgba(213,174,88,.34)!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-panel-header,
+  .web-ds-v2 .genesis-command-deck .deck-panel-header>span,
+  .web-ds-v2 .genesis-command-deck .home-access-head>span{
+    font-size:13px!important;
+    letter-spacing:.024em!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-copy h2{
+    font-size:24px!important;
+    line-height:1.06!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-copy p{
+    font-size:12px!important;
+    line-height:1.46!important;
+  }
+  .web-ds-v2 .genesis-command-deck .genesis-btn,
+  .web-ds-v2 .genesis-command-deck .home-access-guest-actions .genesis-btn{
+    min-height:44px!important;
+    touch-action:manipulation;
+  }
+  .web-ds-v2 .v2-mobile-bottom a,
+  .unified-public-page .mobile-bottom-nav.v2-mobile-bottom a{
+    min-height:56px!important;
+  }
+}
+
+/* DEPLOY MARKER: WEB-DS V3.4 SAFE FINISH */
