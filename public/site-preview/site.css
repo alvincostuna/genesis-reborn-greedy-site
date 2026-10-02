@@ -14302,3 +14302,144 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DEPLOY MARKER: WEB-DS V3.8 IMAGE INLAY OVERLAY SYSTEM */
+
+
+/* ==========================================================================
+   WEB-DS V3.9 — UNIQUE INLAY / PERFORMANCE PASS
+   One distinct WebP artwork per marked box. No repeated picture content.
+   Large panels use category-matched art; small tiles prefer lightweight crops.
+   ========================================================================== */
+
+/* PHASE A — unique large-panel art */
+.web-ds-v2.genesis-home .deck-release-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.72) 0%,rgba(3,12,20,.56) 46%,rgba(3,12,20,.18) 100%),
+    url('/assets/v27/destination-heroes/genesis-atlas-hero.webp')!important;
+  background-position:center 48%!important;
+}
+.web-ds-v2.genesis-home .deck-reading-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.80) 0%,rgba(3,12,20,.52) 42%,rgba(3,12,20,.16) 72%,rgba(3,12,20,.26) 100%),
+    url('/assets/v27/rewards/early-genesis-world-panorama.webp')!important;
+  background-position:center 44%!important;
+}
+.web-ds-v2.genesis-home .deck-access-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.62) 0%,rgba(3,12,20,.44) 45%,rgba(3,12,20,.20) 100%),
+    url('/assets/v27/rewards/maya-villareal.webp')!important;
+  background-position:68% 36%!important;
+}
+
+/* PHASE B — unique supporting-panel art */
+.web-ds-v2.genesis-home .adventure-feed-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.38) 0%,rgba(3,12,20,.34) 44%,rgba(3,12,20,.52) 100%),
+    url('/assets/v27/rewards/flavio-nico-early-party.webp')!important;
+  background-position:center 44%!important;
+}
+.web-ds-v2.genesis-home .bulletin-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.50) 0%,rgba(3,12,20,.38) 42%,rgba(3,12,20,.16) 100%),
+    url('/assets/v27/rewards/starter-town-safe-zone.webp')!important;
+  background-position:center 52%!important;
+}
+
+/* PHASE C — every navigation tile has its own different WebP picture. */
+.web-ds-v2.genesis-home .tile-read::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.08) 42%,rgba(2,7,12,.68) 77%,rgba(2,7,12,.94)),
+    url('/assets/v25/hero-home-mobile.webp')!important;
+  background-position:center 46%!important;
+}
+.web-ds-v2.genesis-home .tile-world::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.08) 42%,rgba(2,7,12,.68) 77%,rgba(2,7,12,.94)),
+    url('/assets/master-key-art-split-world-v1.webp')!important;
+  background-position:center 52%!important;
+}
+.web-ds-v2.genesis-home .tile-codex::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.08) 42%,rgba(2,7,12,.68) 77%,rgba(2,7,12,.94)),
+    url('/assets/v30/destination-heroes/genesis-codex-hero-mobile.webp')!important;
+  background-position:center 46%!important;
+}
+.web-ds-v2.genesis-home .tile-characters::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.08) 42%,rgba(2,7,12,.68) 77%,rgba(2,7,12,.94)),
+    url('/assets/v27/rewards/flavio-reyes.webp')!important;
+  background-position:center 30%!important;
+}
+.web-ds-v2.genesis-home .tile-monsters::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.08) 42%,rgba(2,7,12,.68) 77%,rgba(2,7,12,.94)),
+    url('/assets/v27/rewards/young-gnawer.webp')!important;
+  background-position:center 42%!important;
+}
+.web-ds-v2.genesis-home .tile-items::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.08) 42%,rgba(2,7,12,.68) 77%,rgba(2,7,12,.94)),
+    url('/assets/v27/rewards/genesis-awakening.webp')!important;
+  background-position:center 48%!important;
+}
+.web-ds-v2.genesis-home .tile-manga::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.06) 42%,rgba(2,7,12,.64) 77%,rgba(2,7,12,.94)),
+    url('/assets/v30/destination-heroes/genesis-manga-hero-mobile.webp')!important;
+  background-position:center 44%!important;
+}
+.web-ds-v2.genesis-home .tile-support::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.08) 42%,rgba(2,7,12,.68) 77%,rgba(2,7,12,.94)),
+    url('/assets/v27/rewards/nico-salazar.webp')!important;
+  background-position:center 30%!important;
+}
+.web-ds-v2.genesis-home .tile-fan::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.06) 42%,rgba(2,7,12,.64) 77%,rgba(2,7,12,.94)),
+    url('/assets/v30/destination-heroes/genesis-fan-hero-mobile.webp')!important;
+  background-position:center 46%!important;
+}
+
+/* Keep the images bright enough to register as illustrations. */
+.web-ds-v2.genesis-home .world-nav-tile::before{
+  filter:saturate(1.08) contrast(1.03) brightness(1.04)!important;
+}
+.web-ds-v2.genesis-home .deck-release-panel::before,
+.web-ds-v2.genesis-home .deck-reading-panel::before,
+.web-ds-v2.genesis-home .deck-access-panel::before,
+.web-ds-v2.genesis-home .adventure-feed-panel::before,
+.web-ds-v2.genesis-home .bulletin-panel::before{
+  filter:saturate(1.05) contrast(1.02) brightness(1.02)!important;
+}
+
+/* Keep wording in stable text-safe zones over the brighter art. */
+.web-ds-v2.genesis-home .continue-adventure-copy,
+.web-ds-v2.genesis-home .continue-adventure-ledger,
+.web-ds-v2.genesis-home .reader-profile-state,
+.web-ds-v2.genesis-home .release-monitor-main,
+.web-ds-v2.genesis-home .release-monitor-slots,
+.web-ds-v2.genesis-home .release-monitor-footer,
+.web-ds-v2.genesis-home .adventure-feed-content,
+.web-ds-v2.genesis-home .system-bulletin-list{
+  position:relative;
+  z-index:4;
+}
+.web-ds-v2.genesis-home .continue-adventure-copy::before,
+.web-ds-v2.genesis-home .continue-adventure-ledger::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:-8px;
+  border-radius:6px;
+  background:linear-gradient(90deg,rgba(2,9,16,.42),rgba(2,9,16,.16));
+  pointer-events:none;
+}
+.web-ds-v2.genesis-home .reader-profile-state{
+  background:linear-gradient(90deg,rgba(2,9,16,.48),rgba(2,9,16,.15))!important;
+}
+.web-ds-v2.genesis-home .adventure-feed-content,
+.web-ds-v2.genesis-home .system-bulletin-list{
+  backdrop-filter:blur(.7px);
+}
+
+/* DEPLOY MARKER: WEB-DS V3.9 UNIQUE INLAY PERFORMANCE */
