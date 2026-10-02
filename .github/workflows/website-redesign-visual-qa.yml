@@ -88,6 +88,32 @@ jobs:
           print("PASS: WEB-DS V3 token-sheet parity")
           PY
 
+      - name: Guard WEB-DS V3.3 logo-material hierarchy
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
+          marker="WEB-DS V3.3 — LOGO MATERIAL HIERARCHY"
+          if marker not in css:
+              raise SystemExit("V3.3 material hierarchy marker missing")
+          block=css[css.index(marker):]
+          required=[
+              '--gx33-display:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif',
+              '--gx33-title:#E8E9E7',
+              '--gx33-border:rgba(213,174,88,.50)',
+              '.deck-reading-panel',
+              '.home-access-avatar',
+          ]
+          for item in required:
+              if item not in block:
+                  raise SystemExit(f"Missing V3.3 material rule: {item}")
+          if "url(" in block:
+              raise SystemExit("V3.3 must not introduce image/font asset URLs")
+          print("PASS: WEB-DS V3.3 source contract")
+          PY
+
       - name: Guard WEB-DS V3 logo-alignment contract
         shell: bash
         run: |
@@ -553,7 +579,7 @@ jobs:
                     const storyFamily=getComputedStyle(readingTitle).fontFamily.toLowerCase();
                     if(!displayFamily.includes('cinzel')&&!displayFamily.includes('georgia'))issues.push('V3 display font stack missing');
                     if(!storyFamily.includes('cormorant')&&!storyFamily.includes('georgia'))issues.push('V3 story font stack missing');
-                    if(headerColor!=='rgb(240, 212, 136)')issues.push('V3 panel header ceremonial gold missing: '+headerColor);
+                    if(headerColor!=='rgb(232, 233, 231)')issues.push('V3.3 silver panel-title hierarchy missing: '+headerColor);
                     if(!primaryBg.includes('linear-gradient'))issues.push('V3 primary CTA gradient missing');
                     if(parseFloat(getComputedStyle(accessTitle).fontSize)<18.5)issues.push('V3 access identity title too small');
                     near(releaseSize,34,1,'release time font');
