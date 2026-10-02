@@ -14443,3 +14443,369 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DEPLOY MARKER: WEB-DS V3.9 UNIQUE INLAY PERFORMANCE */
+
+
+/* ==========================================================================
+   WEB-DS V3.10 — REFERENCE ALIGNMENT + MOBILE READABILITY
+   Fix the largest remaining visual gaps after V3.9.
+   ========================================================================== */
+
+/* Never render compatibility/logo fallback assets on top of the real brand. */
+.web-ds-v2.genesis-home .shell-wordmark-compat,
+.web-ds-v2.genesis-home .v2-brand>span{
+  display:none!important;
+}
+
+@media(min-width:901px){
+  /* Match the approved wide brand zone and push navigation right. */
+  .web-ds-v2.genesis-home .v2-brand{
+    width:470px!important;
+    min-width:470px!important;
+    height:55px!important;
+    padding:0 16px 0 24px!important;
+    justify-content:flex-start!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand>img:first-child{
+    display:block!important;
+    width:405px!important;
+    max-width:405px!important;
+    height:50px!important;
+    object-fit:contain!important;
+    object-position:left center!important;
+  }
+  .web-ds-v2.genesis-home .v2-primary-nav a{
+    min-width:88px!important;
+    padding-inline:10px!important;
+  }
+
+  /* Use the composed reference hero so the full stacked title is visible. */
+  .web-ds-v2.genesis-home .cinematic-split-hero{
+    height:286px!important;
+    min-height:286px!important;
+    max-height:286px!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-media{
+    background:url('/assets/v37/hero-reference.svg') center/100% 100% no-repeat!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-poster{
+    opacity:0!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-warm,
+  .web-ds-v2.genesis-home .cinematic-hero-cold{
+    opacity:0!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-vignette{
+    opacity:1!important;
+    background:
+      linear-gradient(180deg,rgba(0,0,0,.01),rgba(0,0,0,.04) 72%,rgba(1,5,9,.20)),
+      radial-gradient(ellipse at center,transparent 62%,rgba(0,0,0,.10) 100%)!important;
+  }
+
+  /* Release monitor wording has fixed text-safe columns. */
+  .web-ds-v2.genesis-home .release-monitor-next{
+    grid-template-columns:42px minmax(112px,1fr) auto!important;
+    gap:7px!important;
+  }
+  .web-ds-v2.genesis-home #home-release-state{
+    max-width:124px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:8px!important;
+  }
+  .web-ds-v2.genesis-home #home-release-part{
+    display:block!important;
+    max-width:145px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:13px!important;
+    line-height:1.1!important;
+  }
+  .web-ds-v2.genesis-home #home-release-time{
+    white-space:nowrap!important;
+    font-size:23px!important;
+  }
+
+  /* A sharp scenic crop inside the journey panel, over the full-panel inlay. */
+  .web-ds-v2.genesis-home .continue-adventure-art{
+    background:
+      linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.08)),
+      url('/assets/v27/rewards/early-genesis-world-panorama.webp') 64% 45%/cover no-repeat!important;
+    border:1px solid rgba(240,215,143,.70)!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(3,11,18,.60),
+      0 5px 14px rgba(0,0,0,.26)!important;
+  }
+}
+
+/* Phone/tablet keeps the normal hero image; only desktop uses the composed banner. */
+@media(max-width:900px){
+  .web-ds-v2.genesis-home .shell-wordmark-compat,
+  .web-ds-v2.genesis-home .v2-brand>span{
+    display:none!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand{
+    width:172px!important;
+    min-width:172px!important;
+    height:55px!important;
+    padding:0!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand>img:first-child{
+    width:165px!important;
+    max-width:165px!important;
+    height:46px!important;
+    object-fit:contain!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-media{
+    background:none!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-poster{
+    opacity:1!important;
+    object-fit:cover!important;
+    object-position:center 67%!important;
+  }
+}
+
+/* Mobile release monitor: no overlapping state/part/time labels. */
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .release-monitor-next{
+    display:grid!important;
+    grid-template-columns:38px minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    align-items:center!important;
+    column-gap:9px!important;
+    row-gap:3px!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-sigil{
+    grid-column:1!important;
+    grid-row:1/3!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-next>div{
+    grid-column:2!important;
+    grid-row:1!important;
+    min-width:0!important;
+  }
+  .web-ds-v2.genesis-home #home-release-state{
+    display:block!important;
+    max-width:100%!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:7px!important;
+    line-height:1.1!important;
+  }
+  .web-ds-v2.genesis-home #home-release-part{
+    display:block!important;
+    max-width:100%!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:10px!important;
+    line-height:1.15!important;
+  }
+  .web-ds-v2.genesis-home #home-release-time{
+    grid-column:2!important;
+    grid-row:2!important;
+    justify-self:start!important;
+    font-size:21px!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+  }
+
+  /* Keep the Continue Adventure picture crisp and compact. */
+  .web-ds-v2.genesis-home .continue-adventure-art{
+    background:
+      linear-gradient(180deg,rgba(0,0,0,.00),rgba(0,0,0,.10)),
+      url('/assets/v27/rewards/early-genesis-world-panorama.webp') 66% 46%/cover no-repeat!important;
+    border-color:rgba(238,211,132,.65)!important;
+  }
+
+  /* Profile is still a HUD on phone: show the most useful ledger rows. */
+  .web-ds-v2.genesis-home .home-access-stats{
+    display:grid!important;
+    margin-top:5px!important;
+  }
+  .web-ds-v2.genesis-home .home-access-stats>div{
+    display:flex!important;
+    min-height:25px!important;
+    padding:3px 4px!important;
+  }
+  .web-ds-v2.genesis-home .home-access-stats>div:nth-child(n+4){
+    display:none!important;
+  }
+  .web-ds-v2.genesis-home .home-access-stats span,
+  .web-ds-v2.genesis-home .home-access-stats strong{
+    font-size:8px!important;
+  }
+
+  /* Feed becomes a real horizontal activity rail rather than an image-only slab. */
+  .web-ds-v2.genesis-home .adventure-feed-content{
+    display:flex!important;
+    gap:7px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    height:auto!important;
+    min-height:118px!important;
+    padding:7px!important;
+    scroll-snap-type:x proximity;
+  }
+  .web-ds-v2.genesis-home .adventure-feed-content>.deck-release-card,
+  .web-ds-v2.genesis-home .adventure-feed-content>.deck-prelaunch-state{
+    flex:0 0 270px!important;
+    width:270px!important;
+    min-width:270px!important;
+    height:104px!important;
+    min-height:104px!important;
+    padding:10px 11px!important;
+    scroll-snap-align:start;
+    background:linear-gradient(90deg,rgba(2,9,16,.45),rgba(2,9,16,.28))!important;
+  }
+
+  .web-ds-v2.genesis-home .system-bulletin-list{
+    background:linear-gradient(90deg,rgba(2,9,16,.48),rgba(2,9,16,.20))!important;
+  }
+
+  /* Remove the oversized empty footer cavity while reserving space for fixed nav. */
+  .web-ds-v2.genesis-home .v37-footer{
+    min-height:0!important;
+    height:auto!important;
+    margin-bottom:0!important;
+    padding:10px 12px 76px!important;
+    grid-template-columns:1fr!important;
+    grid-auto-rows:auto!important;
+    align-content:start!important;
+    row-gap:8px!important;
+  }
+  .web-ds-v2.genesis-home .v37-footer .game-footer-brand,
+  .web-ds-v2.genesis-home .v37-footer .v37-footer-links,
+  .web-ds-v2.genesis-home .v37-footer .v37-social-dock{
+    grid-column:1!important;
+  }
+}
+
+/* DEPLOY MARKER: WEB-DS V3.10 REFERENCE ALIGNMENT */
+
+
+/* WEB-DS V3.10.1 — RED TEAM screenshot correction */
+.web-ds-v2.genesis-home .v2-nav{
+  background:linear-gradient(180deg,#07131f 0%,#030a12 100%)!important;
+  backdrop-filter:none!important;
+}
+@media(min-width:901px){
+  /* The source key art already contains the full GENESIS title; crop the lower band correctly. */
+  .web-ds-v2.genesis-home .cinematic-hero-media{
+    background:none!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-poster{
+    opacity:1!important;
+    display:block!important;
+    width:100%!important;
+    height:100%!important;
+    max-height:none!important;
+    object-fit:cover!important;
+    object-position:center 91%!important;
+    transform:scale(1)!important;
+    filter:saturate(1.03) contrast(1.04) brightness(.91)!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-warm{
+    opacity:1!important;
+    background:linear-gradient(90deg,rgba(112,60,20,.06),transparent 42%)!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-cold{
+    opacity:1!important;
+    background:linear-gradient(270deg,rgba(21,74,139,.08),transparent 45%)!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-art{
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+}
+@media(max-width:620px){
+  /* State text is redundant on phone and was colliding with the Part label. */
+  .web-ds-v2.genesis-home #home-release-state{display:none!important}
+  .web-ds-v2.genesis-home #home-release-part{
+    font-size:9px!important;
+    letter-spacing:.01em!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-art{
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+  .web-ds-v2.genesis-home .v37-footer{
+    max-height:175px!important;
+    overflow:hidden!important;
+    padding:10px 12px 64px!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.10.1 SCREENSHOT CORRECTION */
+
+
+/* WEB-DS V3.10.2 — final reference cleanup */
+.web-ds-v2.genesis-home .console-crown{
+  top:0!important;
+  width:100%!important;
+  height:12px!important;
+  transform:none!important;
+  left:0!important;
+  display:block!important;
+  z-index:8!important;
+}
+.web-ds-v2.genesis-home .console-crown strong,
+.web-ds-v2.genesis-home .console-crown span{
+  display:none!important;
+}
+.web-ds-v2.genesis-home .console-crown small{
+  top:2px!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+  font-size:6px!important;
+  line-height:1!important;
+  letter-spacing:.24em!important;
+  color:#8fa8ba!important;
+}
+.web-ds-v2.genesis-home .genesis-player-console{
+  padding-top:13px!important;
+}
+
+/* Darker, more player-HUD-like profile art; keep every marked box unique. */
+.web-ds-v2.genesis-home .deck-access-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.62) 0%,rgba(3,12,20,.42) 46%,rgba(3,12,20,.18) 100%),
+    url('/assets/v27/rewards/flavio-reyes.webp')!important;
+  background-position:66% 34%!important;
+}
+.web-ds-v2.genesis-home .adventure-feed-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.40) 0%,rgba(3,12,20,.34) 44%,rgba(3,12,20,.50) 100%),
+    url('/assets/v27/rewards/beginner-hunt.webp')!important;
+  background-position:center 45%!important;
+}
+.web-ds-v2.genesis-home .tile-characters::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.08) 42%,rgba(2,7,12,.68) 77%,rgba(2,7,12,.94)),
+    url('/assets/v27/rewards/flavio-nico-early-party.webp')!important;
+  background-position:center 36%!important;
+}
+
+/* Extra insurance against legacy hidden wordmarks reappearing. */
+.web-ds-v2.genesis-home img.shell-wordmark-compat,
+.web-ds-v2.genesis-home img.shell-wordmark-compat[hidden]{
+  display:none!important;
+  visibility:hidden!important;
+  width:0!important;
+  height:0!important;
+}
+
+/* Compact phone footer to a real game dock instead of a tall empty slab. */
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .v37-footer{
+    box-sizing:border-box!important;
+    height:170px!important;
+    min-height:170px!important;
+    max-height:170px!important;
+    padding:10px 12px 58px!important;
+    overflow:hidden!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.10.2 FINAL REFERENCE CLEANUP */
