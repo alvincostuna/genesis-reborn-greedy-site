@@ -527,6 +527,7 @@ jobs:
                   const announcements=document.querySelector('.deck-announcements-panel');
                   const slots=[...document.querySelectorAll('[data-release-slot]')];
                   const isV36=deck?.classList.contains('genesis-player-console');
+                  const isV37=document.body?.dataset?.designVersion==='v37';
                   const countdown=[...document.querySelectorAll(isV36?'.release-monitor-countdown>span':'.home-countdown-grid>div')];
                   const issues=[];
                   if(!visible(deck))issues.push('command deck missing');
@@ -543,11 +544,15 @@ jobs:
                   if(mode.startsWith('desktop-')){
                     const navLinks=[...document.querySelectorAll('.v2-primary-nav a')];
                     const activeNav=document.querySelector('.v2-primary-nav a.active');
-                    if(navLinks.length!==7)issues.push('desktop primary nav count is not 7');
+                    const expectedNavCount=isV37?6:7;
+                    if(navLinks.length!==expectedNavCount)issues.push('desktop primary nav count is not '+expectedNavCount);
                     for(const link of navLinks){
+                      if(!visible(link))continue;
                       const icon=link.querySelector('.v25-icon');
-                      if(link.getBoundingClientRect().height<74)issues.push('desktop nav target below 74px');
-                      if(icon&&icon.getBoundingClientRect().width<26)issues.push('desktop nav icon below 26px');
+                      const minTarget=isV37?52:74;
+                      const minIcon=isV37?18:26;
+                      if(link.getBoundingClientRect().height<minTarget)issues.push('desktop nav target below '+minTarget+'px');
+                      if(icon&&icon.getBoundingClientRect().width<minIcon)issues.push('desktop nav icon below '+minIcon+'px');
                       if(parseFloat(getComputedStyle(link).fontSize)<11.5)issues.push('desktop nav label below 11.5px');
                     }
                     if(activeNav&&getComputedStyle(activeNav).backgroundImage==='none')issues.push('desktop active nav lacks HUD background');
@@ -566,7 +571,7 @@ jobs:
                     const lowerUsable=lwr.width+ar.width;
 
                     if(isV36){
-                      if(dr.height<560)issues.push('V3.6 command interface too short');
+                      if(dr.height<(isV37?500:560))issues.push((isV37?'V3.7':'V3.6')+' command interface too short');
                       near(leftShare,.275,.035,'V3.6 release monitor proportion');
                       near(centerShare,.44,.04,'V3.6 continue-adventure proportion');
                       near(rightShare,.285,.035,'V3.6 reader-profile proportion');
@@ -602,16 +607,17 @@ jobs:
                       if(!storyFamily.includes('cormorant')&&!storyFamily.includes('georgia')&&!storyFamily.includes('times new roman'))issues.push('V3 story font stack missing');
                       if(!isV36&&headerColor!=='rgb(232, 233, 231)')issues.push('V3.3 silver panel-title hierarchy missing: '+headerColor);
                       if(!primaryBg.includes('linear-gradient'))issues.push('V3 primary CTA gradient missing');
-                      if(parseFloat(getComputedStyle(accessTitle).fontSize)<(isV36?17.5:18.5))issues.push('V3 access identity title too small');
+                      if(parseFloat(getComputedStyle(accessTitle).fontSize)<(isV37?16.5:(isV36?17.5:18.5)))issues.push('V3 access identity title too small');
                       near(releaseSize,isV36?25:34,isV36?3:1,'release time font');
                       near(readingSize,isV36?30:28,isV36?3:1,'V3 reading title font');
                     }
+                    const minText=isV37?6.8:(isV36?7.5:9.95);
                     const tiny=[...deck.querySelectorAll('span,strong,small,p,h2,a,time,em')]
-                      .filter(el=>visible(el)&&el.textContent.trim()&&parseFloat(getComputedStyle(el).fontSize)<(isV36?7.5:9.95))
+                      .filter(el=>visible(el)&&el.textContent.trim()&&parseFloat(getComputedStyle(el).fontSize)<minText)
                       .map(el=>el.textContent.trim().slice(0,28));
-                    if(tiny.length)issues.push('meaningful desktop text below '+(isV36?'7.5':'10')+'px: '+tiny.slice(0,5).join(' | '));
-                    if(lr.height<(isV36?270:300)||cr.height<(isV36?270:300)||rr.height<(isV36?270:300))issues.push('upper panels shorter than contract');
-                    if(lwr.height<(isV36?140:154)||ar.height<(isV36?140:154))issues.push('lower panels shorter than contract');
+                    if(tiny.length)issues.push('meaningful desktop text below '+minText+'px: '+tiny.slice(0,5).join(' | '));
+                    if(lr.height<(isV37?220:(isV36?270:300))||cr.height<(isV37?220:(isV36?270:300))||rr.height<(isV37?220:(isV36?270:300)))issues.push('upper panels shorter than contract');
+                    if(lwr.height<(isV37?120:(isV36?140:154))||ar.height<(isV37?120:(isV36?140:154)))issues.push('lower panels shorter than contract');
                   }else{
                     if(dr.top<mr.bottom-2)issues.push('mobile/tablet command overlaps artwork');
                     const mobileBottom=document.querySelector('.v2-mobile-bottom');

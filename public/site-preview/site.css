@@ -12939,3 +12939,1366 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   font-size:8px!important;
 }
 /* DEPLOY MARKER: WEB-DS V3.6.1 QA TYPOGRAPHY FINISH */
+
+
+/* ==========================================================================
+   WEB-DS V3.7 — REFERENCE MATCH / ORNATE GAME CLIENT
+   Visual target: approved Commander reference. Homepage-only.
+   ========================================================================== */
+.web-ds-v2.genesis-home{
+  --v37-gold:#d9ba68;
+  --v37-gold-hi:#f0d98a;
+  --v37-gold-deep:#77521d;
+  --v37-ink:#030811;
+  --v37-panel:#071522;
+  --v37-blue:#74bfff;
+  background:#020812!important;
+}
+.web-ds-v2.genesis-home::before{
+  content:"";
+  position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(35,99,155,.16),transparent 42%),
+    linear-gradient(180deg,#07111c 0%,#02070d 76%,#010409 100%);
+}
+.web-ds-v2.genesis-home .v2-shell{
+  position:relative;
+  width:min(1648px,100%)!important;
+  max-width:1648px!important;
+  padding:0 0 0!important;
+  margin:0 auto!important;
+}
+.web-ds-v2 .v37-page-ornament{
+  position:absolute;z-index:30;inset:0;pointer-events:none;
+  background:url('/assets/v37/ornate-frame.svg') center/100% 100% no-repeat;
+  opacity:.94;
+}
+
+/* ===== TOP GAME NAV ===== */
+.web-ds-v2.genesis-home .v2-nav{
+  width:min(1648px,100%);
+  height:56px!important;
+  min-height:56px!important;
+  margin:0 auto;
+  padding:0 30px!important;
+  border:1px solid rgba(217,186,104,.66)!important;
+  border-top:0!important;
+  background:
+    linear-gradient(180deg,rgba(8,19,31,.995),rgba(3,10,18,.995))!important;
+  box-shadow:
+    inset 0 -1px rgba(240,217,138,.12),
+    inset 0 0 22px rgba(56,133,194,.06),
+    0 8px 20px rgba(0,0,0,.34)!important;
+}
+.web-ds-v2.genesis-home .v2-nav::before,
+.web-ds-v2.genesis-home .v2-nav::after{
+  content:"";position:absolute;top:0;bottom:0;width:180px;pointer-events:none;
+  background:url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat;
+  opacity:.72;
+}
+.web-ds-v2.genesis-home .v2-nav::before{left:0}
+.web-ds-v2.genesis-home .v2-nav::after{right:0;transform:scaleX(-1)}
+.web-ds-v2.genesis-home .v2-brand{
+  min-width:355px!important;
+  height:54px!important;
+  padding-left:64px!important;
+  border:0!important;
+  background:none!important;
+}
+.web-ds-v2.genesis-home .v2-brand img{
+  width:320px!important;
+  max-width:none!important;
+  height:45px!important;
+  object-fit:contain!important;
+  object-position:left center;
+  filter:drop-shadow(0 1px 0 #000) drop-shadow(0 0 8px rgba(217,186,104,.11))!important;
+}
+.web-ds-v2.genesis-home .v2-brand span{display:none!important}
+.web-ds-v2.genesis-home .v2-primary-nav{
+  height:55px!important;
+  gap:0!important;
+  align-items:stretch!important;
+}
+.web-ds-v2.genesis-home .v2-primary-nav a{
+  position:relative;
+  min-width:105px!important;
+  min-height:55px!important;
+  padding:0 13px!important;
+  display:flex!important;
+  flex-direction:row!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:8px!important;
+  color:#e2ddd2!important;
+  border-left:1px solid rgba(217,186,104,.06);
+  border-right:1px solid rgba(217,186,104,.06);
+  font:700 13px/1 Georgia,"Times New Roman",serif!important;
+  letter-spacing:.025em!important;
+  text-transform:uppercase;
+}
+.web-ds-v2.genesis-home .v2-primary-nav a .v25-icon{
+  margin:0!important;
+  width:19px!important;height:19px!important;
+  color:#e5c76e!important;
+}
+.web-ds-v2.genesis-home .v2-primary-nav a.active{
+  color:#fff6db!important;
+  background:
+    radial-gradient(circle at 50% 100%,rgba(83,157,227,.30),transparent 52%),
+    linear-gradient(180deg,rgba(216,179,95,.20),rgba(10,34,55,.58))!important;
+  border-left-color:rgba(217,186,104,.44)!important;
+  border-right-color:rgba(217,186,104,.44)!important;
+  box-shadow:inset 0 -2px #d7b15f,0 0 18px rgba(67,152,230,.14)!important;
+}
+.web-ds-v2.genesis-home .v2-primary-nav .nav-more span{
+  color:#e9c967;font-size:15px;letter-spacing:.15em;
+}
+.web-ds-v2.genesis-home .v2-nav-actions{gap:8px!important}
+.web-ds-v2.genesis-home .v2-search{
+  width:215px!important;height:36px!important;
+  border:1px solid rgba(217,186,104,.44)!important;
+  border-radius:18px!important;
+  background:#04101a!important;
+}
+.web-ds-v2.genesis-home .v2-search input{font-size:11px!important}
+.web-ds-v2.genesis-home .v2-bell,.web-ds-v2.genesis-home .profile-orb{
+  width:38px!important;height:38px!important;border-radius:50%!important;
+  border:1px solid rgba(217,186,104,.55)!important;
+  background:radial-gradient(circle,#10253a,#04101a)!important;
+  box-shadow:0 0 0 2px rgba(2,7,12,.8),0 0 10px rgba(217,186,104,.08)!important;
+}
+
+/* ===== HERO: REFERENCE CROP ===== */
+.web-ds-v2.genesis-home .cinematic-split-hero{
+  position:relative;
+  width:100%!important;
+  height:286px!important;
+  min-height:286px!important;
+  max-height:286px!important;
+  margin:0!important;
+  overflow:hidden!important;
+  border:1px solid rgba(217,186,104,.74)!important;
+  border-top:0!important;
+  border-radius:0!important;
+  box-shadow:
+    inset 0 0 0 5px rgba(3,10,18,.58),
+    0 9px 20px rgba(0,0,0,.30)!important;
+}
+.web-ds-v2 .cinematic-hero-frame,
+.web-ds-v2 .cinematic-hero-media{
+  position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+}
+.web-ds-v2 .cinematic-hero-poster{
+  position:absolute!important;
+  width:100%!important;height:100%!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  object-position:center 72%!important;
+  filter:saturate(1.02) contrast(1.06) brightness(.86)!important;
+  transform:scale(1.02);
+}
+.web-ds-v2 .cinematic-hero-warm{
+  background:linear-gradient(90deg,rgba(91,42,15,.10),transparent 48%)!important;
+}
+.web-ds-v2 .cinematic-hero-cold{
+  background:linear-gradient(270deg,rgba(16,63,117,.12),transparent 50%)!important;
+}
+.web-ds-v2 .cinematic-hero-vignette{
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.04) 60%,rgba(2,6,10,.44)),
+    radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.18) 100%)!important;
+}
+.web-ds-v2 .cinematic-split-hero::after{
+  content:"";
+  position:absolute;z-index:8;inset:0;pointer-events:none;
+  background:url('/assets/v37/ornate-frame.svg') center/100% 100% no-repeat;
+  opacity:.98;
+}
+.web-ds-v2 .v2-corner{display:none!important}
+
+/* ===== READER COMMAND DECK ===== */
+.web-ds-v2 .genesis-player-console{
+  position:relative;
+  width:100%!important;
+  margin:0!important;
+  padding:11px 14px 8px!important;
+  gap:6px!important;
+  border:1px solid rgba(217,186,104,.72)!important;
+  border-top:0!important;
+  background:
+    radial-gradient(circle at 50% 0,rgba(42,101,147,.10),transparent 42%),
+    linear-gradient(180deg,#06111d,#020913)!important;
+  box-shadow:inset 0 0 0 5px rgba(6,26,42,.50),0 10px 25px rgba(0,0,0,.30)!important;
+}
+.web-ds-v2 .genesis-player-console::after{
+  content:"";position:absolute;z-index:20;inset:0;pointer-events:none;
+  background:url('/assets/v37/ornate-frame.svg') center/100% 100% no-repeat;
+  opacity:.62;
+}
+.web-ds-v2 .console-crown{
+  top:-11px!important;
+  width:420px!important;
+  z-index:25!important;
+}
+.web-ds-v2 .console-crown strong{
+  padding:0 17px;
+  color:#fff8e7!important;
+  background:#04101a;
+  font-size:13px!important;
+  letter-spacing:.13em!important;
+}
+.web-ds-v2 .console-crown small{
+  top:17px!important;font-size:7px!important;color:#8ba6ba!important;
+}
+.web-ds-v2 .console-crown span{background:linear-gradient(90deg,transparent,#d5b45f)!important}
+
+/* primary proportions and heights */
+.web-ds-v2 .genesis-player-console .player-console-primary{
+  grid-template-columns:28.5% 42.7% 28.8%!important;
+  gap:7px!important;
+}
+.web-ds-v2 .genesis-player-console .player-console-secondary{
+  grid-template-columns:61% 39%!important;
+  gap:7px!important;
+}
+.web-ds-v2 .genesis-player-console .game-console-panel{
+  min-height:0!important;
+  border:1px solid rgba(217,186,104,.66)!important;
+  border-radius:4px!important;
+  background:
+    linear-gradient(180deg,rgba(8,26,41,.96),rgba(3,13,22,.985))!important;
+  box-shadow:
+    inset 0 0 0 3px rgba(24,67,98,.17),
+    inset 0 0 28px rgba(55,131,190,.035),
+    0 5px 12px rgba(0,0,0,.26)!important;
+}
+.web-ds-v2 .genesis-player-console .game-console-panel::before{
+  inset:4px!important;
+  border-color:rgba(115,176,215,.20)!important;
+  border-radius:2px!important;
+}
+.web-ds-v2 .genesis-player-console .game-console-panel::after{
+  content:"";position:absolute;z-index:4;inset:0;pointer-events:none;
+  background:url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat;
+  opacity:.80;
+}
+.web-ds-v2 .console-corner{display:none!important}
+.web-ds-v2 .game-console-head{
+  z-index:6!important;
+  min-height:39px!important;
+  height:39px!important;
+  padding:0 14px!important;
+  border-bottom:1px solid rgba(217,186,104,.36)!important;
+  background:
+    linear-gradient(90deg,rgba(218,184,103,.08),rgba(12,39,60,.52) 28%,rgba(5,18,30,.15))!important;
+}
+.web-ds-v2 .game-console-head::after{
+  content:"";position:absolute;left:8px;right:8px;bottom:-2px;height:10px;pointer-events:none;
+  background:url('/assets/v37/ornate-divider.svg') center/100% 100% no-repeat;
+  opacity:.40;
+}
+.web-ds-v2 .game-console-head>span{
+  color:#f1ede4!important;
+  font-size:15px!important;
+  letter-spacing:.035em!important;
+  text-shadow:0 1px 1px #000;
+}
+.web-ds-v2 .game-console-head .console-icon{
+  color:#f0d47e!important;
+  width:20px!important;height:20px!important;
+}
+.web-ds-v2 .game-console-head>a{
+  color:#d9e0e4!important;font-size:9px!important;
+}
+
+/* release */
+.web-ds-v2 .release-monitor-main{
+  height:74px!important;
+  margin:8px 10px 5px!important;
+  padding:8px 9px!important;
+  border-color:rgba(217,186,104,.36)!important;
+  background:
+    linear-gradient(90deg,rgba(5,18,30,.92),rgba(5,18,30,.44)),
+    url('/assets/v25/releases/release-city.png') right center/52% cover no-repeat!important;
+}
+.web-ds-v2 .release-monitor-main::after{
+  background:linear-gradient(90deg,#071725 0 43%,rgba(7,23,37,.64) 68%,rgba(7,23,37,.20))!important;
+}
+.web-ds-v2 .release-monitor-next{
+  grid-template-columns:44px minmax(0,1fr) auto!important;
+}
+.web-ds-v2 .release-monitor-sigil{
+  width:40px!important;height:40px!important;border-color:rgba(217,186,104,.68)!important;
+  box-shadow:0 0 0 3px rgba(2,8,14,.78),0 0 12px rgba(217,186,104,.10)!important;
+}
+.web-ds-v2 .release-monitor-next small{font-size:8px!important;color:#e8c75f!important}
+.web-ds-v2 .release-monitor-next strong{font-size:15px!important}
+.web-ds-v2 .release-monitor-next>b{font-size:22px!important;color:#f4da86!important}
+.web-ds-v2 .release-monitor-countdown{font-size:9px!important}
+.web-ds-v2 .release-cycle-label{margin:4px 9px 2px!important}
+.web-ds-v2 .release-monitor-slots{margin:0 9px!important;gap:6px!important}
+.web-ds-v2 .release-monitor-slots .home-release-slot{
+  min-height:62px!important;
+  padding:5px!important;
+  border-color:rgba(217,186,104,.46)!important;
+  background:linear-gradient(180deg,rgba(14,35,50,.92),rgba(4,14,23,.98))!important;
+}
+.web-ds-v2 .release-monitor-slots strong{font-size:12px!important}
+.web-ds-v2 .release-monitor-slots small{font-size:9px!important}
+.web-ds-v2 .release-monitor-footer{
+  margin:6px 10px 8px!important;padding-top:5px!important;
+}
+.web-ds-v2 .release-monitor-footer span>b{
+  border-color:rgba(217,186,104,.58)!important;color:#f2d783!important;
+}
+.web-ds-v2 .release-monitor-footer small{font-size:8px!important}
+.web-ds-v2 .release-monitor-footer strong{font-size:9px!important}
+
+/* center console */
+.web-ds-v2 .continue-adventure-body{
+  min-height:223px!important;
+  height:223px!important;
+  padding:10px 12px!important;
+  grid-template-columns:minmax(0,1.08fr) minmax(210px,.95fr) 105px!important;
+  gap:10px!important;
+}
+.web-ds-v2 .continue-adventure-copy h2{
+  font-size:29px!important;
+  margin:6px 0 8px!important;
+  text-shadow:0 2px 10px rgba(0,0,0,.46);
+}
+.web-ds-v2 .continue-adventure-copy p{
+  font-size:12px!important;
+  line-height:1.38!important;
+  margin-bottom:12px!important;
+}
+.web-ds-v2 .command-primary-cta{
+  width:295px!important;min-height:46px!important;
+  border:1px solid #f4d783!important;
+  background:
+    linear-gradient(180deg,#f3d98c,#c99d4c)!important;
+  box-shadow:
+    inset 0 0 0 2px rgba(255,247,210,.22),
+    inset 0 1px rgba(255,255,255,.60),
+    0 0 14px rgba(217,186,104,.14)!important;
+  font-size:15px!important;
+}
+.web-ds-v2 .continue-adventure-art{
+  min-height:201px!important;height:201px!important;
+  border:1px solid rgba(240,211,126,.82)!important;
+  box-shadow:
+    inset 0 0 0 3px rgba(3,10,18,.82),
+    0 0 0 1px rgba(14,43,65,.80),
+    0 6px 18px rgba(0,0,0,.30)!important;
+}
+.web-ds-v2 .continue-adventure-ledger{
+  border-left:1px solid rgba(217,186,104,.12);
+  padding-left:9px!important;
+}
+.web-ds-v2 .continue-adventure-ledger small,
+.web-ds-v2 .continue-adventure-ledger span{font-size:8px!important}
+.web-ds-v2 .continue-adventure-ledger strong,
+.web-ds-v2 .continue-adventure-ledger b{font-size:9px!important}
+
+/* profile richer artwork + rows */
+.web-ds-v2 .reader-profile-panel{
+  background:
+    linear-gradient(90deg,rgba(4,14,23,.93),rgba(4,14,23,.50)),
+    url('/assets/v27/rewards/flavio-early-cast-wallpaper.webp') 78% center/cover no-repeat!important;
+}
+.web-ds-v2 .reader-profile-panel::before{
+  background:
+    linear-gradient(90deg,rgba(115,181,230,.06),transparent 44%),
+    linear-gradient(180deg,rgba(217,186,104,.03),transparent 40%)!important;
+}
+.web-ds-v2 .reader-profile-state{
+  min-height:223px!important;height:223px!important;padding:9px 13px!important;
+}
+.web-ds-v2 .reader-profile-identity{
+  grid-template-columns:64px 1fr!important;gap:10px!important;padding-bottom:5px!important;
+}
+.web-ds-v2 .reader-profile-identity .home-access-avatar{
+  width:58px!important;height:58px!important;
+  border-color:rgba(240,211,126,.82)!important;
+  box-shadow:
+    0 0 0 4px rgba(3,11,18,.92),
+    0 0 0 5px rgba(217,186,104,.55),
+    0 0 15px rgba(85,170,236,.16)!important;
+}
+.web-ds-v2 .reader-profile-identity strong{font-size:17px!important}
+.web-ds-v2 .reader-profile-ledger>div{
+  min-height:27px!important;
+  border-bottom-color:rgba(151,186,211,.18)!important;
+}
+.web-ds-v2 .reader-profile-ledger span,
+.web-ds-v2 .reader-profile-ledger strong{font-size:9px!important}
+.web-ds-v2 .reader-profile-signin{
+  min-height:31px!important;
+  border-color:rgba(217,186,104,.66)!important;
+  background:linear-gradient(180deg,rgba(20,43,61,.90),rgba(5,16,26,.96))!important;
+}
+
+/* lower row */
+.web-ds-v2 .player-console-secondary .game-console-panel{min-height:128px!important;height:128px!important}
+.web-ds-v2 .adventure-feed-panel .game-console-head,
+.web-ds-v2 .bulletin-panel .game-console-head{height:36px!important;min-height:36px!important}
+.web-ds-v2 .adventure-feed-tabs button{
+  height:23px!important;min-width:64px!important;
+  border-radius:14px!important;
+}
+.web-ds-v2 .adventure-feed-tabs button.active{
+  border-color:#e1c56e!important;
+  box-shadow:0 0 8px rgba(72,166,239,.18),inset 0 0 8px rgba(72,166,239,.08)!important;
+}
+.web-ds-v2 .adventure-feed-content{
+  min-height:84px!important;height:84px!important;margin:0 9px 6px!important;
+}
+.web-ds-v2 .adventure-feed-panel .deck-prelaunch-state,
+.web-ds-v2 .adventure-feed-panel .deck-release-card{
+  min-height:82px!important;height:82px!important;
+  background:
+    linear-gradient(90deg,rgba(3,12,20,.30),rgba(3,12,20,.78) 68%),
+    url('/assets/v25/destinations/destination-codex.png') left center/44% cover no-repeat!important;
+}
+.web-ds-v2 .system-bulletin-list{
+  height:87px!important;
+  padding:3px 8px 5px!important;
+  background:
+    linear-gradient(90deg,rgba(3,12,20,.88),rgba(3,12,20,.54)),
+    url('/assets/v25/destinations/destination-world.png') right center/58% cover no-repeat!important;
+}
+.web-ds-v2 .system-bulletin-list .deck-announcement-row{
+  min-height:27px!important;
+}
+
+/* ===== WORLD NAV HUB ===== */
+.web-ds-v2 .world-navigation-hub{
+  margin-top:0!important;
+  padding:20px 8px 7px!important;
+  border-color:rgba(217,186,104,.72)!important;
+  background:
+    linear-gradient(180deg,rgba(8,23,36,.96),rgba(3,11,18,.99))!important;
+  box-shadow:inset 0 0 0 4px rgba(30,77,110,.16)!important;
+}
+.web-ds-v2 .world-navigation-hub::after{
+  content:"";position:absolute;z-index:5;inset:0;pointer-events:none;
+  background:url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat;
+  opacity:.68;
+}
+.web-ds-v2 .world-navigation-hub>header{
+  top:-11px!important;width:500px!important;z-index:7!important;
+}
+.web-ds-v2 .world-navigation-hub>header div{
+  min-width:300px!important;padding:3px 20px!important;
+  background:#04101a!important;
+  border-color:rgba(217,186,104,.55)!important;
+}
+.web-ds-v2 .world-navigation-hub>header strong{font-size:13px!important;color:#fff5dc!important}
+.web-ds-v2 .world-navigation-hub>header small{font-size:7px!important}
+.web-ds-v2 .world-navigation-grid{
+  position:relative;z-index:6;
+  grid-template-columns:repeat(9,minmax(0,1fr))!important;
+  gap:6px!important;
+}
+.web-ds-v2 .world-nav-tile{
+  min-height:86px!important;height:86px!important;
+  padding:7px 5px 6px!important;
+  border:1px solid rgba(217,186,104,.70)!important;
+  border-radius:3px!important;
+  box-shadow:
+    inset 0 0 0 3px rgba(2,8,14,.62),
+    0 4px 9px rgba(0,0,0,.24)!important;
+}
+.web-ds-v2 .world-nav-tile::after{
+  content:"";position:absolute;inset:3px;pointer-events:none;
+  border:1px solid rgba(247,224,151,.16);
+}
+.web-ds-v2 .world-nav-tile b{
+  font-size:20px!important;
+  color:#f4d87d!important;
+}
+.web-ds-v2 .world-nav-tile strong{
+  font-size:12px!important;color:#fff7e4!important;
+  text-shadow:0 2px 2px #000;
+}
+.web-ds-v2 .world-nav-tile small{
+  font-size:8px!important;color:#d2d9dc!important;
+  text-shadow:0 1px 2px #000;
+}
+.web-ds-v2 .world-nav-tile.is-primary{
+  border-color:#f0d174!important;
+  box-shadow:
+    inset 0 0 0 3px rgba(2,8,14,.58),
+    0 0 12px rgba(87,170,246,.23)!important;
+}
+.web-ds-v2 .world-nav-tile.is-primary b{
+  color:#84c8ff!important;text-shadow:0 0 10px rgba(77,170,255,.55)!important;
+}
+
+/* ===== GAME FOOTER ===== */
+.web-ds-v2.genesis-home .v37-footer{
+  width:min(1648px,100%)!important;
+  min-height:47px!important;height:47px!important;
+  margin:0 auto!important;
+  padding:5px 36px!important;
+  grid-template-columns:300px minmax(0,1fr) 230px 265px!important;
+  gap:16px!important;
+  border:1px solid rgba(217,186,104,.70)!important;
+  border-top:0!important;
+  background:
+    linear-gradient(180deg,#071521,#020a11)!important;
+  box-shadow:inset 0 0 0 3px rgba(26,67,96,.12)!important;
+}
+.web-ds-v2 .v37-footer .game-footer-brand img{width:30px!important;height:30px!important}
+.web-ds-v2 .v37-footer .game-footer-brand strong{font-size:14px!important}
+.web-ds-v2 .v37-footer .game-footer-brand small{font-size:7px!important}
+.web-ds-v2 .v37-footer-links>span{display:none!important}
+.web-ds-v2 .v37-footer-links>div{
+  justify-content:flex-start!important;
+  gap:0!important;
+}
+.web-ds-v2 .v37-footer-links a{
+  position:relative;
+  padding:4px 11px!important;
+  color:#8fa1af!important;
+  font-size:8px!important;
+}
+.web-ds-v2 .v37-footer-links a:not(:last-child)::after{
+  content:"";position:absolute;right:0;top:50%;width:2px;height:2px;border-radius:50%;background:#695735;
+}
+.web-ds-v2 .v37-social-dock{
+  display:flex;justify-content:center;align-items:center;gap:15px;
+  color:#9aaaba;font:700 14px/1 Arial,sans-serif;
+}
+.web-ds-v2 .v37-social-dock span:hover{color:#f0d17c}
+.web-ds-v2 .v37-footer blockquote{
+  color:#c3a86d!important;font-size:10px!important;
+}
+
+/* ===== fit the reference into a desktop viewport ===== */
+@media(min-width:1281px){
+  .web-ds-v2.genesis-home .v2-shell{min-height:0!important}
+  .web-ds-v2 .genesis-player-console{min-height:0!important}
+}
+
+/* ===== tablet / mobile retains the V3.6 stacked console but with ornament ===== */
+@media(max-width:900px){
+  .web-ds-v2 .v37-page-ornament{display:none}
+  .web-ds-v2.genesis-home .v2-nav{width:100%;padding:0 10px!important}
+  .web-ds-v2.genesis-home .v2-brand{min-width:0!important;padding-left:0!important}
+  .web-ds-v2.genesis-home .v2-brand img{width:180px!important}
+  .web-ds-v2.genesis-home .cinematic-split-hero{
+    height:220px!important;min-height:220px!important;max-height:220px!important;
+  }
+  .web-ds-v2 .cinematic-hero-poster{object-position:center 67%!important}
+  .web-ds-v2 .genesis-player-console .player-console-primary,
+  .web-ds-v2 .genesis-player-console .player-console-secondary{
+    grid-template-columns:1fr!important;
+  }
+  .web-ds-v2 .continue-adventure-body{
+    height:auto!important;min-height:0!important;
+  }
+  .web-ds-v2 .reader-profile-state{
+    height:auto!important;min-height:0!important;
+  }
+  .web-ds-v2 .player-console-secondary .game-console-panel{
+    height:auto!important;min-height:128px!important;
+  }
+  .web-ds-v2 .world-navigation-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+  .web-ds-v2.genesis-home .v37-footer{
+    height:auto!important;min-height:90px!important;
+    grid-template-columns:1fr!important;
+    padding:9px 12px 76px!important;
+  }
+  .web-ds-v2 .v37-social-dock{justify-content:flex-start}
+}
+
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .cinematic-split-hero{
+    height:184px!important;min-height:184px!important;max-height:184px!important;
+  }
+  .web-ds-v2 .world-navigation-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+
+/* DEPLOY MARKER: WEB-DS V3.7 REFERENCE MATCH */
+
+
+/* WEB-DS V3.7.1 — HERO + BRAND REFERENCE CORRECTION */
+.web-ds-v2.genesis-home .v2-brand{
+  display:flex!important;
+  align-items:center!important;
+  gap:9px!important;
+  padding-left:18px!important;
+  min-width:360px!important;
+}
+.web-ds-v2.genesis-home .v2-brand img{
+  display:block!important;
+  width:42px!important;height:42px!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 0 8px rgba(217,186,104,.18))!important;
+}
+.web-ds-v2.genesis-home .v2-brand span{
+  display:flex!important;
+  align-items:baseline;
+  gap:8px;
+  color:#f2eee5;
+  font:700 25px/1 Georgia,"Times New Roman",serif!important;
+  letter-spacing:.03em!important;
+  white-space:nowrap!important;
+  text-shadow:0 1px #000;
+}
+.web-ds-v2.genesis-home .v2-brand span br{display:none}
+.web-ds-v2.genesis-home .v2-brand span small{
+  display:inline!important;
+  margin:0!important;
+  color:#c23e38!important;
+  font:700 19px/1 Georgia,"Times New Roman",serif!important;
+  letter-spacing:.04em!important;
+}
+.web-ds-v2 .cinematic-hero-media{
+  background:url('/assets/v37/hero-reference.svg') center/100% 100% no-repeat!important;
+}
+.web-ds-v2 .cinematic-hero-poster,
+.web-ds-v2 .cinematic-hero-warm,
+.web-ds-v2 .cinematic-hero-cold{
+  opacity:0!important;
+}
+.web-ds-v2 .cinematic-hero-vignette{
+  background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.08) 72%,rgba(0,0,0,.25))!important;
+}
+.web-ds-v2 .reader-profile-panel{
+  background:
+    linear-gradient(90deg,rgba(4,14,23,.83),rgba(4,14,23,.24)),
+    url('/assets/v27/rewards/flavio-early-cast-wallpaper.webp') 72% center/cover no-repeat!important;
+}
+.web-ds-v2 .system-bulletin-list{
+  background:
+    linear-gradient(90deg,rgba(3,12,20,.82),rgba(3,12,20,.38)),
+    url('/assets/v25/destinations/destination-world.png') right 44%/65% cover no-repeat!important;
+}
+@media(max-width:900px){
+  .web-ds-v2.genesis-home .v2-brand{min-width:0!important;padding-left:0!important}
+  .web-ds-v2.genesis-home .v2-brand img{width:34px!important;height:34px!important}
+  .web-ds-v2.genesis-home .v2-brand span{font-size:16px!important}
+  .web-ds-v2.genesis-home .v2-brand span small{font-size:12px!important}
+  .web-ds-v2 .cinematic-hero-media{
+    background:url('/assets/master-key-art-split-world-v1.webp') center 68%/cover no-repeat!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.7.1 HERO BRAND */
+
+
+/* WEB-DS V3.7.2 — MOBILE BRAND SHELL COMPATIBILITY */
+@media(max-width:900px){
+  .web-ds-v2.genesis-home .v2-brand{
+    width:170px!important;
+    min-width:170px!important;
+    height:56px!important;
+    padding-left:0!important;
+    justify-content:center!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand img{
+    display:block!important;
+    width:165px!important;
+    height:48px!important;
+    object-fit:contain!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand span{display:none!important}
+}
+/* DEPLOY MARKER: WEB-DS V3.7.2 MOBILE BRAND */
+
+
+/* WEB-DS V3.7.3 — DESKTOP WORDMARK CONTRACT */
+@media(min-width:901px){
+  .web-ds-v2.genesis-home .v2-brand{
+    width:300px!important;
+    min-width:300px!important;
+    padding-left:12px!important;
+    justify-content:flex-start!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand img{
+    width:278px!important;
+    height:50px!important;
+    max-width:278px!important;
+    object-fit:contain!important;
+    object-position:left center!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand span{display:none!important}
+}
+/* DEPLOY MARKER: WEB-DS V3.7.3 DESKTOP WORDMARK */
+
+
+/* WEB-DS V3.7.5 — REFERENCE HERO RESTORE */
+.web-ds-v2.genesis-home .cinematic-hero-media{
+  background:none!important;
+}
+.web-ds-v2.genesis-home .cinematic-hero-poster{
+  opacity:1!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  object-position:center 67%!important;
+  transform:scale(1.035)!important;
+  filter:saturate(1.03) contrast(1.05) brightness(.90)!important;
+}
+.web-ds-v2.genesis-home .cinematic-hero-warm{
+  opacity:1!important;
+  background:linear-gradient(90deg,rgba(129,69,22,.08),transparent 42%)!important;
+}
+.web-ds-v2.genesis-home .cinematic-hero-cold{
+  opacity:1!important;
+  background:linear-gradient(270deg,rgba(21,74,139,.10),transparent 45%)!important;
+}
+.web-ds-v2.genesis-home .cinematic-hero-vignette{
+  opacity:1!important;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.02) 62%,rgba(1,5,9,.34)),
+    radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.12) 100%)!important;
+}
+@media(min-width:901px){
+  .web-ds-v2.genesis-home .v2-brand img{
+    width:310px!important;
+    max-width:310px!important;
+    height:46px!important;
+    object-fit:fill!important;
+  }
+}
+@media(max-width:900px){
+  .web-ds-v2.genesis-home .v2-brand img{
+    object-fit:contain!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.7.5 REFERENCE HERO */
+
+
+/* WEB-DS V3.7.7 — MOBILE COMMAND DECK COMPACTION
+   Fixes the oversized Continue Adventure cavity without changing desktop. */
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .genesis-player-console{
+    padding:12px 9px 8px!important;
+    gap:8px!important;
+  }
+  .web-ds-v2.genesis-home .genesis-player-console .player-console-primary{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:8px!important;
+  }
+  .web-ds-v2.genesis-home .deck-release-panel{order:1!important}
+  .web-ds-v2.genesis-home .deck-reading-panel{order:2!important}
+  .web-ds-v2.genesis-home .deck-access-panel{order:3!important}
+
+  .web-ds-v2.genesis-home .continue-adventure-body{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 118px!important;
+    grid-template-rows:auto auto!important;
+    align-items:start!important;
+    gap:10px 9px!important;
+    min-height:0!important;
+    height:auto!important;
+    padding:12px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy{
+    grid-column:1!important;
+    grid-row:1!important;
+    min-width:0!important;
+    justify-content:flex-start!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy>small{
+    font-size:8px!important;
+    line-height:1.15!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy h2{
+    margin:5px 0 7px!important;
+    font-size:28px!important;
+    line-height:.96!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy p{
+    max-width:none!important;
+    margin:0 0 10px!important;
+    font-size:11px!important;
+    line-height:1.35!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-art{
+    grid-column:2!important;
+    grid-row:1!important;
+    width:118px!important;
+    height:150px!important;
+    min-height:150px!important;
+    align-self:start!important;
+    background-position:center!important;
+  }
+  .web-ds-v2.genesis-home .command-primary-cta{
+    width:100%!important;
+    min-height:42px!important;
+    padding:0 12px!important;
+    font-size:13px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-ledger{
+    grid-column:1/-1!important;
+    grid-row:2!important;
+    display:grid!important;
+    grid-template-columns:78px minmax(0,1fr) 68px minmax(0,1fr)!important;
+    gap:5px 8px!important;
+    align-items:center!important;
+    min-height:0!important;
+    padding:8px 0 0!important;
+    border-top:1px solid rgba(216,179,95,.18)!important;
+    border-left:0!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-ledger small,
+  .web-ds-v2.genesis-home .continue-adventure-ledger span{
+    margin:0!important;
+    font-size:7px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-ledger strong,
+  .web-ds-v2.genesis-home .continue-adventure-ledger b{
+    margin:0!important;
+    font-size:8px!important;
+    line-height:1.2!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-ledger em{
+    grid-column:1/-1!important;
+    margin:4px 0 0!important;
+    font-size:9px!important;
+  }
+
+  .web-ds-v2.genesis-home .release-monitor-main{
+    height:auto!important;
+    min-height:68px!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-slots .home-release-slot{
+    min-height:58px!important;
+  }
+  .web-ds-v2.genesis-home .reader-profile-state{
+    min-height:0!important;
+    height:auto!important;
+    padding:10px 12px!important;
+  }
+  .web-ds-v2.genesis-home .player-console-secondary .game-console-panel{
+    min-height:118px!important;
+    height:auto!important;
+  }
+  .web-ds-v2.genesis-home .adventure-feed-content,
+  .web-ds-v2.genesis-home .system-bulletin-list{
+    height:auto!important;
+    min-height:78px!important;
+  }
+
+  .web-ds-v2.genesis-home .world-navigation-hub{
+    padding-top:24px!important;
+  }
+  .web-ds-v2.genesis-home .world-navigation-hub>header{
+    width:88%!important;
+  }
+  .web-ds-v2.genesis-home .world-navigation-hub>header div{
+    min-width:0!important;
+    width:210px!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.7.7 MOBILE COMMAND COMPACTION */
+
+
+/* ==========================================================================
+   WEB-DS V3.7.8 — RED TEAM REFERENCE CLOSER
+   Desktop geometry + ornament + contrast tuned against approved screenshot.
+   ========================================================================== */
+@media(min-width:901px){
+  .web-ds-v2.genesis-home .v2-shell{
+    width:min(1648px,100%)!important;
+    max-width:1648px!important;
+  }
+
+  /* Hero should read as the game key-art banner, not a generic website hero. */
+  .web-ds-v2.genesis-home .cinematic-split-hero{
+    height:292px!important;
+    min-height:292px!important;
+    max-height:292px!important;
+    border-color:rgba(226,194,111,.82)!important;
+    box-shadow:
+      inset 0 0 0 3px rgba(2,8,14,.85),
+      inset 0 0 0 5px rgba(217,186,104,.12),
+      0 9px 24px rgba(0,0,0,.34)!important;
+  }
+
+  /* Top command row is intentionally compact like the approved game HUD. */
+  .web-ds-v2.genesis-home .genesis-player-console{
+    padding:13px 13px 8px!important;
+    gap:7px!important;
+  }
+  .web-ds-v2.genesis-home .genesis-player-console .player-console-primary{
+    grid-template-columns:29% 42.5% 28.5%!important;
+    align-items:stretch!important;
+    gap:7px!important;
+  }
+  .web-ds-v2.genesis-home .genesis-player-console .player-console-primary>.game-console-panel{
+    height:284px!important;
+    min-height:284px!important;
+    max-height:284px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-body{
+    height:243px!important;
+    min-height:243px!important;
+    padding:10px 12px 11px!important;
+    grid-template-columns:minmax(0,1.03fr) minmax(235px,.98fr) 112px!important;
+    gap:11px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-art{
+    height:222px!important;
+    min-height:222px!important;
+  }
+  .web-ds-v2.genesis-home .reader-profile-state{
+    height:243px!important;
+    min-height:243px!important;
+    padding:10px 13px!important;
+  }
+
+  /* More ornament and stronger material separation on the three top panels. */
+  .web-ds-v2.genesis-home .game-console-panel{
+    border-color:rgba(226,194,111,.78)!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(10,28,42,.95),
+      inset 0 0 0 4px rgba(70,124,158,.11),
+      inset 0 0 36px rgba(53,130,190,.05),
+      0 6px 16px rgba(0,0,0,.30)!important;
+  }
+  .web-ds-v2.genesis-home .game-console-panel::after{
+    opacity:.95!important;
+    filter:drop-shadow(0 0 3px rgba(217,186,104,.16));
+  }
+  .web-ds-v2.genesis-home .game-console-head{
+    height:41px!important;
+    min-height:41px!important;
+    padding:0 15px!important;
+    background:
+      linear-gradient(90deg,rgba(225,195,112,.10),rgba(12,39,60,.62) 30%,rgba(5,18,30,.18))!important;
+  }
+  .web-ds-v2.genesis-home .game-console-head>span{
+    font-size:15.5px!important;
+    letter-spacing:.03em!important;
+  }
+
+  /* Release monitor: stronger next-release plaque and cleaner lower utility row. */
+  .web-ds-v2.genesis-home .release-monitor-main{
+    height:77px!important;
+    margin:8px 10px 4px!important;
+    background:
+      linear-gradient(90deg,rgba(4,15,25,.92),rgba(4,15,25,.42)),
+      url('/assets/v25/releases/release-city.png') right center/57% cover no-repeat!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-next>b{
+    font-size:24px!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-slots .home-release-slot{
+    min-height:63px!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-footer{
+    margin-top:5px!important;
+  }
+
+  /* Center console: closer to the reference's larger copy + art treatment. */
+  .web-ds-v2.genesis-home .continue-adventure-copy h2{
+    font-size:31px!important;
+    line-height:.98!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy p{
+    font-size:12.5px!important;
+    line-height:1.38!important;
+  }
+  .web-ds-v2.genesis-home .command-primary-cta{
+    width:300px!important;
+    min-height:48px!important;
+    border-radius:3px!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(255,246,207,.25),
+      inset 0 1px rgba(255,255,255,.66),
+      0 0 16px rgba(217,186,104,.17)!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-ledger{
+    padding-left:10px!important;
+    border-left:1px solid rgba(217,186,104,.18)!important;
+  }
+
+  /* Reader profile gets a brighter magical spine and less flat rows. */
+  .web-ds-v2.genesis-home .reader-profile-panel{
+    background:
+      radial-gradient(circle at 12% 42%,rgba(76,160,255,.13),transparent 28%),
+      linear-gradient(90deg,rgba(3,13,22,.84),rgba(3,13,22,.24)),
+      url('/assets/v27/rewards/flavio-early-cast-wallpaper.webp') 76% center/cover no-repeat!important;
+  }
+  .web-ds-v2.genesis-home .reader-profile-panel::after{
+    content:"";
+    position:absolute;
+    z-index:2;
+    left:82px;top:44px;bottom:16px;
+    width:1px;
+    background:linear-gradient(180deg,transparent,#6cbcff 20%,#d7b861 52%,#6cbcff 80%,transparent);
+    box-shadow:0 0 10px rgba(78,167,255,.30);
+    pointer-events:none;
+  }
+  .web-ds-v2.genesis-home .reader-profile-ledger>div{
+    background:
+      linear-gradient(90deg,rgba(84,155,210,.045),rgba(3,13,22,.10) 55%,rgba(3,13,22,.28))!important;
+  }
+
+  /* Lower row: illustrated, compressed, and less website-card-like. */
+  .web-ds-v2.genesis-home .player-console-secondary{
+    grid-template-columns:61.5% 38.5%!important;
+    gap:7px!important;
+  }
+  .web-ds-v2.genesis-home .player-console-secondary>.game-console-panel{
+    height:139px!important;
+    min-height:139px!important;
+    max-height:139px!important;
+  }
+  .web-ds-v2.genesis-home .adventure-feed-content{
+    height:96px!important;
+    min-height:96px!important;
+    margin:0 8px 5px!important;
+  }
+  .web-ds-v2.genesis-home .adventure-feed-panel .deck-prelaunch-state,
+  .web-ds-v2.genesis-home .adventure-feed-panel .deck-release-card{
+    height:94px!important;
+    min-height:94px!important;
+    background:
+      linear-gradient(90deg,rgba(2,9,16,.20),rgba(2,9,16,.46) 44%,rgba(2,9,16,.90)),
+      url('/assets/v27/rewards/flavio-nico-early-party.webp') left center/48% cover no-repeat!important;
+  }
+  .web-ds-v2.genesis-home .system-bulletin-list{
+    height:98px!important;
+    min-height:98px!important;
+    background:
+      linear-gradient(90deg,rgba(2,9,16,.82),rgba(2,9,16,.32)),
+      url('/assets/v25/destinations/destination-world.png') right 46%/64% cover no-repeat!important;
+  }
+
+  /* Navigation hub: brighter, more illustrative destination cards. */
+  .web-ds-v2.genesis-home .world-navigation-hub{
+    padding:22px 8px 8px!important;
+    border-color:rgba(226,194,111,.82)!important;
+  }
+  .web-ds-v2.genesis-home .world-navigation-grid{
+    gap:7px!important;
+  }
+  .web-ds-v2.genesis-home .world-nav-tile{
+    height:91px!important;
+    min-height:91px!important;
+    border-color:rgba(226,194,111,.78)!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(2,8,14,.78),
+      inset 0 0 0 4px rgba(227,199,120,.06),
+      0 5px 10px rgba(0,0,0,.28)!important;
+  }
+  .web-ds-v2.genesis-home .world-nav-tile::before{
+    background:
+      linear-gradient(180deg,rgba(0,0,0,.03) 0%,rgba(0,0,0,.08) 34%,rgba(2,7,12,.64) 68%,rgba(2,7,12,.95) 100%)!important;
+  }
+  .web-ds-v2.genesis-home .world-nav-tile b{
+    font-size:22px!important;
+  }
+  .web-ds-v2.genesis-home .world-nav-tile strong{
+    font-size:13px!important;
+  }
+
+  /* Footer should read like an integrated game client dock. */
+  .web-ds-v2.genesis-home .v37-footer{
+    min-height:50px!important;
+    height:50px!important;
+    border-color:rgba(226,194,111,.80)!important;
+    background:
+      radial-gradient(circle at 50% 0%,rgba(65,128,180,.07),transparent 42%),
+      linear-gradient(180deg,#071522,#020a11)!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(3,11,18,.92),
+      inset 0 0 0 4px rgba(217,186,104,.05),
+      0 8px 18px rgba(0,0,0,.28)!important;
+  }
+  .web-ds-v2.genesis-home .v37-footer::before{
+    content:"";
+    position:absolute;
+    left:28%;right:28%;top:-8px;height:16px;
+    background:url('/assets/v37/ornate-divider.svg') center/100% 100% no-repeat;
+    opacity:.78;
+    pointer-events:none;
+  }
+}
+
+/* Stronger world-card art assignments for the approved-reference look. */
+.web-ds-v2.genesis-home .tile-read{background-image:url('/assets/v27/rewards/early-genesis-world-panorama.webp')!important}
+.web-ds-v2.genesis-home .tile-world{background-image:url('/assets/v25/destinations/destination-world.png')!important}
+.web-ds-v2.genesis-home .tile-codex{background-image:url('/assets/v25/destinations/destination-codex.png')!important}
+.web-ds-v2.genesis-home .tile-characters{background-image:url('/assets/v27/rewards/flavio-nico-early-party.webp')!important}
+.web-ds-v2.genesis-home .tile-monsters{background-image:url('/assets/v27/rewards/beginner-hunt.webp')!important}
+.web-ds-v2.genesis-home .tile-items{background-image:url('/assets/v27/rewards/genesis-awakening.webp')!important}
+.web-ds-v2.genesis-home .tile-manga{background-image:url('/assets/v25/destinations/destination-manga.png')!important}
+.web-ds-v2.genesis-home .tile-support{background-image:url('/assets/v25/destinations/destination-support.png')!important}
+.web-ds-v2.genesis-home .tile-fan{background-image:url('/assets/v25/destinations/destination-fanpage.png')!important}
+
+/* DEPLOY MARKER: WEB-DS V3.7.8 RED TEAM CLOSER */
+
+
+/* ==========================================================================
+   WEB-DS V3.8 — PHASE A/B/C IMAGE-INLAY OVERLAY SYSTEM
+   Each marked box gets one unique category-specific background image.
+   Live wording remains HTML and is overlaid over image-safe gradients.
+   ========================================================================== */
+
+/* Shared inlay treatment: bright enough to read as art, protected for text. */
+.web-ds-v2.genesis-home .deck-release-panel,
+.web-ds-v2.genesis-home .deck-reading-panel,
+.web-ds-v2.genesis-home .deck-access-panel,
+.web-ds-v2.genesis-home .adventure-feed-panel,
+.web-ds-v2.genesis-home .bulletin-panel,
+.web-ds-v2.genesis-home .world-nav-tile{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+}
+.web-ds-v2.genesis-home .deck-release-panel::before,
+.web-ds-v2.genesis-home .deck-reading-panel::before,
+.web-ds-v2.genesis-home .deck-access-panel::before,
+.web-ds-v2.genesis-home .adventure-feed-panel::before,
+.web-ds-v2.genesis-home .bulletin-panel::before,
+.web-ds-v2.genesis-home .world-nav-tile::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  filter:saturate(1.04) contrast(1.04) brightness(.92);
+  transform:scale(1.01);
+  pointer-events:none;
+}
+.web-ds-v2.genesis-home .deck-release-panel>*,
+.web-ds-v2.genesis-home .deck-reading-panel>*,
+.web-ds-v2.genesis-home .deck-access-panel>*,
+.web-ds-v2.genesis-home .adventure-feed-panel>*,
+.web-ds-v2.genesis-home .bulletin-panel>*,
+.web-ds-v2.genesis-home .world-nav-tile>*{
+  position:relative;
+  z-index:3;
+}
+
+/* ===== PHASE A ===== */
+
+/* 1. Release System Monitor — unique city/release-control scene */
+.web-ds-v2.genesis-home .deck-release-panel{
+  background:#091824!important;
+}
+.web-ds-v2.genesis-home .deck-release-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.76) 0%,rgba(3,12,20,.64) 46%,rgba(3,12,20,.20) 100%),
+    url('/assets/v25/releases/release-city.png');
+  background-position:center right;
+  filter:saturate(1.08) contrast(1.04) brightness(.98);
+}
+.web-ds-v2.genesis-home .deck-release-panel::after{
+  background:
+    linear-gradient(180deg,rgba(4,14,23,.12),rgba(4,14,23,.32)),
+    url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat!important;
+}
+.web-ds-v2.genesis-home .deck-release-panel .release-monitor-main{
+  background:linear-gradient(90deg,rgba(3,13,22,.78),rgba(3,13,22,.32))!important;
+  backdrop-filter:blur(1px);
+}
+.web-ds-v2.genesis-home .deck-release-panel .home-release-slot{
+  background:linear-gradient(180deg,rgba(10,29,43,.82),rgba(4,14,23,.84))!important;
+  backdrop-filter:blur(1px);
+}
+
+/* 2. Continue Adventure — unique world/journey panorama covering the full panel */
+.web-ds-v2.genesis-home .deck-reading-panel{
+  background:#0a1925!important;
+}
+.web-ds-v2.genesis-home .deck-reading-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.82) 0%,rgba(3,12,20,.58) 43%,rgba(3,12,20,.22) 72%,rgba(3,12,20,.30) 100%),
+    url('/assets/v27/rewards/early-genesis-world-panorama.webp');
+  background-position:center 44%;
+  filter:saturate(1.07) contrast(1.02) brightness(1.00);
+}
+.web-ds-v2.genesis-home .deck-reading-panel::after{
+  background:
+    linear-gradient(180deg,rgba(3,12,20,.02),rgba(3,12,20,.18)),
+    url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat!important;
+}
+.web-ds-v2.genesis-home .deck-reading-panel .continue-adventure-body{
+  background:linear-gradient(90deg,rgba(4,14,23,.22),rgba(4,14,23,.05))!important;
+}
+.web-ds-v2.genesis-home .deck-reading-panel .continue-adventure-art{
+  background:rgba(4,14,23,.18)!important;
+  border-color:rgba(238,211,132,.58)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,246,214,.06),0 5px 15px rgba(0,0,0,.20)!important;
+  backdrop-filter:blur(1px);
+}
+.web-ds-v2.genesis-home .deck-reading-panel .continue-adventure-copy{
+  text-shadow:0 2px 4px rgba(0,0,0,.88);
+}
+
+/* 3. Reader Profile — unique magical player-profile scene */
+.web-ds-v2.genesis-home .deck-access-panel{
+  background:#081522!important;
+}
+.web-ds-v2.genesis-home .deck-access-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.58) 0%,rgba(3,12,20,.42) 48%,rgba(3,12,20,.24) 100%),
+    url('/assets/v27/rewards/flavio-early-cast-wallpaper.webp');
+  background-position:70% center;
+  filter:saturate(1.04) contrast(1.02) brightness(.98);
+}
+.web-ds-v2.genesis-home .deck-access-panel::after{
+  background:
+    radial-gradient(circle at 15% 42%,rgba(76,160,255,.13),transparent 32%),
+    url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat!important;
+}
+.web-ds-v2.genesis-home .deck-access-panel .reader-profile-state{
+  background:linear-gradient(90deg,rgba(3,13,22,.40),rgba(3,13,22,.16))!important;
+}
+.web-ds-v2.genesis-home .deck-access-panel .reader-profile-ledger>div{
+  background:linear-gradient(90deg,rgba(4,14,23,.48),rgba(4,14,23,.20))!important;
+}
+
+/* ===== PHASE B ===== */
+
+/* 4. Adventure Feed — unique archive/lore scene */
+.web-ds-v2.genesis-home .adventure-feed-panel{
+  background:#08141f!important;
+}
+.web-ds-v2.genesis-home .adventure-feed-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.44) 0%,rgba(3,12,20,.38) 46%,rgba(3,12,20,.52) 100%),
+    url('/assets/v30/destination-heroes/genesis-codex-hero.webp');
+  background-position:center 52%;
+  filter:saturate(1.00) contrast(1.01) brightness(1.02);
+}
+.web-ds-v2.genesis-home .adventure-feed-panel::after{
+  background:url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat!important;
+}
+.web-ds-v2.genesis-home .adventure-feed-panel .adventure-feed-content,
+.web-ds-v2.genesis-home .adventure-feed-panel .deck-prelaunch-state,
+.web-ds-v2.genesis-home .adventure-feed-panel .deck-release-card{
+  background:linear-gradient(90deg,rgba(2,10,17,.22),rgba(2,10,17,.40))!important;
+}
+
+/* 5. System Bulletin — unique official-world command/notice scene */
+.web-ds-v2.genesis-home .bulletin-panel{
+  background:#08141f!important;
+}
+.web-ds-v2.genesis-home .bulletin-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.54) 0%,rgba(3,12,20,.42) 42%,rgba(3,12,20,.18) 100%),
+    url('/assets/v27/rewards/starter-town-safe-zone.webp');
+  background-position:center 58%;
+  filter:saturate(1.02) contrast(1.02) brightness(1.00);
+}
+.web-ds-v2.genesis-home .bulletin-panel::after{
+  background:url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat!important;
+}
+.web-ds-v2.genesis-home .bulletin-panel .system-bulletin-list{
+  background:linear-gradient(90deg,rgba(2,10,17,.34),rgba(2,10,17,.22))!important;
+}
+
+/* ===== PHASE C =====
+   Nine unique tile images; no duplication across categories. */
+.web-ds-v2.genesis-home .tile-read::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.02),rgba(2,7,12,.15) 42%,rgba(2,7,12,.80) 80%,rgba(2,7,12,.96)),
+    url('/assets/v25/releases/release-duel.png');
+  background-position:center 42%;
+}
+.web-ds-v2.genesis-home .tile-world::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.12) 40%,rgba(2,7,12,.78) 79%,rgba(2,7,12,.96)),
+    url('/assets/v30/destination-heroes/genesis-atlas-hero.webp');
+  background-position:center 48%;
+}
+.web-ds-v2.genesis-home .tile-codex::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.12) 40%,rgba(2,7,12,.78) 79%,rgba(2,7,12,.96)),
+    url('/assets/v25/destinations/destination-codex.png');
+  background-position:center 46%;
+}
+.web-ds-v2.genesis-home .tile-characters::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.12) 40%,rgba(2,7,12,.78) 79%,rgba(2,7,12,.96)),
+    url('/assets/v27/rewards/flavio-nico-early-party.webp');
+  background-position:center 38%;
+}
+.web-ds-v2.genesis-home .tile-monsters::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.12) 40%,rgba(2,7,12,.78) 79%,rgba(2,7,12,.96)),
+    url('/assets/v27/rewards/beginner-hunt.webp');
+  background-position:center 43%;
+}
+.web-ds-v2.genesis-home .tile-items::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.12) 40%,rgba(2,7,12,.78) 79%,rgba(2,7,12,.96)),
+    url('/assets/v27/rewards/genesis-awakening.webp');
+  background-position:center 50%;
+}
+.web-ds-v2.genesis-home .tile-manga::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.10) 40%,rgba(2,7,12,.76) 79%,rgba(2,7,12,.96)),
+    url('/assets/v30/destination-heroes/genesis-manga-hero.webp');
+  background-position:center 46%;
+}
+.web-ds-v2.genesis-home .tile-support::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.10) 40%,rgba(2,7,12,.76) 79%,rgba(2,7,12,.96)),
+    url('/assets/v25/destinations/destination-support.png');
+  background-position:center 48%;
+}
+.web-ds-v2.genesis-home .tile-fan::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.10) 40%,rgba(2,7,12,.76) 79%,rgba(2,7,12,.96)),
+    url('/assets/v30/destination-heroes/genesis-fan-hero.webp');
+  background-position:center 45%;
+}
+
+/* Neutralize older tile background-image declarations so each inlay owns the image. */
+.web-ds-v2.genesis-home .world-nav-tile{
+  background:#07131e!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile::after{
+  z-index:2!important;
+  border-color:rgba(246,224,153,.18)!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile b,
+.web-ds-v2.genesis-home .world-nav-tile strong,
+.web-ds-v2.genesis-home .world-nav-tile small{
+  text-shadow:0 2px 4px rgba(0,0,0,.96)!important;
+}
+
+/* ===== PHASE D — text-safe readability pass ===== */
+.web-ds-v2.genesis-home .deck-release-panel,
+.web-ds-v2.genesis-home .deck-reading-panel,
+.web-ds-v2.genesis-home .deck-access-panel,
+.web-ds-v2.genesis-home .adventure-feed-panel,
+.web-ds-v2.genesis-home .bulletin-panel{
+  color:#f0eee8!important;
+}
+.web-ds-v2.genesis-home .game-console-head{
+  background:linear-gradient(90deg,rgba(2,10,17,.74),rgba(2,10,17,.44) 60%,rgba(2,10,17,.20))!important;
+  backdrop-filter:blur(1.5px);
+}
+.web-ds-v2.genesis-home .game-console-head>span{
+  text-shadow:0 2px 4px rgba(0,0,0,.98)!important;
+}
+.web-ds-v2.genesis-home .game-console-head>a{
+  text-shadow:0 1px 3px rgba(0,0,0,.98)!important;
+}
+.web-ds-v2.genesis-home .reader-profile-ledger span,
+.web-ds-v2.genesis-home .reader-profile-ledger strong,
+.web-ds-v2.genesis-home .system-bulletin-list,
+.web-ds-v2.genesis-home .adventure-feed-content{
+  text-shadow:0 1px 3px rgba(0,0,0,.94);
+}
+
+/* DEPLOY MARKER: WEB-DS V3.8 IMAGE INLAY OVERLAY SYSTEM */

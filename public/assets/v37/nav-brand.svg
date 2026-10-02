@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 50">
+<defs>
+ <linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fffdf7"/><stop offset=".46" stop-color="#bfc5ca"/><stop offset=".72" stop-color="#707985"/><stop offset="1" stop-color="#f2ead8"/></linearGradient>
+ <linearGradient id="r" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ff5b4e"/><stop offset=".55" stop-color="#c8222c"/><stop offset="1" stop-color="#7e0e17"/></linearGradient>
+</defs>
+<g transform="translate(23 25)" fill="none" stroke="#f5f2e9" stroke-width="1.9">
+ <path d="M0-17 6-7 17 0 6 7 0 17-6 7-17 0-6-7Z"/>
+ <path d="M0-9 3-3 9 0 3 3 0 9-3 3-9 0-3-3Z" stroke="#d8b567" stroke-width="1.1"/>
+</g>
+<text x="52" y="33" fill="url(#s)" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="27" letter-spacing="1.2">GENESIS</text>
+<text x="173" y="31.5" fill="#e5ded0" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="18" letter-spacing=".7">REBORN</text>
+<text x="246" y="31.5" fill="url(#r)" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="18" letter-spacing=".6">GREEDY</text>
+</svg>

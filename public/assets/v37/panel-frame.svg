@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" preserveAspectRatio="none">
+<defs>
+ <linearGradient id="g" x1="0" x2="1"><stop stop-color="#6a4818"/><stop offset=".22" stop-color="#c99d4f"/><stop offset=".5" stop-color="#f0d98a"/><stop offset=".78" stop-color="#c99d4f"/><stop offset="1" stop-color="#6a4818"/></linearGradient>
+ <filter id="gl"><feGaussianBlur stdDeviation=".45" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g fill="none" stroke="url(#g)" filter="url(#gl)">
+ <rect x="1.5" y="1.5" width="597" height="297" rx="3" stroke-width="1.4" opacity=".62"/>
+ <path d="M1 66V1h84M1 29c22 0 25-18 42-18h27M599 66V1h-84M599 29c-22 0-25-18-42-18h-27" stroke-width="2.2" opacity=".96"/>
+ <path d="M1 234v65h84M1 271c22 0 25 18 42 18h27M599 234v65h-84M599 271c-22 0-25 18-42 18h-27" stroke-width="2.2" opacity=".96"/>
+ <path d="M84 1h141m150 0h141M84 299h141m150 0h141" stroke-width="1.5" opacity=".86"/>
+ <path d="M12 49l17-17 15 15M588 49l-17-17-15 15M12 251l17 17 15-15M588 251l-17 17-15-15" stroke-width="1.2" opacity=".72"/>
+ <path d="M284 1h32M284 299h32" stroke-width="1.2" opacity=".75"/>
+</g>
+<g fill="#e3c876" stroke="#fff0aa" stroke-width=".55">
+ <path d="M300 1l7 7-7 7-7-7zM300 299l7-7 7 7-7 7z"/>
+ <path d="M15 15l5 5-5 5-5-5zM585 15l5 5-5 5-5-5zM15 285l5-5 5 5-5 5zM585 285l5-5 5 5-5 5z" opacity=".82"/>
+</g>
+</svg>
