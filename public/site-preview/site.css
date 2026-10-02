@@ -14685,3 +14685,57 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DEPLOY MARKER: WEB-DS V3.10 REFERENCE ALIGNMENT */
+
+
+/* WEB-DS V3.10.1 — RED TEAM screenshot correction */
+.web-ds-v2.genesis-home .v2-nav{
+  background:linear-gradient(180deg,#07131f 0%,#030a12 100%)!important;
+  backdrop-filter:none!important;
+}
+@media(min-width:901px){
+  /* The source key art already contains the full GENESIS title; crop the lower band correctly. */
+  .web-ds-v2.genesis-home .cinematic-hero-media{
+    background:none!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-poster{
+    opacity:1!important;
+    display:block!important;
+    width:100%!important;
+    height:100%!important;
+    max-height:none!important;
+    object-fit:cover!important;
+    object-position:center 91%!important;
+    transform:scale(1)!important;
+    filter:saturate(1.03) contrast(1.04) brightness(.91)!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-warm{
+    opacity:1!important;
+    background:linear-gradient(90deg,rgba(112,60,20,.06),transparent 42%)!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-cold{
+    opacity:1!important;
+    background:linear-gradient(270deg,rgba(21,74,139,.08),transparent 45%)!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-art{
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+}
+@media(max-width:620px){
+  /* State text is redundant on phone and was colliding with the Part label. */
+  .web-ds-v2.genesis-home #home-release-state{display:none!important}
+  .web-ds-v2.genesis-home #home-release-part{
+    font-size:9px!important;
+    letter-spacing:.01em!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-art{
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+  .web-ds-v2.genesis-home .v37-footer{
+    max-height:175px!important;
+    overflow:hidden!important;
+    padding:10px 12px 64px!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.10.1 SCREENSHOT CORRECTION */
