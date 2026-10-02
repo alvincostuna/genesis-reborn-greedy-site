@@ -56,7 +56,7 @@
   </section>
 
   <section id="atlas-browser" class="atlas-browser hud-card">
-    <div class="card-head"><span>WORLD ATLAS</span><span>Reader-safe Supabase projection</span></div>
+    <div class="card-head"><span>WORLD ATLAS</span><span>Revealed world archive</span></div>
     <div class="atlas-toolbar">
       <label><span>Find a revealed location</span><input id="atlas-search" type="search" placeholder="Map name or code" autocomplete="off"></label>
       <button id="atlas-search-button" type="button">Search Atlas</button>
@@ -64,13 +64,13 @@
     </div>
     <div id="atlas-region-filter" class="atlas-region-filter" aria-label="Region filters"></div>
     <div id="atlas-board" class="atlas-board" aria-live="polite">
-      <div class="atlas-fog-state"><div class="atlas-fog-orb">?</div><strong>Reading the world database…</strong><p>Only executed reader-safe reveals will be shown.</p></div>
+      <div class="atlas-fog-state"><div class="atlas-fog-orb">?</div><strong>Charting the revealed world…</strong><p>Only places introduced in published Parts appear on the Atlas.</p></div>
     </div>
   </section>
 
   <section class="atlas-safety-note hud-card">
-    <div><strong>Fog-of-war is data protection</strong><p>The production database can contain maps, monsters, NPCs, shops and routes long before readers are allowed to know them. The Atlas never treats backend existence as a reveal.</p></div>
-    <div><strong>Artwork can arrive later</strong><p>When a map is reader-safe but has no approved web artwork, its page stays usable with a clearly marked fog/placeholder visual until the art pipeline binds the real image.</p></div>
+    <div><strong>Fog of War</strong><p>Unrevealed places, routes, creatures, and encounters stay hidden until the story reaches them.</p></div>
+    <div><strong>The world grows with the story</strong><p>Revealed locations remain explorable while dedicated illustrations continue to join the Atlas over time.</p></div>
   </section>
 </main>
 
@@ -83,7 +83,7 @@
 </nav>
 <div id="global-search-panel" class="global-flyout search-flyout" hidden>
   <div class="global-flyout-head"><strong>Search GENESIS</strong><button type="button" data-close-search aria-label="Close search">×</button></div>
-  <div id="global-search-results" class="global-flyout-body"><div class="flyout-empty">Type at least 2 characters to search released story and reader-safe database records.</div></div>
+  <div id="global-search-results" class="global-flyout-body"><div class="flyout-empty">Search released chapters and the world revealed so far.</div></div>
 </div>
 <div id="notification-panel" class="global-flyout notification-flyout" hidden>
   <div class="global-flyout-head"><strong>Notifications</strong><div><button id="notification-mark-all" type="button">Mark all read</button><button type="button" data-close-notifications aria-label="Close notifications">×</button></div></div>

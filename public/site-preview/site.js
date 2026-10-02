@@ -257,7 +257,7 @@ function entityCard(x,kind="codex"){
       '<span class="entity-symbol">'+esc(v.icon)+'</span><span class="entity-category">'+esc(v.label)+'</span>'+
     '</div>'+
     '<div class="entity-copy"><small>'+esc(type.toUpperCase())+'</small><h2>'+esc(title)+'</h2><p>'+esc(desc)+'</p>'+
-    (fieldChips?'<div class="reveal-fields">'+fieldChips+'</div>':'<div class="entity-safe-note">Reader-safe revealed record</div>')+
+    (fieldChips?'<div class="reveal-fields">'+fieldChips+'</div>':'<div class="entity-safe-note">Spoiler-safe revealed record</div>')+
     '</div></article>';
 }
 
@@ -663,7 +663,7 @@ async function initRead(){
     const episode=episodes.find(e=>String(e.episode_number)===String(number));
     const head=document.querySelector("#novel-head");
     if(head){
-      head.innerHTML='<p class="eyebrow">EPISODE '+esc(number)+'</p><h2>'+esc(episode?.title||"GENESIS")+'</h2><p>'+esc(episode?.summary_public||"Released Final Canon.")+'</p>';
+      head.innerHTML='<p class="eyebrow">EPISODE '+esc(number)+'</p><h2>'+esc(episode?.title||"GENESIS")+'</h2><p>'+esc(episode?.summary_public||"Published story.")+'</p>';
     }
 
     let parts=[];
@@ -672,7 +672,7 @@ async function initRead(){
 
     if(!currentParts.length){
       if(tabs)tabs.innerHTML="";
-      if(body)body.innerHTML='<div class="empty-state large reader-empty-state"><strong>No released Parts yet.</strong><span>This Episode has no public Final Canon Parts available.</span></div>';
+      if(body)body.innerHTML='<div class="empty-state large reader-empty-state"><strong>No released Parts yet.</strong><span>This Episode does not have a published Part available yet.</span></div>';
       if(partSelect){
         partSelect.innerHTML='<option>No released Parts yet</option>';
         partSelect.disabled=true;
@@ -826,7 +826,7 @@ function atlasMapCard(map){
     '<div class="atlas-map-card-copy">'+
       '<small>'+esc(map?.region||"Discovered World")+' · '+esc(map?.map_type||"MAP")+'</small>'+
       '<h2>'+esc(map?.public_name||"Revealed map")+'</h2>'+
-      '<p>'+esc(map?.short_description||"A reader-safe GENESIS location.")+'</p>'+
+      '<p>'+esc(map?.short_description||"A location revealed through the published story.")+'</p>'+
       (chips?'<div class="atlas-field-chips">'+chips+'</div>':'')+
       '<span class="atlas-open-link">Open map database →</span>'+
     '</div>'+
@@ -856,7 +856,7 @@ function renderAtlasBoard(maps,contract){
     board.innerHTML='<div class="atlas-fog-state">'+
       '<div class="atlas-fog-orb">?</div>'+
       '<strong>The Atlas is still under full fog-of-war.</strong>'+
-      '<p>No map has an executed published Final Canon reveal yet. The world database remains private until the story opens it.</p>'+
+      '<p>This place has not been revealed by the published story yet. The Atlas will open it when readers reach that discovery.</p>'+
       '<span class="atlas-fog-rule">Backend existence ≠ reader visibility</span>'+
     '</div>';
     const filter=document.querySelector("#atlas-region-filter");if(filter)filter.innerHTML="";
@@ -878,14 +878,14 @@ function renderAtlasBoard(maps,contract){
 }
 async function loadAtlasIndex(query=null){
   const board=document.querySelector("#atlas-board");
-  if(board)board.innerHTML='<div class="atlas-fog-state"><div class="atlas-fog-orb">⌁</div><strong>Querying the reader-safe Atlas…</strong><p>Supabase is resolving released locations.</p></div>';
+  if(board)board.innerHTML='<div class="atlas-fog-state"><div class="atlas-fog-orb">⌁</div><strong>Charting the revealed Atlas…</strong><p>Revealed locations are being gathered.</p></div>';
   try{
     const raw=await rpc("api_atlas_map_index_v1",{p_query:query||null,p_limit:100});
     const data=firstRow(raw)||raw||{};
     const maps=Array.isArray(data?.maps)?data.maps:[];
     renderAtlasBoard(maps,data);
   }catch(error){
-    if(board)board.innerHTML='<div class="atlas-fog-state error-state"><div class="atlas-fog-orb">!</div><strong>Atlas data is temporarily unavailable.</strong><p>'+esc(error.message||"Reader Atlas request failed.")+'</p></div>';
+    if(board)board.innerHTML='<div class="atlas-fog-state error-state"><div class="atlas-fog-orb">!</div><strong>Atlas data is temporarily unavailable.</strong><p>'+esc(error.message||"The Atlas could not be reached.")+'</p></div>';
     const status=document.querySelector("#atlas-status");if(status)status.textContent="Unavailable";
   }
 }
@@ -909,7 +909,7 @@ function atlasRelatedCard(item,kind){
     :codexEntityUrl(type,item?.public_name);
   return '<a class="atlas-related-card is-placeholder" href="'+esc(href)+'">'+
     '<div class="atlas-related-art" style="background-image:linear-gradient(180deg,rgba(4,10,17,.08),rgba(4,10,17,.92)),url(\''+esc(art)+'\')"><span>ART PENDING</span></div>'+
-    '<div><small>'+esc(type.toUpperCase())+'</small><strong>'+esc(item?.public_name||item?.entity_code||"Revealed entry")+'</strong><p>'+esc(item?.short_description||"Reader-safe related record.")+'</p></div>'+
+    '<div><small>'+esc(type.toUpperCase())+'</small><strong>'+esc(item?.public_name||item?.entity_code||"Revealed entry")+'</strong><p>'+esc(item?.short_description||"Related revealed record.")+'</p></div>'+
   '</a>';
 }
 function renderMapRelation(kind,allowed,items){
@@ -918,11 +918,11 @@ function renderMapRelation(kind,allowed,items){
   if(gate)gate.textContent=allowed?"REVEALED":"FOG-GATED";
   if(!root)return;
   if(!allowed){
-    root.innerHTML='<div class="atlas-relation-fog"><strong>Relationship still hidden</strong><p>This map may already have '+esc(kind)+' in the production database, but the story has not released that relationship.</p></div>';
+    root.innerHTML='<div class="atlas-relation-fog"><strong>Relationship still hidden</strong><p>This map may already have '+esc(kind)+' exists beyond the current story reveal and remains hidden for now.</p></div>';
     return;
   }
   if(!Array.isArray(items)||!items.length){
-    root.innerHTML='<div class="empty-state">No reader-safe '+esc(kind)+' are currently attached to this map.</div>';
+    root.innerHTML='<div class="empty-state">No revealed '+esc(kind)+' are currently attached to this map.</div>';
     return;
   }
   root.innerHTML=items.map(x=>atlasRelatedCard(x,kind)).join("");
@@ -957,7 +957,7 @@ async function initMapDetail(){
       locked?.classList.remove("hidden");
       if(content)content.classList.add("hidden");
       document.querySelector("#map-detail-name").textContent="Fog-of-war";
-      document.querySelector("#map-detail-description").textContent="This Atlas location is not reader-safe yet.";
+      document.querySelector("#map-detail-description").textContent="This Atlas location is not spoiler-safe yet.";
       return;
     }
     const map=data.map;
@@ -965,7 +965,7 @@ async function initMapDetail(){
     document.querySelector("#map-breadcrumb-name").textContent=map.public_name||"Map";
     document.querySelector("#map-detail-region").textContent=(map.region||"Discovered World").toUpperCase();
     document.querySelector("#map-detail-name").textContent=map.public_name||"Revealed map";
-    document.querySelector("#map-detail-description").textContent=map.short_description||"A reader-safe GENESIS location.";
+    document.querySelector("#map-detail-description").textContent=map.short_description||"A location revealed through the published story.";
     document.querySelector("#map-detail-type").textContent=map.map_type||"MAP";
     document.querySelector("#map-detail-state").textContent=map.reveal_state||"DISCOVERED";
     document.querySelector("#map-detail-code").textContent=map.entity_code||"—";
@@ -975,7 +975,7 @@ async function initMapDetail(){
       artRoot.style.backgroundImage="linear-gradient(180deg,rgba(2,7,12,.12),rgba(2,7,12,.72)),url('"+String(artUrl).replaceAll("'","%27")+"')";
       artRoot.classList.toggle("is-placeholder",map?.art?.status!=="READY");
       const mark=artRoot.querySelector(".map-placeholder-mark");
-      if(mark)mark.innerHTML=map?.art?.status==="READY"?"READER-SAFE<br><strong>ARTWORK</strong>":"MAP ART<br><strong>PENDING</strong>";
+      if(mark)mark.innerHTML=map?.art?.status==="READY"?"REVEALED<br><strong>ARTWORK</strong>":"MAP ART<br><strong>PENDING</strong>";
     }
     renderMapFields(map.revealed_fields||{});
     const gates=data.cross_link_gates||{};
@@ -987,7 +987,7 @@ async function initMapDetail(){
     locked?.classList.remove("hidden");
     if(content)content.classList.add("hidden");
     document.querySelector("#map-detail-name").textContent="Atlas unavailable";
-    document.querySelector("#map-detail-description").textContent=error.message||"Reader Atlas request failed.";
+    document.querySelector("#map-detail-description").textContent=error.message||"The Atlas could not be reached.";
   }
 }
 
@@ -995,17 +995,17 @@ async function loadCodex(){
   const results=document.querySelector("#codex-results");
   const type=document.querySelector("#codex-type").value||null;
   const query=document.querySelector("#codex-search").value.trim()||null;
-  results.innerHTML='<div class="empty-state large">Searching revealed database…</div>';
+  results.innerHTML='<div class="empty-state large">Searching the revealed archive…</div>';
   try{
     const rows=await rpc("api_entity_search_v2",{p_type:type,p_query:query,p_limit:60});
     const count=document.querySelector("#codex-result-count");
     if(!Array.isArray(rows)||!rows.length){
-      if(count)count.textContent="0 reader-safe results";
+      if(count)count.textContent="0 revealed results";
       const v=entityVisual(type||"codex");
-      results.innerHTML='<div class="v28-empty-discovery codex-empty"><div class="empty-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.12),rgba(2,8,14,.94)),url(\''+esc(v.art)+'\')"></div><div><small>READER-SAFE INDEX</small><strong>No revealed Codex records match this search.</strong><p>Try another category or return after more released story content becomes public.</p></div></div>';
+      results.innerHTML='<div class="v28-empty-discovery codex-empty"><div class="empty-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.12),rgba(2,8,14,.94)),url(\''+esc(v.art)+'\')"></div><div><small>REVEALED ARCHIVE</small><strong>The Codex is still waiting for this discovery.</strong><p>Try another category, or return as more of the world is revealed through the story.</p></div></div>';
       return;
     }
-    if(count)count.textContent=rows.length+" reader-safe result"+(rows.length===1?"":"s");
+    if(count)count.textContent=rows.length+" revealed result"+(rows.length===1?"":"s");
     results.innerHTML=rows.map(x=>entityCard(x,"codex")).join("");
   }catch{
     results.innerHTML='<div class="empty-state large">Codex is temporarily unavailable.</div>';
@@ -1076,13 +1076,13 @@ async function searchGenesisPublic(query){
     ...episodes.map(e=>({
       kind:"Story",
       title:"Episode "+e.episode_number+" · "+(e.title||"GENESIS"),
-      detail:e.summary_public||"Released Final Canon.",
+      detail:e.summary_public||"Published story.",
       href:readerUrl(e.episode_number,null)
     })),
     ...entities.map(x=>({
       kind:String(x.entity_type||"Codex").replaceAll("_"," "),
       title:x.public_name||x.entity_code||"Revealed entry",
-      detail:x.short_description||"Reader-safe revealed record.",
+      detail:x.short_description||"Revealed Codex record.",
       href:sitePath("/codex/")+"?q="+encodeURIComponent(x.public_name||x.entity_code||q)
     }))
   ].slice(0,20);
@@ -1097,12 +1097,12 @@ function initGlobalSearch(){
     clearTimeout(timer);
     const q=input.value.trim();
     if(q.length<2){
-      results.innerHTML='<div class="flyout-empty">Type at least 2 characters to search released story and reader-safe Codex records.</div>';
+      results.innerHTML='<div class="flyout-empty">Type at least 2 characters to search released story and revealed Codex records.</div>';
       if(q.length===0)closeGlobalFlyouts();
       return;
     }
     openFlyout(panel,input);
-    results.innerHTML='<div class="flyout-empty">Searching reader-safe GENESIS records…</div>';
+    results.innerHTML='<div class="flyout-empty">Searching GENESIS…</div>';
     const mine=++token;
     timer=setTimeout(async()=>{
       try{
@@ -1110,7 +1110,7 @@ function initGlobalSearch(){
         if(mine!==token)return;
         results.innerHTML=rows.length?rows.map(x=>
           '<a class="global-result" href="'+esc(x.href)+'"><small>'+esc(x.kind.toUpperCase())+'</small><strong>'+esc(x.title)+'</strong><span>'+esc(x.detail)+'</span></a>'
-        ).join(""):'<div class="flyout-empty">No released or reader-safe records match “'+esc(q)+'”.</div>';
+        ).join(""):'<div class="flyout-empty">No revealed GENESIS records match “'+esc(q)+'”.</div>';
       }catch{
         if(mine===token)results.innerHTML='<div class="flyout-empty">Search is temporarily unavailable.</div>';
       }
@@ -1151,7 +1151,7 @@ async function buildNotificationFeed(){
   try{
     const {releaseState:state}=await readPublicReleaseAuthority();
     if(state?.releases_paused){
-      items.push({id:"release-paused",kind:"Release",title:"Public releases are paused",detail:"The story queue remains protected until releases resume.",href:sitePath("/read/"),time:"SYSTEM"});
+      items.push({id:"release-paused",kind:"Release",title:"Story releases are paused",detail:"New Parts will appear here when releases resume.",href:sitePath("/read/"),time:"SYSTEM"});
     }else if(state?.next_part&&state?.next_publish_at){
       const p=state.next_part;
       items.push({id:"next-"+(p.part_key||p.episode_number+"-"+p.part_number)+"-"+state.next_publish_at,kind:"Release",title:"Next Part scheduled",detail:"Episode "+p.episode_number+" · Part "+String(p.part_number).padStart(3,"0")+" · "+formatPhtDate(state.next_publish_at),href:sitePath("/read/"),time:"UPCOMING"});
@@ -1169,7 +1169,7 @@ async function buildNotificationFeed(){
             id:"release-"+(p.part_id||ep.episode_number+"-"+p.part_number),
             kind:"New Part",
             title:"Episode "+ep.episode_number+" · Part "+String(p.part_number).padStart(3,"0"),
-            detail:p.title||ep.title||"Released Final Canon",
+            detail:p.title||ep.title||"Published Part",
             href:readerUrl(ep.episode_number,p.part_number),
             time:formatPhtDate(p.publish_at||p.published_at||p.released_at)||"RELEASED"
           });
@@ -1244,7 +1244,7 @@ function initMobileHomeNav(){
         if(mine!==searchToken)return;
         searchResults.innerHTML=rows.length?rows.slice(0,8).map(x=>
           '<a href="'+esc(x.href)+'"><small>'+esc(x.kind.toUpperCase())+'</small><strong>'+esc(x.title)+'</strong></a>'
-        ).join(""):'<div class="mobile-search-empty">No reader-safe matches.</div>';
+        ).join(""):'<div class="mobile-search-empty">No revealed matches.</div>';
       }catch{
         if(mine===searchToken)searchResults.innerHTML='<div class="mobile-search-empty">Search unavailable.</div>';
       }
@@ -1314,15 +1314,15 @@ function paintReleaseState(el,clock){
 function paintSystemNotices(releaseState,accountData=null){
   const list=document.querySelector(".notice-list");
   if(!list)return;
-  const releaseTitle=releaseState?.releases_paused?"Release queue paused":releaseState?.launch_authorized===false?"Pre-launch protection active":"Three-Part Release Cycle";
+  const releaseTitle=releaseState?.releases_paused?"Release queue paused":releaseState?.launch_authorized===false?"Story launch in preparation":"Three-Part Release Cycle";
   const releaseCopy=releaseState?.releases_paused
     ?"No public Part will release while the queue is paused."
     :releaseState?.launch_authorized===false
-      ?"Production may continue, but public launch remains protected until authorization."
+      ?"The public Reader will open when the first Part is ready to publish."
       :"Monday–Saturday · 8:00 AM, 2:00 PM and 8:00 PM PHT · Sunday rest.";
   const accessCopy=accountData
-    ?"Your Tier, EXP, rewards and reading progress are loaded from your reader account."
-    :"Sign in to synchronize account rewards and keep a local exact reading resume point.";
+    ?"Your Tier, EXP, rewards, and reading progress stay connected to your reader profile."
+    :"Sign in to keep your progress, rewards, and reading position together across visits.";
   list.innerHTML=
     '<div><span class="notice-icon gold"><i class="v25-icon i-release" aria-hidden="true"></i></span><p><strong>'+esc(releaseTitle)+'</strong><small>'+esc(releaseCopy)+'</small></p><time>LIVE</time></div>'+
     '<div><span class="notice-icon cyan"><i class="v25-icon i-quest" aria-hidden="true"></i></span><p><strong>Reader Quest System</strong><small>Read, share, support and claim eligible rewards through the protected reader account.</small></p><time>ACTIVE</time></div>'+
@@ -1548,14 +1548,14 @@ function renderHomeReleaseModel(model){
 
   const nextTime=model.nextPublish?formatHomeReleaseTime(model.nextPublish):"8 AM · 2 PM · 8 PM";
   const stateCopy={
-    PRE_LAUNCH:["PUBLIC LAUNCH NOT YET OPEN","RELEASE SCHEDULE LOCKED","Public Final Canon remains protected."],
+    PRE_LAUNCH:["STORY LAUNCH IN PREPARATION","8 AM · 2 PM · 8 PM","The first published Part will open here when launch begins."],
     PAUSED:["RELEASES PAUSED","QUEUE PROTECTED","No public Part releases while paused."],
     DELAYED:["NEXT RELEASE DELAYED",nextTime,model.nextPartLabel],
     RELEASED:["NEW PART AVAILABLE","AVAILABLE NOW",model.latestPartLabel],
     REST_DAY:["SUNDAY · REST DAY",model.nextPublish?nextTime:"NEXT RELEASE MONDAY",model.nextPart?model.nextPartLabel:"Official weekly rest day."],
     SCHEDULED:["NEXT RELEASE",nextTime,model.nextPartLabel],
-    AWAITING_VERIFIED_PART:["AWAITING VERIFIED PART","8 AM · 2 PM · 8 PM","Waiting for the next canonical Part."],
-    API_ERROR:["RELEASE STATUS UNAVAILABLE","8 AM · 2 PM · 8 PM","Monday–Saturday · Sunday rest."]
+    AWAITING_VERIFIED_PART:["NEXT RELEASE PENDING","8 AM · 2 PM · 8 PM","The next Part will appear here once its schedule is confirmed."],
+    API_ERROR:["OFFICIAL RELEASE CYCLE","8 AM · 2 PM · 8 PM","Live countdown appears when the next Part is scheduled."]
   };
   const copy=stateCopy[model.state]||stateCopy.AWAITING_VERIFIED_PART;
   if(stateEl)stateEl.textContent=copy[0];
@@ -1563,7 +1563,7 @@ function renderHomeReleaseModel(model){
   if(partEl)partEl.textContent=copy[2];
   if(detail){
     detail.textContent=model.state==="DELAYED"
-      ?"Later Parts will not skip the delayed canonical Part."
+      ?"Later Parts will wait until the delayed Part is released."
       :model.state==="REST_DAY"
         ?"Sunday rest · release cycle resumes on the next valid slot."
         :model.state==="API_ERROR"
@@ -1741,11 +1741,23 @@ async function initHome(){
   const epLabel=(episode,part)=>"EPISODE "+String(episode).padStart(3,"0")+" · PART "+String(part).padStart(3,"0");
 
   if(!episodes.length){
-    if(latestGrid)latestGrid.innerHTML='<a class="deck-release-card is-loading" href="/site-preview/read/"><span>Released story data is temporarily unavailable.</span></a>';
+    if(readingEpisode)readingEpisode.textContent="STORY PRE-LAUNCH";
+    if(readingTitle)readingTitle.textContent="Begin your journey";
+    if(readingSummary)readingSummary.textContent="The Reader is ready. Your exact progress will appear here once the first Part is published.";
+    if(readingContinue){
+      readingContinue.href="/site-preview/read/";
+      readingContinue.innerHTML='<span aria-hidden="true">▣</span> Open Reader';
+    }
+    if(readingEpisodeLink){
+      readingEpisodeLink.hidden=true;
+      readingEpisodeLink.setAttribute("aria-hidden","true");
+    }
+    if(latestGrid)latestGrid.innerHTML=
+      '<div class="deck-prelaunch-state"><span class="deck-prelaunch-mark" aria-hidden="true">✦</span><div><small>RELEASE ARCHIVE</small><strong>The first adventure is being prepared.</strong><p>After launch, the newest published Parts will appear here automatically.</p></div><a href="/site-preview/read/">Open Reader ›</a></div>';
     if(announcements)announcements.innerHTML=
-      '<div class="deck-announcement-row"><span class="deck-announcement-icon">◆</span><p><strong>Release status unavailable</strong><small>The public reader remains fail-closed until verified data returns.</small></p><time>System</time></div>'+
+      '<div class="deck-announcement-row"><span class="deck-announcement-icon">◆</span><p><strong>Story launch in preparation</strong><small>The Reader is ready for the first published Part.</small></p><time>Soon</time></div>'+
       '<div class="deck-announcement-row"><span class="deck-announcement-icon">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div>'+
-      '<a class="deck-announcement-row" href="/site-preview/support/"><span class="deck-announcement-icon">◇</span><p><strong>Support GENESIS</strong><small>Reader support and account options remain available.</small></p><time>Open</time></a>';
+      '<a class="deck-announcement-row" href="/site-preview/account/"><span class="deck-announcement-icon">◇</span><p><strong>Prepare your reader profile</strong><small>Sign in now to keep progress, EXP, rewards, and your collection together.</small></p><time>Open</time></a>';
     return;
   }
 
@@ -1786,7 +1798,7 @@ async function initHome(){
     const episodeHref=readerUrl(readingTarget.episode_number,readingTarget.part_number);
     if(readingEpisode)readingEpisode.textContent=epLabel(readingTarget.episode_number,readingTarget.part_number);
     if(readingTitle)readingTitle.textContent=readingTarget.title||readingTarget.episode_title||"GENESIS";
-    if(readingSummary)readingSummary.textContent=readingTarget.summary_public||"Continue through the released Final Canon and pick up from your reader-safe progress.";
+    if(readingSummary)readingSummary.textContent=readingTarget.summary_public||"Continue the published story and pick up exactly where you left off.";
     if(readingArt)readingArt.href=episodeHref;
     if(readingContinue){
       readingContinue.href=href;
@@ -2053,12 +2065,12 @@ async function initSupport(){
 
     if(notices.length&&!paymentReturn){
       const enabled=providerReady&&(!!s.payments_enabled||!!s.pure_support_enabled||!!s.share_rewards_enabled);
-      paintSupportNotice('<strong>'+(enabled?(testMode?'PayMongo TEST MODE active':'Secure PayMongo checkout ready'):'PayMongo preparation mode')+'</strong><span>'+
+      paintSupportNotice('<strong>'+(enabled?(testMode?'Support checkout testing':'Secure checkout ready'):'Support options coming soon')+'</strong><span>'+
         (enabled
           ?(testMode
             ?'Testing only — no GENESIS live entitlement sales are active. Do not scan a QR Ph test code with a real banking or e-wallet app; use PayMongo\'s test simulation controls.'
-            :'Payments are verified server-side before credits, VIP, or Supporter eligibility are granted.')
-          :'PayMongo is selected and wired, but collection remains disabled until merchant keys, webhook signing, and test-mode verification pass.')+
+            :'Payments are verified securely before advance access or supporter benefits are added to your account.')
+          :'Payments and share rewards are not open yet. Normal story releases continue on schedule.')+
         '</span>');
     }
 
@@ -2080,7 +2092,7 @@ async function initSupport(){
       }catch(e){
         button.disabled=false;
         button.textContent=original;
-        if(notices.length)paintSupportNotice('<strong>Checkout unavailable</strong><span>'+esc(String(e.message||e))+'</span>');
+        if(notices.length)paintSupportNotice('<strong>Checkout could not open</strong><span>Please try again later. No charge was completed.</span>');
       }
     };
 
@@ -2096,7 +2108,7 @@ async function initSupport(){
         ?(user
           ?(testMode?(pure?"TEST Give through PayMongo":"TEST Pay with PayMongo"):(pure?"Give through PayMongo":"Pay with PayMongo"))
           :"Sign in to continue")
-        :(testMode&&!testRuleAllowed?"Locked until next test phase":"PayMongo not live yet");
+        :(testMode&&!testRuleAllowed?"Available after testing":"Support option opening soon");
 
       if(pure){
         document.querySelectorAll("#pure-support-amount,[data-pure-support-amount]").forEach(amount=>{amount.disabled=!ready});
@@ -2116,7 +2128,7 @@ async function initSupport(){
     });
   }catch(e){
     if(notices.length&&!paymentReturn){
-      paintSupportNotice('<strong>Support status unavailable</strong><span>Payment collection remains closed.</span>');
+      paintSupportNotice('<strong>Support options coming soon</strong><span>Payments are not open yet.</span>');
     }
   }
 }

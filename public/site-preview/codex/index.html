@@ -34,7 +34,7 @@
     <div class="codex-hero-copy"><p class="eyebrow">GENESIS KNOWLEDGE ARCHIVE</p><h1>Codex</h1><p>Search characters, places, monsters, items, classes, and lore revealed by the published story. Hidden knowledge stays hidden until readers reach it.</p>
       <div class="codex-hero-meta"><span>Revealed records</span><span>Fog-gated lore</span><span>Searchable archive</span></div>
     </div>
-    <div class="destination-signal codex-status"><span>REVEAL FILTER</span><strong>READER-SAFE</strong><small>Only published knowledge appears.</small></div>
+    <div class="destination-signal codex-status"><span>REVEAL FILTER</span><strong>SPOILER-SAFE</strong><small>Only knowledge revealed by published Parts appears.</small></div>
   </section>
   <section class="destination-section-intro" aria-label="Codex introduction">
     <div><span>KNOWLEDGE UNLOCKED</span><h2>Browse the archive.</h2></div>
@@ -56,9 +56,9 @@
       <select id="codex-type" aria-label="Codex category">
         <option value="">All revealed records</option><option value="monster">Monsters</option><option value="map">Maps</option><option value="weapon">Weapons</option><option value="armor">Armor</option><option value="item">Items</option><option value="material">Materials</option><option value="class">Classes</option><option value="profession">Professions</option><option value="skill">Skills</option><option value="npc">NPCs</option><option value="quest">Quests</option><option value="shop">Shops</option><option value="faction">Factions</option>
       </select>
-      <input id="codex-search" type="search" placeholder="Search revealed names, types or lore…" autocomplete="off"><button id="codex-search-button">Search Database</button>
+      <input id="codex-search" type="search" placeholder="Search revealed names, types or lore…" autocomplete="off"><button id="codex-search-button">Search Codex</button>
     </div>
-    <div class="codex-results-head"><div><small>REVEALED INDEX</small><strong>Public Knowledge Archive</strong></div><span id="codex-result-count">Reader-safe results</span></div>
+    <div class="codex-results-head"><div><small>REVEALED INDEX</small><strong>Public Knowledge Archive</strong></div><span id="codex-result-count">Revealed results</span></div>
     <section id="codex-results" class="codex-grid game-grid v28-codex-grid"><div class="empty-state large">Loading revealed Codex records…</div></section>
   </section>
 </main>
@@ -71,7 +71,7 @@
   </nav>
 <div id="global-search-panel" class="global-flyout search-flyout" hidden>
     <div class="global-flyout-head"><strong>Search GENESIS</strong><button type="button" data-close-search aria-label="Close search">×</button></div>
-    <div id="global-search-results" class="global-flyout-body"><div class="flyout-empty">Type at least 2 characters to search released story and reader-safe Codex records.</div></div>
+    <div id="global-search-results" class="global-flyout-body"><div class="flyout-empty">Search released chapters, characters, places, monsters, items, and more.</div></div>
   </div>
 
   <div id="notification-panel" class="global-flyout notification-flyout" hidden>

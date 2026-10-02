@@ -10906,3 +10906,79 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 
 /* DEPLOY SYNC: DATABASE SITE ALIGNMENT V2 */
+
+
+/* ==========================================================================
+   WEB-DS V2.9 — EDITORIAL & EMPTY-STATE POLISH
+   Reader-facing pre-launch states should feel intentional, not like errors.
+   ========================================================================== */
+.web-ds-v2 .deck-prelaunch-state{
+  grid-column:1/-1;
+  min-height:100%;
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr) auto;
+  align-items:center;
+  gap:14px;
+  padding:12px 16px;
+  border:1px solid rgba(61,116,157,.45);
+  border-radius:5px;
+  background:
+    radial-gradient(circle at 12% 50%,rgba(216,179,95,.08),transparent 28%),
+    linear-gradient(180deg,rgba(9,29,45,.92),rgba(5,17,29,.96));
+}
+.web-ds-v2 .deck-prelaunch-mark{
+  width:44px;height:44px;
+  display:grid;place-items:center;
+  border:1px solid rgba(216,179,95,.52);
+  border-radius:50%;
+  color:#f1d58b;
+  background:rgba(21,35,45,.82);
+  box-shadow:0 0 18px rgba(216,179,95,.10);
+  font-size:20px;
+}
+.web-ds-v2 .deck-prelaunch-state>div{min-width:0;display:grid;gap:3px}
+.web-ds-v2 .deck-prelaunch-state small{
+  color:#d8b35f;
+  font:800 10px/1 Inter,Arial,sans-serif;
+  letter-spacing:.11em;
+}
+.web-ds-v2 .deck-prelaunch-state strong{
+  color:#f2f0e9;
+  font:600 15px/1.15 Georgia,"Times New Roman",serif;
+}
+.web-ds-v2 .deck-prelaunch-state p{
+  margin:0;
+  color:#9fb1bf;
+  font:500 11px/1.35 Inter,Arial,sans-serif;
+}
+.web-ds-v2 .deck-prelaunch-state>a{
+  min-height:36px;
+  padding:0 14px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid rgba(61,116,157,.58);
+  border-radius:5px;
+  color:#d9e7f1;
+  background:rgba(7,24,39,.88);
+  font:700 11px/1 Inter,Arial,sans-serif;
+  text-decoration:none;
+  white-space:nowrap;
+}
+.web-ds-v2 .deck-prelaunch-state>a:hover{
+  border-color:rgba(216,179,95,.65);
+  color:#f1d58b;
+}
+.web-ds-v2 .deck-reading-actions a[hidden]{display:none!important}
+.web-ds-v2 .deck-reading-actions:has(a[hidden]){grid-template-columns:1fr}
+.web-ds-v2 .deck-reading-actions:has(a[hidden]) .genesis-btn.primary{max-width:none}
+@media(max-width:620px){
+  .web-ds-v2 .deck-prelaunch-state{
+    grid-template-columns:42px minmax(0,1fr);
+    gap:10px;
+    padding:12px;
+  }
+  .web-ds-v2 .deck-prelaunch-mark{width:38px;height:38px}
+  .web-ds-v2 .deck-prelaunch-state>a{
+    grid-column:1/-1;
+    min-height:42px;
+  }
+}

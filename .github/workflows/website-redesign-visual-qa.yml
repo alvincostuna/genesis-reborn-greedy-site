@@ -55,6 +55,22 @@ jobs:
       - name: Audit shared public shell consistency
         run: node scripts/public-shell-consistency-audit.mjs
 
+      - name: Guard public editorial language
+        shell: bash
+        run: |
+          set -euo pipefail
+          forbidden='Final Canon|Reader-safe Supabase projection|production database|executed reader-safe|>XXX<|1-DAY ADVANCE|7-DAY ADVANCE|30-DAY ADVANCE'
+          if grep -RniE "$forbidden" public/site-preview --include='*.html' --include='*.js'; then
+            echo "::error::Internal/obsolete wording leaked into the public reader interface."
+            exit 1
+          fi
+          grep -q 'The first adventure is being prepared.' public/site-preview/site.js
+          grep -q 'Begin your journey' public/site-preview/index.html
+          grep -q 'Fog of War' public/site-preview/world/index.html
+          grep -q 'SPOILER-SAFE' public/site-preview/codex/index.html
+          grep -q '2-PART ADVANCE' public/site-preview/support/index.html
+          echo "PASS: public editorial language contract"
+
       - name: Install Playwright Chromium
         run: |
           npm install --legacy-peer-deps --no-save playwright@1.55.0
