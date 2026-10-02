@@ -10900,3 +10900,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   /* Shared compact headers should remain readable on a 390px phone. */
   .unified-public-page :where(.card-head,.rail-head){font-size:12px!important}
 }
+
+
+/* DEPLOY SYNC: PUBLIC DESKTOP + MOBILE POLISH V2.8 */
