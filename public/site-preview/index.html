@@ -54,146 +54,175 @@
       </div>
     </section>
 
-    <section id="home-command-deck" class="genesis-command-deck" data-command-deck-contract="v1" aria-label="GENESIS reader command deck">
-      <div id="home-release-command" class="genesis-command-top home-release-command">
-        <section class="deck-panel deck-release-panel home-release-cycle-panel home-ornate-card" aria-label="Next release">
-          <span class="deck-corner deck-corner-tl" aria-hidden="true"></span><span class="deck-corner deck-corner-tr" aria-hidden="true"></span><span class="deck-corner deck-corner-bl" aria-hidden="true"></span><span class="deck-corner deck-corner-br" aria-hidden="true"></span>
-          <header class="deck-release-head">
-            <span class="deck-release-emblem" aria-hidden="true">⌛</span>
-            <div class="deck-release-title">
-              <span id="home-release-state" aria-live="polite">CHECKING RELEASE</span>
-              <strong id="home-release-time">-- PHT</strong>
-              <small id="home-release-part">Next verified Part</small>
-            </div>
-            <a class="deck-release-arrow" href="/site-preview/read/?start=1" aria-label="Open Reader">›</a>
+    <section id="home-command-deck" class="genesis-command-deck genesis-player-console" data-command-deck-contract="v2" aria-label="GENESIS Reader Command Deck">
+      <div class="console-crown" aria-hidden="true"><span></span><strong>READER COMMAND DECK</strong><small>YOUR GATEWAY TO A GREATER STORY</small><span></span></div>
+
+      <div id="home-release-command" class="genesis-command-top player-console-primary">
+        <section class="deck-panel deck-release-panel home-release-cycle-panel game-console-panel" aria-label="Release system monitor">
+          <span class="console-corner tl" aria-hidden="true"></span><span class="console-corner tr" aria-hidden="true"></span><span class="console-corner bl" aria-hidden="true"></span><span class="console-corner br" aria-hidden="true"></span>
+          <header class="game-console-head">
+            <span><b class="console-icon" aria-hidden="true">✦</b> RELEASE SYSTEM MONITOR</span>
+            <a href="/site-preview/read/">View Schedule ›</a>
           </header>
-          <div class="home-countdown-grid" aria-label="Release countdown">
-            <div><span>HOURS</span><strong id="home-countdown-hours">--</strong></div>
-            <div><span>MINUTES</span><strong id="home-countdown-minutes">--</strong></div>
-            <div><span>SECONDS</span><strong id="home-countdown-seconds">--</strong></div>
+          <div class="release-monitor-main">
+            <div class="release-monitor-next">
+              <span class="release-monitor-sigil" aria-hidden="true">◈</span>
+              <div>
+                <small id="home-release-state">CHECKING RELEASE</small>
+                <strong id="home-release-part">Next verified Part</strong>
+              </div>
+              <b id="home-release-time">-- PHT</b>
+            </div>
+            <div class="release-monitor-countdown" aria-label="Release countdown">
+              <span id="home-countdown-hours">--</span><i>:</i><span id="home-countdown-minutes">--</span><i>:</i><span id="home-countdown-seconds">--</span>
+            </div>
           </div>
-          <div class="home-cycle-divider"><span>DAILY RELEASE CYCLE</span></div>
-          <div class="home-release-slots" aria-label="Release times">
-            <div class="home-release-slot" data-release-slot="08:00"><strong>8:00 AM</strong><span>—</span></div>
-            <div class="home-release-slot" data-release-slot="14:00"><strong>2:00 PM</strong><span>—</span></div>
-            <div class="home-release-slot" data-release-slot="20:00"><strong>8:00 PM</strong><span>—</span></div>
+          <div class="release-cycle-label"><span>DAILY RELEASE CYCLE</span></div>
+          <div class="home-release-slots release-monitor-slots" aria-label="Release times">
+            <div class="home-release-slot" data-release-slot="08:00"><strong>8:00 AM</strong><small>Part 1</small><span>—</span></div>
+            <div class="home-release-slot" data-release-slot="14:00"><strong>2:00 PM</strong><small>Part 2</small><span>—</span></div>
+            <div class="home-release-slot" data-release-slot="20:00"><strong>8:00 PM</strong><small>Part 3</small><span>—</span></div>
           </div>
-          <footer class="home-release-card-footer">
-            <span id="home-release-detail">3 Parts · Monday–Saturday</span>
-            <span>Asia/Manila (PHT)</span>
+          <footer class="release-monitor-footer">
+            <span><b aria-hidden="true">▣</b><small>Release Days</small><strong>Monday – Saturday</strong></span>
+            <span><b aria-hidden="true">✧</b><small>Server Time</small><strong>Asia/Manila (PHT)</strong></span>
+            <span id="home-release-detail" class="sr-only">3 Parts · Monday–Saturday</span>
           </footer>
         </section>
 
-        <section class="deck-panel deck-reading-panel home-ornate-card" aria-label="Currently reading">
-          <span class="deck-corner deck-corner-tl" aria-hidden="true"></span><span class="deck-corner deck-corner-tr" aria-hidden="true"></span><span class="deck-corner deck-corner-bl" aria-hidden="true"></span><span class="deck-corner deck-corner-br" aria-hidden="true"></span>
-          <header class="deck-panel-header">
-            <span><b aria-hidden="true">▣</b> CURRENTLY READING</span>
+        <section class="deck-panel deck-reading-panel game-console-panel continue-adventure-panel" aria-label="Continue adventure">
+          <span class="console-corner tl" aria-hidden="true"></span><span class="console-corner tr" aria-hidden="true"></span><span class="console-corner bl" aria-hidden="true"></span><span class="console-corner br" aria-hidden="true"></span>
+          <header class="game-console-head">
+            <span><b class="console-icon book" aria-hidden="true">▤</b> CONTINUE ADVENTURE</span>
             <a href="/site-preview/read/">View Library ›</a>
           </header>
-          <div class="deck-reading-body">
-            <div class="deck-reading-copy">
+          <div class="continue-adventure-body">
+            <div class="continue-adventure-copy">
               <small id="home-reading-episode">READER PROGRESS</small>
               <h2 id="home-reading-title">Begin your journey</h2>
               <p id="home-reading-summary">Your story begins in the Reader. Once Parts are published, your exact progress will appear here.</p>
+              <a id="home-reading-continue" class="command-primary-cta" href="/site-preview/read/?start=1"><span aria-hidden="true">▤</span> Open Reader <b aria-hidden="true">›</b></a>
             </div>
-            <a id="home-reading-art" class="deck-reading-art" href="/site-preview/read/?start=1" aria-label="Open current reading"></a>
+            <a id="home-reading-art" class="continue-adventure-art deck-reading-art" href="/site-preview/read/?start=1" aria-label="Open current reading"></a>
+            <aside class="continue-adventure-ledger">
+              <small>LATEST PART</small>
+              <strong>The first adventure<br>is being prepared.</strong>
+              <span>PROGRESS</span><b>—</b>
+              <span>YOUR STATUS</span><b>Not Signed In</b>
+              <em>“Every great story begins with a single step.”</em>
+            </aside>
           </div>
-          <div class="deck-reading-actions">
-            <a id="home-reading-continue" class="genesis-btn primary" href="/site-preview/read/?start=1"><span aria-hidden="true">▣</span> Open Reader</a>
-            <a id="home-reading-view-episode" class="genesis-btn ghost" href="/site-preview/read/"><span aria-hidden="true">☰</span> View Episode</a>
-          </div>
+          <a id="home-reading-view-episode" class="sr-only" href="/site-preview/read/">View Episode</a>
         </section>
 
-        <section class="deck-panel deck-access-panel home-access-panel home-ornate-card" aria-label="Your reader access">
-          <span class="deck-corner deck-corner-tl" aria-hidden="true"></span><span class="deck-corner deck-corner-tr" aria-hidden="true"></span><span class="deck-corner deck-corner-bl" aria-hidden="true"></span><span class="deck-corner deck-corner-br" aria-hidden="true"></span>
-          <header class="deck-panel-header home-access-head">
-            <span><b aria-hidden="true">♙</b> YOUR ACCESS</span>
+        <section class="deck-panel deck-access-panel home-access-panel game-console-panel reader-profile-panel" aria-label="Reader profile">
+          <span class="console-corner tl" aria-hidden="true"></span><span class="console-corner tr" aria-hidden="true"></span><span class="console-corner bl" aria-hidden="true"></span><span class="console-corner br" aria-hidden="true"></span>
+          <header class="game-console-head">
+            <span><b class="console-icon crystal" aria-hidden="true">✧</b> READER PROFILE</span>
             <a href="/site-preview/account/">View Details ›</a>
           </header>
 
-          <div id="home-access-guest" class="home-access-guest">
-            <div class="home-access-profile">
+          <div id="home-access-guest" class="home-access-guest reader-profile-state">
+            <div class="reader-profile-identity">
               <div class="home-access-avatar"><img src="/assets/genesis-official-logo-64.png" alt=""></div>
-              <div class="home-access-identity">
+              <div>
                 <strong>GENESIS Reader</strong>
-                <span>Sign in to track progress, EXP, access, and rewards.</span>
-                <b>Reader Account</b>
+                <span>A new world awaits your mark.</span>
               </div>
             </div>
-            <div class="home-access-guest-preview">
-              <div><span>Advance Access</span><strong>Sign in to view</strong></div>
-              <div><span>Reader EXP</span><strong>Sign in to view</strong></div>
-              <div><span>Story Progress</span><strong>Sign in to view</strong></div>
-              <div><span>Collectible Rewards</span><strong>Sign in to view</strong></div>
+            <div class="reader-profile-ledger">
+              <div><span>Access Tier</span><strong>Not Signed In</strong></div>
+              <div><span>Reader EXP</span><strong>—</strong></div>
+              <div><span>Story Progress</span><strong>—</strong></div>
+              <div><span>Collection</span><strong>— / —</strong></div>
+              <div><span>Achievements</span><strong>—</strong></div>
             </div>
-            <div class="home-access-guest-actions">
-              <a class="genesis-btn primary" href="/site-preview/account/">Sign In</a>
-              <a class="genesis-btn ghost" href="/site-preview/read/?start=1">Start Reading</a>
-            </div>
+            <a class="reader-profile-signin" href="/site-preview/account/">▣ Sign In to Sync Your Adventure</a>
           </div>
 
-          <div id="home-access-reader" class="home-access-reader" hidden>
-            <div class="home-access-profile">
+          <div id="home-access-reader" class="home-access-reader reader-profile-state" hidden>
+            <div class="reader-profile-identity">
               <div class="home-access-avatar"><img id="home-access-avatar" src="/assets/genesis-official-logo-64.png" alt=""></div>
-              <div class="home-access-identity">
+              <div>
                 <strong id="home-access-name">Reader</strong>
                 <span id="home-access-title">GENESIS Adventurer</span>
                 <b id="home-access-tier">Tier 1</b>
               </div>
-              <span class="deck-access-crest" aria-hidden="true">✦</span>
             </div>
-            <div class="home-access-exp">
+            <div class="home-access-exp reader-profile-exp">
               <div class="home-access-exp-bar"><i id="home-access-exp-fill"></i></div>
               <div><span id="home-access-exp-total">0 / 2,000 EXP</span><span id="home-access-next-tier">Next Tier in 2,000</span></div>
             </div>
-            <div class="home-access-stats">
-              <div><span><b aria-hidden="true">⌂</b> Advance Access</span><strong id="home-access-advance">0 Parts Ahead</strong></div>
-              <div><span><b aria-hidden="true">♔</b> Support Status</span><strong id="home-access-support">Standard</strong></div>
-              <div><span><b aria-hidden="true">◎</b> Reader EXP</span><strong id="home-access-reader-exp">0 EXP</strong></div>
-              <div><span><b aria-hidden="true">◇</b> Story Progress</span><strong id="home-access-progress">Not started</strong></div>
-              <div><span><b aria-hidden="true">✥</b> Collectible Rewards</span><strong id="home-access-collectibles">0 Unlocked</strong></div>
+            <div class="reader-profile-ledger home-access-stats">
+              <div><span>Advance Access</span><strong id="home-access-advance">0 Parts Ahead</strong></div>
+              <div><span>Support Status</span><strong id="home-access-support">Standard</strong></div>
+              <div><span>Reader EXP</span><strong id="home-access-reader-exp">0 EXP</strong></div>
+              <div><span>Story Progress</span><strong id="home-access-progress">Not started</strong></div>
+              <div><span>Collection</span><strong id="home-access-collectibles">0 Unlocked</strong></div>
             </div>
           </div>
         </section>
       </div>
 
-      <div class="genesis-command-bottom">
-        <section class="deck-panel deck-latest-panel home-ornate-card" aria-label="Latest releases">
-          <header class="deck-panel-header">
-            <span><b aria-hidden="true">☼</b> LATEST RELEASES</span>
+      <div class="genesis-command-bottom player-console-secondary">
+        <section class="deck-panel deck-latest-panel game-console-panel adventure-feed-panel" aria-label="Adventure feed">
+          <header class="game-console-head">
+            <span><b class="console-icon" aria-hidden="true">✥</b> ADVENTURE FEED</span>
+            <nav class="adventure-feed-tabs" aria-label="Feed filters"><button type="button" class="active">All</button><button type="button">Releases</button><button type="button">Updates</button><button type="button">Community</button></nav>
             <a href="/site-preview/read/">View All ›</a>
           </header>
-          <div id="home-latest-releases" class="deck-latest-grid" aria-live="polite">
+          <div id="home-latest-releases" class="deck-latest-grid adventure-feed-content" aria-live="polite">
             <a class="deck-release-card is-loading" href="/site-preview/read/"><span>Loading latest public releases…</span></a>
           </div>
         </section>
 
-        <section class="deck-panel deck-announcements-panel home-ornate-card" aria-label="Announcements">
-          <header class="deck-panel-header">
-            <span><b aria-hidden="true">◆</b> ANNOUNCEMENTS</span>
+        <section class="deck-panel deck-announcements-panel game-console-panel bulletin-panel" aria-label="System bulletin">
+          <header class="game-console-head">
+            <span><b class="console-icon" aria-hidden="true">♜</b> SYSTEM BULLETIN</span>
             <a href="/site-preview/support/">View All ›</a>
           </header>
-          <div id="home-announcements" class="deck-announcement-list" aria-live="polite">
+          <div id="home-announcements" class="deck-announcement-list system-bulletin-list" aria-live="polite">
             <div class="deck-announcement-row"><span class="deck-announcement-icon">◆</span><p><strong>GENESIS updates</strong><small>Release news, reader updates, and important notices appear here.</small></p><time>Live</time></div>
           </div>
         </section>
       </div>
+
+      <section class="world-navigation-hub" aria-label="World navigation hub">
+        <header><span></span><div><strong>WORLD NAVIGATION HUB</strong><small>EXPLORE. DISCOVER. COLLECT. BELONG.</small></div><span></span></header>
+        <nav class="world-navigation-grid">
+          <a class="world-nav-tile is-primary tile-read" href="/site-preview/read/"><b>▤</b><strong>READ</strong><small>Continue the story</small></a>
+          <a class="world-nav-tile tile-world" href="/site-preview/world/"><b>◎</b><strong>WORLD</strong><small>Explore the world</small></a>
+          <a class="world-nav-tile tile-codex" href="/site-preview/codex/"><b>✥</b><strong>CODEX</strong><small>Lore & encyclopedia</small></a>
+          <a class="world-nav-tile tile-characters" href="/site-preview/codex/?type=npc"><b>♙</b><strong>CHARACTERS</strong><small>Meet key figures</small></a>
+          <a class="world-nav-tile tile-monsters" href="/site-preview/codex/?type=monster"><b>✦</b><strong>MONSTERS</strong><small>Bestiary & enemies</small></a>
+          <a class="world-nav-tile tile-items" href="/site-preview/codex/?type=equipment"><b>◇</b><strong>ITEMS</strong><small>Artifacts & equipment</small></a>
+          <a class="world-nav-tile tile-manga" href="/site-preview/manga/"><b>▣</b><strong>MANGA</strong><small>Official manga</small></a>
+          <a class="world-nav-tile tile-support" href="/site-preview/support/"><b>⚑</b><strong>SUPPORT</strong><small>Help & information</small></a>
+          <a class="world-nav-tile tile-fan" href="/site-preview/fan-page/"><b>♜</b><strong>FAN PAGE</strong><small>Community hub</small></a>
+        </nav>
+      </section>
     </section>
-
-
 
   </main>
 
-  <footer class="lean-home-footer">
-    <small>GENESIS: REBORN GREEDY · Official Light Novel</small>
-    <nav aria-label="Footer">
-      <a href="/site-preview/read/">Read</a>
-      <a href="/site-preview/world/">World</a>
-      <a href="/site-preview/codex/">Codex</a>
-      <a href="/site-preview/manga/">Manga</a>
-      <a href="/site-preview/fan-page/">Fan Page</a>
-      <a href="/site-preview/support/">Support</a>
+  <footer class="game-command-footer">
+    <div class="game-footer-brand"><img src="/assets/genesis-official-logo-64.png" alt=""><span><strong>GENESIS <em>REBORN GREEDY</em></strong><small>Official Light Novel Website</small></span></div>
+    <nav class="game-footer-links" aria-label="Reader command dock">
+      <span>READER COMMAND DOCK</span>
+      <div>
+        <a class="active" href="/site-preview/">⌂ Home</a>
+        <a href="/site-preview/read/">▤ Read</a>
+        <a href="/site-preview/world/">◎ World</a>
+        <a href="/site-preview/codex/">✥ Codex</a>
+        <a href="/site-preview/codex/?type=npc">♙ Characters</a>
+        <a href="/site-preview/codex/?type=monster">✦ Monsters</a>
+        <a href="/site-preview/codex/?type=equipment">◇ Items</a>
+        <a href="/site-preview/manga/">▣ Manga</a>
+        <a href="/site-preview/support/">⚑ Support</a>
+      </div>
     </nav>
+    <div class="game-footer-status"><span><i></i><strong>SYSTEM ONLINE</strong></span><small>Reader services operational</small></div>
+    <blockquote>“A Second Life. One Future to Forge.”</blockquote>
   </footer>
 
   <nav class="mobile-bottom-nav v2-mobile-bottom" aria-label="Mobile navigation">
