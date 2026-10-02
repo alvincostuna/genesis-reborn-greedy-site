@@ -11535,3 +11535,216 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     padding:6px!important;
   }
 }
+
+
+/* ==========================================================================
+   WEB-DS V3.3 — LOGO MATERIAL HIERARCHY
+   Composition-first polish: silver title mass, gold structure, rare red accent.
+   No external fonts, assets, delivery changes, or geometry rewrite.
+   ========================================================================== */
+.web-ds-v2{
+  --gx33-display:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+  --gx33-story:Georgia,"Times New Roman",serif;
+  --gx33-title:#E8E9E7;
+  --gx33-title-hi:#F6F3EC;
+  --gx33-border:rgba(213,174,88,.50);
+  --gx33-inner:rgba(203,211,218,.12);
+}
+
+/* Reduce the "gold boxes everywhere" effect. Gold frames the material; silver carries the title. */
+.web-ds-v2 .genesis-command-deck .deck-panel{
+  border-color:var(--gx33-border)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel::before{
+  border-color:var(--gx33-inner)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel::after{
+  opacity:.62;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header{
+  color:var(--gx33-title)!important;
+  font-family:var(--gx33-display)!important;
+  font-variant-caps:small-caps;
+  letter-spacing:.045em!important;
+  background:
+    linear-gradient(90deg,rgba(232,233,231,.035),rgba(213,174,88,.022) 50%,transparent 84%)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header>span,
+.web-ds-v2 .genesis-command-deck .home-access-head>span{
+  color:var(--gx33-title)!important;
+  font-family:var(--gx33-display)!important;
+  letter-spacing:.045em!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.82),0 0 10px rgba(232,233,231,.035)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header b,
+.web-ds-v2 .genesis-command-deck .home-access-head b{
+  color:var(--gx3-gold)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header::before{
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(203,211,218,.16) 10%,
+      rgba(213,174,88,.34) 28%,
+      rgba(203,211,218,.18) 72%,
+      transparent
+    )!important;
+}
+
+/* Classical system-serif treatment that stays premium even without downloaded fonts. */
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-time{
+  font-family:var(--gx33-display)!important;
+  color:var(--gx3-gold-hi)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-copy h2{
+  font-family:var(--gx33-story)!important;
+  color:var(--gx33-title-hi)!important;
+  font-weight:700!important;
+  letter-spacing:-.012em!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-identity strong{
+  font-family:var(--gx33-story)!important;
+  color:var(--gx33-title-hi)!important;
+  font-weight:700!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-copy strong,
+.web-ds-v2 .genesis-command-deck .deck-prelaunch-state strong{
+  font-family:var(--gx33-story)!important;
+  color:var(--gx33-title-hi)!important;
+}
+
+/* Reading panel is the narrative focal point, not another equal-weight box. */
+.web-ds-v2 .genesis-command-deck .deck-reading-panel{
+  border-color:rgba(232,233,231,.34)!important;
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.035),
+    inset 0 0 0 1px rgba(213,174,88,.13),
+    inset 0 0 26px rgba(52,94,126,.035),
+    0 12px 32px rgba(0,0,0,.34)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-panel .deck-panel-header>span{
+  color:var(--gx33-title-hi)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-copy small{
+  color:var(--gx3-gold)!important;
+  letter-spacing:.11em!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-art{
+  border-color:rgba(232,233,231,.28)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(213,174,88,.14),
+    inset 0 0 26px rgba(0,0,0,.24),
+    0 0 0 1px rgba(2,7,13,.94),
+    0 7px 20px rgba(0,0,0,.28)!important;
+}
+
+/* Buttons use material hierarchy rather than color saturation. */
+.web-ds-v2 .genesis-command-deck .genesis-btn{
+  font-family:var(--gx33-display)!important;
+  letter-spacing:.015em!important;
+}
+.web-ds-v2 .genesis-command-deck .genesis-btn.primary{
+  color:var(--gx33-title-hi)!important;
+  border-color:rgba(213,174,88,.60)!important;
+  background:
+    linear-gradient(180deg,rgba(232,233,231,.045),transparent 34%),
+    linear-gradient(180deg,#111f2b 0%,#091621 58%,#050d15 100%)!important;
+  box-shadow:
+    inset 0 1px rgba(246,243,236,.07),
+    inset 0 -1px rgba(0,0,0,.52),
+    inset 0 0 0 1px rgba(203,211,218,.025)!important;
+}
+.web-ds-v2 .genesis-command-deck .genesis-btn.primary:hover{
+  color:#fff8e8!important;
+  border-color:var(--gx3-gold-hi)!important;
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.09),
+    0 0 12px rgba(213,174,88,.11)!important;
+}
+.web-ds-v2 .genesis-command-deck .genesis-btn.ghost,
+.web-ds-v2 .genesis-command-deck .home-access-guest-actions .genesis-btn:not(.primary){
+  color:#D4D9DD!important;
+  border-color:rgba(203,211,218,.28)!important;
+  background:linear-gradient(180deg,rgba(232,233,231,.018),rgba(5,15,25,.76))!important;
+}
+.web-ds-v2 .genesis-command-deck .genesis-btn.ghost:hover,
+.web-ds-v2 .genesis-command-deck .home-access-guest-actions .genesis-btn:not(.primary):hover{
+  color:var(--gx3-gold-hi)!important;
+  border-color:rgba(213,174,88,.54)!important;
+}
+
+/* Access becomes a crest-and-ledger composition. */
+.web-ds-v2 .genesis-command-deck .home-access-avatar{
+  border-color:rgba(232,233,231,.42)!important;
+  box-shadow:
+    0 0 0 1px rgba(213,174,88,.48),
+    0 0 0 3px #07111b,
+    0 0 14px rgba(213,174,88,.09)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-profile{
+  border-bottom-color:rgba(203,211,218,.13)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-guest-preview>div,
+.web-ds-v2 .genesis-command-deck .home-access-stats>div{
+  background:
+    linear-gradient(90deg,rgba(232,233,231,.018),transparent 42%)!important;
+  border-bottom-color:rgba(203,211,218,.12)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-guest-preview span,
+.web-ds-v2 .genesis-command-deck .home-access-stats span{
+  color:#BDC6CD!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-guest-preview strong,
+.web-ds-v2 .genesis-command-deck .home-access-stats strong{
+  color:#DCE1E4!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-stats strong{
+  color:var(--gx3-gold-hi)!important;
+}
+
+/* Lower panels read as a chronicle, not another pair of framed dashboards. */
+.web-ds-v2 .genesis-command-deck .deck-latest-panel,
+.web-ds-v2 .genesis-command-deck .deck-announcements-panel{
+  border-color:rgba(213,174,88,.44)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-card{
+  border-color:rgba(203,211,218,.16)!important;
+  background:
+    linear-gradient(180deg,rgba(232,233,231,.014),rgba(4,13,21,.98))!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-card:hover{
+  border-color:rgba(213,174,88,.48)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row{
+  border-bottom-color:rgba(203,211,218,.11)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-icon{
+  color:var(--gx3-gold-hi)!important;
+  border-color:rgba(213,174,88,.34)!important;
+  background:rgba(232,233,231,.025)!important;
+}
+
+/* Red remains the GREEDY signature, not a general theme color. */
+.web-ds-v2 .genesis-command-deck .deck-reading-panel .deck-panel-header::after{
+  width:24px!important;
+  opacity:.86;
+}
+
+/* Mobile: preserve the hierarchy without adding visual noise. */
+@media(max-width:620px){
+  .web-ds-v2 .genesis-command-deck .deck-panel-header,
+  .web-ds-v2 .genesis-command-deck .deck-panel-header>span,
+  .web-ds-v2 .genesis-command-deck .home-access-head>span{
+    letter-spacing:.035em!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-copy h2{
+    letter-spacing:-.008em!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-panel{
+    box-shadow:
+      inset 0 1px rgba(255,255,255,.03),
+      inset 0 0 0 1px rgba(213,174,88,.11),
+      0 8px 22px rgba(0,0,0,.28)!important;
+  }
+}
