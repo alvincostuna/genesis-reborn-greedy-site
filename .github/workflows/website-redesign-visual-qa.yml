@@ -99,8 +99,9 @@ jobs:
           if marker not in css:
               raise SystemExit("V3.3 material hierarchy marker missing")
           start=css.index(marker)
-          next_section=css.find("/* ========================================================================== */", start+len(marker))
-          block=css[start:next_section if next_section != -1 else len(css)]
+          end_marker="WEB-DS V3.4 — SAFE FINISH / MATERIAL RHYTHM"
+          end=css.find(end_marker,start+len(marker))
+          block=css[start:end if end != -1 else len(css)]
           required=[
               '--gx33-display:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif',
               '--gx33-title:#E8E9E7',
