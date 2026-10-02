@@ -13675,3 +13675,130 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   }
 }
 /* DEPLOY MARKER: WEB-DS V3.7.5 REFERENCE HERO */
+
+
+/* WEB-DS V3.7.7 — MOBILE COMMAND DECK COMPACTION
+   Fixes the oversized Continue Adventure cavity without changing desktop. */
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .genesis-player-console{
+    padding:12px 9px 8px!important;
+    gap:8px!important;
+  }
+  .web-ds-v2.genesis-home .genesis-player-console .player-console-primary{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:8px!important;
+  }
+  .web-ds-v2.genesis-home .deck-release-panel{order:1!important}
+  .web-ds-v2.genesis-home .deck-reading-panel{order:2!important}
+  .web-ds-v2.genesis-home .deck-access-panel{order:3!important}
+
+  .web-ds-v2.genesis-home .continue-adventure-body{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 118px!important;
+    grid-template-rows:auto auto!important;
+    align-items:start!important;
+    gap:10px 9px!important;
+    min-height:0!important;
+    height:auto!important;
+    padding:12px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy{
+    grid-column:1!important;
+    grid-row:1!important;
+    min-width:0!important;
+    justify-content:flex-start!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy>small{
+    font-size:8px!important;
+    line-height:1.15!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy h2{
+    margin:5px 0 7px!important;
+    font-size:28px!important;
+    line-height:.96!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy p{
+    max-width:none!important;
+    margin:0 0 10px!important;
+    font-size:11px!important;
+    line-height:1.35!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-art{
+    grid-column:2!important;
+    grid-row:1!important;
+    width:118px!important;
+    height:150px!important;
+    min-height:150px!important;
+    align-self:start!important;
+    background-position:center!important;
+  }
+  .web-ds-v2.genesis-home .command-primary-cta{
+    width:100%!important;
+    min-height:42px!important;
+    padding:0 12px!important;
+    font-size:13px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-ledger{
+    grid-column:1/-1!important;
+    grid-row:2!important;
+    display:grid!important;
+    grid-template-columns:78px minmax(0,1fr) 68px minmax(0,1fr)!important;
+    gap:5px 8px!important;
+    align-items:center!important;
+    min-height:0!important;
+    padding:8px 0 0!important;
+    border-top:1px solid rgba(216,179,95,.18)!important;
+    border-left:0!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-ledger small,
+  .web-ds-v2.genesis-home .continue-adventure-ledger span{
+    margin:0!important;
+    font-size:7px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-ledger strong,
+  .web-ds-v2.genesis-home .continue-adventure-ledger b{
+    margin:0!important;
+    font-size:8px!important;
+    line-height:1.2!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-ledger em{
+    grid-column:1/-1!important;
+    margin:4px 0 0!important;
+    font-size:9px!important;
+  }
+
+  .web-ds-v2.genesis-home .release-monitor-main{
+    height:auto!important;
+    min-height:68px!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-slots .home-release-slot{
+    min-height:58px!important;
+  }
+  .web-ds-v2.genesis-home .reader-profile-state{
+    min-height:0!important;
+    height:auto!important;
+    padding:10px 12px!important;
+  }
+  .web-ds-v2.genesis-home .player-console-secondary .game-console-panel{
+    min-height:118px!important;
+    height:auto!important;
+  }
+  .web-ds-v2.genesis-home .adventure-feed-content,
+  .web-ds-v2.genesis-home .system-bulletin-list{
+    height:auto!important;
+    min-height:78px!important;
+  }
+
+  .web-ds-v2.genesis-home .world-navigation-hub{
+    padding-top:24px!important;
+  }
+  .web-ds-v2.genesis-home .world-navigation-hub>header{
+    width:88%!important;
+  }
+  .web-ds-v2.genesis-home .world-navigation-hub>header div{
+    min-width:0!important;
+    width:210px!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.7.7 MOBILE COMMAND COMPACTION */
