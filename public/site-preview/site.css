@@ -10988,3 +10988,400 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 
 /* DEPLOY SYNC: HOMEPAGE PAYLOAD HOTFIX V1 */
+
+
+/* ==========================================================================
+   WEB-DS V3.0 — LOGO ALIGNMENT PASS
+   Pure theme layer. Geometry, runtime behavior, and optimized assets unchanged.
+   ========================================================================== */
+.web-ds-v2{
+  --gx3-page:#02070D;
+  --gx3-shell:#050D16;
+  --gx3-panel:#081624;
+  --gx3-panel-raised:#0A1C2C;
+  --gx3-gold:#D5AE58;
+  --gx3-gold-hi:#F0D488;
+  --gx3-gold-dark:#756033;
+  --gx3-ivory:#F2EEE5;
+  --gx3-silver:#CBD3DA;
+  --gx3-steel:#899BAA;
+  --gx3-blue:#5EA7D9;
+  --gx3-blue-hi:#8BD5FF;
+  --gx3-red:#A92521;
+  --gx3-red-hi:#D04238;
+  --gx3-display:"Cinzel",Georgia,"Times New Roman",serif;
+  --gx3-story:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --gx3-ui:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+
+/* Deck surfaces: less SaaS-blue, more engraved midnight metal. */
+.web-ds-v2 .genesis-command-deck{
+  background:
+    radial-gradient(circle at 50% -14%,rgba(213,174,88,.065),transparent 34%),
+    linear-gradient(180deg,#050d16 0%,#02070d 100%)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(213,174,88,.74),
+    inset 0 0 0 5px rgba(73,98,118,.12),
+    0 18px 42px rgba(0,0,0,.38)!important;
+}
+.web-ds-v2 .genesis-command-deck::before{
+  background:linear-gradient(90deg,transparent,#d5ae58 18%,#f0d488 50%,#d5ae58 82%,transparent)!important;
+  box-shadow:0 0 10px rgba(213,174,88,.20)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel{
+  border-color:rgba(213,174,88,.72)!important;
+  background:
+    radial-gradient(circle at 50% -12%,rgba(213,174,88,.070),transparent 38%),
+    linear-gradient(155deg,#0a1b2a 0%,#071421 55%,#040c14 100%)!important;
+  box-shadow:
+    inset 0 1px rgba(255,240,196,.035),
+    inset 0 0 28px rgba(50,111,155,.035),
+    0 12px 32px rgba(0,0,0,.34)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel::before{
+  border-color:rgba(94,167,217,.20)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel::after{
+  background:linear-gradient(90deg,transparent,#d5ae58 35%,#f0d488 50%,#d5ae58 65%,transparent)!important;
+  box-shadow:0 0 8px rgba(213,174,88,.14)!important;
+}
+
+/* Engraved fantasy headers. */
+.web-ds-v2 .genesis-command-deck .deck-panel-header{
+  height:38px!important;
+  color:var(--gx3-gold-hi)!important;
+  font-family:var(--gx3-display)!important;
+  font-size:15px!important;
+  font-weight:600!important;
+  font-variant-caps:small-caps;
+  letter-spacing:.055em!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.68),0 0 10px rgba(213,174,88,.08);
+  border-bottom:1px solid transparent!important;
+  position:relative;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header::before{
+  content:"";
+  position:absolute;
+  left:12px;right:12px;bottom:-1px;height:1px;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(213,174,88,.42) 12%,
+    rgba(94,167,217,.25) 50%,
+    rgba(213,174,88,.42) 88%,
+    transparent
+  );
+  pointer-events:none;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header>span,
+.web-ds-v2 .genesis-command-deck .home-access-head>span{
+  color:var(--gx3-gold-hi)!important;
+  font-family:var(--gx3-display)!important;
+  font-size:15px!important;
+  font-weight:600!important;
+  letter-spacing:.055em!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header b{
+  color:var(--gx3-gold)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header a,
+.web-ds-v2 .genesis-command-deck .home-access-head>a{
+  color:var(--gx3-silver)!important;
+  font-family:var(--gx3-ui)!important;
+  font-size:10px!important;
+  font-weight:600!important;
+  letter-spacing:.015em!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header a:hover,
+.web-ds-v2 .genesis-command-deck .home-access-head>a:hover{
+  color:var(--gx3-gold-hi)!important;
+}
+
+/* Refined corners: gold engraving, not neon. */
+.web-ds-v2 .genesis-command-deck .deck-corner{
+  width:28px!important;
+  height:28px!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-corner::before{
+  width:28px!important;
+  background:linear-gradient(90deg,#d5ae58,rgba(213,174,88,.08))!important;
+  box-shadow:0 0 6px rgba(213,174,88,.16)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-corner::after{
+  height:28px!important;
+  background:linear-gradient(180deg,#d5ae58,rgba(213,174,88,.08))!important;
+  box-shadow:0 0 6px rgba(213,174,88,.16)!important;
+}
+
+/* Release-cycle plaque. */
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-state{
+  color:var(--gx3-gold)!important;
+  font-family:var(--gx3-display)!important;
+  font-size:10px!important;
+  font-weight:600!important;
+  font-variant-caps:small-caps;
+  letter-spacing:.115em!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-time{
+  color:var(--gx3-gold-hi)!important;
+  font-family:var(--gx3-display)!important;
+  font-size:33px!important;
+  font-weight:600!important;
+  letter-spacing:.01em!important;
+  text-shadow:0 1px 0 #000,0 0 14px rgba(213,174,88,.10)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-part{
+  color:var(--gx3-silver)!important;
+  font-family:var(--gx3-story)!important;
+  font-size:15px!important;
+  font-weight:600!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-emblem{
+  color:var(--gx3-gold-hi)!important;
+  filter:drop-shadow(0 0 7px rgba(213,174,88,.18))!important;
+}
+.web-ds-v2 .genesis-command-deck .home-countdown-grid>div{
+  border-color:rgba(94,167,217,.48)!important;
+  background:linear-gradient(180deg,rgba(10,29,45,.90),rgba(4,13,22,.98))!important;
+  box-shadow:inset 0 0 14px rgba(94,167,217,.045)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-countdown-grid span{
+  color:#a9b7c3!important;
+  font-family:var(--gx3-ui)!important;
+  font-weight:700!important;
+}
+.web-ds-v2 .genesis-command-deck .home-countdown-grid strong{
+  color:var(--gx3-blue-hi)!important;
+  font-family:var(--gx3-ui)!important;
+  font-weight:600!important;
+  text-shadow:0 0 10px rgba(94,167,217,.16);
+}
+.web-ds-v2 .genesis-command-deck .home-cycle-divider span{
+  color:var(--gx3-silver)!important;
+  background:#071421!important;
+  font-family:var(--gx3-display)!important;
+  font-weight:600!important;
+  letter-spacing:.09em!important;
+}
+.web-ds-v2 .genesis-command-deck .home-release-slot{
+  border-color:rgba(117,96,51,.58)!important;
+  background:linear-gradient(180deg,rgba(8,20,31,.94),rgba(3,11,18,.98))!important;
+}
+.web-ds-v2 .genesis-command-deck .home-release-slot strong{
+  color:var(--gx3-gold-hi)!important;
+  font-family:var(--gx3-display)!important;
+  font-weight:600!important;
+}
+.web-ds-v2 .genesis-command-deck .home-release-slot.is-next{
+  border-color:rgba(213,174,88,.78)!important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(213,174,88,.08),transparent 60%),
+    linear-gradient(180deg,rgba(18,29,36,.95),rgba(5,14,22,.98))!important;
+}
+
+/* Currently Reading becomes the literary centerpiece. */
+.web-ds-v2 .genesis-command-deck .deck-reading-copy small{
+  color:var(--gx3-gold)!important;
+  font-family:var(--gx3-ui)!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:.085em!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-copy h2{
+  color:var(--gx3-ivory)!important;
+  font-family:var(--gx3-story)!important;
+  font-size:28px!important;
+  font-weight:600!important;
+  letter-spacing:.005em;
+  text-shadow:0 1px 0 rgba(0,0,0,.80),0 4px 14px rgba(0,0,0,.34)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-copy p{
+  color:var(--gx3-silver)!important;
+  font-family:var(--gx3-ui)!important;
+  font-size:12px!important;
+  font-weight:500!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-art{
+  border-color:rgba(213,174,88,.42)!important;
+  box-shadow:inset 0 0 18px rgba(0,0,0,.18),0 0 12px rgba(213,174,88,.05)!important;
+}
+
+/* CTA hierarchy: dark ceremonial buttons instead of saturated app-blue. */
+.web-ds-v2 .genesis-command-deck .genesis-btn{
+  font-family:var(--gx3-display)!important;
+  font-weight:600!important;
+  letter-spacing:.025em!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.72);
+}
+.web-ds-v2 .genesis-command-deck .genesis-btn.primary{
+  color:var(--gx3-ivory)!important;
+  border:1px solid #b99447!important;
+  background:linear-gradient(180deg,#162738 0%,#0b1927 52%,#07111b 100%)!important;
+  box-shadow:inset 0 1px rgba(255,232,168,.10),inset 0 0 18px rgba(213,174,88,.035)!important;
+}
+.web-ds-v2 .genesis-command-deck .genesis-btn.primary:hover{
+  color:#fff4d3!important;
+  border-color:var(--gx3-gold-hi)!important;
+  box-shadow:inset 0 1px rgba(255,239,191,.13),0 0 14px rgba(213,174,88,.16)!important;
+}
+.web-ds-v2 .genesis-command-deck .genesis-btn.ghost,
+.web-ds-v2 .genesis-command-deck .home-access-guest-actions .genesis-btn:not(.primary){
+  color:var(--gx3-silver)!important;
+  border:1px solid rgba(119,153,177,.50)!important;
+  background:rgba(5,15,25,.72)!important;
+}
+.web-ds-v2 .genesis-command-deck .genesis-btn.ghost:hover,
+.web-ds-v2 .genesis-command-deck .home-access-guest-actions .genesis-btn:not(.primary):hover{
+  color:var(--gx3-gold-hi)!important;
+  border-color:rgba(213,174,88,.68)!important;
+  background:rgba(18,28,35,.88)!important;
+}
+
+/* Reader identity plaque. */
+.web-ds-v2 .genesis-command-deck .home-access-avatar{
+  border-color:var(--gx3-gold)!important;
+  box-shadow:0 0 0 2px #07111b,0 0 12px rgba(213,174,88,.12)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-identity strong{
+  color:var(--gx3-ivory)!important;
+  font-family:var(--gx3-story)!important;
+  font-size:19px!important;
+  font-weight:600!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-identity span{
+  color:var(--gx3-silver)!important;
+  font-family:var(--gx3-ui)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-identity b{
+  background:linear-gradient(180deg,#e3bf6c,#b68735)!important;
+  border-color:rgba(240,212,136,.80)!important;
+  color:#261a08!important;
+  font-family:var(--gx3-display)!important;
+  font-weight:600!important;
+  box-shadow:inset 0 1px rgba(255,244,209,.20);
+}
+.web-ds-v2 .genesis-command-deck .home-access-guest-preview,
+.web-ds-v2 .genesis-command-deck .home-access-stats{
+  border-top-color:rgba(97,130,153,.22)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-guest-preview>div,
+.web-ds-v2 .genesis-command-deck .home-access-stats>div{
+  border-bottom-color:rgba(97,130,153,.22)!important;
+  background:transparent!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-guest-preview span,
+.web-ds-v2 .genesis-command-deck .home-access-stats span{
+  color:var(--gx3-silver)!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-stats strong{
+  color:var(--gx3-gold-hi)!important;
+}
+
+/* Archive / announcements: literary chronicle rather than utility dashboard. */
+.web-ds-v2 .genesis-command-deck .deck-release-card{
+  border-color:rgba(117,96,51,.38)!important;
+  background:linear-gradient(180deg,rgba(8,22,34,.94),rgba(4,13,21,.98))!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-card:hover{
+  border-color:rgba(213,174,88,.68)!important;
+  box-shadow:0 0 12px rgba(213,174,88,.055);
+}
+.web-ds-v2 .genesis-command-deck .deck-release-copy small{
+  color:var(--gx3-gold)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-copy strong{
+  color:var(--gx3-ivory)!important;
+  font-family:var(--gx3-story)!important;
+  font-size:14px!important;
+  font-weight:600!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-copy em{
+  color:var(--gx3-steel)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row{
+  border-bottom-color:rgba(97,130,153,.20)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-icon{
+  color:var(--gx3-gold-hi)!important;
+  border-color:rgba(213,174,88,.42)!important;
+  background:rgba(16,31,41,.76)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row strong{
+  color:var(--gx3-ivory)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row small,
+.web-ds-v2 .genesis-command-deck .deck-announcement-row time{
+  color:var(--gx3-steel)!important;
+}
+
+/* Pre-launch archive follows the same heraldic language. */
+.web-ds-v2 .genesis-command-deck .deck-prelaunch-state{
+  border-color:rgba(117,96,51,.46)!important;
+  background:
+    radial-gradient(circle at 10% 50%,rgba(213,174,88,.065),transparent 28%),
+    linear-gradient(180deg,rgba(8,22,34,.95),rgba(4,13,21,.98))!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-prelaunch-mark{
+  border-color:rgba(213,174,88,.54)!important;
+  color:var(--gx3-gold-hi)!important;
+  background:rgba(18,28,35,.82)!important;
+  box-shadow:0 0 14px rgba(213,174,88,.10)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-prelaunch-state small{
+  color:var(--gx3-gold)!important;
+  font-family:var(--gx3-display)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-prelaunch-state strong{
+  color:var(--gx3-ivory)!important;
+  font-family:var(--gx3-story)!important;
+  font-size:16px!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-prelaunch-state p{
+  color:var(--gx3-steel)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-prelaunch-state>a{
+  color:var(--gx3-silver)!important;
+  border-color:rgba(117,96,51,.58)!important;
+  background:rgba(5,15,25,.78)!important;
+  font-family:var(--gx3-display)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-prelaunch-state>a:hover{
+  color:var(--gx3-gold-hi)!important;
+  border-color:rgba(213,174,88,.68)!important;
+}
+
+/* GREEDY red remains rare: one thin story accent only. */
+.web-ds-v2 .genesis-command-deck .deck-reading-panel .deck-panel-header::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-2px;
+  width:18px;
+  height:1px;
+  transform:translateX(-50%);
+  background:linear-gradient(90deg,transparent,var(--gx3-red),transparent);
+  box-shadow:0 0 6px rgba(169,37,33,.20);
+  pointer-events:none;
+}
+
+@media(max-width:620px){
+  .web-ds-v2 .genesis-command-deck .deck-panel-header,
+  .web-ds-v2 .genesis-command-deck .deck-panel-header>span,
+  .web-ds-v2 .genesis-command-deck .home-access-head>span{
+    font-size:13px!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-copy h2{
+    font-size:24px!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-release-title #home-release-time{
+    font-size:29px!important;
+  }
+  .web-ds-v2 .genesis-command-deck .home-access-identity strong{
+    font-size:17px!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-corner{
+    width:21px!important;height:21px!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-corner::before{width:21px!important}
+  .web-ds-v2 .genesis-command-deck .deck-corner::after{height:21px!important}
+}
