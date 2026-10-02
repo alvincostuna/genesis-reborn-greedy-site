@@ -524,7 +524,7 @@ jobs:
                     if(!primaryBg.includes('linear-gradient'))issues.push('V3 primary CTA gradient missing');
                     if(parseFloat(getComputedStyle(accessTitle).fontSize)<18.5)issues.push('V3 access identity title too small');
                     near(releaseSize,34,1,'release time font');
-                    near(readingSize,26,1,'reading title font');
+                    near(readingSize,28,1,'V3 reading title font');
                     const tiny=[...deck.querySelectorAll('span,strong,small,p,h2,a,time,em')]
                       .filter(el=>visible(el)&&el.textContent.trim()&&parseFloat(getComputedStyle(el).fontSize)<9.95)
                       .map(el=>el.textContent.trim().slice(0,28));
