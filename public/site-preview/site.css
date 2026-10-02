@@ -13590,3 +13590,23 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   }
 }
 /* DEPLOY MARKER: WEB-DS V3.7.1 HERO BRAND */
+
+
+/* WEB-DS V3.7.2 — MOBILE BRAND SHELL COMPATIBILITY */
+@media(max-width:900px){
+  .web-ds-v2.genesis-home .v2-brand{
+    width:170px!important;
+    min-width:170px!important;
+    height:56px!important;
+    padding-left:0!important;
+    justify-content:center!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand img{
+    display:block!important;
+    width:165px!important;
+    height:48px!important;
+    object-fit:contain!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand span{display:none!important}
+}
+/* DEPLOY MARKER: WEB-DS V3.7.2 MOBILE BRAND */
