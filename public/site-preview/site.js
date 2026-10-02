@@ -208,6 +208,11 @@ function entityVisual(type,seed=""){
     "/assets/v27/rewards/genesis-awakening.webp",
     "/assets/v27/rewards/beginner-hunt.webp"
   ]);
+  if(t==="material")return pick("MATERIALS","◆",[
+    "/assets/v27/rewards/starter-town-safe-zone.webp",
+    "/assets/v27/rewards/beginner-hunt.webp",
+    "/assets/v25/destinations/destination-codex.png"
+  ]);
   if(t==="class"||t==="profession"||t==="skill")return pick("PATH","✧",[
     "/assets/v25/destinations/destination-codex.png",
     "/assets/v27/rewards/flavio-reyes.webp",
@@ -228,6 +233,11 @@ function entityVisual(type,seed=""){
   if(t==="shop")return pick("TRADE","¤",[
     "/assets/v25/destinations/destination-support.png",
     "/assets/v27/rewards/starter-town-safe-zone.webp"
+  ]);
+  if(t==="faction")return pick("FACTIONS","♜",[
+    "/assets/v25/destinations/destination-world.png",
+    "/assets/v25/destinations/destination-codex.png",
+    "/assets/v27/rewards/early-genesis-world-panorama.webp"
   ]);
   return pick("ARCHIVE","▣",[
     "/assets/v27/rewards/genesis-awakening.webp",

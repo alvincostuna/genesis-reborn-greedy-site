@@ -101,6 +101,21 @@ jobs:
           grep -q 'genesis_admin_website_ops_status' src/worker.ts
           grep -q '/admin/read/' public/admin/admin.js
 
+      - name: Check database alignment V2 contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'genesis_admin_game_database_summary_v2' src/worker.ts
+          grep -q 'genesis_admin_game_database_list_v2' src/worker.ts
+          grep -q '"monster_catalog","equipment_catalog","shops","routes","civilizations","races","settlements"' src/worker.ts
+          grep -q 'value="monster_catalog"' public/admin/index.html
+          grep -q 'value="transport_nodes"' public/admin/index.html
+          grep -q 'value="sea_corridors"' public/admin/index.html
+          grep -q 'READ-ONLY DESIGN' public/admin/admin.js
+          grep -q 'data-codex-chip="faction"' public/site-preview/codex/index.html
+          grep -q 'option value="faction"' public/site-preview/codex/index.html
+          grep -q 't==="faction"' public/site-preview/site.js
+
       - name: Confirm public Worker still blocks Admin
         shell: bash
         run: |
