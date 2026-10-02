@@ -12939,3 +12939,589 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   font-size:8px!important;
 }
 /* DEPLOY MARKER: WEB-DS V3.6.1 QA TYPOGRAPHY FINISH */
+
+
+/* ==========================================================================
+   WEB-DS V3.7 — REFERENCE MATCH / ORNATE GAME CLIENT
+   Visual target: approved Commander reference. Homepage-only.
+   ========================================================================== */
+.web-ds-v2.genesis-home{
+  --v37-gold:#d9ba68;
+  --v37-gold-hi:#f0d98a;
+  --v37-gold-deep:#77521d;
+  --v37-ink:#030811;
+  --v37-panel:#071522;
+  --v37-blue:#74bfff;
+  background:#020812!important;
+}
+.web-ds-v2.genesis-home::before{
+  content:"";
+  position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(35,99,155,.16),transparent 42%),
+    linear-gradient(180deg,#07111c 0%,#02070d 76%,#010409 100%);
+}
+.web-ds-v2.genesis-home .v2-shell{
+  position:relative;
+  width:min(1648px,100%)!important;
+  max-width:1648px!important;
+  padding:0 0 0!important;
+  margin:0 auto!important;
+}
+.web-ds-v2 .v37-page-ornament{
+  position:absolute;z-index:30;inset:0;pointer-events:none;
+  background:url('/assets/v37/ornate-frame.svg') center/100% 100% no-repeat;
+  opacity:.94;
+}
+
+/* ===== TOP GAME NAV ===== */
+.web-ds-v2 .v2-nav{
+  width:min(1648px,100%);
+  height:56px!important;
+  min-height:56px!important;
+  margin:0 auto;
+  padding:0 30px!important;
+  border:1px solid rgba(217,186,104,.66)!important;
+  border-top:0!important;
+  background:
+    linear-gradient(180deg,rgba(8,19,31,.995),rgba(3,10,18,.995))!important;
+  box-shadow:
+    inset 0 -1px rgba(240,217,138,.12),
+    inset 0 0 22px rgba(56,133,194,.06),
+    0 8px 20px rgba(0,0,0,.34)!important;
+}
+.web-ds-v2 .v2-nav::before,
+.web-ds-v2 .v2-nav::after{
+  content:"";position:absolute;top:0;bottom:0;width:180px;pointer-events:none;
+  background:url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat;
+  opacity:.72;
+}
+.web-ds-v2 .v2-nav::before{left:0}
+.web-ds-v2 .v2-nav::after{right:0;transform:scaleX(-1)}
+.web-ds-v2 .v2-brand{
+  min-width:355px!important;
+  height:54px!important;
+  padding-left:64px!important;
+  border:0!important;
+  background:none!important;
+}
+.web-ds-v2 .v2-brand img{
+  width:320px!important;
+  max-width:none!important;
+  height:45px!important;
+  object-fit:contain!important;
+  object-position:left center;
+  filter:drop-shadow(0 1px 0 #000) drop-shadow(0 0 8px rgba(217,186,104,.11))!important;
+}
+.web-ds-v2 .v2-brand span{display:none!important}
+.web-ds-v2 .v2-primary-nav{
+  height:55px!important;
+  gap:0!important;
+  align-items:stretch!important;
+}
+.web-ds-v2 .v2-primary-nav a{
+  position:relative;
+  min-width:105px!important;
+  min-height:55px!important;
+  padding:0 13px!important;
+  display:flex!important;
+  flex-direction:row!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:8px!important;
+  color:#e2ddd2!important;
+  border-left:1px solid rgba(217,186,104,.06);
+  border-right:1px solid rgba(217,186,104,.06);
+  font:700 13px/1 Georgia,"Times New Roman",serif!important;
+  letter-spacing:.025em!important;
+  text-transform:uppercase;
+}
+.web-ds-v2 .v2-primary-nav a .v25-icon{
+  margin:0!important;
+  width:19px!important;height:19px!important;
+  color:#e5c76e!important;
+}
+.web-ds-v2 .v2-primary-nav a.active{
+  color:#fff6db!important;
+  background:
+    radial-gradient(circle at 50% 100%,rgba(83,157,227,.30),transparent 52%),
+    linear-gradient(180deg,rgba(216,179,95,.20),rgba(10,34,55,.58))!important;
+  border-left-color:rgba(217,186,104,.44)!important;
+  border-right-color:rgba(217,186,104,.44)!important;
+  box-shadow:inset 0 -2px #d7b15f,0 0 18px rgba(67,152,230,.14)!important;
+}
+.web-ds-v2 .v2-primary-nav .nav-more span{
+  color:#e9c967;font-size:15px;letter-spacing:.15em;
+}
+.web-ds-v2 .v2-nav-actions{gap:8px!important}
+.web-ds-v2 .v2-search{
+  width:215px!important;height:36px!important;
+  border:1px solid rgba(217,186,104,.44)!important;
+  border-radius:18px!important;
+  background:#04101a!important;
+}
+.web-ds-v2 .v2-search input{font-size:11px!important}
+.web-ds-v2 .v2-bell,.web-ds-v2 .profile-orb{
+  width:38px!important;height:38px!important;border-radius:50%!important;
+  border:1px solid rgba(217,186,104,.55)!important;
+  background:radial-gradient(circle,#10253a,#04101a)!important;
+  box-shadow:0 0 0 2px rgba(2,7,12,.8),0 0 10px rgba(217,186,104,.08)!important;
+}
+
+/* ===== HERO: REFERENCE CROP ===== */
+.web-ds-v2.genesis-home .cinematic-split-hero{
+  position:relative;
+  width:100%!important;
+  height:286px!important;
+  min-height:286px!important;
+  max-height:286px!important;
+  margin:0!important;
+  overflow:hidden!important;
+  border:1px solid rgba(217,186,104,.74)!important;
+  border-top:0!important;
+  border-radius:0!important;
+  box-shadow:
+    inset 0 0 0 5px rgba(3,10,18,.58),
+    0 9px 20px rgba(0,0,0,.30)!important;
+}
+.web-ds-v2 .cinematic-hero-frame,
+.web-ds-v2 .cinematic-hero-media{
+  position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+}
+.web-ds-v2 .cinematic-hero-poster{
+  position:absolute!important;
+  width:100%!important;height:100%!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  object-position:center 72%!important;
+  filter:saturate(1.02) contrast(1.06) brightness(.86)!important;
+  transform:scale(1.02);
+}
+.web-ds-v2 .cinematic-hero-warm{
+  background:linear-gradient(90deg,rgba(91,42,15,.10),transparent 48%)!important;
+}
+.web-ds-v2 .cinematic-hero-cold{
+  background:linear-gradient(270deg,rgba(16,63,117,.12),transparent 50%)!important;
+}
+.web-ds-v2 .cinematic-hero-vignette{
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.04) 60%,rgba(2,6,10,.44)),
+    radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.18) 100%)!important;
+}
+.web-ds-v2 .cinematic-split-hero::after{
+  content:"";
+  position:absolute;z-index:8;inset:0;pointer-events:none;
+  background:url('/assets/v37/ornate-frame.svg') center/100% 100% no-repeat;
+  opacity:.98;
+}
+.web-ds-v2 .v2-corner{display:none!important}
+
+/* ===== READER COMMAND DECK ===== */
+.web-ds-v2 .genesis-player-console{
+  position:relative;
+  width:100%!important;
+  margin:0!important;
+  padding:11px 14px 8px!important;
+  gap:6px!important;
+  border:1px solid rgba(217,186,104,.72)!important;
+  border-top:0!important;
+  background:
+    radial-gradient(circle at 50% 0,rgba(42,101,147,.10),transparent 42%),
+    linear-gradient(180deg,#06111d,#020913)!important;
+  box-shadow:inset 0 0 0 5px rgba(6,26,42,.50),0 10px 25px rgba(0,0,0,.30)!important;
+}
+.web-ds-v2 .genesis-player-console::after{
+  content:"";position:absolute;z-index:20;inset:0;pointer-events:none;
+  background:url('/assets/v37/ornate-frame.svg') center/100% 100% no-repeat;
+  opacity:.62;
+}
+.web-ds-v2 .console-crown{
+  top:-11px!important;
+  width:420px!important;
+  z-index:25!important;
+}
+.web-ds-v2 .console-crown strong{
+  padding:0 17px;
+  color:#fff8e7!important;
+  background:#04101a;
+  font-size:13px!important;
+  letter-spacing:.13em!important;
+}
+.web-ds-v2 .console-crown small{
+  top:17px!important;font-size:7px!important;color:#8ba6ba!important;
+}
+.web-ds-v2 .console-crown span{background:linear-gradient(90deg,transparent,#d5b45f)!important}
+
+/* primary proportions and heights */
+.web-ds-v2 .genesis-player-console .player-console-primary{
+  grid-template-columns:28.5% 42.7% 28.8%!important;
+  gap:7px!important;
+}
+.web-ds-v2 .genesis-player-console .player-console-secondary{
+  grid-template-columns:61% 39%!important;
+  gap:7px!important;
+}
+.web-ds-v2 .genesis-player-console .game-console-panel{
+  min-height:0!important;
+  border:1px solid rgba(217,186,104,.66)!important;
+  border-radius:4px!important;
+  background:
+    linear-gradient(180deg,rgba(8,26,41,.96),rgba(3,13,22,.985))!important;
+  box-shadow:
+    inset 0 0 0 3px rgba(24,67,98,.17),
+    inset 0 0 28px rgba(55,131,190,.035),
+    0 5px 12px rgba(0,0,0,.26)!important;
+}
+.web-ds-v2 .genesis-player-console .game-console-panel::before{
+  inset:4px!important;
+  border-color:rgba(115,176,215,.20)!important;
+  border-radius:2px!important;
+}
+.web-ds-v2 .genesis-player-console .game-console-panel::after{
+  content:"";position:absolute;z-index:4;inset:0;pointer-events:none;
+  background:url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat;
+  opacity:.80;
+}
+.web-ds-v2 .console-corner{display:none!important}
+.web-ds-v2 .game-console-head{
+  z-index:6!important;
+  min-height:39px!important;
+  height:39px!important;
+  padding:0 14px!important;
+  border-bottom:1px solid rgba(217,186,104,.36)!important;
+  background:
+    linear-gradient(90deg,rgba(218,184,103,.08),rgba(12,39,60,.52) 28%,rgba(5,18,30,.15))!important;
+}
+.web-ds-v2 .game-console-head::after{
+  content:"";position:absolute;left:8px;right:8px;bottom:-2px;height:10px;pointer-events:none;
+  background:url('/assets/v37/ornate-divider.svg') center/100% 100% no-repeat;
+  opacity:.40;
+}
+.web-ds-v2 .game-console-head>span{
+  color:#f1ede4!important;
+  font-size:15px!important;
+  letter-spacing:.035em!important;
+  text-shadow:0 1px 1px #000;
+}
+.web-ds-v2 .game-console-head .console-icon{
+  color:#f0d47e!important;
+  width:20px!important;height:20px!important;
+}
+.web-ds-v2 .game-console-head>a{
+  color:#d9e0e4!important;font-size:9px!important;
+}
+
+/* release */
+.web-ds-v2 .release-monitor-main{
+  height:74px!important;
+  margin:8px 10px 5px!important;
+  padding:8px 9px!important;
+  border-color:rgba(217,186,104,.36)!important;
+  background:
+    linear-gradient(90deg,rgba(5,18,30,.92),rgba(5,18,30,.44)),
+    url('/assets/v25/releases/release-city.png') right center/52% cover no-repeat!important;
+}
+.web-ds-v2 .release-monitor-main::after{
+  background:linear-gradient(90deg,#071725 0 43%,rgba(7,23,37,.64) 68%,rgba(7,23,37,.20))!important;
+}
+.web-ds-v2 .release-monitor-next{
+  grid-template-columns:44px minmax(0,1fr) auto!important;
+}
+.web-ds-v2 .release-monitor-sigil{
+  width:40px!important;height:40px!important;border-color:rgba(217,186,104,.68)!important;
+  box-shadow:0 0 0 3px rgba(2,8,14,.78),0 0 12px rgba(217,186,104,.10)!important;
+}
+.web-ds-v2 .release-monitor-next small{font-size:8px!important;color:#e8c75f!important}
+.web-ds-v2 .release-monitor-next strong{font-size:15px!important}
+.web-ds-v2 .release-monitor-next>b{font-size:22px!important;color:#f4da86!important}
+.web-ds-v2 .release-monitor-countdown{font-size:9px!important}
+.web-ds-v2 .release-cycle-label{margin:4px 9px 2px!important}
+.web-ds-v2 .release-monitor-slots{margin:0 9px!important;gap:6px!important}
+.web-ds-v2 .release-monitor-slots .home-release-slot{
+  min-height:62px!important;
+  padding:5px!important;
+  border-color:rgba(217,186,104,.46)!important;
+  background:linear-gradient(180deg,rgba(14,35,50,.92),rgba(4,14,23,.98))!important;
+}
+.web-ds-v2 .release-monitor-slots strong{font-size:12px!important}
+.web-ds-v2 .release-monitor-slots small{font-size:9px!important}
+.web-ds-v2 .release-monitor-footer{
+  margin:6px 10px 8px!important;padding-top:5px!important;
+}
+.web-ds-v2 .release-monitor-footer span>b{
+  border-color:rgba(217,186,104,.58)!important;color:#f2d783!important;
+}
+.web-ds-v2 .release-monitor-footer small{font-size:8px!important}
+.web-ds-v2 .release-monitor-footer strong{font-size:9px!important}
+
+/* center console */
+.web-ds-v2 .continue-adventure-body{
+  min-height:223px!important;
+  height:223px!important;
+  padding:10px 12px!important;
+  grid-template-columns:minmax(0,1.08fr) minmax(210px,.95fr) 105px!important;
+  gap:10px!important;
+}
+.web-ds-v2 .continue-adventure-copy h2{
+  font-size:29px!important;
+  margin:6px 0 8px!important;
+  text-shadow:0 2px 10px rgba(0,0,0,.46);
+}
+.web-ds-v2 .continue-adventure-copy p{
+  font-size:12px!important;
+  line-height:1.38!important;
+  margin-bottom:12px!important;
+}
+.web-ds-v2 .command-primary-cta{
+  width:295px!important;min-height:46px!important;
+  border:1px solid #f4d783!important;
+  background:
+    linear-gradient(180deg,#f3d98c,#c99d4c)!important;
+  box-shadow:
+    inset 0 0 0 2px rgba(255,247,210,.22),
+    inset 0 1px rgba(255,255,255,.60),
+    0 0 14px rgba(217,186,104,.14)!important;
+  font-size:15px!important;
+}
+.web-ds-v2 .continue-adventure-art{
+  min-height:201px!important;height:201px!important;
+  border:1px solid rgba(240,211,126,.82)!important;
+  box-shadow:
+    inset 0 0 0 3px rgba(3,10,18,.82),
+    0 0 0 1px rgba(14,43,65,.80),
+    0 6px 18px rgba(0,0,0,.30)!important;
+}
+.web-ds-v2 .continue-adventure-ledger{
+  border-left:1px solid rgba(217,186,104,.12);
+  padding-left:9px!important;
+}
+.web-ds-v2 .continue-adventure-ledger small,
+.web-ds-v2 .continue-adventure-ledger span{font-size:8px!important}
+.web-ds-v2 .continue-adventure-ledger strong,
+.web-ds-v2 .continue-adventure-ledger b{font-size:9px!important}
+
+/* profile richer artwork + rows */
+.web-ds-v2 .reader-profile-panel{
+  background:
+    linear-gradient(90deg,rgba(4,14,23,.93),rgba(4,14,23,.50)),
+    url('/assets/v27/rewards/flavio-early-cast-wallpaper.webp') 78% center/cover no-repeat!important;
+}
+.web-ds-v2 .reader-profile-panel::before{
+  background:
+    linear-gradient(90deg,rgba(115,181,230,.06),transparent 44%),
+    linear-gradient(180deg,rgba(217,186,104,.03),transparent 40%)!important;
+}
+.web-ds-v2 .reader-profile-state{
+  min-height:223px!important;height:223px!important;padding:9px 13px!important;
+}
+.web-ds-v2 .reader-profile-identity{
+  grid-template-columns:64px 1fr!important;gap:10px!important;padding-bottom:5px!important;
+}
+.web-ds-v2 .reader-profile-identity .home-access-avatar{
+  width:58px!important;height:58px!important;
+  border-color:rgba(240,211,126,.82)!important;
+  box-shadow:
+    0 0 0 4px rgba(3,11,18,.92),
+    0 0 0 5px rgba(217,186,104,.55),
+    0 0 15px rgba(85,170,236,.16)!important;
+}
+.web-ds-v2 .reader-profile-identity strong{font-size:17px!important}
+.web-ds-v2 .reader-profile-ledger>div{
+  min-height:27px!important;
+  border-bottom-color:rgba(151,186,211,.18)!important;
+}
+.web-ds-v2 .reader-profile-ledger span,
+.web-ds-v2 .reader-profile-ledger strong{font-size:9px!important}
+.web-ds-v2 .reader-profile-signin{
+  min-height:31px!important;
+  border-color:rgba(217,186,104,.66)!important;
+  background:linear-gradient(180deg,rgba(20,43,61,.90),rgba(5,16,26,.96))!important;
+}
+
+/* lower row */
+.web-ds-v2 .player-console-secondary .game-console-panel{min-height:128px!important;height:128px!important}
+.web-ds-v2 .adventure-feed-panel .game-console-head,
+.web-ds-v2 .bulletin-panel .game-console-head{height:36px!important;min-height:36px!important}
+.web-ds-v2 .adventure-feed-tabs button{
+  height:23px!important;min-width:64px!important;
+  border-radius:14px!important;
+}
+.web-ds-v2 .adventure-feed-tabs button.active{
+  border-color:#e1c56e!important;
+  box-shadow:0 0 8px rgba(72,166,239,.18),inset 0 0 8px rgba(72,166,239,.08)!important;
+}
+.web-ds-v2 .adventure-feed-content{
+  min-height:84px!important;height:84px!important;margin:0 9px 6px!important;
+}
+.web-ds-v2 .adventure-feed-panel .deck-prelaunch-state,
+.web-ds-v2 .adventure-feed-panel .deck-release-card{
+  min-height:82px!important;height:82px!important;
+  background:
+    linear-gradient(90deg,rgba(3,12,20,.30),rgba(3,12,20,.78) 68%),
+    url('/assets/v25/destinations/destination-codex.png') left center/44% cover no-repeat!important;
+}
+.web-ds-v2 .system-bulletin-list{
+  height:87px!important;
+  padding:3px 8px 5px!important;
+  background:
+    linear-gradient(90deg,rgba(3,12,20,.88),rgba(3,12,20,.54)),
+    url('/assets/v25/destinations/destination-world.png') right center/58% cover no-repeat!important;
+}
+.web-ds-v2 .system-bulletin-list .deck-announcement-row{
+  min-height:27px!important;
+}
+
+/* ===== WORLD NAV HUB ===== */
+.web-ds-v2 .world-navigation-hub{
+  margin-top:0!important;
+  padding:20px 8px 7px!important;
+  border-color:rgba(217,186,104,.72)!important;
+  background:
+    linear-gradient(180deg,rgba(8,23,36,.96),rgba(3,11,18,.99))!important;
+  box-shadow:inset 0 0 0 4px rgba(30,77,110,.16)!important;
+}
+.web-ds-v2 .world-navigation-hub::after{
+  content:"";position:absolute;z-index:5;inset:0;pointer-events:none;
+  background:url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat;
+  opacity:.68;
+}
+.web-ds-v2 .world-navigation-hub>header{
+  top:-11px!important;width:500px!important;z-index:7!important;
+}
+.web-ds-v2 .world-navigation-hub>header div{
+  min-width:300px!important;padding:3px 20px!important;
+  background:#04101a!important;
+  border-color:rgba(217,186,104,.55)!important;
+}
+.web-ds-v2 .world-navigation-hub>header strong{font-size:13px!important;color:#fff5dc!important}
+.web-ds-v2 .world-navigation-hub>header small{font-size:7px!important}
+.web-ds-v2 .world-navigation-grid{
+  position:relative;z-index:6;
+  grid-template-columns:repeat(9,minmax(0,1fr))!important;
+  gap:6px!important;
+}
+.web-ds-v2 .world-nav-tile{
+  min-height:86px!important;height:86px!important;
+  padding:7px 5px 6px!important;
+  border:1px solid rgba(217,186,104,.70)!important;
+  border-radius:3px!important;
+  box-shadow:
+    inset 0 0 0 3px rgba(2,8,14,.62),
+    0 4px 9px rgba(0,0,0,.24)!important;
+}
+.web-ds-v2 .world-nav-tile::after{
+  content:"";position:absolute;inset:3px;pointer-events:none;
+  border:1px solid rgba(247,224,151,.16);
+}
+.web-ds-v2 .world-nav-tile b{
+  font-size:20px!important;
+  color:#f4d87d!important;
+}
+.web-ds-v2 .world-nav-tile strong{
+  font-size:12px!important;color:#fff7e4!important;
+  text-shadow:0 2px 2px #000;
+}
+.web-ds-v2 .world-nav-tile small{
+  font-size:8px!important;color:#d2d9dc!important;
+  text-shadow:0 1px 2px #000;
+}
+.web-ds-v2 .world-nav-tile.is-primary{
+  border-color:#f0d174!important;
+  box-shadow:
+    inset 0 0 0 3px rgba(2,8,14,.58),
+    0 0 12px rgba(87,170,246,.23)!important;
+}
+.web-ds-v2 .world-nav-tile.is-primary b{
+  color:#84c8ff!important;text-shadow:0 0 10px rgba(77,170,255,.55)!important;
+}
+
+/* ===== GAME FOOTER ===== */
+.web-ds-v2.genesis-home .v37-footer{
+  width:min(1648px,100%)!important;
+  min-height:47px!important;height:47px!important;
+  margin:0 auto!important;
+  padding:5px 36px!important;
+  grid-template-columns:300px minmax(0,1fr) 230px 265px!important;
+  gap:16px!important;
+  border:1px solid rgba(217,186,104,.70)!important;
+  border-top:0!important;
+  background:
+    linear-gradient(180deg,#071521,#020a11)!important;
+  box-shadow:inset 0 0 0 3px rgba(26,67,96,.12)!important;
+}
+.web-ds-v2 .v37-footer .game-footer-brand img{width:30px!important;height:30px!important}
+.web-ds-v2 .v37-footer .game-footer-brand strong{font-size:14px!important}
+.web-ds-v2 .v37-footer .game-footer-brand small{font-size:7px!important}
+.web-ds-v2 .v37-footer-links>span{display:none!important}
+.web-ds-v2 .v37-footer-links>div{
+  justify-content:flex-start!important;
+  gap:0!important;
+}
+.web-ds-v2 .v37-footer-links a{
+  position:relative;
+  padding:4px 11px!important;
+  color:#8fa1af!important;
+  font-size:8px!important;
+}
+.web-ds-v2 .v37-footer-links a:not(:last-child)::after{
+  content:"";position:absolute;right:0;top:50%;width:2px;height:2px;border-radius:50%;background:#695735;
+}
+.web-ds-v2 .v37-social-dock{
+  display:flex;justify-content:center;align-items:center;gap:15px;
+  color:#9aaaba;font:700 14px/1 Arial,sans-serif;
+}
+.web-ds-v2 .v37-social-dock span:hover{color:#f0d17c}
+.web-ds-v2 .v37-footer blockquote{
+  color:#c3a86d!important;font-size:10px!important;
+}
+
+/* ===== fit the reference into a desktop viewport ===== */
+@media(min-width:1281px){
+  .web-ds-v2.genesis-home .v2-shell{min-height:0!important}
+  .web-ds-v2 .genesis-player-console{min-height:0!important}
+}
+
+/* ===== tablet / mobile retains the V3.6 stacked console but with ornament ===== */
+@media(max-width:900px){
+  .web-ds-v2 .v37-page-ornament{display:none}
+  .web-ds-v2 .v2-nav{width:100%;padding:0 10px!important}
+  .web-ds-v2 .v2-brand{min-width:0!important;padding-left:0!important}
+  .web-ds-v2 .v2-brand img{width:180px!important}
+  .web-ds-v2.genesis-home .cinematic-split-hero{
+    height:220px!important;min-height:220px!important;max-height:220px!important;
+  }
+  .web-ds-v2 .cinematic-hero-poster{object-position:center 67%!important}
+  .web-ds-v2 .genesis-player-console .player-console-primary,
+  .web-ds-v2 .genesis-player-console .player-console-secondary{
+    grid-template-columns:1fr!important;
+  }
+  .web-ds-v2 .continue-adventure-body{
+    height:auto!important;min-height:0!important;
+  }
+  .web-ds-v2 .reader-profile-state{
+    height:auto!important;min-height:0!important;
+  }
+  .web-ds-v2 .player-console-secondary .game-console-panel{
+    height:auto!important;min-height:128px!important;
+  }
+  .web-ds-v2 .world-navigation-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+  .web-ds-v2.genesis-home .v37-footer{
+    height:auto!important;min-height:90px!important;
+    grid-template-columns:1fr!important;
+    padding:9px 12px 76px!important;
+  }
+  .web-ds-v2 .v37-social-dock{justify-content:flex-start}
+}
+
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .cinematic-split-hero{
+    height:184px!important;min-height:184px!important;max-height:184px!important;
+  }
+  .web-ds-v2 .world-navigation-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+
+/* DEPLOY MARKER: WEB-DS V3.7 REFERENCE MATCH */
