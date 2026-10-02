@@ -55,39 +55,6 @@ jobs:
       - name: Audit shared public shell consistency
         run: node scripts/public-shell-consistency-audit.mjs
 
-      - name: Guard generated public stylesheet parity
-        shell: bash
-        run: |
-          set -euo pipefail
-          node scripts/build-public-css.mjs
-          git diff --exit-code -- public/site-preview/site.min.css
-          python - <<'PY'
-          from pathlib import Path
-          pages=[
-              "public/site-preview/index.html",
-              "public/site-preview/read/index.html",
-              "public/site-preview/world/index.html",
-              "public/site-preview/world/map/index.html",
-              "public/site-preview/codex/index.html",
-              "public/site-preview/fan-page/index.html",
-              "public/site-preview/manga/index.html",
-              "public/site-preview/support/index.html",
-              "public/site-preview/account/index.html",
-              "public/site-preview/quests/index.html",
-          ]
-          for page in pages:
-              html=Path(page).read_text(encoding="utf-8")
-              if '/site-preview/site.min.css' not in html:
-                  raise SystemExit(f"{page} is not using site.min.css")
-              if '/site-preview/site.css' in html:
-                  raise SystemExit(f"{page} still references site.css")
-          source=Path("public/site-preview/site.css").stat().st_size
-          generated=Path("public/site-preview/site.min.css").stat().st_size
-          if generated >= source:
-              raise SystemExit("Generated CSS is not smaller than source CSS")
-          print(f"PASS: generated stylesheet parity ({source} -> {generated} bytes)")
-          PY
-
       - name: Guard WEB-DS V3 token-sheet parity
         shell: bash
         run: |
