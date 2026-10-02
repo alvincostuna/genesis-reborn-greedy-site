@@ -10673,21 +10673,21 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   text-overflow:clip!important;
 }
 
-/* Use existing reader-safe GENESIS artwork so the command deck matches the approved reference more closely. */
+/* PERFORMANCE HOTFIX: keep command-deck imagery visually rich without loading 2.8–3.0 MB PNGs. */
 .web-ds-v2 .genesis-command-deck .deck-reading-art{
   background:
     linear-gradient(90deg,rgba(5,13,22,.08),rgba(5,13,22,.12)),
-    url('/assets/v25/releases/release-city.png') center/cover!important;
+    url('/assets/v27/destination-heroes/genesis-atlas-hero.webp') center/cover!important;
 }
 .web-ds-v2 .genesis-command-deck .deck-release-card-1 .deck-release-thumb{
   background:
     linear-gradient(180deg,rgba(2,8,14,.02),rgba(2,8,14,.28)),
-    url('/assets/v25/releases/release-duel.png') center/cover!important;
+    url('/assets/v27/rewards/flavio-early-cast-wallpaper.webp') center/cover!important;
 }
 .web-ds-v2 .genesis-command-deck .deck-release-card-2 .deck-release-thumb{
   background:
     linear-gradient(180deg,rgba(2,8,14,.02),rgba(2,8,14,.28)),
-    url('/assets/v25/releases/release-city.png') center/cover!important;
+    url('/assets/v27/destination-heroes/genesis-atlas-hero.webp') center/cover!important;
 }
 .web-ds-v2 .genesis-command-deck .deck-release-card-3 .deck-release-thumb{
   background:
