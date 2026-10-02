@@ -12975,7 +12975,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* ===== TOP GAME NAV ===== */
-.web-ds-v2 .v2-nav{
+.web-ds-v2.genesis-home .v2-nav{
   width:min(1648px,100%);
   height:56px!important;
   min-height:56px!important;
@@ -12990,22 +12990,22 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     inset 0 0 22px rgba(56,133,194,.06),
     0 8px 20px rgba(0,0,0,.34)!important;
 }
-.web-ds-v2 .v2-nav::before,
-.web-ds-v2 .v2-nav::after{
+.web-ds-v2.genesis-home .v2-nav::before,
+.web-ds-v2.genesis-home .v2-nav::after{
   content:"";position:absolute;top:0;bottom:0;width:180px;pointer-events:none;
   background:url('/assets/v37/panel-frame.svg') center/100% 100% no-repeat;
   opacity:.72;
 }
-.web-ds-v2 .v2-nav::before{left:0}
-.web-ds-v2 .v2-nav::after{right:0;transform:scaleX(-1)}
-.web-ds-v2 .v2-brand{
+.web-ds-v2.genesis-home .v2-nav::before{left:0}
+.web-ds-v2.genesis-home .v2-nav::after{right:0;transform:scaleX(-1)}
+.web-ds-v2.genesis-home .v2-brand{
   min-width:355px!important;
   height:54px!important;
   padding-left:64px!important;
   border:0!important;
   background:none!important;
 }
-.web-ds-v2 .v2-brand img{
+.web-ds-v2.genesis-home .v2-brand img{
   width:320px!important;
   max-width:none!important;
   height:45px!important;
@@ -13013,13 +13013,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   object-position:left center;
   filter:drop-shadow(0 1px 0 #000) drop-shadow(0 0 8px rgba(217,186,104,.11))!important;
 }
-.web-ds-v2 .v2-brand span{display:none!important}
-.web-ds-v2 .v2-primary-nav{
+.web-ds-v2.genesis-home .v2-brand span{display:none!important}
+.web-ds-v2.genesis-home .v2-primary-nav{
   height:55px!important;
   gap:0!important;
   align-items:stretch!important;
 }
-.web-ds-v2 .v2-primary-nav a{
+.web-ds-v2.genesis-home .v2-primary-nav a{
   position:relative;
   min-width:105px!important;
   min-height:55px!important;
@@ -13036,12 +13036,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   letter-spacing:.025em!important;
   text-transform:uppercase;
 }
-.web-ds-v2 .v2-primary-nav a .v25-icon{
+.web-ds-v2.genesis-home .v2-primary-nav a .v25-icon{
   margin:0!important;
   width:19px!important;height:19px!important;
   color:#e5c76e!important;
 }
-.web-ds-v2 .v2-primary-nav a.active{
+.web-ds-v2.genesis-home .v2-primary-nav a.active{
   color:#fff6db!important;
   background:
     radial-gradient(circle at 50% 100%,rgba(83,157,227,.30),transparent 52%),
@@ -13050,18 +13050,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   border-right-color:rgba(217,186,104,.44)!important;
   box-shadow:inset 0 -2px #d7b15f,0 0 18px rgba(67,152,230,.14)!important;
 }
-.web-ds-v2 .v2-primary-nav .nav-more span{
+.web-ds-v2.genesis-home .v2-primary-nav .nav-more span{
   color:#e9c967;font-size:15px;letter-spacing:.15em;
 }
-.web-ds-v2 .v2-nav-actions{gap:8px!important}
-.web-ds-v2 .v2-search{
+.web-ds-v2.genesis-home .v2-nav-actions{gap:8px!important}
+.web-ds-v2.genesis-home .v2-search{
   width:215px!important;height:36px!important;
   border:1px solid rgba(217,186,104,.44)!important;
   border-radius:18px!important;
   background:#04101a!important;
 }
-.web-ds-v2 .v2-search input{font-size:11px!important}
-.web-ds-v2 .v2-bell,.web-ds-v2 .profile-orb{
+.web-ds-v2.genesis-home .v2-search input{font-size:11px!important}
+.web-ds-v2.genesis-home .v2-bell,.web-ds-v2.genesis-home .profile-orb{
   width:38px!important;height:38px!important;border-radius:50%!important;
   border:1px solid rgba(217,186,104,.55)!important;
   background:radial-gradient(circle,#10253a,#04101a)!important;
@@ -13484,9 +13484,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* ===== tablet / mobile retains the V3.6 stacked console but with ornament ===== */
 @media(max-width:900px){
   .web-ds-v2 .v37-page-ornament{display:none}
-  .web-ds-v2 .v2-nav{width:100%;padding:0 10px!important}
-  .web-ds-v2 .v2-brand{min-width:0!important;padding-left:0!important}
-  .web-ds-v2 .v2-brand img{width:180px!important}
+  .web-ds-v2.genesis-home .v2-nav{width:100%;padding:0 10px!important}
+  .web-ds-v2.genesis-home .v2-brand{min-width:0!important;padding-left:0!important}
+  .web-ds-v2.genesis-home .v2-brand img{width:180px!important}
   .web-ds-v2.genesis-home .cinematic-split-hero{
     height:220px!important;min-height:220px!important;max-height:220px!important;
   }
@@ -13528,20 +13528,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 
 /* WEB-DS V3.7.1 — HERO + BRAND REFERENCE CORRECTION */
-.web-ds-v2 .v2-brand{
+.web-ds-v2.genesis-home .v2-brand{
   display:flex!important;
   align-items:center!important;
   gap:9px!important;
   padding-left:18px!important;
   min-width:360px!important;
 }
-.web-ds-v2 .v2-brand img{
+.web-ds-v2.genesis-home .v2-brand img{
   display:block!important;
   width:42px!important;height:42px!important;
   object-fit:contain!important;
   filter:drop-shadow(0 0 8px rgba(217,186,104,.18))!important;
 }
-.web-ds-v2 .v2-brand span{
+.web-ds-v2.genesis-home .v2-brand span{
   display:flex!important;
   align-items:baseline;
   gap:8px;
@@ -13551,8 +13551,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   white-space:nowrap!important;
   text-shadow:0 1px #000;
 }
-.web-ds-v2 .v2-brand span br{display:none}
-.web-ds-v2 .v2-brand span small{
+.web-ds-v2.genesis-home .v2-brand span br{display:none}
+.web-ds-v2.genesis-home .v2-brand span small{
   display:inline!important;
   margin:0!important;
   color:#c23e38!important;
@@ -13581,10 +13581,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     url('/assets/v25/destinations/destination-world.png') right 44%/65% cover no-repeat!important;
 }
 @media(max-width:900px){
-  .web-ds-v2 .v2-brand{min-width:0!important;padding-left:0!important}
-  .web-ds-v2 .v2-brand img{width:34px!important;height:34px!important}
-  .web-ds-v2 .v2-brand span{font-size:16px!important}
-  .web-ds-v2 .v2-brand span small{font-size:12px!important}
+  .web-ds-v2.genesis-home .v2-brand{min-width:0!important;padding-left:0!important}
+  .web-ds-v2.genesis-home .v2-brand img{width:34px!important;height:34px!important}
+  .web-ds-v2.genesis-home .v2-brand span{font-size:16px!important}
+  .web-ds-v2.genesis-home .v2-brand span small{font-size:12px!important}
   .web-ds-v2 .cinematic-hero-media{
     background:url('/assets/master-key-art-split-world-v1.webp') center 68%/cover no-repeat!important;
   }
