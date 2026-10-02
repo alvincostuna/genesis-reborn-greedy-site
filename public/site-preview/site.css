@@ -14644,3 +14644,142 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DEPLOY MARKER: WEB-DS V3.9 IMAGE INLAY REFINEMENT */
+
+
+/* ==========================================================================
+   WEB-DS V3.9.1 — PHASE D FINAL ALIGNMENT / READABILITY
+   Tighten live wording positions over the new image-inlay backgrounds.
+   ========================================================================== */
+@media(min-width:901px){
+  /* Release monitor: stop dynamic labels colliding with the time block. */
+  .web-ds-v2.genesis-home .release-monitor-main{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 142px!important;
+    grid-template-rows:auto auto!important;
+    column-gap:10px!important;
+    align-items:center!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-next{
+    grid-column:1/-1!important;
+    display:grid!important;
+    grid-template-columns:42px minmax(0,1fr) 142px!important;
+    gap:8px!important;
+    min-width:0!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-next>div{
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+  .web-ds-v2.genesis-home #home-release-state{
+    display:block!important;
+    max-width:100%!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:8px!important;
+    line-height:1.05!important;
+    letter-spacing:.055em!important;
+  }
+  .web-ds-v2.genesis-home #home-release-part{
+    display:block!important;
+    max-width:100%!important;
+    margin-top:2px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:11px!important;
+    line-height:1.05!important;
+  }
+  .web-ds-v2.genesis-home #home-release-time{
+    justify-self:end!important;
+    align-self:center!important;
+    min-width:132px!important;
+    text-align:right!important;
+    font-size:23px!important;
+    line-height:1!important;
+    letter-spacing:.01em!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-countdown{
+    grid-column:2!important;
+    justify-self:end!important;
+    padding-right:2px!important;
+    margin-top:-1px!important;
+    font-size:9px!important;
+    letter-spacing:.08em!important;
+  }
+
+  /* Main reading copy occupies a deliberate text-safe lane. */
+  .web-ds-v2.genesis-home .continue-adventure-copy{
+    padding:7px 8px 7px 0!important;
+    background:linear-gradient(90deg,rgba(1,7,12,.30),rgba(1,7,12,.08) 78%,transparent)!important;
+    border-radius:2px;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy>small{
+    font-size:8.5px!important;
+    letter-spacing:.09em!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy h2{
+    max-width:290px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy p{
+    max-width:310px!important;
+  }
+
+  /* Reader profile rows remain aligned even on bright artwork. */
+  .web-ds-v2.genesis-home .reader-profile-identity{
+    padding:5px 8px 7px 3px!important;
+    background:linear-gradient(90deg,rgba(1,7,12,.34),rgba(1,7,12,.10))!important;
+    border-radius:2px;
+  }
+  .web-ds-v2.genesis-home .reader-profile-ledger{
+    background:linear-gradient(90deg,rgba(1,7,12,.34),rgba(1,7,12,.12))!important;
+  }
+  .web-ds-v2.genesis-home .reader-profile-ledger>div{
+    padding-inline:7px!important;
+  }
+
+  /* Lower panels: keep copy on quiet lanes, leave art visible around it. */
+  .web-ds-v2.genesis-home .adventure-feed-panel .deck-release-copy,
+  .web-ds-v2.genesis-home .adventure-feed-panel .deck-prelaunch-copy{
+    padding:6px 10px!important;
+    background:linear-gradient(90deg,rgba(1,7,12,.54),rgba(1,7,12,.16))!important;
+    border-radius:2px;
+  }
+  .web-ds-v2.genesis-home .system-bulletin-list .deck-announcement-row{
+    background:linear-gradient(90deg,rgba(1,7,12,.48),rgba(1,7,12,.12))!important;
+  }
+
+  /* Navigation labels sit on one consistent bottom glass band. */
+  .web-ds-v2.genesis-home .world-nav-tile{
+    justify-content:flex-end!important;
+    padding-bottom:7px!important;
+  }
+  .web-ds-v2.genesis-home .world-nav-tile strong,
+  .web-ds-v2.genesis-home .world-nav-tile small{
+    width:100%!important;
+    text-align:center!important;
+  }
+}
+
+/* Phone alignment: live copy stays compact and does not cover the key art. */
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .release-monitor-next>div{
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+  .web-ds-v2.genesis-home #home-release-state,
+  .web-ds-v2.genesis-home #home-release-part{
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy{
+    background:linear-gradient(90deg,rgba(1,7,12,.48),rgba(1,7,12,.16))!important;
+    padding:6px!important;
+  }
+  .web-ds-v2.genesis-home .reader-profile-state{
+    background:linear-gradient(90deg,rgba(1,7,12,.34),rgba(1,7,12,.12))!important;
+  }
+}
+
+/* DEPLOY MARKER: WEB-DS V3.9.1 FINAL ALIGNMENT */
