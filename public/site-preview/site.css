@@ -13630,3 +13630,48 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2.genesis-home .v2-brand span{display:none!important}
 }
 /* DEPLOY MARKER: WEB-DS V3.7.3 DESKTOP WORDMARK */
+
+
+/* WEB-DS V3.7.5 — REFERENCE HERO RESTORE */
+.web-ds-v2.genesis-home .cinematic-hero-media{
+  background:none!important;
+}
+.web-ds-v2.genesis-home .cinematic-hero-poster{
+  opacity:1!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  object-position:center 67%!important;
+  transform:scale(1.035)!important;
+  filter:saturate(1.03) contrast(1.05) brightness(.90)!important;
+}
+.web-ds-v2.genesis-home .cinematic-hero-warm{
+  opacity:1!important;
+  background:linear-gradient(90deg,rgba(129,69,22,.08),transparent 42%)!important;
+}
+.web-ds-v2.genesis-home .cinematic-hero-cold{
+  opacity:1!important;
+  background:linear-gradient(270deg,rgba(21,74,139,.10),transparent 45%)!important;
+}
+.web-ds-v2.genesis-home .cinematic-hero-vignette{
+  opacity:1!important;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.02) 62%,rgba(1,5,9,.34)),
+    radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.12) 100%)!important;
+}
+@media(min-width:901px){
+  .web-ds-v2.genesis-home .v2-brand img{
+    width:310px!important;
+    max-width:310px!important;
+    height:46px!important;
+    object-fit:fill!important;
+  }
+}
+@media(max-width:900px){
+  .web-ds-v2.genesis-home .v2-brand img{
+    object-fit:contain!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.7.5 REFERENCE HERO */
