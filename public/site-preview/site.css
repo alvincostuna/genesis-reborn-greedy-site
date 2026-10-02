@@ -13525,3 +13525,68 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DEPLOY MARKER: WEB-DS V3.7 REFERENCE MATCH */
+
+
+/* WEB-DS V3.7.1 — HERO + BRAND REFERENCE CORRECTION */
+.web-ds-v2 .v2-brand{
+  display:flex!important;
+  align-items:center!important;
+  gap:9px!important;
+  padding-left:18px!important;
+  min-width:360px!important;
+}
+.web-ds-v2 .v2-brand img{
+  display:block!important;
+  width:42px!important;height:42px!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 0 8px rgba(217,186,104,.18))!important;
+}
+.web-ds-v2 .v2-brand span{
+  display:flex!important;
+  align-items:baseline;
+  gap:8px;
+  color:#f2eee5;
+  font:700 25px/1 Georgia,"Times New Roman",serif!important;
+  letter-spacing:.03em!important;
+  white-space:nowrap!important;
+  text-shadow:0 1px #000;
+}
+.web-ds-v2 .v2-brand span br{display:none}
+.web-ds-v2 .v2-brand span small{
+  display:inline!important;
+  margin:0!important;
+  color:#c23e38!important;
+  font:700 19px/1 Georgia,"Times New Roman",serif!important;
+  letter-spacing:.04em!important;
+}
+.web-ds-v2 .cinematic-hero-media{
+  background:url('/assets/v37/hero-reference.svg') center/100% 100% no-repeat!important;
+}
+.web-ds-v2 .cinematic-hero-poster,
+.web-ds-v2 .cinematic-hero-warm,
+.web-ds-v2 .cinematic-hero-cold{
+  opacity:0!important;
+}
+.web-ds-v2 .cinematic-hero-vignette{
+  background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.08) 72%,rgba(0,0,0,.25))!important;
+}
+.web-ds-v2 .reader-profile-panel{
+  background:
+    linear-gradient(90deg,rgba(4,14,23,.83),rgba(4,14,23,.24)),
+    url('/assets/v27/rewards/flavio-early-cast-wallpaper.webp') 72% center/cover no-repeat!important;
+}
+.web-ds-v2 .system-bulletin-list{
+  background:
+    linear-gradient(90deg,rgba(3,12,20,.82),rgba(3,12,20,.38)),
+    url('/assets/v25/destinations/destination-world.png') right 44%/65% cover no-repeat!important;
+}
+@media(max-width:900px){
+  .web-ds-v2 .v2-brand{min-width:0!important;padding-left:0!important}
+  .web-ds-v2 .v2-brand img{width:34px!important;height:34px!important}
+  .web-ds-v2 .v2-brand span{font-size:16px!important}
+  .web-ds-v2 .v2-brand span small{font-size:12px!important}
+  .web-ds-v2 .cinematic-hero-media{
+    background:url('/assets/master-key-art-split-world-v1.webp') center 68%/cover no-repeat!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.7.1 HERO BRAND */
