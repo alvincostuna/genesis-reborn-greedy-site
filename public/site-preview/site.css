@@ -13610,3 +13610,23 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2.genesis-home .v2-brand span{display:none!important}
 }
 /* DEPLOY MARKER: WEB-DS V3.7.2 MOBILE BRAND */
+
+
+/* WEB-DS V3.7.3 — DESKTOP WORDMARK CONTRACT */
+@media(min-width:901px){
+  .web-ds-v2.genesis-home .v2-brand{
+    width:300px!important;
+    min-width:300px!important;
+    padding-left:12px!important;
+    justify-content:flex-start!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand img{
+    width:278px!important;
+    height:50px!important;
+    max-width:278px!important;
+    object-fit:contain!important;
+    object-position:left center!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand span{display:none!important}
+}
+/* DEPLOY MARKER: WEB-DS V3.7.3 DESKTOP WORDMARK */
