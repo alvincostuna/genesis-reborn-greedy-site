@@ -14811,3 +14811,45 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   }
 }
 /* DEPLOY MARKER: WEB-DS V3.9.2 REFERENCE HERO */
+
+
+/* WEB-DS V3.9.3 — HERO ART + TRANSPARENT TITLE OVERLAY */
+@media(min-width:901px){
+  .web-ds-v2.genesis-home .cinematic-hero-media{
+    background:none!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-poster{
+    opacity:1!important;
+    display:block!important;
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    object-position:center 66%!important;
+    transform:scale(1.035)!important;
+    filter:saturate(1.05) contrast(1.04) brightness(.92)!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-warm{
+    opacity:1!important;
+    background:linear-gradient(90deg,rgba(118,63,20,.07),transparent 42%)!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-cold{
+    opacity:1!important;
+    background:linear-gradient(270deg,rgba(27,85,148,.09),transparent 44%)!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-media::after{
+    content:"";
+    position:absolute;
+    z-index:7;
+    inset:0;
+    pointer-events:none;
+    background:url('/assets/v37/hero-reference.svg') center/100% 100% no-repeat;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-vignette{
+    z-index:6!important;
+    opacity:1!important;
+    background:
+      linear-gradient(180deg,rgba(0,0,0,.01),rgba(0,0,0,.03) 68%,rgba(1,5,9,.22)),
+      radial-gradient(ellipse at center,transparent 62%,rgba(0,0,0,.10) 100%)!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.9.3 HERO OVERLAY */
