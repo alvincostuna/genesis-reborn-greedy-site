@@ -14443,3 +14443,204 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DEPLOY MARKER: WEB-DS V3.9 UNIQUE INLAY PERFORMANCE */
+
+
+/* ==========================================================================
+   WEB-DS V3.9 — IMAGE-INLAY REFINEMENT
+   Direct image ownership for every marked panel/tile; brighter art, cleaner
+   text-safe gradients, and category-specific compositions.
+   ========================================================================== */
+
+/* ----- PHASE A: three large panels ----- */
+.web-ds-v2.genesis-home .deck-release-panel{
+  background:
+    linear-gradient(90deg,rgba(3,12,20,.72) 0%,rgba(3,12,20,.56) 46%,rgba(3,12,20,.20) 100%),
+    url('/assets/v25/releases/release-city.png') center right/cover no-repeat!important;
+}
+.web-ds-v2.genesis-home .deck-release-panel::before{background:none!important}
+.web-ds-v2.genesis-home .deck-release-panel .release-monitor-main{
+  background:linear-gradient(90deg,rgba(2,9,16,.58),rgba(2,9,16,.18))!important;
+  border-color:rgba(231,202,120,.36)!important;
+}
+.web-ds-v2.genesis-home .deck-release-panel .release-monitor-next{
+  grid-template-columns:42px minmax(0,1fr) auto!important;
+}
+.web-ds-v2.genesis-home .deck-release-panel #home-release-state{
+  max-width:116px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:8px!important;
+}
+.web-ds-v2.genesis-home .deck-release-panel #home-release-part{
+  max-width:124px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.web-ds-v2.genesis-home .deck-release-panel #home-release-time{
+  font-size:22px!important;
+  white-space:nowrap;
+}
+
+.web-ds-v2.genesis-home .deck-reading-panel{
+  background:
+    linear-gradient(90deg,rgba(2,9,16,.74) 0%,rgba(2,9,16,.58) 36%,rgba(2,9,16,.28) 68%,rgba(2,9,16,.18) 100%),
+    url('/assets/v30/destination-heroes/genesis-atlas-hero.webp') center 45%/cover no-repeat!important;
+}
+.web-ds-v2.genesis-home .deck-reading-panel::before{background:none!important}
+.web-ds-v2.genesis-home .deck-reading-panel .continue-adventure-body{
+  background:linear-gradient(90deg,rgba(2,9,16,.24),rgba(2,9,16,.04))!important;
+}
+.web-ds-v2.genesis-home .deck-reading-panel .continue-adventure-art{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.12)),
+    url('/assets/v27/rewards/early-genesis-world-panorama.webp') center/cover no-repeat!important;
+  filter:saturate(1.05) brightness(1.03);
+}
+.web-ds-v2.genesis-home .deck-reading-panel .continue-adventure-ledger{
+  background:linear-gradient(90deg,rgba(2,9,16,.34),rgba(2,9,16,.10));
+  border-radius:2px;
+}
+
+.web-ds-v2.genesis-home .deck-access-panel{
+  background:
+    radial-gradient(circle at 17% 42%,rgba(86,168,255,.12),transparent 28%),
+    linear-gradient(90deg,rgba(2,9,16,.56) 0%,rgba(2,9,16,.38) 48%,rgba(2,9,16,.16) 100%),
+    url('/assets/v27/rewards/maya-villareal.webp') 72% 38%/cover no-repeat!important;
+}
+.web-ds-v2.genesis-home .deck-access-panel::before{background:none!important}
+.web-ds-v2.genesis-home .deck-access-panel .reader-profile-state{
+  background:linear-gradient(90deg,rgba(2,9,16,.34),rgba(2,9,16,.08))!important;
+}
+.web-ds-v2.genesis-home .deck-access-panel .reader-profile-ledger>div{
+  background:linear-gradient(90deg,rgba(3,13,22,.42),rgba(3,13,22,.18))!important;
+}
+
+/* ----- PHASE B: second row ----- */
+.web-ds-v2.genesis-home .adventure-feed-panel{
+  background:
+    linear-gradient(90deg,rgba(2,9,16,.36) 0%,rgba(2,9,16,.30) 44%,rgba(2,9,16,.54) 100%),
+    url('/assets/v30/destination-heroes/genesis-codex-hero.webp') center 54%/cover no-repeat!important;
+}
+.web-ds-v2.genesis-home .adventure-feed-panel::before{background:none!important}
+.web-ds-v2.genesis-home .adventure-feed-panel .adventure-feed-content,
+.web-ds-v2.genesis-home .adventure-feed-panel .deck-prelaunch-state,
+.web-ds-v2.genesis-home .adventure-feed-panel .deck-release-card{
+  background:linear-gradient(90deg,rgba(2,9,16,.24),rgba(2,9,16,.34))!important;
+}
+
+.web-ds-v2.genesis-home .bulletin-panel{
+  background:
+    linear-gradient(90deg,rgba(2,9,16,.48) 0%,rgba(2,9,16,.34) 45%,rgba(2,9,16,.14) 100%),
+    url('/assets/v27/rewards/starter-town-safe-zone.webp') center 46%/cover no-repeat!important;
+}
+.web-ds-v2.genesis-home .bulletin-panel::before{background:none!important}
+.web-ds-v2.genesis-home .bulletin-panel .system-bulletin-list{
+  background:linear-gradient(90deg,rgba(2,9,16,.30),rgba(2,9,16,.16))!important;
+}
+
+/* ----- PHASE C: nine unique destination images, direct tile ownership ----- */
+.web-ds-v2.genesis-home .world-nav-tile{
+  background-position:center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile::before{
+  z-index:1!important;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.00) 0%,rgba(0,0,0,.06) 40%,rgba(1,6,11,.62) 72%,rgba(1,6,11,.92) 100%)!important;
+  filter:none!important;
+  transform:none!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile>*{z-index:3!important}
+
+.web-ds-v2.genesis-home .tile-read{
+  background-image:url('/assets/v25/releases/release-duel.png')!important;
+  background-position:center 42%!important;
+}
+.web-ds-v2.genesis-home .tile-world{
+  background-image:url('/assets/v30/destination-heroes/genesis-atlas-hero.webp')!important;
+  background-position:center 48%!important;
+}
+.web-ds-v2.genesis-home .tile-codex{
+  background-image:url('/assets/v25/destinations/destination-codex.png')!important;
+  background-position:center 48%!important;
+}
+.web-ds-v2.genesis-home .tile-characters{
+  background-image:url('/assets/v27/rewards/flavio-nico-early-party.webp')!important;
+  background-position:center 40%!important;
+}
+.web-ds-v2.genesis-home .tile-monsters{
+  background-image:url('/assets/v27/rewards/beginner-hunt.webp')!important;
+  background-position:center 45%!important;
+}
+.web-ds-v2.genesis-home .tile-items{
+  background-image:url('/assets/v27/rewards/genesis-awakening.webp')!important;
+  background-position:center 50%!important;
+}
+.web-ds-v2.genesis-home .tile-manga{
+  background-image:url('/assets/v30/destination-heroes/genesis-manga-hero.webp')!important;
+  background-position:center 45%!important;
+}
+.web-ds-v2.genesis-home .tile-support{
+  background-image:url('/assets/v25/destinations/destination-support.png')!important;
+  background-position:center 47%!important;
+}
+.web-ds-v2.genesis-home .tile-fan{
+  background-image:url('/assets/v30/destination-heroes/genesis-fan-hero.webp')!important;
+  background-position:center 44%!important;
+}
+
+/* Brighter art while keeping labels legible. */
+.web-ds-v2.genesis-home .world-nav-tile{
+  filter:none!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile strong{
+  color:#fff8e9!important;
+  font-size:13px!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile small{
+  color:#e1e6e8!important;
+  font-size:8px!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile b{
+  color:#f2d777!important;
+  text-shadow:0 0 8px rgba(226,193,105,.22),0 2px 3px rgba(0,0,0,.92)!important;
+}
+
+/* ----- PHASE D: text-safe zones ----- */
+.web-ds-v2.genesis-home .game-console-head{
+  background:linear-gradient(90deg,rgba(1,7,12,.78),rgba(1,7,12,.50) 62%,rgba(1,7,12,.20))!important;
+}
+.web-ds-v2.genesis-home .deck-reading-panel .continue-adventure-copy,
+.web-ds-v2.genesis-home .deck-access-panel .reader-profile-state,
+.web-ds-v2.genesis-home .deck-release-panel .release-monitor-main,
+.web-ds-v2.genesis-home .adventure-feed-panel .adventure-feed-content,
+.web-ds-v2.genesis-home .bulletin-panel .system-bulletin-list{
+  text-shadow:0 2px 4px rgba(0,0,0,.94);
+}
+
+/* Mobile: keep backgrounds bright but increase text-protection locally. */
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .deck-release-panel{
+    background-position:72% center!important;
+  }
+  .web-ds-v2.genesis-home .deck-reading-panel{
+    background-position:center 42%!important;
+  }
+  .web-ds-v2.genesis-home .deck-access-panel{
+    background-position:67% 36%!important;
+  }
+  .web-ds-v2.genesis-home .adventure-feed-panel{
+    background-position:center 50%!important;
+  }
+  .web-ds-v2.genesis-home .bulletin-panel{
+    background-position:center 46%!important;
+  }
+  .web-ds-v2.genesis-home .world-nav-tile{
+    min-height:112px!important;
+  }
+}
+
+/* DEPLOY MARKER: WEB-DS V3.9 IMAGE INLAY REFINEMENT */
