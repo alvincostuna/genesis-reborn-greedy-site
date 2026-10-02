@@ -2065,12 +2065,12 @@ async function initSupport(){
 
     if(notices.length&&!paymentReturn){
       const enabled=providerReady&&(!!s.payments_enabled||!!s.pure_support_enabled||!!s.share_rewards_enabled);
-      paintSupportNotice('<strong>'+(enabled?(testMode?'PayMongo TEST MODE active':'Secure PayMongo checkout ready'):'PayMongo preparation mode')+'</strong><span>'+
+      paintSupportNotice('<strong>'+(enabled?(testMode?'Support checkout testing':'Secure checkout ready'):'Support options coming soon')+'</strong><span>'+
         (enabled
           ?(testMode
             ?'Testing only — no GENESIS live entitlement sales are active. Do not scan a QR Ph test code with a real banking or e-wallet app; use PayMongo\'s test simulation controls.'
-            :'Payments are verified server-side before credits, VIP, or Supporter eligibility are granted.')
-          :'PayMongo is selected and wired, but collection remains disabled until merchant keys, webhook signing, and test-mode verification pass.')+
+            :'Payments are verified securely before advance access or supporter benefits are added to your account.')
+          :'Payments and share rewards are not open yet. Normal story releases continue on schedule.')+
         '</span>');
     }
 
@@ -2092,7 +2092,7 @@ async function initSupport(){
       }catch(e){
         button.disabled=false;
         button.textContent=original;
-        if(notices.length)paintSupportNotice('<strong>Checkout unavailable</strong><span>'+esc(String(e.message||e))+'</span>');
+        if(notices.length)paintSupportNotice('<strong>Checkout could not open</strong><span>Please try again later. No charge was completed.</span>');
       }
     };
 
@@ -2108,7 +2108,7 @@ async function initSupport(){
         ?(user
           ?(testMode?(pure?"TEST Give through PayMongo":"TEST Pay with PayMongo"):(pure?"Give through PayMongo":"Pay with PayMongo"))
           :"Sign in to continue")
-        :(testMode&&!testRuleAllowed?"Locked until next test phase":"PayMongo not live yet");
+        :(testMode&&!testRuleAllowed?"Available after testing":"Support option opening soon");
 
       if(pure){
         document.querySelectorAll("#pure-support-amount,[data-pure-support-amount]").forEach(amount=>{amount.disabled=!ready});
@@ -2128,7 +2128,7 @@ async function initSupport(){
     });
   }catch(e){
     if(notices.length&&!paymentReturn){
-      paintSupportNotice('<strong>Support status unavailable</strong><span>Payment collection remains closed.</span>');
+      paintSupportNotice('<strong>Support options coming soon</strong><span>Payments are not open yet.</span>');
     }
   }
 }
