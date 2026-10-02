@@ -132,6 +132,7 @@ jobs:
           ];
           const viewports=[
             ['desktop-1440',{width:1440,height:900}],
+            ['desktop-1600',{width:1600,height:1000}],
             ['tablet-768',{width:768,height:1024}],
             ['mobile-430',{width:430,height:932}],
             ['mobile-390',{width:390,height:844}]
@@ -399,18 +400,28 @@ jobs:
                   const hr=rect(hero),mr=rect(media),dr=rect(deck),lr=rect(left),cr=rect(center),rr=rect(right),lwr=rect(latest),ar=rect(announcements);
                   if(dr.top<hr.bottom-2)issues.push('command deck overlaps cinematic hero');
 
-                  if(mode==='desktop-1440'){
-                    const near=(actual,target,tolerance,label)=>{if(Math.abs(actual-target)>tolerance)issues.push(label+' '+actual.toFixed(1)+'px != '+target+'±'+tolerance+'px')};
-                    near(dr.width,1400,4,'deck width');
-                    near(dr.height,500,6,'deck height');
-                    near(lr.width,400,5,'next release width');
-                    near(cr.width,520,5,'currently reading width');
-                    near(rr.width,440,5,'your access width');
-                    near(lwr.width,860,5,'latest releases width');
-                    near(ar.width,510,5,'announcements width');
+                  if(mode.startsWith('desktop-')){
+                    const near=(actual,target,tolerance,label)=>{if(Math.abs(actual-target)>tolerance)issues.push(label+' '+actual.toFixed(1)+'px != '+target.toFixed(1)+'±'+tolerance+'px')};
+                    near(dr.left,hr.left,2,'deck left edge vs hero');
+                    near(dr.right,hr.right,2,'deck right edge vs hero');
+                    near(dr.width,hr.width,2,'deck width vs hero');
+                    near(dr.height,dr.width/2.8,3,'deck 2.8:1 height');
                     near(cr.left-lr.right,10,2,'left/center gap');
                     near(rr.left-cr.right,10,2,'center/right gap');
                     near(ar.left-lwr.right,10,2,'lower gap');
+
+                    const topUsable=lr.width+cr.width+rr.width;
+                    const leftShare=lr.width/topUsable;
+                    const centerShare=cr.width/topUsable;
+                    const rightShare=rr.width/topUsable;
+                    near(leftShare,400/1360,.012,'next release proportion');
+                    near(centerShare,520/1360,.012,'currently reading proportion');
+                    near(rightShare,440/1360,.012,'your access proportion');
+
+                    const lowerUsable=lwr.width+ar.width;
+                    near(lwr.width/lowerUsable,860/1370,.012,'latest releases proportion');
+                    near(ar.width/lowerUsable,510/1370,.012,'announcements proportion');
+
                     if(cr.width<=lr.width||cr.width<=rr.width)issues.push('currently reading is not the largest upper panel');
                     const releaseSize=parseFloat(getComputedStyle(document.querySelector('#home-release-time')).fontSize);
                     const readingSize=parseFloat(getComputedStyle(document.querySelector('#home-reading-title')).fontSize);
