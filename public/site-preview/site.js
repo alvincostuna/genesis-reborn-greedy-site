@@ -257,7 +257,7 @@ function entityCard(x,kind="codex"){
       '<span class="entity-symbol">'+esc(v.icon)+'</span><span class="entity-category">'+esc(v.label)+'</span>'+
     '</div>'+
     '<div class="entity-copy"><small>'+esc(type.toUpperCase())+'</small><h2>'+esc(title)+'</h2><p>'+esc(desc)+'</p>'+
-    (fieldChips?'<div class="reveal-fields">'+fieldChips+'</div>':'<div class="entity-safe-note">Reader-safe revealed record</div>')+
+    (fieldChips?'<div class="reveal-fields">'+fieldChips+'</div>':'<div class="entity-safe-note">Spoiler-safe revealed record</div>')+
     '</div></article>';
 }
 
@@ -672,7 +672,7 @@ async function initRead(){
 
     if(!currentParts.length){
       if(tabs)tabs.innerHTML="";
-      if(body)body.innerHTML='<div class="empty-state large reader-empty-state"><strong>No released Parts yet.</strong><span>This Episode has no public Final Canon Parts available.</span></div>';
+      if(body)body.innerHTML='<div class="empty-state large reader-empty-state"><strong>No released Parts yet.</strong><span>This Episode does not have a published Part available yet.</span></div>';
       if(partSelect){
         partSelect.innerHTML='<option>No released Parts yet</option>';
         partSelect.disabled=true;
@@ -826,7 +826,7 @@ function atlasMapCard(map){
     '<div class="atlas-map-card-copy">'+
       '<small>'+esc(map?.region||"Discovered World")+' · '+esc(map?.map_type||"MAP")+'</small>'+
       '<h2>'+esc(map?.public_name||"Revealed map")+'</h2>'+
-      '<p>'+esc(map?.short_description||"A reader-safe GENESIS location.")+'</p>'+
+      '<p>'+esc(map?.short_description||"A location revealed through the published story.")+'</p>'+
       (chips?'<div class="atlas-field-chips">'+chips+'</div>':'')+
       '<span class="atlas-open-link">Open map database →</span>'+
     '</div>'+
@@ -922,7 +922,7 @@ function renderMapRelation(kind,allowed,items){
     return;
   }
   if(!Array.isArray(items)||!items.length){
-    root.innerHTML='<div class="empty-state">No reader-safe '+esc(kind)+' are currently attached to this map.</div>';
+    root.innerHTML='<div class="empty-state">No revealed '+esc(kind)+' are currently attached to this map.</div>';
     return;
   }
   root.innerHTML=items.map(x=>atlasRelatedCard(x,kind)).join("");
@@ -957,7 +957,7 @@ async function initMapDetail(){
       locked?.classList.remove("hidden");
       if(content)content.classList.add("hidden");
       document.querySelector("#map-detail-name").textContent="Fog-of-war";
-      document.querySelector("#map-detail-description").textContent="This Atlas location is not reader-safe yet.";
+      document.querySelector("#map-detail-description").textContent="This Atlas location is not spoiler-safe yet.";
       return;
     }
     const map=data.map;
@@ -965,7 +965,7 @@ async function initMapDetail(){
     document.querySelector("#map-breadcrumb-name").textContent=map.public_name||"Map";
     document.querySelector("#map-detail-region").textContent=(map.region||"Discovered World").toUpperCase();
     document.querySelector("#map-detail-name").textContent=map.public_name||"Revealed map";
-    document.querySelector("#map-detail-description").textContent=map.short_description||"A reader-safe GENESIS location.";
+    document.querySelector("#map-detail-description").textContent=map.short_description||"A location revealed through the published story.";
     document.querySelector("#map-detail-type").textContent=map.map_type||"MAP";
     document.querySelector("#map-detail-state").textContent=map.reveal_state||"DISCOVERED";
     document.querySelector("#map-detail-code").textContent=map.entity_code||"—";
@@ -1005,7 +1005,7 @@ async function loadCodex(){
       results.innerHTML='<div class="v28-empty-discovery codex-empty"><div class="empty-art" style="background-image:linear-gradient(180deg,rgba(2,8,14,.12),rgba(2,8,14,.94)),url(\''+esc(v.art)+'\')"></div><div><small>REVEALED ARCHIVE</small><strong>The Codex is still waiting for this discovery.</strong><p>Try another category, or return as more of the world is revealed through the story.</p></div></div>';
       return;
     }
-    if(count)count.textContent=rows.length+" reader-safe result"+(rows.length===1?"":"s");
+    if(count)count.textContent=rows.length+" revealed result"+(rows.length===1?"":"s");
     results.innerHTML=rows.map(x=>entityCard(x,"codex")).join("");
   }catch{
     results.innerHTML='<div class="empty-state large">Codex is temporarily unavailable.</div>';
@@ -1097,7 +1097,7 @@ function initGlobalSearch(){
     clearTimeout(timer);
     const q=input.value.trim();
     if(q.length<2){
-      results.innerHTML='<div class="flyout-empty">Type at least 2 characters to search released story and reader-safe Codex records.</div>';
+      results.innerHTML='<div class="flyout-empty">Type at least 2 characters to search released story and revealed Codex records.</div>';
       if(q.length===0)closeGlobalFlyouts();
       return;
     }
