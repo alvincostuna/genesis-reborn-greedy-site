@@ -14783,3 +14783,31 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DEPLOY MARKER: WEB-DS V3.9.1 FINAL ALIGNMENT */
+
+
+/* WEB-DS V3.9.2 — REFERENCE HERO COMPOSITION */
+@media(min-width:901px){
+  .web-ds-v2.genesis-home .cinematic-hero-media{
+    background:url('/assets/v37/hero-reference.svg') center/100% 100% no-repeat!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-poster,
+  .web-ds-v2.genesis-home .cinematic-hero-warm,
+  .web-ds-v2.genesis-home .cinematic-hero-cold{
+    opacity:0!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-vignette{
+    background:linear-gradient(180deg,rgba(0,0,0,.01),rgba(0,0,0,.04) 72%,rgba(0,0,0,.20))!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand{
+    width:330px!important;
+    min-width:330px!important;
+    padding-left:14px!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand img{
+    width:304px!important;
+    max-width:304px!important;
+    height:47px!important;
+    object-fit:contain!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.9.2 REFERENCE HERO */
