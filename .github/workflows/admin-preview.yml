@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - feat/admin-manuscript-viewer
+      - deploy/admin-database-alignment-v2
 
 permissions:
   contents: read
@@ -15,7 +16,7 @@ concurrency:
 
 jobs:
   preview:
-    if: github.ref == 'refs/heads/feat/admin-manuscript-viewer'
+    if: github.ref == 'refs/heads/feat/admin-manuscript-viewer' || github.ref == 'refs/heads/deploy/admin-database-alignment-v2'
     environment: genesis-admin-preview
     runs-on: ubuntu-latest
     timeout-minutes: 15
