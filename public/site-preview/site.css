@@ -14739,3 +14739,73 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   }
 }
 /* DEPLOY MARKER: WEB-DS V3.10.1 SCREENSHOT CORRECTION */
+
+
+/* WEB-DS V3.10.2 — final reference cleanup */
+.web-ds-v2.genesis-home .console-crown{
+  top:0!important;
+  width:100%!important;
+  height:12px!important;
+  transform:none!important;
+  left:0!important;
+  display:block!important;
+  z-index:8!important;
+}
+.web-ds-v2.genesis-home .console-crown strong,
+.web-ds-v2.genesis-home .console-crown span{
+  display:none!important;
+}
+.web-ds-v2.genesis-home .console-crown small{
+  top:2px!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+  font-size:6px!important;
+  line-height:1!important;
+  letter-spacing:.24em!important;
+  color:#8fa8ba!important;
+}
+.web-ds-v2.genesis-home .genesis-player-console{
+  padding-top:13px!important;
+}
+
+/* Darker, more player-HUD-like profile art; keep every marked box unique. */
+.web-ds-v2.genesis-home .deck-access-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.62) 0%,rgba(3,12,20,.42) 46%,rgba(3,12,20,.18) 100%),
+    url('/assets/v27/rewards/flavio-reyes.webp')!important;
+  background-position:66% 34%!important;
+}
+.web-ds-v2.genesis-home .adventure-feed-panel::before{
+  background-image:
+    linear-gradient(90deg,rgba(3,12,20,.40) 0%,rgba(3,12,20,.34) 44%,rgba(3,12,20,.50) 100%),
+    url('/assets/v27/rewards/beginner-hunt.webp')!important;
+  background-position:center 45%!important;
+}
+.web-ds-v2.genesis-home .tile-characters::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.00),rgba(2,7,12,.08) 42%,rgba(2,7,12,.68) 77%,rgba(2,7,12,.94)),
+    url('/assets/v27/rewards/flavio-nico-early-party.webp')!important;
+  background-position:center 36%!important;
+}
+
+/* Extra insurance against legacy hidden wordmarks reappearing. */
+.web-ds-v2.genesis-home img.shell-wordmark-compat,
+.web-ds-v2.genesis-home img.shell-wordmark-compat[hidden]{
+  display:none!important;
+  visibility:hidden!important;
+  width:0!important;
+  height:0!important;
+}
+
+/* Compact phone footer to a real game dock instead of a tall empty slab. */
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .v37-footer{
+    box-sizing:border-box!important;
+    height:170px!important;
+    min-height:170px!important;
+    max-height:170px!important;
+    padding:10px 12px 58px!important;
+    overflow:hidden!important;
+  }
+}
+/* DEPLOY MARKER: WEB-DS V3.10.2 FINAL REFERENCE CLEANUP */
