@@ -401,6 +401,16 @@ jobs:
                   if(dr.top<hr.bottom-2)issues.push('command deck overlaps cinematic hero');
 
                   if(mode.startsWith('desktop-')){
+                    const navLinks=[...document.querySelectorAll('.v2-primary-nav a')];
+                    const activeNav=document.querySelector('.v2-primary-nav a.active');
+                    if(navLinks.length!==7)issues.push('desktop primary nav count is not 7');
+                    for(const link of navLinks){
+                      const icon=link.querySelector('.v25-icon');
+                      if(link.getBoundingClientRect().height<74)issues.push('desktop nav target below 74px');
+                      if(icon&&icon.getBoundingClientRect().width<26)issues.push('desktop nav icon below 26px');
+                      if(parseFloat(getComputedStyle(link).fontSize)<11.5)issues.push('desktop nav label below 11.5px');
+                    }
+                    if(activeNav&&getComputedStyle(activeNav).backgroundImage==='none')issues.push('desktop active nav lacks HUD background');
                     const near=(actual,target,tolerance,label)=>{if(Math.abs(actual-target)>tolerance)issues.push(label+' '+actual.toFixed(1)+'px != '+target.toFixed(1)+'±'+tolerance+'px')};
                     near(dr.left,hr.left,2,'deck left edge vs hero');
                     near(dr.right,hr.right,2,'deck right edge vs hero');
@@ -435,6 +445,16 @@ jobs:
                     if(lwr.height<154||ar.height<154)issues.push('lower panels shorter than contract');
                   }else{
                     if(dr.top<mr.bottom-2)issues.push('mobile/tablet command overlaps artwork');
+                    const mobileBottom=document.querySelector('.v2-mobile-bottom');
+                    const mobileMenu=document.querySelector('.v2-mobile-menu');
+                    if(mode.startsWith('mobile-')){
+                      if(mobileMenu&&mobileMenu.getBoundingClientRect().width<39)issues.push('mobile menu target below 39px');
+                      if(mobileBottom&&mobileBottom.getBoundingClientRect().height<60)issues.push('mobile bottom nav below 60px');
+                      const mobileIcons=[...document.querySelectorAll('.v2-mobile-bottom .v25-icon')];
+                      if(mobileIcons.some(icon=>icon.getBoundingClientRect().width<20))issues.push('mobile bottom nav icon below 20px');
+                      const readingPanel=document.querySelector('.deck-reading-panel');
+                      if(readingPanel&&readingPanel.getBoundingClientRect().height>250)issues.push('mobile currently-reading panel retains oversized blank cavity');
+                    }
                     const primary=document.querySelector('.deck-reading-actions .genesis-btn.primary');
                     if(mode.startsWith('mobile-')&&visible(primary)&&primary.getBoundingClientRect().height<40)issues.push('phone primary target below 40px');
                   }

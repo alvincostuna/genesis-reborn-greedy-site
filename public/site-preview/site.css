@@ -10706,3 +10706,197 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 
 /* DEPLOY SYNC: HERO-RELATIVE COMMAND DECK V1.1 */
+
+
+/* ==========================================================================
+   WEB-DS V2.8 — RED TEAM DESKTOP + MOBILE POLISH
+   Shared-shell refinement only. No story, routing, auth, or data behavior.
+   ========================================================================== */
+:where(.web-ds-v2,.unified-public-page) :where(a,button,input,select,textarea):focus-visible{
+  outline:2px solid rgba(114,201,255,.95);
+  outline-offset:2px;
+}
+
+/* Desktop navigation now reads like a premium game HUD instead of thin utility tabs. */
+@media(min-width:901px){
+  .web-ds-v2 .v2-primary-nav{
+    align-self:stretch;
+    gap:4px!important;
+  }
+  .web-ds-v2 .v2-primary-nav a{
+    width:84px!important;
+    flex:0 1 84px!important;
+    min-height:78px;
+    padding:11px 9px 9px!important;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    border:1px solid transparent;
+    border-bottom:0;
+    border-radius:9px 9px 0 0!important;
+    color:#c9d8e5!important;
+    font-size:12px!important;
+    letter-spacing:.01em;
+    text-shadow:0 1px 8px rgba(0,0,0,.55);
+    transition:background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease,transform .18s ease;
+  }
+  .web-ds-v2 .v2-primary-nav a .v25-icon{
+    width:27px!important;
+    height:27px!important;
+    margin:0 auto 6px!important;
+    color:#d5e5f1!important;
+    filter:drop-shadow(0 1px 4px rgba(0,0,0,.58));
+    transition:color .18s ease,filter .18s ease,transform .18s ease;
+  }
+  .web-ds-v2 .v2-primary-nav a:hover{
+    color:#f2f8fc!important;
+    border-color:rgba(92,154,198,.20);
+    background:linear-gradient(180deg,rgba(20,45,65,.66),rgba(8,24,38,.34));
+    box-shadow:inset 0 1px rgba(255,255,255,.025);
+  }
+  .web-ds-v2 .v2-primary-nav a:hover .v25-icon{
+    color:#91dcff!important;
+    transform:translateY(-1px);
+    filter:drop-shadow(0 0 9px rgba(87,193,255,.24));
+  }
+  .web-ds-v2 .v2-primary-nav a.active{
+    color:#ffe4a0!important;
+    border-color:rgba(231,189,99,.30);
+    background:
+      radial-gradient(circle at 50% 8%,rgba(231,189,99,.20),transparent 46%),
+      linear-gradient(180deg,rgba(41,40,31,.58),rgba(11,25,37,.40));
+    box-shadow:
+      inset 0 1px rgba(255,232,173,.08),
+      inset 0 -16px 28px rgba(229,180,74,.035),
+      0 0 20px rgba(228,187,103,.055);
+  }
+  .web-ds-v2 .v2-primary-nav a.active .v25-icon{
+    width:28px!important;
+    height:28px!important;
+    color:#efc968!important;
+    filter:drop-shadow(0 0 8px rgba(239,201,104,.34));
+  }
+  .web-ds-v2 .v2-primary-nav a.active:after{
+    left:15px!important;
+    right:15px!important;
+    bottom:3px!important;
+    height:2px!important;
+    background:linear-gradient(90deg,transparent,#b98a34,#ffe09a,#b98a34,transparent)!important;
+    box-shadow:0 0 10px rgba(255,205,102,.48)!important;
+  }
+}
+
+/* Mobile shell: premium but less visually obstructive, with proper safe-area allowance. */
+@media(max-width:900px){
+  .web-ds-v2 .v2-mobile-menu{
+    width:40px!important;
+    height:40px!important;
+    border-color:rgba(228,187,103,.55)!important;
+    background:linear-gradient(180deg,#0a1c2c,#06121e)!important;
+    box-shadow:inset 0 0 12px rgba(66,142,197,.06);
+  }
+  .web-ds-v2 .profile-orb{
+    width:40px!important;
+    height:40px!important;
+  }
+  .web-ds-v2 .v2-mobile-bottom,
+  .unified-public-page .mobile-bottom-nav.v2-mobile-bottom{
+    min-height:64px!important;
+    padding:4px 6px calc(4px + env(safe-area-inset-bottom))!important;
+    border-top:1px solid rgba(228,187,103,.52)!important;
+    background:
+      linear-gradient(180deg,rgba(7,20,32,.94),rgba(2,9,16,.975))!important;
+    box-shadow:0 -10px 26px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.025)!important;
+    -webkit-backdrop-filter:blur(16px) saturate(1.12);
+    backdrop-filter:blur(16px) saturate(1.12);
+  }
+  .web-ds-v2 .v2-mobile-bottom a,
+  .unified-public-page .mobile-bottom-nav.v2-mobile-bottom a{
+    min-height:54px;
+    padding:5px 3px;
+    border-radius:8px;
+    color:#aebfd0!important;
+    font-size:9px!important;
+    line-height:1.05;
+    transition:color .16s ease,background .16s ease,box-shadow .16s ease;
+  }
+  .web-ds-v2 .v2-mobile-bottom a .v25-icon,
+  .unified-public-page .mobile-bottom-nav.v2-mobile-bottom a .v25-icon{
+    width:21px!important;
+    height:21px!important;
+    margin-bottom:3px!important;
+    color:#afc4d5!important;
+    filter:drop-shadow(0 1px 3px rgba(0,0,0,.5));
+  }
+  .web-ds-v2 .v2-mobile-bottom a.active,
+  .unified-public-page .mobile-bottom-nav.v2-mobile-bottom a.active{
+    color:#f3cf76!important;
+    background:
+      radial-gradient(circle at 50% 8%,rgba(231,189,99,.17),transparent 58%),
+      linear-gradient(180deg,rgba(42,38,28,.34),rgba(7,19,30,.18));
+    text-shadow:0 0 9px rgba(231,189,99,.24)!important;
+    box-shadow:inset 0 1px rgba(255,229,166,.04);
+  }
+  .web-ds-v2 .v2-mobile-bottom a.active .v25-icon,
+  .unified-public-page .mobile-bottom-nav.v2-mobile-bottom a.active .v25-icon{
+    color:#efc968!important;
+    filter:drop-shadow(0 0 8px rgba(239,201,104,.32))!important;
+  }
+
+  /* Ensure fixed bottom navigation never steals the last usable reading/control area. */
+  .unified-public-page{
+    padding-bottom:calc(96px + env(safe-area-inset-bottom))!important;
+  }
+  .web-ds-v2 .v2-shell{
+    padding-bottom:calc(106px + env(safe-area-inset-bottom))!important;
+  }
+}
+
+/* Phone home: remove the empty desktop-art cavity from Currently Reading. */
+@media(max-width:620px){
+  .web-ds-v2 .genesis-command-deck .deck-reading-panel{
+    min-height:220px!important;
+    grid-template-rows:38px auto 48px!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-body{
+    min-height:0!important;
+    overflow:visible!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-copy{
+    padding:11px 2px 9px!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-copy p{
+    -webkit-line-clamp:3!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-latest-grid{
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    overscroll-behavior-x:contain;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-latest-grid::-webkit-scrollbar{display:none}
+  .web-ds-v2 .genesis-command-deck .deck-release-card{scroll-snap-align:start}
+
+  /* Support mobile was functionally correct but used overly fine micro-type. */
+  .unified-public-page .support-mobile-card .support-kicker{font-size:9px!important}
+  .unified-public-page .support-mobile-card p,
+  .unified-public-page .support-mobile-card small{font-size:10px!important;line-height:1.4!important}
+  .unified-public-page .support-mobile-card>strong{font-size:10px!important}
+  .unified-public-page .support-mobile-card .support-tier-value span{font-size:10px!important}
+  .unified-public-page .support-mobile-card .support-reward-chip{font-size:9px!important}
+  .unified-public-page .support-mobile-card button,
+  .unified-public-page .support-mobile-card>a,
+  .unified-public-page .support-mobile-help-links a{
+    min-height:42px!important;
+    font-size:10px!important;
+  }
+  .unified-public-page .support-mobile-status strong{font-size:9px!important}
+  .unified-public-page .support-mobile-status span{font-size:9px!important}
+  .unified-public-page .support-mobile-mechanic label{font-size:9px!important}
+  .unified-public-page .support-mobile-mechanic input{font-size:10px!important}
+  .unified-public-page .support-mobile-contact input,
+  .unified-public-page .support-mobile-contact textarea{font-size:10px!important}
+
+  /* Shared compact headers should remain readable on a 390px phone. */
+  .unified-public-page :where(.card-head,.rail-head){font-size:12px!important}
+}
