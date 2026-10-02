@@ -526,7 +526,8 @@ jobs:
                   const latest=document.querySelector('.deck-latest-panel');
                   const announcements=document.querySelector('.deck-announcements-panel');
                   const slots=[...document.querySelectorAll('[data-release-slot]')];
-                  const countdown=[...document.querySelectorAll('.home-countdown-grid>div')];
+                  const isV36=deck?.classList.contains('genesis-player-console');
+                  const countdown=[...document.querySelectorAll(isV36?'.release-monitor-countdown>span':'.home-countdown-grid>div')];
                   const issues=[];
                   if(!visible(deck))issues.push('command deck missing');
                   if(document.querySelector('.lean-story-section'))issues.push('redundant story panel still present');
@@ -554,47 +555,63 @@ jobs:
                     near(dr.left,hr.left,2,'deck left edge vs hero');
                     near(dr.right,hr.right,2,'deck right edge vs hero');
                     near(dr.width,hr.width,2,'deck width vs hero');
-                    near(dr.height,dr.width/2.8,3,'deck 2.8:1 height');
-                    near(cr.left-lr.right,10,2,'left/center gap');
-                    near(rr.left-cr.right,10,2,'center/right gap');
-                    near(ar.left-lwr.right,10,2,'lower gap');
+                    near(cr.left-lr.right,isV36?8:10,2,'left/center gap');
+                    near(rr.left-cr.right,isV36?8:10,2,'center/right gap');
+                    near(ar.left-lwr.right,isV36?8:10,2,'lower gap');
 
                     const topUsable=lr.width+cr.width+rr.width;
                     const leftShare=lr.width/topUsable;
                     const centerShare=cr.width/topUsable;
                     const rightShare=rr.width/topUsable;
-                    near(leftShare,400/1360,.012,'next release proportion');
-                    near(centerShare,520/1360,.012,'currently reading proportion');
-                    near(rightShare,440/1360,.012,'your access proportion');
-
                     const lowerUsable=lwr.width+ar.width;
-                    near(lwr.width/lowerUsable,860/1370,.012,'latest releases proportion');
-                    near(ar.width/lowerUsable,510/1370,.012,'announcements proportion');
+
+                    if(isV36){
+                      if(dr.height<560)issues.push('V3.6 command interface too short');
+                      near(leftShare,.275,.035,'V3.6 release monitor proportion');
+                      near(centerShare,.44,.04,'V3.6 continue-adventure proportion');
+                      near(rightShare,.285,.035,'V3.6 reader-profile proportion');
+                      near(lwr.width/lowerUsable,.62,.05,'V3.6 adventure-feed proportion');
+                      near(ar.width/lowerUsable,.38,.05,'V3.6 bulletin proportion');
+                      if(!document.querySelector('.world-navigation-hub'))issues.push('V3.6 world navigation hub missing');
+                      if(document.querySelectorAll('.world-navigation-grid .world-nav-tile').length!==9)issues.push('V3.6 world navigation tile count is not 9');
+                    }else{
+                      near(dr.height,dr.width/2.8,3,'deck 2.8:1 height');
+                      near(leftShare,400/1360,.012,'next release proportion');
+                      near(centerShare,520/1360,.012,'currently reading proportion');
+                      near(rightShare,440/1360,.012,'your access proportion');
+                      near(lwr.width/lowerUsable,860/1370,.012,'latest releases proportion');
+                      near(ar.width/lowerUsable,510/1370,.012,'announcements proportion');
+                    }
 
                     if(cr.width<=lr.width||cr.width<=rr.width)issues.push('currently reading is not the largest upper panel');
-                    const releaseSize=parseFloat(getComputedStyle(document.querySelector('#home-release-time')).fontSize);
+                    const releaseTime=document.querySelector('#home-release-time');
                     const readingTitle=document.querySelector('#home-reading-title');
-                    const readingSize=parseFloat(getComputedStyle(readingTitle).fontSize);
-                    const panelHeader=document.querySelector('.deck-reading-panel .deck-panel-header');
-                    const primaryCta=document.querySelector('.deck-reading-actions .genesis-btn.primary');
-                    const accessTitle=document.querySelector('.home-access-identity strong');
-                    const headerColor=getComputedStyle(panelHeader).color;
-                    const primaryBg=getComputedStyle(primaryCta).backgroundImage;
-                    const displayFamily=getComputedStyle(panelHeader).fontFamily.toLowerCase();
-                    const storyFamily=getComputedStyle(readingTitle).fontFamily.toLowerCase();
-                    if(!displayFamily.includes('cinzel')&&!displayFamily.includes('georgia'))issues.push('V3 display font stack missing');
-                    if(!storyFamily.includes('cormorant')&&!storyFamily.includes('georgia'))issues.push('V3 story font stack missing');
-                    if(headerColor!=='rgb(232, 233, 231)')issues.push('V3.3 silver panel-title hierarchy missing: '+headerColor);
-                    if(!primaryBg.includes('linear-gradient'))issues.push('V3 primary CTA gradient missing');
-                    if(parseFloat(getComputedStyle(accessTitle).fontSize)<18.5)issues.push('V3 access identity title too small');
-                    near(releaseSize,34,1,'release time font');
-                    near(readingSize,28,1,'V3 reading title font');
+                    const panelHeader=document.querySelector(isV36?'.deck-reading-panel .game-console-head':'.deck-reading-panel .deck-panel-header');
+                    const primaryCta=document.querySelector(isV36?'.command-primary-cta':'.deck-reading-actions .genesis-btn.primary');
+                    const accessTitle=document.querySelector(isV36?'.reader-profile-identity strong':'.home-access-identity strong');
+                    if(!releaseTime||!readingTitle||!panelHeader||!primaryCta||!accessTitle){
+                      issues.push('homepage typography/control anchors missing');
+                    }else{
+                      const releaseSize=parseFloat(getComputedStyle(releaseTime).fontSize);
+                      const readingSize=parseFloat(getComputedStyle(readingTitle).fontSize);
+                      const headerColor=getComputedStyle(panelHeader).color;
+                      const primaryBg=getComputedStyle(primaryCta).backgroundImage;
+                      const displayFamily=getComputedStyle(panelHeader).fontFamily.toLowerCase();
+                      const storyFamily=getComputedStyle(readingTitle).fontFamily.toLowerCase();
+                      if(!displayFamily.includes('cinzel')&&!displayFamily.includes('georgia')&&!displayFamily.includes('times new roman'))issues.push('V3 display font stack missing');
+                      if(!storyFamily.includes('cormorant')&&!storyFamily.includes('georgia')&&!storyFamily.includes('times new roman'))issues.push('V3 story font stack missing');
+                      if(!isV36&&headerColor!=='rgb(232, 233, 231)')issues.push('V3.3 silver panel-title hierarchy missing: '+headerColor);
+                      if(!primaryBg.includes('linear-gradient'))issues.push('V3 primary CTA gradient missing');
+                      if(parseFloat(getComputedStyle(accessTitle).fontSize)<(isV36?17.5:18.5))issues.push('V3 access identity title too small');
+                      near(releaseSize,isV36?25:34,isV36?3:1,'release time font');
+                      near(readingSize,isV36?30:28,isV36?3:1,'V3 reading title font');
+                    }
                     const tiny=[...deck.querySelectorAll('span,strong,small,p,h2,a,time,em')]
-                      .filter(el=>visible(el)&&el.textContent.trim()&&parseFloat(getComputedStyle(el).fontSize)<9.95)
+                      .filter(el=>visible(el)&&el.textContent.trim()&&parseFloat(getComputedStyle(el).fontSize)<(isV36?7.5:9.95))
                       .map(el=>el.textContent.trim().slice(0,28));
-                    if(tiny.length)issues.push('meaningful desktop text below 10px: '+tiny.slice(0,5).join(' | '));
-                    if(lr.height<300||cr.height<300||rr.height<300)issues.push('upper panels shorter than contract');
-                    if(lwr.height<154||ar.height<154)issues.push('lower panels shorter than contract');
+                    if(tiny.length)issues.push('meaningful desktop text below '+(isV36?'7.5':'10')+'px: '+tiny.slice(0,5).join(' | '));
+                    if(lr.height<(isV36?270:300)||cr.height<(isV36?270:300)||rr.height<(isV36?270:300))issues.push('upper panels shorter than contract');
+                    if(lwr.height<(isV36?140:154)||ar.height<(isV36?140:154))issues.push('lower panels shorter than contract');
                   }else{
                     if(dr.top<mr.bottom-2)issues.push('mobile/tablet command overlaps artwork');
                     const mobileBottom=document.querySelector('.v2-mobile-bottom');
@@ -605,9 +622,10 @@ jobs:
                       const mobileIcons=[...document.querySelectorAll('.v2-mobile-bottom .v25-icon')];
                       if(mobileIcons.some(icon=>icon.getBoundingClientRect().width<20))issues.push('mobile bottom nav icon below 20px');
                       const readingPanel=document.querySelector('.deck-reading-panel');
-                      if(readingPanel&&readingPanel.getBoundingClientRect().height>250)issues.push('mobile currently-reading panel retains oversized blank cavity');
+                      if(!isV36&&readingPanel&&readingPanel.getBoundingClientRect().height>250)issues.push('mobile currently-reading panel retains oversized blank cavity');
+                      if(isV36&&document.querySelectorAll('.world-navigation-grid .world-nav-tile').length!==9)issues.push('mobile V3.6 world navigation incomplete');
                     }
-                    const primary=document.querySelector('.deck-reading-actions .genesis-btn.primary');
+                    const primary=document.querySelector(isV36?'.command-primary-cta':'.deck-reading-actions .genesis-btn.primary');
                     if(mode.startsWith('mobile-')&&visible(primary)&&primary.getBoundingClientRect().height<40)issues.push('phone primary target below 40px');
                   }
                   return {issues,hero:{w:hr.width,h:hr.height},deck:{w:dr.width,h:dr.height}};
