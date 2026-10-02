@@ -11989,3 +11989,266 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DEPLOY MARKER: WEB-DS V3.4 SAFE FINISH */
+
+
+/* ==========================================================================
+   WEB-DS V3.5 — DENSITY + FINISH
+   Screenshot-led refinement after V3.4 approval.
+   CSS-only. No layout contract, runtime, asset, or delivery-path changes.
+   ========================================================================== */
+
+/* Homepage vertical rhythm: remove excess dead air below the command deck. */
+.web-ds-v2.genesis-home .v2-shell{
+  padding-bottom:46px!important;
+}
+.web-ds-v2.genesis-home .lean-home-footer{
+  width:min(1460px,calc(100% - 28px));
+  padding:15px 8px 24px;
+  border-top-color:rgba(213,174,88,.14);
+  background:
+    linear-gradient(90deg,transparent,rgba(213,174,88,.018) 18%,rgba(228,231,232,.012) 50%,rgba(213,174,88,.018) 82%,transparent);
+}
+.web-ds-v2.genesis-home .lean-home-footer small{
+  color:#8799a8;
+  letter-spacing:.075em;
+}
+.web-ds-v2.genesis-home .lean-home-footer a{
+  color:#9aabb9;
+}
+.web-ds-v2.genesis-home .lean-home-footer a:hover{
+  color:#efd487;
+}
+
+/* Main deck: slightly stronger separation and cleaner breathing room. */
+.web-ds-v2 .genesis-command-deck{
+  gap:9px!important;
+  padding:9px!important;
+}
+.web-ds-v2 .genesis-command-top,
+.web-ds-v2 .genesis-command-bottom{
+  gap:9px!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel{
+  border-radius:6px!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header{
+  padding-inline:14px!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-panel-header>span{
+  gap:7px!important;
+}
+
+/* Release cycle: make the time plaque feel deliberate, not oversized. */
+.web-ds-v2 .genesis-command-deck .deck-release-title #home-release-time{
+  letter-spacing:.005em!important;
+}
+.web-ds-v2 .genesis-command-deck .home-countdown-grid{
+  gap:7px!important;
+}
+.web-ds-v2 .genesis-command-deck .home-countdown-grid>div{
+  border-radius:6px!important;
+}
+.web-ds-v2 .genesis-command-deck .home-countdown-grid span{
+  letter-spacing:.105em!important;
+}
+
+/* Currently Reading: stronger editorial hierarchy and less empty copy. */
+.web-ds-v2 .genesis-command-deck .deck-reading-copy{
+  justify-content:center!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-copy small{
+  color:#d5ae58!important;
+  letter-spacing:.10em!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-copy h2{
+  margin-top:8px!important;
+  margin-bottom:9px!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-copy p{
+  max-width:440px;
+}
+.web-ds-v2 .genesis-command-deck .deck-reading-actions{
+  gap:8px!important;
+}
+
+/* Your Access: improve ledger readability without increasing card height. */
+.web-ds-v2 .genesis-command-deck .home-access-identity span{
+  line-height:1.32!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-stats>div,
+.web-ds-v2 .genesis-command-deck .home-access-guest-preview>div{
+  min-height:34px!important;
+}
+.web-ds-v2 .genesis-command-deck .home-access-stats span,
+.web-ds-v2 .genesis-command-deck .home-access-stats strong,
+.web-ds-v2 .genesis-command-deck .home-access-guest-preview span,
+.web-ds-v2 .genesis-command-deck .home-access-guest-preview strong{
+  font-size:11px!important;
+}
+
+/* Lower chronicle: readable enough to scan, still subordinate to the top row. */
+.web-ds-v2 .genesis-command-deck .deck-latest-panel,
+.web-ds-v2 .genesis-command-deck .deck-announcements-panel{
+  grid-template-rows:36px minmax(0,1fr)!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-latest-panel .deck-panel-header,
+.web-ds-v2 .genesis-command-deck .deck-announcements-panel .deck-panel-header{
+  height:36px!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-copy small{
+  font-size:9px!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-copy strong{
+  font-size:15px!important;
+  line-height:1.12!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-release-copy em{
+  font-size:10px!important;
+  line-height:1.25!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row strong{
+  font-size:12px!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row small{
+  font-size:9px!important;
+  line-height:1.25!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row time{
+  font-size:9px!important;
+}
+
+/* Navigation polish: reduce visual competition with the hero. */
+@media(min-width:901px){
+  .web-ds-v2 .v2-nav{
+    box-shadow:0 8px 24px rgba(0,0,0,.22);
+  }
+  .web-ds-v2 .v2-primary-nav a{
+    min-height:76px!important;
+  }
+  .web-ds-v2 .v2-primary-nav a .v25-icon{
+    margin-bottom:5px!important;
+  }
+}
+
+/* Mobile homepage: tighter footer and clearer card scan order. */
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .v2-shell{
+    padding-bottom:78px!important;
+  }
+  .web-ds-v2.genesis-home .lean-home-footer{
+    width:calc(100% - 18px)!important;
+    padding:14px 4px 76px!important;
+    gap:10px;
+  }
+  .web-ds-v2.genesis-home .lean-home-footer nav{
+    gap:11px!important;
+  }
+  .web-ds-v2.genesis-home .lean-home-footer a{
+    font-size:9px!important;
+  }
+  .web-ds-v2 .genesis-command-deck{
+    padding:7px!important;
+    gap:7px!important;
+  }
+  .web-ds-v2 .genesis-command-top,
+  .web-ds-v2 .genesis-command-bottom{
+    gap:7px!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-release-title #home-release-time{
+    font-size:28px!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-copy p{
+    max-width:none;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-release-copy strong{
+    font-size:14px!important;
+  }
+}
+
+/* DEPLOY MARKER: WEB-DS V3.5 DENSITY + FINISH */
+
+
+/* ==========================================================================
+   WEB-DS V3.5.1 — VISIBLE POLISH CORRECTION
+   Make the approved polish visibly legible while preserving the page structure.
+   Also restores the visual-QA minimum desktop text size.
+   ========================================================================== */
+@media(min-width:901px){
+  .web-ds-v2 .genesis-command-deck .deck-panel-header,
+  .web-ds-v2 .genesis-command-deck .deck-panel-header>span,
+  .web-ds-v2 .genesis-command-deck .home-access-head>span{
+    font-size:16px!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-panel-header{
+    min-height:40px;
+    background:
+      linear-gradient(90deg,rgba(228,231,232,.050),rgba(213,174,88,.025) 46%,transparent 84%)!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-panel{
+    border-color:rgba(232,233,231,.38)!important;
+    box-shadow:
+      inset 0 1px rgba(255,255,255,.04),
+      inset 0 0 0 1px rgba(213,174,88,.15),
+      0 14px 34px rgba(0,0,0,.34)!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-reading-art{
+    border-color:rgba(213,174,88,.58)!important;
+    box-shadow:
+      inset 0 0 0 1px rgba(246,243,236,.05),
+      inset 0 0 24px rgba(0,0,0,.20),
+      0 0 0 1px rgba(2,7,13,.92),
+      0 7px 18px rgba(0,0,0,.26)!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-release-panel,
+  .web-ds-v2 .genesis-command-deck .deck-access-panel{
+    background:
+      radial-gradient(circle at 50% -12%,rgba(213,174,88,.055),transparent 38%),
+      linear-gradient(155deg,#0a1b2a 0%,#071421 55%,#040c14 100%)!important;
+  }
+  .web-ds-v2 .genesis-command-deck .home-countdown-grid>div{
+    border-color:rgba(94,167,217,.48)!important;
+  }
+  .web-ds-v2 .genesis-command-deck .home-release-slot{
+    border-color:rgba(213,174,88,.34)!important;
+  }
+  .web-ds-v2 .genesis-command-deck .home-release-slot.is-next{
+    border-color:rgba(239,212,135,.80)!important;
+    box-shadow:inset 0 0 0 1px rgba(239,212,135,.045),0 0 12px rgba(213,174,88,.05)!important;
+  }
+  .web-ds-v2 .genesis-command-deck .genesis-btn.primary{
+    border-color:rgba(213,174,88,.72)!important;
+    background:
+      linear-gradient(180deg,rgba(246,243,236,.05),transparent 34%),
+      linear-gradient(180deg,#162735 0%,#0b1925 58%,#061018 100%)!important;
+  }
+  .web-ds-v2 .genesis-command-deck .deck-latest-panel,
+  .web-ds-v2 .genesis-command-deck .deck-announcements-panel{
+    border-color:rgba(213,174,88,.46)!important;
+    background:
+      radial-gradient(circle at 10% 0%,rgba(213,174,88,.055),transparent 28%),
+      linear-gradient(155deg,#0a1824 0%,#06121d 58%,#030b12 100%)!important;
+  }
+
+  /* QA: meaningful desktop metadata must stay at least 10px. */
+  .web-ds-v2 .genesis-command-deck .deck-release-copy small,
+  .web-ds-v2 .genesis-command-deck .deck-release-copy em,
+  .web-ds-v2 .genesis-command-deck .deck-announcement-row small,
+  .web-ds-v2 .genesis-command-deck .deck-announcement-row time{
+    font-size:10px!important;
+  }
+}
+
+/* Make the lower cards visibly separated instead of blending into one dark slab. */
+.web-ds-v2 .genesis-command-deck .deck-release-card{
+  border-color:rgba(203,211,218,.20)!important;
+  background:
+    linear-gradient(180deg,rgba(232,233,231,.024),rgba(4,13,21,.985))!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row{
+  padding-inline:7px!important;
+}
+.web-ds-v2 .genesis-command-deck .deck-announcement-row:hover{
+  background:linear-gradient(90deg,rgba(213,174,88,.045),transparent 62%)!important;
+}
+
+/* DEPLOY MARKER: WEB-DS V3.5.1 VISIBLE POLISH */

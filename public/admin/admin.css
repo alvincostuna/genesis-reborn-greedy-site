@@ -517,3 +517,124 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DEPLOY MARKER: ADMIN V3.4 OFFICIAL MATERIAL ALIGNMENT */
+
+
+/* ==========================================================================
+   ADMIN V3.5 — DENSITY + READABILITY
+   Follow-up to V3.4. CSS-only, no control behavior or data-path changes.
+   ========================================================================== */
+.sidebar{
+  padding:22px 16px;
+  gap:22px;
+}
+.sidebar nav{gap:4px}
+.nav{
+  min-height:40px;
+  padding:9px 11px 9px 13px;
+}
+main{
+  padding:26px;
+}
+.topbar{
+  margin-bottom:20px;
+}
+.cards{
+  gap:12px;
+  margin-bottom:16px;
+}
+.card{
+  padding:16px;
+}
+.card strong{
+  margin-top:6px;
+  line-height:1.05;
+}
+.panel{
+  border-radius:9px;
+}
+.database-head{
+  padding:12px 14px;
+}
+th,td{
+  padding:11px 13px;
+}
+.toolbar{
+  gap:8px;
+  margin-bottom:12px;
+}
+.toolbar input,.toolbar select,.toolbar button{
+  min-height:40px;
+  padding:9px 11px;
+}
+.admin-note,.section-intro{
+  padding:16px;
+  margin-bottom:16px;
+}
+.runtime div{
+  padding:14px;
+}
+.runtime small{
+  margin-bottom:4px;
+}
+
+/* Long operational tables stay readable without becoming visually heavy. */
+.table-scroll{
+  scrollbar-width:thin;
+  scrollbar-color:rgba(213,174,88,.28) rgba(7,18,29,.4);
+}
+.table-scroll::-webkit-scrollbar{height:8px;width:8px}
+.table-scroll::-webkit-scrollbar-thumb{
+  border-radius:999px;
+  background:rgba(213,174,88,.25);
+}
+.table-scroll::-webkit-scrollbar-track{
+  background:rgba(7,18,29,.44);
+}
+
+/* Forms and action surfaces share one consistent control height. */
+.admin-control-form input,
+.admin-control-form select,
+.admin-control-form button,
+.codex-form textarea,
+.codex-form input,
+.codex-form select,
+.codex-form button,
+.readers-toolbar input,
+.readers-toolbar button,
+.admin-reply-form button{
+  min-height:40px;
+}
+
+/* Status pills: slightly calmer, easier to scan in dense lists. */
+.badge,.status{
+  letter-spacing:.015em;
+}
+.status{
+  padding:4px 8px;
+}
+
+/* Mobile Admin: preserve touch area while reducing dead space. */
+@media(max-width:900px){
+  main{padding:13px 13px 84px!important}
+  .topbar{
+    margin:-13px -13px 18px!important;
+    padding:11px 13px!important;
+  }
+  .cards{gap:9px}
+  .card{padding:14px}
+  .sidebar{
+    padding:18px 14px calc(24px + env(safe-area-inset-bottom))!important;
+    gap:18px!important;
+  }
+  .sidebar .nav{
+    min-height:46px;
+    padding:10px 12px;
+  }
+}
+
+@media(max-width:520px){
+  .topbar h1{font-size:23px}
+  .card strong{font-size:21px}
+}
+
+/* DEPLOY MARKER: ADMIN V3.5 DENSITY + READABILITY */
