@@ -130,17 +130,39 @@
         <div id="database-summary" class="cards"></div>
         <div class="toolbar">
           <select id="database-domain">
-            <option value="monsters">Monsters</option>
-            <option value="classes">Classes</option>
-            <option value="professions">Professions</option>
-            <option value="skills">Skills</option>
-            <option value="loot">Loot</option>
-            <option value="maps">Maps</option>
-            <option value="items">Items</option>
-            <option value="npcs">NPCs</option>
-            <option value="quests">Quests</option>
-            <option value="crafting">Crafting</option>
-            <option value="companions">Pets / Mounts</option>
+            <optgroup label="Core canonical database">
+              <option value="monsters">Monsters · Core Master</option>
+              <option value="classes">Classes</option>
+              <option value="professions">Professions</option>
+              <option value="skills">Skills</option>
+              <option value="loot">Loot</option>
+              <option value="maps">Maps</option>
+              <option value="items">Items · Core Master</option>
+              <option value="npcs">NPCs</option>
+              <option value="quests">Quests</option>
+              <option value="crafting">Crafting</option>
+              <option value="companions">Pets / Mounts</option>
+            </optgroup>
+            <optgroup label="Expanded systems · protected read-only">
+              <option value="monster_catalog">Bestiary Projection</option>
+              <option value="equipment_catalog">Equipment / Simulator Catalog</option>
+              <option value="shops">Shops</option>
+              <option value="routes">Routes</option>
+              <option value="civilizations">Civilizations</option>
+              <option value="races">Race Structures</option>
+              <option value="settlements">Settlement Designs</option>
+              <option value="transport_modes">Transport Modes</option>
+              <option value="transport_vehicles">Transport Vehicles</option>
+              <option value="transport_nodes">Transport Nodes</option>
+              <option value="freight_corridors">Freight Corridors</option>
+              <option value="competitions">Competition Venues</option>
+              <option value="currencies">Currencies</option>
+              <option value="economy_levels">Economy Level Curve</option>
+              <option value="guild_skills">Guild Skills</option>
+              <option value="guild_facilities">Guild Facilities</option>
+              <option value="sea_corridors">Sea Corridors</option>
+              <option value="maritime_rates">Maritime Service Rates</option>
+            </optgroup>
           </select>
           <input id="database-search" placeholder="Search canonical name, code, family, role…">
           <button id="refresh-database">Refresh</button>
