@@ -10475,8 +10475,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 
 /* ==========================================================================
-   GENESIS COMMAND DECK V1.0 — APPROVED DESKTOP VISUAL CONTRACT
-   Reference acceptance viewport: 1440px. Hero remains unobstructed.
+   GENESIS COMMAND DECK V1.1 — HERO-RELATIVE DESKTOP VISUAL CONTRACT
+   Desktop deck width follows the rendered cinematic hero; ratio remains 2.8:1.
    ========================================================================== */
 .web-ds-v2{
   --gx-deck-bg:#050D16;--gx-panel:#071522;--gx-panel-raised:#0A1D2D;--gx-panel-blue:#0B2236;
@@ -10485,8 +10485,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   --gx-text:#F2F0E9;--gx-text-soft:#CBD6E0;--gx-text-muted:#8EA3B6;
 }
 .web-ds-v2 .genesis-command-deck{
-  width:100%;max-width:1400px;height:500px;margin:0 auto;padding:10px;
-  display:grid;grid-template-rows:310px 160px;gap:10px;position:relative;
+  width:100%;max-width:none;height:auto;aspect-ratio:2.8 / 1;margin:0;padding:10px;
+  display:grid;grid-template-rows:minmax(0,310fr) minmax(0,160fr);gap:10px;position:relative;
   background:radial-gradient(circle at 50% -20%,rgba(216,179,95,.09),transparent 34%),linear-gradient(180deg,#06111d 0%,#030912 100%);
   box-shadow:inset 0 0 0 1px rgba(216,179,95,.74),inset 0 0 0 5px rgba(39,76,104,.24),0 18px 42px rgba(0,0,0,.36);
 }
@@ -10598,7 +10598,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* Hero/deck relationship: never overlay the approved cinematic artwork. */
 @media(min-width:901px){.web-ds-v2 .cinematic-split-hero{border-radius:0!important}}
 @media(min-width:901px) and (max-width:1199px){
-  .web-ds-v2 .genesis-command-deck{height:auto;grid-template-rows:auto auto}
+  .web-ds-v2 .genesis-command-deck{height:auto;aspect-ratio:auto;grid-template-rows:auto auto}
   .web-ds-v2 .genesis-command-top{grid-template-columns:1fr 1.18fr}
   .web-ds-v2 .deck-access-panel{grid-column:1/-1;min-height:290px}
   .web-ds-v2 .genesis-command-bottom{grid-template-columns:1.35fr 1fr}
@@ -10606,7 +10606,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2 .deck-latest-panel,.web-ds-v2 .deck-announcements-panel{min-height:160px}
 }
 @media(max-width:900px){
-  .web-ds-v2 .genesis-command-deck{height:auto;padding:8px;grid-template-rows:auto auto;gap:8px}
+  .web-ds-v2 .genesis-command-deck{height:auto;aspect-ratio:auto;padding:8px;grid-template-rows:auto auto;gap:8px}
   .web-ds-v2 .genesis-command-top,.web-ds-v2 .genesis-command-bottom{position:static!important;display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
   .web-ds-v2 .deck-release-panel{min-height:300px}.web-ds-v2 .deck-reading-panel{min-height:286px}.web-ds-v2 .deck-access-panel{min-height:286px}
   .web-ds-v2 .deck-latest-panel{min-height:168px}.web-ds-v2 .deck-announcements-panel{min-height:168px}
