@@ -55,6 +55,34 @@ jobs:
       - name: Audit shared public shell consistency
         run: node scripts/public-shell-consistency-audit.mjs
 
+      - name: Guard homepage payload budget
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
+          start=css.index("/* PERFORMANCE HOTFIX: keep command-deck imagery")
+          end=css.index("/* DEPLOY SYNC: APPROVED HOMEPAGE COMMAND DECK V1 */",start)
+          block=css[start:end]
+          if ".png" in block:
+              raise SystemExit("Command deck performance block must not load PNG artwork.")
+          required=[
+              "/assets/v27/destination-heroes/genesis-atlas-hero.webp",
+              "/assets/v27/rewards/flavio-early-cast-wallpaper.webp",
+              "/assets/v27/rewards/early-genesis-world-panorama.webp",
+          ]
+          for asset in required:
+              if asset not in block:
+                  raise SystemExit(f"Missing optimized command-deck asset: {asset}")
+          html=Path("public/site-preview/index.html").read_text(encoding="utf-8")
+          if 'rel="preload" as="image" href="/assets/master-key-art-split-world-v1.webp"' not in html:
+              raise SystemExit("Hero preload missing.")
+          if 'rel="preconnect" href="https://lyhrwymhzhhxszquxnke.supabase.co"' not in html:
+              raise SystemExit("Supabase preconnect missing.")
+          print("PASS: homepage payload budget contract")
+          PY
+
       - name: Guard public editorial language
         shell: bash
         run: |
