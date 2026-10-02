@@ -13802,3 +13802,241 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   }
 }
 /* DEPLOY MARKER: WEB-DS V3.7.7 MOBILE COMMAND COMPACTION */
+
+
+/* ==========================================================================
+   WEB-DS V3.7.8 — RED TEAM REFERENCE CLOSER
+   Desktop geometry + ornament + contrast tuned against approved screenshot.
+   ========================================================================== */
+@media(min-width:901px){
+  .web-ds-v2.genesis-home .v2-shell{
+    width:min(1648px,100%)!important;
+    max-width:1648px!important;
+  }
+
+  /* Hero should read as the game key-art banner, not a generic website hero. */
+  .web-ds-v2.genesis-home .cinematic-split-hero{
+    height:292px!important;
+    min-height:292px!important;
+    max-height:292px!important;
+    border-color:rgba(226,194,111,.82)!important;
+    box-shadow:
+      inset 0 0 0 3px rgba(2,8,14,.85),
+      inset 0 0 0 5px rgba(217,186,104,.12),
+      0 9px 24px rgba(0,0,0,.34)!important;
+  }
+
+  /* Top command row is intentionally compact like the approved game HUD. */
+  .web-ds-v2.genesis-home .genesis-player-console{
+    padding:13px 13px 8px!important;
+    gap:7px!important;
+  }
+  .web-ds-v2.genesis-home .genesis-player-console .player-console-primary{
+    grid-template-columns:29% 42.5% 28.5%!important;
+    align-items:stretch!important;
+    gap:7px!important;
+  }
+  .web-ds-v2.genesis-home .genesis-player-console .player-console-primary>.game-console-panel{
+    height:284px!important;
+    min-height:284px!important;
+    max-height:284px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-body{
+    height:243px!important;
+    min-height:243px!important;
+    padding:10px 12px 11px!important;
+    grid-template-columns:minmax(0,1.03fr) minmax(235px,.98fr) 112px!important;
+    gap:11px!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-art{
+    height:222px!important;
+    min-height:222px!important;
+  }
+  .web-ds-v2.genesis-home .reader-profile-state{
+    height:243px!important;
+    min-height:243px!important;
+    padding:10px 13px!important;
+  }
+
+  /* More ornament and stronger material separation on the three top panels. */
+  .web-ds-v2.genesis-home .game-console-panel{
+    border-color:rgba(226,194,111,.78)!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(10,28,42,.95),
+      inset 0 0 0 4px rgba(70,124,158,.11),
+      inset 0 0 36px rgba(53,130,190,.05),
+      0 6px 16px rgba(0,0,0,.30)!important;
+  }
+  .web-ds-v2.genesis-home .game-console-panel::after{
+    opacity:.95!important;
+    filter:drop-shadow(0 0 3px rgba(217,186,104,.16));
+  }
+  .web-ds-v2.genesis-home .game-console-head{
+    height:41px!important;
+    min-height:41px!important;
+    padding:0 15px!important;
+    background:
+      linear-gradient(90deg,rgba(225,195,112,.10),rgba(12,39,60,.62) 30%,rgba(5,18,30,.18))!important;
+  }
+  .web-ds-v2.genesis-home .game-console-head>span{
+    font-size:15.5px!important;
+    letter-spacing:.03em!important;
+  }
+
+  /* Release monitor: stronger next-release plaque and cleaner lower utility row. */
+  .web-ds-v2.genesis-home .release-monitor-main{
+    height:77px!important;
+    margin:8px 10px 4px!important;
+    background:
+      linear-gradient(90deg,rgba(4,15,25,.92),rgba(4,15,25,.42)),
+      url('/assets/v25/releases/release-city.png') right center/57% cover no-repeat!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-next>b{
+    font-size:24px!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-slots .home-release-slot{
+    min-height:63px!important;
+  }
+  .web-ds-v2.genesis-home .release-monitor-footer{
+    margin-top:5px!important;
+  }
+
+  /* Center console: closer to the reference's larger copy + art treatment. */
+  .web-ds-v2.genesis-home .continue-adventure-copy h2{
+    font-size:31px!important;
+    line-height:.98!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-copy p{
+    font-size:12.5px!important;
+    line-height:1.38!important;
+  }
+  .web-ds-v2.genesis-home .command-primary-cta{
+    width:300px!important;
+    min-height:48px!important;
+    border-radius:3px!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(255,246,207,.25),
+      inset 0 1px rgba(255,255,255,.66),
+      0 0 16px rgba(217,186,104,.17)!important;
+  }
+  .web-ds-v2.genesis-home .continue-adventure-ledger{
+    padding-left:10px!important;
+    border-left:1px solid rgba(217,186,104,.18)!important;
+  }
+
+  /* Reader profile gets a brighter magical spine and less flat rows. */
+  .web-ds-v2.genesis-home .reader-profile-panel{
+    background:
+      radial-gradient(circle at 12% 42%,rgba(76,160,255,.13),transparent 28%),
+      linear-gradient(90deg,rgba(3,13,22,.84),rgba(3,13,22,.24)),
+      url('/assets/v27/rewards/flavio-early-cast-wallpaper.webp') 76% center/cover no-repeat!important;
+  }
+  .web-ds-v2.genesis-home .reader-profile-panel::after{
+    content:"";
+    position:absolute;
+    z-index:2;
+    left:82px;top:44px;bottom:16px;
+    width:1px;
+    background:linear-gradient(180deg,transparent,#6cbcff 20%,#d7b861 52%,#6cbcff 80%,transparent);
+    box-shadow:0 0 10px rgba(78,167,255,.30);
+    pointer-events:none;
+  }
+  .web-ds-v2.genesis-home .reader-profile-ledger>div{
+    background:
+      linear-gradient(90deg,rgba(84,155,210,.045),rgba(3,13,22,.10) 55%,rgba(3,13,22,.28))!important;
+  }
+
+  /* Lower row: illustrated, compressed, and less website-card-like. */
+  .web-ds-v2.genesis-home .player-console-secondary{
+    grid-template-columns:61.5% 38.5%!important;
+    gap:7px!important;
+  }
+  .web-ds-v2.genesis-home .player-console-secondary>.game-console-panel{
+    height:139px!important;
+    min-height:139px!important;
+    max-height:139px!important;
+  }
+  .web-ds-v2.genesis-home .adventure-feed-content{
+    height:96px!important;
+    min-height:96px!important;
+    margin:0 8px 5px!important;
+  }
+  .web-ds-v2.genesis-home .adventure-feed-panel .deck-prelaunch-state,
+  .web-ds-v2.genesis-home .adventure-feed-panel .deck-release-card{
+    height:94px!important;
+    min-height:94px!important;
+    background:
+      linear-gradient(90deg,rgba(2,9,16,.20),rgba(2,9,16,.46) 44%,rgba(2,9,16,.90)),
+      url('/assets/v27/rewards/flavio-nico-early-party.webp') left center/48% cover no-repeat!important;
+  }
+  .web-ds-v2.genesis-home .system-bulletin-list{
+    height:98px!important;
+    min-height:98px!important;
+    background:
+      linear-gradient(90deg,rgba(2,9,16,.82),rgba(2,9,16,.32)),
+      url('/assets/v25/destinations/destination-world.png') right 46%/64% cover no-repeat!important;
+  }
+
+  /* Navigation hub: brighter, more illustrative destination cards. */
+  .web-ds-v2.genesis-home .world-navigation-hub{
+    padding:22px 8px 8px!important;
+    border-color:rgba(226,194,111,.82)!important;
+  }
+  .web-ds-v2.genesis-home .world-navigation-grid{
+    gap:7px!important;
+  }
+  .web-ds-v2.genesis-home .world-nav-tile{
+    height:91px!important;
+    min-height:91px!important;
+    border-color:rgba(226,194,111,.78)!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(2,8,14,.78),
+      inset 0 0 0 4px rgba(227,199,120,.06),
+      0 5px 10px rgba(0,0,0,.28)!important;
+  }
+  .web-ds-v2.genesis-home .world-nav-tile::before{
+    background:
+      linear-gradient(180deg,rgba(0,0,0,.03) 0%,rgba(0,0,0,.08) 34%,rgba(2,7,12,.64) 68%,rgba(2,7,12,.95) 100%)!important;
+  }
+  .web-ds-v2.genesis-home .world-nav-tile b{
+    font-size:22px!important;
+  }
+  .web-ds-v2.genesis-home .world-nav-tile strong{
+    font-size:13px!important;
+  }
+
+  /* Footer should read like an integrated game client dock. */
+  .web-ds-v2.genesis-home .v37-footer{
+    min-height:50px!important;
+    height:50px!important;
+    border-color:rgba(226,194,111,.80)!important;
+    background:
+      radial-gradient(circle at 50% 0%,rgba(65,128,180,.07),transparent 42%),
+      linear-gradient(180deg,#071522,#020a11)!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(3,11,18,.92),
+      inset 0 0 0 4px rgba(217,186,104,.05),
+      0 8px 18px rgba(0,0,0,.28)!important;
+  }
+  .web-ds-v2.genesis-home .v37-footer::before{
+    content:"";
+    position:absolute;
+    left:28%;right:28%;top:-8px;height:16px;
+    background:url('/assets/v37/ornate-divider.svg') center/100% 100% no-repeat;
+    opacity:.78;
+    pointer-events:none;
+  }
+}
+
+/* Stronger world-card art assignments for the approved-reference look. */
+.web-ds-v2.genesis-home .tile-read{background-image:url('/assets/v27/rewards/early-genesis-world-panorama.webp')!important}
+.web-ds-v2.genesis-home .tile-world{background-image:url('/assets/v25/destinations/destination-world.png')!important}
+.web-ds-v2.genesis-home .tile-codex{background-image:url('/assets/v25/destinations/destination-codex.png')!important}
+.web-ds-v2.genesis-home .tile-characters{background-image:url('/assets/v27/rewards/flavio-nico-early-party.webp')!important}
+.web-ds-v2.genesis-home .tile-monsters{background-image:url('/assets/v27/rewards/beginner-hunt.webp')!important}
+.web-ds-v2.genesis-home .tile-items{background-image:url('/assets/v27/rewards/genesis-awakening.webp')!important}
+.web-ds-v2.genesis-home .tile-manga{background-image:url('/assets/v25/destinations/destination-manga.png')!important}
+.web-ds-v2.genesis-home .tile-support{background-image:url('/assets/v25/destinations/destination-support.png')!important}
+.web-ds-v2.genesis-home .tile-fan{background-image:url('/assets/v25/destinations/destination-fanpage.png')!important}
+
+/* DEPLOY MARKER: WEB-DS V3.7.8 RED TEAM CLOSER */
