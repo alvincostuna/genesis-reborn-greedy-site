@@ -78,9 +78,9 @@ function minifyCss(input) {
       continue;
     }
 
-    if (/\\s/.test(c)) {
+    if (/\s/.test(c)) {
       let j = i + 1;
-      while (j < stripped.length && /\\s/.test(stripped[j])) j += 1;
+      while (j < stripped.length && /\s/.test(stripped[j])) j += 1;
       const previous = output[output.length - 1] || "";
       const next = stripped[j] || "";
       if (!previous || !next || punctuation.has(previous) || punctuation.has(next)) {
