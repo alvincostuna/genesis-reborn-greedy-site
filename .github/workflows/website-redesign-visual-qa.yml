@@ -98,7 +98,9 @@ jobs:
           marker="WEB-DS V3.3 — LOGO MATERIAL HIERARCHY"
           if marker not in css:
               raise SystemExit("V3.3 material hierarchy marker missing")
-          block=css[css.index(marker):]
+          start=css.index(marker)
+          next_section=css.find("/* ========================================================================== */", start+len(marker))
+          block=css[start:next_section if next_section != -1 else len(css)]
           required=[
               '--gx33-display:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif',
               '--gx33-title:#E8E9E7',
@@ -125,7 +127,8 @@ jobs:
           if marker not in css:
               raise SystemExit("V3 logo-alignment marker missing")
           start=css.index(marker)
-          block=css[start:]
+          next_section=css.find("/* ========================================================================== */", start+len(marker))
+          block=css[start:next_section if next_section != -1 else len(css)]
           required=[
               '--gx3-gold:#D5AE58',
               '--gx3-gold-hi:#F0D488',
