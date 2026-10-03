@@ -87,6 +87,7 @@ jobs:
           if [ -d public/assets/v27 ]; then cp -R public/assets/v27 .live-assets/assets/v27; fi
           if [ -d public/assets/v37 ]; then cp -R public/assets/v37 .live-assets/assets/v37; fi
           if [ -d public/assets/dashboard-v1 ]; then cp -R public/assets/dashboard-v1 .live-assets/assets/dashboard-v1; fi
+          if [ -d public/assets/overlays ]; then cp -R public/assets/overlays .live-assets/assets/overlays; fi
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
           python - <<'PY'
           from pathlib import Path
@@ -377,6 +378,7 @@ jobs:
 
           verify_candidate_asset "/assets/genesis-wordmark-v2.svg" "GENESIS wordmark asset"
           verify_candidate_asset "/assets/master-key-art-split-world-v1.webp" "Cinematic split-world hero asset"
+          verify_candidate_asset "/assets/overlays/world-compass-crest.svg" "WORLD overlay compass crest"
 
           if grep -q '/site-preview/' /tmp/candidate-home.html; then
             echo "::error::FAIL: preview-only path leaked into live candidate"
@@ -475,6 +477,7 @@ jobs:
           }
           verify_live_asset "/assets/genesis-wordmark-v2.svg" "Live GENESIS wordmark asset"
           verify_live_asset "/assets/master-key-art-split-world-v1.webp" "Live cinematic split-world hero asset"
+          verify_live_asset "/assets/overlays/world-compass-crest.svg" "Live WORLD overlay compass crest"
 
           ADMIN_STATUS="000"
           for attempt in 1 2 3 4 5; do
