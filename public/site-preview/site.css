@@ -14705,3 +14705,155 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DESKTOP RECOVERY MARKER: V36_STRUCTURE_CURRENT_ART */
+
+
+/* ==========================================================================
+   WORLD OVERLAY PROTOTYPE V1
+   Reference language: floating art + raised title plate + quiet caption body.
+   Isolated to .world-overlay-prototype; no other navigation tile is changed.
+   ========================================================================== */
+.web-ds-v2.genesis-home .world-nav-tile.world-overlay-prototype{
+  overflow:visible!important;
+  isolation:isolate!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  background:#07131e!important;
+  border-color:rgba(226,194,111,.86)!important;
+  box-shadow:
+    inset 0 0 0 2px rgba(2,8,14,.82),
+    inset 0 0 0 4px rgba(227,199,120,.07),
+    0 8px 18px rgba(0,0,0,.34)!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile.world-overlay-prototype::before{
+  inset:0!important;
+  border-radius:inherit;
+  background-image:
+    linear-gradient(180deg,rgba(1,7,13,.00) 0%,rgba(1,7,13,.08) 36%,rgba(2,8,15,.42) 62%,rgba(2,8,15,.94) 100%),
+    url('/assets/dashboard-v1/tile-world-desktop.webp')!important;
+  background-position:center 48%!important;
+  background-size:cover!important;
+  filter:saturate(1.08) contrast(1.04) brightness(1.06)!important;
+  transform:none!important;
+  z-index:0!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile.world-overlay-prototype::after{
+  inset:4px!important;
+  z-index:1!important;
+  border:1px solid rgba(247,224,151,.18)!important;
+  border-radius:2px!important;
+  pointer-events:none!important;
+}
+.web-ds-v2.genesis-home .world-overlay-crest{
+  position:absolute!important;
+  z-index:7!important;
+  top:-23px!important;
+  right:7px!important;
+  width:62px!important;
+  height:62px!important;
+  pointer-events:none!important;
+  filter:drop-shadow(0 6px 8px rgba(0,0,0,.54)) drop-shadow(0 0 8px rgba(86,174,255,.18));
+  transform:rotate(4deg);
+}
+.web-ds-v2.genesis-home .world-overlay-crest img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+}
+.web-ds-v2.genesis-home .world-overlay-nameplate{
+  position:absolute!important;
+  z-index:6!important;
+  left:8px!important;
+  right:28px!important;
+  bottom:29px!important;
+  min-height:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:4px 28px 4px 10px!important;
+  border:1px solid rgba(229,196,106,.88)!important;
+  border-radius:10px 5px 5px 10px!important;
+  background:
+    linear-gradient(180deg,rgba(34,51,70,.97),rgba(7,19,31,.98))!important;
+  box-shadow:
+    inset 0 1px rgba(255,244,204,.14),
+    inset 0 -8px 14px rgba(0,0,0,.19),
+    0 3px 7px rgba(0,0,0,.38)!important;
+}
+.web-ds-v2.genesis-home .world-overlay-nameplate::before{
+  content:"";
+  position:absolute;
+  left:8px;right:8px;bottom:2px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(238,209,125,.52),transparent);
+}
+.web-ds-v2.genesis-home .world-overlay-nameplate strong{
+  color:#fff7e4!important;
+  font:700 13px/1 Georgia,"Times New Roman",serif!important;
+  letter-spacing:.08em!important;
+  text-shadow:0 2px 2px #000,0 0 6px rgba(233,199,107,.16)!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile.world-overlay-prototype>small{
+  position:relative!important;
+  z-index:5!important;
+  width:100%!important;
+  min-height:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin:0!important;
+  padding:8px 6px 5px!important;
+  color:#d7e0e5!important;
+  background:linear-gradient(180deg,rgba(4,12,20,.22),rgba(3,10,17,.82))!important;
+  font-size:8px!important;
+  letter-spacing:.02em!important;
+  text-shadow:0 1px 2px #000!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile.world-overlay-prototype:hover{
+  transform:translateY(-2px);
+  border-color:#f1d579!important;
+  box-shadow:
+    inset 0 0 0 2px rgba(2,8,14,.78),
+    inset 0 0 0 4px rgba(227,199,120,.09),
+    0 10px 22px rgba(0,0,0,.40),
+    0 0 14px rgba(89,170,238,.12)!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile.world-overlay-prototype:hover .world-overlay-crest{
+  transform:translateY(-2px) rotate(1deg) scale(1.03);
+}
+
+@media(max-width:900px){
+  .web-ds-v2.genesis-home .world-nav-tile.world-overlay-prototype::before{
+    background-image:
+      linear-gradient(180deg,rgba(1,7,13,.00),rgba(1,7,13,.10) 38%,rgba(2,8,15,.48) 66%,rgba(2,8,15,.95) 100%),
+      url('/assets/dashboard-v1/tile-world-mobile.webp')!important;
+    background-position:center 46%!important;
+  }
+  .web-ds-v2.genesis-home .world-overlay-crest{
+    top:-14px!important;
+    right:8px!important;
+    width:48px!important;
+    height:48px!important;
+  }
+  .web-ds-v2.genesis-home .world-overlay-nameplate{
+    left:7px!important;
+    right:22px!important;
+    bottom:30px!important;
+    min-height:27px!important;
+    padding-right:22px!important;
+  }
+}
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .world-overlay-crest{
+    top:-10px!important;
+    right:5px!important;
+    width:42px!important;
+    height:42px!important;
+  }
+  .web-ds-v2.genesis-home .world-overlay-nameplate{
+    right:18px!important;
+  }
+}
+
+/* WORLD OVERLAY PROTOTYPE MARKER: V1 */
