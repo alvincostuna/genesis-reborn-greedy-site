@@ -516,6 +516,94 @@ jobs:
                 const design=await page.evaluate(({mode})=>{
                   const visible=el=>!!el&&getComputedStyle(el).display!=='none'&&getComputedStyle(el).visibility!=='hidden';
                   const rect=el=>el?.getBoundingClientRect();
+
+                  /* PORTAL V1 QA CONTRACT
+                     New homepage hierarchy:
+                     hero -> reader strip -> primary portals -> secondary portals
+                     -> story -> discovery -> community.
+                     Keep legacy dashboard checks below for non-portal designs. */
+                  const isPortalV1=document.body?.dataset?.designVersion==='portal-v1';
+                  if(isPortalV1){
+                    const issues=[];
+                    const hero=document.querySelector('.portal-hero');
+                    const heroCopy=document.querySelector('.portal-hero-copy');
+                    const heroCharacter=document.querySelector('.portal-hero-character');
+                    const statusStrip=document.querySelector('.portal-status-strip');
+                    const statuses=[...document.querySelectorAll('.portal-status-strip .portal-status')];
+                    const primary=document.querySelector('.portal-primary-grid');
+                    const world=document.querySelector('.portal-world');
+                    const characters=document.querySelector('.portal-characters');
+                    const monsters=document.querySelector('.portal-monsters');
+                    const codex=document.querySelector('.portal-codex');
+                    const secondary=document.querySelector('.portal-secondary-grid');
+                    const story=document.querySelector('.portal-story');
+                    const discovery=document.querySelector('.portal-discovery');
+                    const community=document.querySelector('.portal-community-grid');
+                    const worldCharacter=document.querySelector('.portal-world .portal-card-character');
+                    const primaryCtas=[...document.querySelectorAll('.portal-btn,.portal-card b,.portal-status a')].filter(visible);
+                    const required=[hero,heroCopy,statusStrip,primary,world,characters,monsters,codex,secondary,story,discovery,community];
+                    if(required.some(x=>!visible(x)))issues.push('portal hierarchy incomplete');
+                    if(statuses.length!==3)issues.push('portal reader strip must contain exactly 3 status cells');
+                    if(document.querySelector('.genesis-command-deck'))issues.push('legacy command deck still present in portal homepage');
+                    if(document.querySelector('.world-navigation-hub'))issues.push('legacy world-navigation hub still present in portal homepage');
+
+                    if(hero&&world&&characters&&monsters&&codex&&story&&discovery&&community){
+                      const hr=rect(hero),wr=rect(world),chr=rect(characters),mr=rect(monsters),cr=rect(codex),sr=rect(story),dr=rect(discovery),cor=rect(community);
+                      if(!(hr.bottom<=statusStrip.getBoundingClientRect().top+2))issues.push('reader strip overlaps hero');
+                      if(!(statusStrip.getBoundingClientRect().bottom<=primary.getBoundingClientRect().top+2))issues.push('primary portals overlap reader strip');
+                      if(!(secondary.getBoundingClientRect().bottom<=sr.top+2))issues.push('story overlaps secondary portals');
+                      if(!(sr.bottom<=dr.top+2))issues.push('discovery overlaps story');
+                      if(!(dr.bottom<=cor.top+2))issues.push('community overlaps discovery');
+
+                      if(mode.startsWith('desktop-')){
+                        if(hr.height<450)issues.push('desktop portal hero below 450px');
+                        if(hr.width<1100)issues.push('desktop portal hero too narrow');
+                        if(wr.width<=chr.width)issues.push('WORLD must be wider than CHARACTERS on desktop');
+                        if(wr.height<330)issues.push('WORLD portal below 330px');
+                        if(chr.height<250||mr.height<250||cr.height<250)issues.push('primary supporting portal below 250px');
+                        if(sr.height<320)issues.push('story banner below 320px');
+                        const heroTitle=document.querySelector('.portal-hero h1');
+                        if(!heroTitle||parseFloat(getComputedStyle(heroTitle).fontSize)<54)issues.push('desktop hero title below 54px');
+                        const worldTitle=document.querySelector('.portal-world h2');
+                        if(!worldTitle||parseFloat(getComputedStyle(worldTitle).fontSize)<30)issues.push('desktop WORLD title below 30px');
+                        const statusTitle=document.querySelector('.portal-status strong');
+                        if(!statusTitle||parseFloat(getComputedStyle(statusTitle).fontSize)<17)issues.push('desktop reader-strip primary text below 17px');
+                        if(worldCharacter&&visible(worldCharacter)){
+                          const or=rect(worldCharacter);
+                          if(or.top>=wr.top+8)issues.push('WORLD overlay does not break the portal frame');
+                          if(or.right>wr.right+80)issues.push('WORLD overlay escapes too far outside portal');
+                        }else issues.push('WORLD character overlay missing');
+                        const desktopTiny=[...document.querySelectorAll('.portal-shell h1,.portal-shell h2,.portal-shell h3,.portal-shell p,.portal-shell a,.portal-shell strong,.portal-shell b')]
+                          .filter(el=>visible(el)&&el.textContent.trim()&&parseFloat(getComputedStyle(el).fontSize)<9)
+                          .map(el=>el.textContent.trim().slice(0,28));
+                        if(desktopTiny.length)issues.push('portal desktop meaningful text below 9px: '+desktopTiny.slice(0,5).join(' | '));
+                      }else{
+                        if(hr.height<460)issues.push('mobile/tablet portal hero below 460px');
+                        if(mode.startsWith('mobile-')){
+                          const vw=document.documentElement.clientWidth;
+                          const cards=[world,characters,monsters,codex,...document.querySelectorAll('.portal-secondary-grid .portal-card'),...document.querySelectorAll('.portal-community-grid .portal-card')];
+                          for(const card of cards.filter(visible)){
+                            const r=rect(card);
+                            if(r.left<-2||r.right>vw+2)issues.push('portal card escapes mobile viewport');
+                          }
+                          if(rect(world).width<vw-28)issues.push('WORLD is not full-width enough on mobile');
+                          if(worldCharacter&&visible(worldCharacter)){
+                            const or=rect(worldCharacter);
+                            if(or.right>vw+2)issues.push('WORLD overlay clipped beyond mobile viewport');
+                          }
+                          for(const target of primaryCtas){
+                            const r=rect(target);
+                            if(r.height<40)issues.push('portal mobile CTA below 40px');
+                          }
+                          const heroActions=document.querySelector('.portal-hero-actions');
+                          if(heroActions&&rect(heroActions).width>vw-16)issues.push('hero actions exceed mobile safe width');
+                        }
+                      }
+                    }
+                    const overflow=document.documentElement.scrollWidth>document.documentElement.clientWidth+2;
+                    if(overflow)issues.push('portal horizontal overflow');
+                    return {issues,portal:true};
+                  }
                   const hero=document.querySelector('.cinematic-split-hero');
                   const media=document.querySelector('.cinematic-hero-media');
                   const deck=document.querySelector('.genesis-command-deck');
