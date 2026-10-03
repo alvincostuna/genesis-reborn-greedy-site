@@ -14857,3 +14857,58 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* WORLD OVERLAY PROTOTYPE MARKER: V1 */
+
+
+/* WORLD CHARACTER OVERLAY V2 — approved character-over-frame direction */
+.web-ds-v2.genesis-home .world-nav-tile.world-overlay-prototype{
+  overflow:visible!important;
+}
+.web-ds-v2.genesis-home .world-navigation-hub,
+.web-ds-v2.genesis-home .world-navigation-grid{
+  overflow:visible!important;
+}
+.web-ds-v2.genesis-home .world-overlay-crest{display:none!important}
+.web-ds-v2.genesis-home .world-overlay-character{
+  position:absolute!important;
+  z-index:9!important;
+  right:-7px!important;
+  top:-50px!important;
+  width:128px!important;
+  height:auto!important;
+  pointer-events:none!important;
+  filter:drop-shadow(0 8px 10px rgba(0,0,0,.62));
+  transform-origin:70% 80%;
+}
+.web-ds-v2.genesis-home .world-overlay-character img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  object-fit:contain!important;
+}
+.web-ds-v2.genesis-home .world-overlay-nameplate{
+  right:42px!important;
+}
+.web-ds-v2.genesis-home .world-nav-tile.world-overlay-prototype:hover .world-overlay-character{
+  transform:translateY(-3px) scale(1.025);
+}
+@media(max-width:900px){
+  .web-ds-v2.genesis-home .world-overlay-character{
+    right:-3px!important;
+    top:-34px!important;
+    width:96px!important;
+  }
+  .web-ds-v2.genesis-home .world-overlay-nameplate{
+    right:34px!important;
+  }
+}
+@media(max-width:620px){
+  .web-ds-v2.genesis-home .world-overlay-character{
+    right:-1px!important;
+    top:-26px!important;
+    width:82px!important;
+  }
+  .web-ds-v2.genesis-home .world-overlay-nameplate{
+    right:30px!important;
+  }
+}
+/* WORLD CHARACTER OVERLAY MARKER: V2 */
