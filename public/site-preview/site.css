@@ -14597,3 +14597,111 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .web-ds-v2.genesis-home .adventure-feed-panel .deck-prelaunch-state{color:#f4efe4!important;text-shadow:0 2px 4px rgba(0,0,0,.98)!important}
 .web-ds-v2.genesis-home .system-bulletin-list .deck-announcement-row{color:#f4efe4!important;text-shadow:0 2px 4px rgba(0,0,0,.98)!important}
 }
+
+
+/* ==========================================================================
+   DESKTOP RECOVERY — V3.6 STRUCTURE + CURRENT ART PACK
+   2026-10-04: restore the last stable reader-command geometry while retaining
+   dashboard-v1 category artwork and later mobile/admin fixes.
+   ========================================================================== */
+@media(min-width:901px){
+  .web-ds-v2.genesis-home .v2-brand{
+    width:300px!important;
+    min-width:300px!important;
+    padding-left:12px!important;
+    justify-content:flex-start!important;
+  }
+  .web-ds-v2.genesis-home .v2-brand img{
+    width:278px!important;
+    max-width:278px!important;
+    height:50px!important;
+    object-fit:contain!important;
+    object-position:left center!important;
+  }
+
+  /* Recover the key-art banner: keep the baked title out of the deck seam. */
+  .web-ds-v2.genesis-home .cinematic-split-hero{
+    height:320px!important;
+    min-height:320px!important;
+    max-height:320px!important;
+  }
+  .web-ds-v2.genesis-home .cinematic-hero-poster{
+    object-fit:cover!important;
+    object-position:center 32%!important;
+    transform:none!important;
+  }
+
+  .web-ds-v2 .genesis-player-console{
+    padding:22px 10px 10px!important;
+  }
+  .web-ds-v2 .console-crown{
+    top:-15px!important;
+    width:min(460px,48%)!important;
+  }
+
+  /* Restore V3.6 flexible desktop proportions instead of V3.7 fixed mini-panels. */
+  .web-ds-v2 .genesis-player-console .player-console-primary{
+    grid-template-columns:minmax(320px,.92fr) minmax(480px,1.48fr) minmax(330px,.94fr)!important;
+    gap:8px!important;
+  }
+  .web-ds-v2 .genesis-player-console .player-console-secondary{
+    grid-template-columns:minmax(0,1.62fr) minmax(390px,.98fr)!important;
+    gap:8px!important;
+  }
+  .web-ds-v2 .genesis-player-console .game-console-panel,
+  .web-ds-v2.genesis-home .genesis-player-console .player-console-primary>.game-console-panel{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+  }
+
+  .web-ds-v2 .release-monitor-main{
+    height:auto!important;
+    min-height:92px!important;
+    margin:9px 11px 5px!important;
+    padding:10px 10px 8px!important;
+  }
+  .web-ds-v2 .continue-adventure-body{
+    height:auto!important;
+    min-height:270px!important;
+    padding:13px 13px 11px!important;
+    grid-template-columns:minmax(0,1fr) minmax(230px,.88fr) 110px!important;
+    gap:12px!important;
+  }
+  .web-ds-v2 .reader-profile-state{
+    height:auto!important;
+    min-height:270px!important;
+    padding:11px 13px 10px!important;
+  }
+
+  .web-ds-v2 .adventure-feed-content{
+    min-height:108px!important;
+    margin:0 10px 9px!important;
+  }
+  .web-ds-v2 .adventure-feed-panel .deck-prelaunch-state,
+  .web-ds-v2 .adventure-feed-panel .deck-release-card{
+    min-height:100px!important;
+  }
+  .web-ds-v2 .world-navigation-grid{
+    grid-template-columns:repeat(9,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+  .web-ds-v2 .world-nav-tile{
+    min-height:94px!important;
+  }
+}
+
+/* Preserve a three-column desktop until the actual mobile breakpoint. */
+@media(min-width:1101px) and (max-width:1280px){
+  .web-ds-v2 .genesis-player-console .player-console-primary{
+    grid-template-columns:minmax(290px,.88fr) minmax(430px,1.42fr) minmax(300px,.92fr)!important;
+  }
+  .web-ds-v2 .continue-adventure-body{
+    grid-template-columns:minmax(0,1fr) minmax(210px,.82fr) 92px!important;
+    gap:9px!important;
+  }
+  .web-ds-v2 .world-navigation-grid{gap:4px!important}
+  .web-ds-v2 .world-nav-tile{min-height:88px!important}
+}
+
+/* DESKTOP RECOVERY MARKER: V36_STRUCTURE_CURRENT_ART */
