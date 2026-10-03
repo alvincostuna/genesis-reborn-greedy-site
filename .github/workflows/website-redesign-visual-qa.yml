@@ -540,7 +540,7 @@ jobs:
                     const discovery=document.querySelector('.portal-discovery');
                     const community=document.querySelector('.portal-community-grid');
                     const worldCharacter=document.querySelector('.portal-world .portal-card-character');
-                    const primaryCtas=[...document.querySelectorAll('.portal-btn,.portal-card b,.portal-status a')].filter(visible);
+                    const primaryCtas=[...document.querySelectorAll('.portal-btn,.portal-card,.portal-status a')].filter(visible);
                     const required=[hero,heroCopy,statusStrip,primary,world,characters,monsters,codex,secondary,story,discovery,community];
                     if(required.some(x=>!visible(x)))issues.push('portal hierarchy incomplete');
                     if(statuses.length!==3)issues.push('portal reader strip must contain exactly 3 status cells');
