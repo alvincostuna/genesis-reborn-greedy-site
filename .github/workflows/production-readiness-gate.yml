@@ -67,6 +67,7 @@ jobs:
           cp -R public/assets/v27 .readiness-live-assets/assets/v27
           if [ -d public/assets/v37 ]; then cp -R public/assets/v37 .readiness-live-assets/assets/v37; fi
           if [ -d public/assets/dashboard-v1 ]; then cp -R public/assets/dashboard-v1 .readiness-live-assets/assets/dashboard-v1; fi
+          if [ -d public/assets/overlays ]; then cp -R public/assets/overlays .readiness-live-assets/assets/overlays; fi
           python - <<'PY'
           from pathlib import Path
           for p in Path('.readiness-live-assets').rglob('*.html'):
