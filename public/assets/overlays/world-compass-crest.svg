@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title">
+<title id="title">Genesis world compass crest</title>
+<defs>
+  <radialGradient id="gem" cx="50%" cy="42%" r="58%">
+    <stop offset="0" stop-color="#9edcff"/>
+    <stop offset=".48" stop-color="#3d89c9"/>
+    <stop offset="1" stop-color="#0c2f53"/>
+  </radialGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#fff0a9"/>
+    <stop offset=".36" stop-color="#d9b55f"/>
+    <stop offset=".72" stop-color="#8e6927"/>
+    <stop offset="1" stop-color="#f0d783"/>
+  </linearGradient>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="2.2" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+<g fill="none" stroke="url(#gold)" stroke-width="4" stroke-linejoin="round" filter="url(#glow)">
+  <path d="M60 6 72 36 104 48 74 61 62 113 49 76 16 63 47 50Z" fill="#071522"/>
+  <circle cx="60" cy="60" r="24" fill="url(#gem)"/>
+  <path d="M60 22 68 52 98 60 68 68 60 98 52 68 22 60 52 52Z"/>
+  <circle cx="60" cy="60" r="7" fill="#d9eefb"/>
+</g>
+</svg>
