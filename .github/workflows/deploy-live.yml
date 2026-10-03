@@ -85,6 +85,7 @@ jobs:
           cp public/assets/genesis-wordmark-v2.svg .live-assets/assets/genesis-wordmark-v2.svg
           if [ -d public/assets/v25 ]; then cp -R public/assets/v25 .live-assets/assets/v25; fi
           if [ -d public/assets/v27 ]; then cp -R public/assets/v27 .live-assets/assets/v27; fi
+          if [ -d public/assets/v37 ]; then cp -R public/assets/v37 .live-assets/assets/v37; fi
           if [ -d public/assets/dashboard-v1 ]; then cp -R public/assets/dashboard-v1 .live-assets/assets/dashboard-v1; fi
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
           python - <<'PY'
@@ -308,6 +309,10 @@ jobs:
             echo "::error::FAIL: $LABEL unavailable after retries"
             return 1
           }
+
+          verify_candidate_asset "/assets/v37/nav-brand.svg" "V3.7 nav brand"
+          verify_candidate_asset "/assets/v37/panel-frame.svg" "V3.7 panel frame"
+          verify_candidate_asset "/assets/v37/ornate-divider.svg" "V3.7 ornate divider"
 
           dashboard_v1_assets=(
             "release-monitor-desktop.webp"
