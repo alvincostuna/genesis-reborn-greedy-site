@@ -65,6 +65,7 @@ jobs:
           cp public/assets/genesis-wordmark-v2.svg .readiness-live-assets/assets/genesis-wordmark-v2.svg
           cp -R public/assets/v25 .readiness-live-assets/assets/v25
           cp -R public/assets/v27 .readiness-live-assets/assets/v27
+          if [ -d public/assets/dashboard-v1 ]; then cp -R public/assets/dashboard-v1 .readiness-live-assets/assets/dashboard-v1; fi
           python - <<'PY'
           from pathlib import Path
           for p in Path('.readiness-live-assets').rglob('*.html'):
@@ -78,6 +79,145 @@ jobs:
           if find .readiness-live-assets -iname '*admin*' -print | grep -q .; then
             echo "::error::Admin asset leaked into public package"; exit 1
           fi
+
+      - name: Verify exact dashboard-v1 28-asset manifest
+        run: |
+          set -euo pipefail
+          expected=(
+            "release-monitor-desktop.webp"
+            "release-monitor-mobile.webp"
+            "continue-adventure-desktop.webp"
+            "continue-adventure-mobile.webp"
+            "reader-profile-desktop.webp"
+            "reader-profile-mobile.webp"
+            "adventure-feed-desktop.webp"
+            "adventure-feed-mobile.webp"
+            "system-bulletin-desktop.webp"
+            "system-bulletin-mobile.webp"
+            "tile-read-desktop.webp"
+            "tile-read-mobile.webp"
+            "tile-world-desktop.webp"
+            "tile-world-mobile.webp"
+            "tile-codex-desktop.webp"
+            "tile-codex-mobile.webp"
+            "tile-characters-desktop.webp"
+            "tile-characters-mobile.webp"
+            "tile-monsters-desktop.webp"
+            "tile-monsters-mobile.webp"
+            "tile-items-desktop.webp"
+            "tile-items-mobile.webp"
+            "tile-manga-desktop.webp"
+            "tile-manga-mobile.webp"
+            "tile-support-desktop.webp"
+            "tile-support-mobile.webp"
+            "tile-fan-page-desktop.webp"
+            "tile-fan-page-mobile.webp"
+          )
+          mapfile -t actual < <(find public/assets/dashboard-v1 -maxdepth 1 -type f -name '*.webp' -printf '%f\n' | sort)
+          mapfile -t wanted < <(printf '%s\n' "${expected[@]}" | sort)
+
+          echo "Expected WebP count: ${#wanted[@]}"
+          echo "Actual WebP count:   ${#actual[@]}"
+
+          missing="$(comm -23 <(printf '%s\n' "${wanted[@]}") <(printf '%s\n' "${actual[@]}") || true)"
+          extra="$(comm -13 <(printf '%s\n' "${wanted[@]}") <(printf '%s\n' "${actual[@]}") || true)"
+
+          if [ -n "$missing" ]; then
+            echo "::error::Missing dashboard-v1 WebP assets:"
+            printf '%s\n' "$missing"
+          fi
+          if [ -n "$extra" ]; then
+            echo "::error::Unexpected dashboard-v1 WebP assets:"
+            printf '%s\n' "$extra"
+          fi
+
+          if [ "${#wanted[@]}" -ne 28 ] || [ "${#actual[@]}" -ne 28 ] || [ -n "$missing" ] || [ -n "$extra" ]; then
+            exit 1
+          fi
+
+          {
+            echo "### Dashboard-v1 source manifest"
+            echo ""
+            echo "- Expected: 28 WebP assets"
+            echo "- Found: 28 WebP assets"
+            echo "- Missing: 0"
+            echo "- Unexpected: 0"
+            echo ""
+            echo "| # | Asset | Manifest |"
+            echo "|---:|---|---|"
+            i=1
+            for file in "${expected[@]}"; do
+              echo "| $i | `$file` | PASS |"
+              i=$((i+1))
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "PASS: dashboard-v1 source manifest is exactly 28/28 with no extras."
+
+      - name: Verify all 28 dashboard-v1 assets over HTTP
+        run: |
+          set -euo pipefail
+          expected=(
+            "release-monitor-desktop.webp"
+            "release-monitor-mobile.webp"
+            "continue-adventure-desktop.webp"
+            "continue-adventure-mobile.webp"
+            "reader-profile-desktop.webp"
+            "reader-profile-mobile.webp"
+            "adventure-feed-desktop.webp"
+            "adventure-feed-mobile.webp"
+            "system-bulletin-desktop.webp"
+            "system-bulletin-mobile.webp"
+            "tile-read-desktop.webp"
+            "tile-read-mobile.webp"
+            "tile-world-desktop.webp"
+            "tile-world-mobile.webp"
+            "tile-codex-desktop.webp"
+            "tile-codex-mobile.webp"
+            "tile-characters-desktop.webp"
+            "tile-characters-mobile.webp"
+            "tile-monsters-desktop.webp"
+            "tile-monsters-mobile.webp"
+            "tile-items-desktop.webp"
+            "tile-items-mobile.webp"
+            "tile-manga-desktop.webp"
+            "tile-manga-mobile.webp"
+            "tile-support-desktop.webp"
+            "tile-support-mobile.webp"
+            "tile-fan-page-desktop.webp"
+            "tile-fan-page-mobile.webp"
+          )
+          python3 -m http.server 4174 --directory .readiness-live-assets >/tmp/genesis-readiness-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" >/dev/null 2>&1 || true' EXIT
+
+          for attempt in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:4174/ >/dev/null; then break; fi
+            if [ "$attempt" -eq 20 ]; then
+              cat /tmp/genesis-readiness-http.log
+              echo "::error::Readiness HTTP server failed to start"
+              exit 1
+            fi
+            sleep 1
+          done
+
+          failed=0
+          echo "Dashboard-v1 readiness HTTP verification:"
+          for file in "${expected[@]}"; do
+            url="http://127.0.0.1:4174/assets/dashboard-v1/$file"
+            status="$(curl -sS -o /dev/null -w '%{http_code}' "$url" || true)"
+            if [ "$status" = "200" ]; then
+              echo "PASS 200 $file"
+            else
+              echo "::error::FAIL $status $file"
+              failed=1
+            fi
+          done
+          if [ "$failed" -ne 0 ]; then
+            echo "::error::One or more dashboard-v1 readiness assets failed HTTP 200 verification."
+            exit 1
+          fi
+          echo "PASS: all 28 dashboard-v1 readiness assets returned HTTP 200."
 
       - name: Upload readiness evidence
         if: always()
