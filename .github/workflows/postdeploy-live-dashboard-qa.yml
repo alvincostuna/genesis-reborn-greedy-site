@@ -97,3 +97,5 @@ jobs:
           git add qa-captures
           git commit -m "QA: capture live dashboard at locked viewports"
           git push
+
+# rerun-after-dashboard-v1-packaging
