@@ -65,6 +65,7 @@ jobs:
           cp public/assets/genesis-wordmark-v2.svg .readiness-live-assets/assets/genesis-wordmark-v2.svg
           cp -R public/assets/v25 .readiness-live-assets/assets/v25
           cp -R public/assets/v27 .readiness-live-assets/assets/v27
+          if [ -d public/assets/dashboard-v1 ]; then cp -R public/assets/dashboard-v1 .readiness-live-assets/assets/dashboard-v1; fi
           python - <<'PY'
           from pathlib import Path
           for p in Path('.readiness-live-assets').rglob('*.html'):
