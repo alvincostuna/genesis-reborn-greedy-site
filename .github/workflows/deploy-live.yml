@@ -85,6 +85,7 @@ jobs:
           cp public/assets/genesis-wordmark-v2.svg .live-assets/assets/genesis-wordmark-v2.svg
           if [ -d public/assets/v25 ]; then cp -R public/assets/v25 .live-assets/assets/v25; fi
           if [ -d public/assets/v27 ]; then cp -R public/assets/v27 .live-assets/assets/v27; fi
+          if [ -d public/assets/dashboard-v1 ]; then cp -R public/assets/dashboard-v1 .live-assets/assets/dashboard-v1; fi
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
           python - <<'PY'
           from pathlib import Path
@@ -253,6 +254,11 @@ jobs:
             echo "::error::FAIL: $LABEL unavailable after retries"
             return 1
           }
+
+          verify_candidate_asset "/assets/dashboard-v1/release-monitor-desktop.webp" "Dashboard V1 release desktop"
+          verify_candidate_asset "/assets/dashboard-v1/continue-adventure-desktop.webp" "Dashboard V1 continue desktop"
+          verify_candidate_asset "/assets/dashboard-v1/tile-codex-desktop.webp" "Dashboard V1 codex desktop"
+          verify_candidate_asset "/assets/dashboard-v1/tile-fan-page-mobile.webp" "Dashboard V1 fan mobile"
 
           verify_candidate_asset "/assets/genesis-wordmark-v2.svg" "GENESIS wordmark asset"
           verify_candidate_asset "/assets/master-key-art-split-world-v1.webp" "Cinematic split-world hero asset"
