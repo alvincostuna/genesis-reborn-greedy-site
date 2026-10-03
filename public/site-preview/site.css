@@ -15095,3 +15095,52 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .portal-home .portal-card-copy{width:76%}
 }
 /* PORTAL V1 BUILD MARKER */
+
+
+/* PORTAL V1 QA REPAIR PASS 1 */
+.portal-home .portal-world{
+  overflow:visible!important;
+  z-index:3;
+}
+.portal-home .portal-primary-grid{
+  overflow:visible!important;
+}
+.portal-home .portal-world .world-traveler{
+  top:-58px!important;
+  bottom:auto!important;
+  right:-8px!important;
+  width:min(43%,330px)!important;
+  z-index:8!important;
+}
+.portal-home .portal-status a{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:40px!important;
+  width:max-content;
+  padding-right:10px;
+}
+.portal-home .portal-fan-support{
+  background-image:
+    linear-gradient(90deg,rgba(2,8,14,.92),rgba(2,8,14,.16)),
+    url('/assets/dashboard-v1/tile-support-desktop.webp')!important;
+}
+@media(max-width:900px){
+  .portal-home .portal-world .world-traveler{
+    top:-34px!important;
+    right:0!important;
+    width:min(46%,190px)!important;
+  }
+  .portal-home .portal-status a{min-height:44px!important}
+  .portal-home .portal-fan-support{
+    background-image:
+      linear-gradient(90deg,rgba(2,8,14,.92),rgba(2,8,14,.16)),
+      url('/assets/dashboard-v1/tile-support-mobile.webp')!important;
+  }
+}
+@media(max-width:620px){
+  .portal-home .portal-world .world-traveler{
+    top:-26px!important;
+    width:min(44%,168px)!important;
+  }
+}
+/* PORTAL V1 QA REPAIR PASS 1 MARKER */
