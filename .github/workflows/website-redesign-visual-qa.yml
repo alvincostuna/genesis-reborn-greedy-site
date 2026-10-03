@@ -270,9 +270,13 @@ jobs:
             ['manga','/manga/']
           ];
           const viewports=[
-            ['desktop-1440',{width:1440,height:900}],
             ['desktop-1600',{width:1600,height:1000}],
+            ['desktop-1440',{width:1440,height:900}],
+            ['desktop-1200',{width:1200,height:900}],
+            ['desktop-1024',{width:1024,height:900}],
+            ['tablet-900',{width:900,height:1100}],
             ['tablet-768',{width:768,height:1024}],
+            ['tablet-620',{width:620,height:960}],
             ['mobile-430',{width:430,height:932}],
             ['mobile-390',{width:390,height:844}]
           ];
@@ -516,6 +520,119 @@ jobs:
                 const design=await page.evaluate(({mode})=>{
                   const visible=el=>!!el&&getComputedStyle(el).display!=='none'&&getComputedStyle(el).visibility!=='hidden';
                   const rect=el=>el?.getBoundingClientRect();
+
+                  /* BOX SKELETON V1 QA CONTRACT
+                     Geometry-only authority. No art/background/overlay judgement. */
+                  const isSkeletonV1=document.body?.dataset?.designVersion==='skeleton-v1';
+                  if(isSkeletonV1){
+                    const issues=[];
+                    const q=(sel)=>document.querySelector(sel);
+                    const qa=(sel)=>[...document.querySelectorAll(sel)];
+                    const hero=q('.skeleton-hero');
+                    const statusRow=q('.skeleton-status-row');
+                    const status=qa('.skeleton-status-row .skeleton-status');
+                    const primaryRows=qa('.skeleton-primary-row');
+                    const world=q('.skeleton-world');
+                    const characters=q('.skeleton-characters');
+                    const monsters=q('.skeleton-monsters');
+                    const codex=q('.skeleton-codex');
+                    const secondaryRow=q('.skeleton-secondary-row');
+                    const items=q('.skeleton-items');
+                    const manga=q('.skeleton-manga');
+                    const support=q('.skeleton-support');
+                    const story=q('.skeleton-story');
+                    const discoveryRow=q('.skeleton-discovery-row');
+                    const discovery=qa('.skeleton-discovery');
+                    const communityRow=q('.skeleton-community-row');
+                    const community=qa('.skeleton-community');
+                    const footer=q('.skeleton-footer');
+                    const required=[hero,statusRow,world,characters,monsters,codex,secondaryRow,items,manga,support,story,discoveryRow,communityRow,footer];
+                    if(required.some(x=>!visible(x)))issues.push('skeleton hierarchy incomplete');
+                    if(status.length!==3)issues.push('status cell count is not 3');
+                    if(primaryRows.length!==2)issues.push('primary row count is not 2');
+                    if(discovery.length!==3)issues.push('discovery card count is not 3');
+                    if(community.length!==2)issues.push('community card count is not 2');
+
+                    const width=document.documentElement.clientWidth;
+                    const minH=(el,n,label)=>{ if(el&&rect(el).height+1<n)issues.push(label+' below '+n+'px: '+rect(el).height.toFixed(1)); };
+                    const cols=(row,expected,label)=>{
+                      if(!row)return;
+                      const children=[...row.children].filter(visible);
+                      const tops=[...new Set(children.map(el=>Math.round(rect(el).top)))];
+                      const firstRow=children.filter(el=>Math.abs(rect(el).top-rect(children[0]).top)<3);
+                      if(expected===1){
+                        if(firstRow.length!==1)issues.push(label+' should stack to 1 column');
+                      }else if(firstRow.length!==expected){
+                        issues.push(label+' expected '+expected+' columns, got '+firstRow.length);
+                      }
+                    };
+
+                    let h={};
+                    if(width>=1440) h={hero:560,status:104,world:400,characters:400,monsters:330,codex:330,secondary:245,story:350,discovery:180,community:250,footer:96};
+                    else if(width>=1200) h={hero:520,status:100,world:380,characters:380,monsters:315,codex:315,secondary:235,story:335,discovery:175,community:240,footer:92};
+                    else if(width>=901) h={hero:480,status:96,world:350,characters:350,monsters:300,codex:300,secondary:225,story:320,discovery:165,community:230,footer:88};
+                    else if(width>=621) h={hero:500,status:86,world:320,characters:280,monsters:270,codex:250,secondary:210,support:220,story:320,discovery:170,community:230,footer:100};
+                    else h={hero:480,status:82,world:300,characters:260,monsters:250,codex:230,secondary:210,support:220,story:300,discovery:160,community:220,footer:100};
+
+                    minH(hero,h.hero,'hero');
+                    status.forEach((el,i)=>minH(el,h.status,'status '+(i+1)));
+                    minH(world,h.world,'WORLD');
+                    minH(characters,h.characters,'CHARACTERS');
+                    minH(monsters,h.monsters,'MONSTERS');
+                    minH(codex,h.codex,'CODEX');
+                    minH(items,h.secondary,'ITEMS');
+                    minH(manga,h.secondary,'MANGA');
+                    minH(support,h.support??h.secondary,'SUPPORT');
+                    minH(story,h.story,'CONTINUE STORY');
+                    discovery.forEach((el,i)=>minH(el,h.discovery,'discovery '+(i+1)));
+                    community.forEach((el,i)=>minH(el,h.community,'community '+(i+1)));
+                    minH(footer,h.footer,'footer');
+
+                    if(width>=901){
+                      cols(statusRow,3,'status row');
+                      primaryRows.forEach((row,i)=>cols(row,2,'primary row '+(i+1)));
+                      cols(secondaryRow,3,'secondary row');
+                      cols(discoveryRow,3,'discovery row');
+                      cols(communityRow,2,'community row');
+
+                      const wr=rect(world),chr=rect(characters),mr=rect(monsters),cr=rect(codex);
+                      if(width>=1200){
+                        const primaryShare=wr.width/(wr.width+chr.width);
+                        if(primaryShare<.565||primaryShare>.595)issues.push('desktop WORLD share not near 58%: '+primaryShare.toFixed(3));
+                        const monsterShare=mr.width/(mr.width+cr.width);
+                        if(monsterShare<.565||monsterShare>.595)issues.push('desktop MONSTERS share not near 58%: '+monsterShare.toFixed(3));
+                      }else{
+                        const primaryShare=wr.width/(wr.width+chr.width);
+                        if(primaryShare<.545||primaryShare>.575)issues.push('compact WORLD share not near 56%: '+primaryShare.toFixed(3));
+                      }
+                    }else{
+                      cols(statusRow,1,'status row');
+                      primaryRows.forEach((row,i)=>cols(row,1,'primary row '+(i+1)));
+                      cols(discoveryRow,1,'discovery row');
+                      cols(communityRow,1,'community row');
+                      cols(secondaryRow,width>=621?2:1,'secondary row');
+                      if(width>=621){
+                        const sr=rect(support),ir=rect(items);
+                        if(Math.abs(sr.width-secondaryRow.getBoundingClientRect().width)>4)issues.push('SUPPORT is not full-width in tablet secondary row');
+                        if(Math.abs(rect(items).width-rect(manga).width)>3)issues.push('ITEMS/MANGA tablet widths differ');
+                      }
+                    }
+
+                    // Hierarchy and annotations.
+                    if(rect(hero).height<=rect(world).height)issues.push('hero is not the largest vertical box');
+                    if(rect(world).height<rect(characters).height)issues.push('WORLD is not vertically dominant over CHARACTERS');
+                    const boxes=qa('.skeleton-box');
+                    for(const box of boxes){
+                      if(!box.dataset.name||!box.dataset.role||!box.dataset.desktop||!box.dataset.mobile)issues.push('placeholder annotation metadata missing');
+                    }
+                    if(qa('.skeleton-text-zone').length<10)issues.push('text-safe zone annotations missing');
+                    if(qa('.skeleton-overlay-zone').length<10)issues.push('overlay-safe zone annotations missing');
+                    if(document.querySelector('.portal-card-character,.portal-hero-character'))issues.push('final overlay art leaked into skeleton');
+                    if(getComputedStyle(hero).backgroundImage!=='none')issues.push('final background art leaked into hero skeleton');
+
+                    if(document.documentElement.scrollWidth>width+2)issues.push('skeleton horizontal overflow');
+                    return {issues,skeleton:true,width};
+                  }
 
                   /* PORTAL V1 QA CONTRACT
                      New homepage hierarchy:
