@@ -15144,3 +15144,180 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   }
 }
 /* PORTAL V1 QA REPAIR PASS 1 MARKER */
+
+
+/* ==========================================================================
+   PORTAL BOX SKELETON V1
+   Geometry-only review state. No backgrounds, no overlays, no final wording.
+   ========================================================================== */
+.box-skeleton-v1{
+  --skeleton-max:1500px;
+  --skeleton-gap-desktop:14px;
+  --skeleton-gap-compact:10px;
+  --skeleton-gap-mobile:8px;
+  --skeleton-pad-desktop:24px;
+  --skeleton-pad-tablet:14px;
+  --skeleton-pad-mobile:8px;
+  background:#05090e!important;
+}
+.box-skeleton-v1 .skeleton-shell{
+  width:min(var(--skeleton-max),calc(100% - 48px));
+  margin:0 auto;
+  padding:18px 0 28px;
+  display:grid;
+  gap:var(--skeleton-gap-desktop);
+}
+.box-skeleton-v1 .skeleton-status-row,
+.box-skeleton-v1 .skeleton-primary-row,
+.box-skeleton-v1 .skeleton-secondary-row,
+.box-skeleton-v1 .skeleton-discovery-row,
+.box-skeleton-v1 .skeleton-community-row{
+  display:grid;
+  gap:var(--skeleton-gap-desktop);
+}
+.box-skeleton-v1 .skeleton-status-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+.box-skeleton-v1 .skeleton-primary-row{grid-template-columns:58fr 42fr}
+.box-skeleton-v1 .skeleton-secondary-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+.box-skeleton-v1 .skeleton-discovery-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+.box-skeleton-v1 .skeleton-community-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+.box-skeleton-v1 .skeleton-box{
+  position:relative;
+  overflow:visible;
+  min-width:0;
+  padding:18px;
+  border:1px dashed #71808d;
+  border-radius:4px;
+  background:#101820!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  color:#d8e0e6;
+  isolation:isolate;
+}
+.box-skeleton-v1 .skeleton-box::before,
+.box-skeleton-v1 .skeleton-box::after{content:none!important}
+.box-skeleton-v1 .skeleton-spec{
+  position:relative;
+  z-index:4;
+  display:grid;
+  align-content:start;
+  width:min(340px,58%);
+  padding:12px 14px;
+  border:1px solid #5a6771;
+  background:rgba(5,10,15,.76);
+  font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+.box-skeleton-v1 .skeleton-spec strong{
+  margin-bottom:6px;
+  color:#fff;
+  font:700 18px/1.1 ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+.box-skeleton-v1 .skeleton-spec span{color:#aab5bd}
+.box-skeleton-v1 .skeleton-zone{
+  position:absolute;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px dashed;
+  font:700 10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  pointer-events:none;
+}
+.box-skeleton-v1 .skeleton-text-zone{
+  left:12px;bottom:12px;width:42%;height:34%;
+  border-color:#5f9b78;background:rgba(63,122,85,.10);color:#8cc39c;
+}
+.box-skeleton-v1 .skeleton-overlay-zone{
+  right:-8px;top:-12px;width:34%;height:40%;
+  border-color:#9a6f6f;background:rgba(140,74,74,.09);color:#c28e8e;
+}
+.box-skeleton-v1 .skeleton-hero{min-height:560px}
+.box-skeleton-v1 .skeleton-status{min-height:104px}
+.box-skeleton-v1 .skeleton-world,
+.box-skeleton-v1 .skeleton-characters{min-height:400px}
+.box-skeleton-v1 .skeleton-monsters,
+.box-skeleton-v1 .skeleton-codex{min-height:330px}
+.box-skeleton-v1 .skeleton-items,
+.box-skeleton-v1 .skeleton-manga,
+.box-skeleton-v1 .skeleton-support{min-height:245px}
+.box-skeleton-v1 .skeleton-story{min-height:350px}
+.box-skeleton-v1 .skeleton-discovery{min-height:180px}
+.box-skeleton-v1 .skeleton-community{min-height:250px}
+.box-skeleton-v1 .skeleton-footer{min-height:96px}
+.box-skeleton-v1 .skeleton-status .skeleton-zone{display:none}
+.box-skeleton-v1 .skeleton-footer .skeleton-zone{display:none}
+
+@media(min-width:1200px) and (max-width:1439px){
+  .box-skeleton-v1 .skeleton-hero{min-height:520px}
+  .box-skeleton-v1 .skeleton-status{min-height:100px}
+  .box-skeleton-v1 .skeleton-world,.box-skeleton-v1 .skeleton-characters{min-height:380px}
+  .box-skeleton-v1 .skeleton-monsters,.box-skeleton-v1 .skeleton-codex{min-height:315px}
+  .box-skeleton-v1 .skeleton-items,.box-skeleton-v1 .skeleton-manga,.box-skeleton-v1 .skeleton-support{min-height:235px}
+  .box-skeleton-v1 .skeleton-story{min-height:335px}
+  .box-skeleton-v1 .skeleton-discovery{min-height:175px}
+  .box-skeleton-v1 .skeleton-community{min-height:240px}
+  .box-skeleton-v1 .skeleton-footer{min-height:92px}
+}
+@media(min-width:901px) and (max-width:1199px){
+  .box-skeleton-v1 .skeleton-shell{width:calc(100% - 28px);gap:var(--skeleton-gap-compact)}
+  .box-skeleton-v1 .skeleton-status-row,
+  .box-skeleton-v1 .skeleton-primary-row,
+  .box-skeleton-v1 .skeleton-secondary-row,
+  .box-skeleton-v1 .skeleton-discovery-row,
+  .box-skeleton-v1 .skeleton-community-row{gap:var(--skeleton-gap-compact)}
+  .box-skeleton-v1 .skeleton-primary-row{grid-template-columns:56fr 44fr}
+  .box-skeleton-v1 .skeleton-hero{min-height:480px}
+  .box-skeleton-v1 .skeleton-status{min-height:96px}
+  .box-skeleton-v1 .skeleton-world,.box-skeleton-v1 .skeleton-characters{min-height:350px}
+  .box-skeleton-v1 .skeleton-monsters,.box-skeleton-v1 .skeleton-codex{min-height:300px}
+  .box-skeleton-v1 .skeleton-items,.box-skeleton-v1 .skeleton-manga,.box-skeleton-v1 .skeleton-support{min-height:225px}
+  .box-skeleton-v1 .skeleton-story{min-height:320px}
+  .box-skeleton-v1 .skeleton-discovery{min-height:165px}
+  .box-skeleton-v1 .skeleton-community{min-height:230px}
+  .box-skeleton-v1 .skeleton-footer{min-height:88px}
+}
+@media(max-width:900px){
+  .box-skeleton-v1 .skeleton-shell{width:calc(100% - 20px);gap:var(--skeleton-gap-mobile);padding-top:10px}
+  .box-skeleton-v1 .skeleton-status-row,
+  .box-skeleton-v1 .skeleton-primary-row,
+  .box-skeleton-v1 .skeleton-discovery-row,
+  .box-skeleton-v1 .skeleton-community-row{grid-template-columns:1fr;gap:var(--skeleton-gap-mobile)}
+  .box-skeleton-v1 .skeleton-secondary-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--skeleton-gap-mobile)}
+  .box-skeleton-v1 .skeleton-support{grid-column:1/-1}
+  .box-skeleton-v1 .skeleton-hero{min-height:500px}
+  .box-skeleton-v1 .skeleton-status{min-height:86px}
+  .box-skeleton-v1 .skeleton-world{min-height:320px}
+  .box-skeleton-v1 .skeleton-characters{min-height:280px}
+  .box-skeleton-v1 .skeleton-monsters{min-height:270px}
+  .box-skeleton-v1 .skeleton-codex{min-height:250px}
+  .box-skeleton-v1 .skeleton-items,.box-skeleton-v1 .skeleton-manga{min-height:210px}
+  .box-skeleton-v1 .skeleton-support{min-height:220px}
+  .box-skeleton-v1 .skeleton-story{min-height:320px}
+  .box-skeleton-v1 .skeleton-discovery{min-height:170px}
+  .box-skeleton-v1 .skeleton-community{min-height:230px}
+  .box-skeleton-v1 .skeleton-footer{min-height:100px}
+  .box-skeleton-v1 .skeleton-spec{width:min(360px,68%)}
+}
+@media(max-width:620px){
+  .box-skeleton-v1 .skeleton-shell{width:calc(100% - 16px)}
+  .box-skeleton-v1 .skeleton-secondary-row{grid-template-columns:1fr}
+  .box-skeleton-v1 .skeleton-support{grid-column:auto}
+  .box-skeleton-v1 .skeleton-hero{min-height:480px}
+  .box-skeleton-v1 .skeleton-status{min-height:82px}
+  .box-skeleton-v1 .skeleton-world{min-height:300px}
+  .box-skeleton-v1 .skeleton-characters{min-height:260px}
+  .box-skeleton-v1 .skeleton-monsters{min-height:250px}
+  .box-skeleton-v1 .skeleton-codex{min-height:230px}
+  .box-skeleton-v1 .skeleton-items,.box-skeleton-v1 .skeleton-manga{min-height:210px}
+  .box-skeleton-v1 .skeleton-support{min-height:220px}
+  .box-skeleton-v1 .skeleton-story{min-height:300px}
+  .box-skeleton-v1 .skeleton-discovery{min-height:160px}
+  .box-skeleton-v1 .skeleton-community{min-height:220px}
+  .box-skeleton-v1 .skeleton-footer{min-height:100px}
+  .box-skeleton-v1 .skeleton-spec{width:78%;font-size:11px}
+  .box-skeleton-v1 .skeleton-spec strong{font-size:16px}
+  .box-skeleton-v1 .skeleton-overlay-zone{right:-4px;top:-8px;width:32%;height:34%}
+  .box-skeleton-v1 .skeleton-text-zone{width:50%;height:30%}
+}
+/* BOX SKELETON V1 MARKER */
