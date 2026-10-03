@@ -188,7 +188,11 @@ jobs:
             exit 1
           fi
           grep -q 'The first adventure is being prepared.' public/site-preview/site.js
-          grep -q 'Begin your journey' public/site-preview/index.html
+          if grep -q 'data-design-version="skeleton-v1"' public/site-preview/index.html; then
+            grep -q 'Portal Box Skeleton V1' public/site-preview/index.html
+          else
+            grep -q 'Begin your journey' public/site-preview/index.html
+          fi
           grep -q 'Fog of War' public/site-preview/world/index.html
           grep -q 'SPOILER-SAFE' public/site-preview/codex/index.html
           grep -q '2-PART ADVANCE' public/site-preview/support/index.html
