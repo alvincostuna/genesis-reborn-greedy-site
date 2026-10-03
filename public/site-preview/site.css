@@ -14912,3 +14912,186 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   }
 }
 /* WORLD CHARACTER OVERLAY MARKER: V2 */
+
+
+/* ==========================================================================
+   GENESIS WORLD PORTAL V1
+   New-from-scratch homepage composition.
+   Background art -> readability gradient -> live text -> overlay subject.
+   ========================================================================== */
+.portal-home{background:#020812!important}
+.portal-home .portal-shell{
+  width:min(1500px,calc(100% - 24px));
+  margin:0 auto;
+  padding:10px 0 28px;
+  display:grid;
+  gap:12px;
+}
+.portal-home .portal-hero,
+.portal-home .portal-card,
+.portal-home .portal-story,
+.portal-home .portal-discovery-card,
+.portal-home .portal-status-strip{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(225,191,101,.78);
+  background:#07131e;
+  box-shadow:0 12px 30px rgba(0,0,0,.36),inset 0 0 0 2px rgba(255,229,151,.045);
+}
+.portal-home .portal-hero::after,
+.portal-home .portal-card::after,
+.portal-home .portal-story::after,
+.portal-home .portal-discovery-card::after{
+  content:"";
+  position:absolute;
+  inset:4px;
+  pointer-events:none;
+  border:1px solid rgba(246,220,145,.16);
+  z-index:2;
+}
+.portal-home .portal-hero{
+  min-height:520px;
+  display:flex;
+  align-items:center;
+  padding:60px 58px;
+  background:
+    linear-gradient(90deg,rgba(2,8,14,.96) 0%,rgba(2,8,14,.70) 31%,rgba(2,8,14,.14) 60%,rgba(2,8,14,.28) 100%),
+    url('/assets/master-key-art-split-world-v1.webp') center 46%/cover no-repeat;
+}
+.portal-home .portal-hero-copy{position:relative;z-index:5;max-width:620px}
+.portal-home .portal-kicker{color:#d8b45f;font:800 11px/1 Inter,Arial,sans-serif;letter-spacing:.18em}
+.portal-home .portal-hero h1{margin:12px 0 0;color:#f5e8bd;font:700 clamp(56px,7vw,104px)/.86 Georgia,serif;text-shadow:0 5px 18px #000}
+.portal-home .portal-hero h1 small{display:block;margin-top:10px;color:#efe9dc;font-size:.30em;letter-spacing:.12em}
+.portal-home .portal-hero p{margin:24px 0;color:#efe5d0;font:italic 25px/1.2 Georgia,serif;text-shadow:0 2px 5px #000}
+.portal-home .portal-hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.portal-home .portal-btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 28px;
+  border:1px solid rgba(227,194,103,.78);border-radius:4px;
+  background:linear-gradient(180deg,rgba(18,37,54,.96),rgba(5,16,27,.98));
+  color:#f2e5bc!important;text-decoration:none!important;font:700 14px/1 Georgia,serif;letter-spacing:.04em;
+  box-shadow:inset 0 1px rgba(255,255,255,.06),0 6px 16px rgba(0,0,0,.28);
+}
+.portal-home .portal-btn-primary{
+  background:linear-gradient(180deg,#f3d77b,#c59637)!important;color:#1a1208!important;border-color:#f7df91!important;
+}
+.portal-home .portal-hero-character{
+  position:absolute;z-index:6;right:-10px;bottom:-10px;width:min(44vw,610px);max-height:520px;object-fit:contain;
+  filter:drop-shadow(0 18px 28px rgba(0,0,0,.58));
+}
+
+.portal-home .portal-status-strip{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));min-height:94px;
+  background:linear-gradient(180deg,#071827,#03101a);
+}
+.portal-home .portal-status{display:grid;grid-template-columns:54px 1fr;gap:12px;align-items:center;padding:14px 20px;border-right:1px solid rgba(221,188,99,.24);min-width:0}
+.portal-home .portal-status:last-child{border-right:0}
+.portal-home .portal-status>span{display:grid;place-items:center;width:50px;height:50px;border:1px solid rgba(220,188,101,.55);border-radius:8px;color:#f0cf6f;font-size:24px}
+.portal-home .portal-status div{min-width:0;display:grid;gap:3px}
+.portal-home .portal-status small{color:#d0b46d;font:800 8px/1 Inter,sans-serif;letter-spacing:.11em}
+.portal-home .portal-status strong{color:#f2ede3;font:700 20px/1.05 Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.portal-home .portal-status b,.portal-home .portal-status em{color:#aebbc4;font:500 10px/1.2 Inter,sans-serif;font-style:normal}
+.portal-home .portal-status a{color:#d8b45f;font:700 10px/1 Inter,sans-serif;text-decoration:none}
+
+.portal-home .portal-primary-grid{
+  display:grid;
+  grid-template-columns:1.25fr .85fr;
+  grid-template-areas:
+    "world characters"
+    "monsters codex";
+  gap:12px;
+}
+.portal-home .portal-secondary-grid{display:grid;grid-template-columns:1.1fr .9fr .9fr;gap:12px}
+.portal-home .portal-community-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.portal-home .portal-card{
+  min-height:285px;
+  display:flex;align-items:flex-end;
+  color:#fff!important;text-decoration:none!important;
+  background-position:center;background-size:cover;background-repeat:no-repeat;
+}
+.portal-home .portal-world{grid-area:world;min-height:360px;background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.28) 52%,rgba(2,8,14,.14)),url('/assets/dashboard-v1/tile-world-desktop.webp')}
+.portal-home .portal-characters{grid-area:characters;background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-characters-desktop.webp')}
+.portal-home .portal-monsters{grid-area:monsters;background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-monsters-desktop.webp')}
+.portal-home .portal-codex{grid-area:codex;background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.16)),url('/assets/dashboard-v1/tile-codex-desktop.webp')}
+.portal-home .portal-items{background-image:linear-gradient(90deg,rgba(2,8,14,.88),rgba(2,8,14,.12)),url('/assets/dashboard-v1/tile-items-desktop.webp')}
+.portal-home .portal-manga{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.14)),url('/assets/dashboard-v1/tile-manga-desktop.webp')}
+.portal-home .portal-support{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.14)),url('/assets/dashboard-v1/tile-support-desktop.webp')}
+.portal-home .portal-community{background-image:linear-gradient(90deg,rgba(2,8,14,.92),rgba(2,8,14,.16)),url('/assets/dashboard-v1/tile-fan-page-desktop.webp')}
+.portal-home .portal-fan-support{background-image:linear-gradient(90deg,rgba(2,8,14,.92),rgba(2,8,14,.16)),url('/assets/dashboard-v1/support-tile-desktop.webp')}
+.portal-home .portal-card-copy{position:relative;z-index:5;width:min(58%,520px);padding:30px 30px 26px}
+.portal-home .portal-card-copy>span{color:#e9c861;font-size:28px}
+.portal-home .portal-card h2{margin:4px 0 8px;color:#f5e4ad;font:700 clamp(28px,3vw,48px)/1 Georgia,serif;text-shadow:0 3px 10px #000}
+.portal-home .portal-card p{margin:0 0 18px;color:#d7dfe4;font:500 13px/1.45 Inter,Arial,sans-serif;text-shadow:0 2px 4px #000}
+.portal-home .portal-card b{display:inline-block;padding:10px 15px;border:1px solid rgba(222,189,99,.62);border-radius:4px;background:rgba(2,11,19,.72);color:#f0ddb0;font:700 11px/1 Inter,sans-serif}
+.portal-home .portal-card-character{
+  position:absolute;z-index:6;pointer-events:none;filter:drop-shadow(0 12px 18px rgba(0,0,0,.58));
+}
+.portal-home .world-traveler{right:-8px;bottom:-4px;width:min(45%,360px)}
+
+.portal-home .portal-story{
+  min-height:350px;
+  display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:stretch;
+  background:
+    linear-gradient(90deg,rgba(3,10,18,.94),rgba(3,10,18,.58) 45%,rgba(3,10,18,.18)),
+    url('/assets/dashboard-v1/continue-adventure-desktop.webp') center/cover no-repeat;
+}
+.portal-home .portal-story-copy{position:relative;z-index:5;padding:48px 42px;align-self:center}
+.portal-home .portal-story-copy>span{color:#d9b95d;font:800 11px/1 Inter,sans-serif;letter-spacing:.08em}
+.portal-home .portal-story h2{margin:12px 0 4px;color:#f1eadf;font:700 36px/1 Georgia,serif}
+.portal-home .portal-story h3{margin:0 0 14px;color:#e8d199;font:700 22px/1.1 Georgia,serif}
+.portal-home .portal-story p{max-width:560px;color:#cbd5dc;font:500 13px/1.5 Inter,sans-serif}
+.portal-home .portal-story-art{position:relative;z-index:4;min-height:350px}
+
+.portal-home .portal-discovery{padding-top:2px}
+.portal-home .portal-discovery>header{display:flex;justify-content:space-between;align-items:center;padding:4px 6px 8px}
+.portal-home .portal-discovery>header h2{margin:0;color:#f0dfb2;font:700 20px/1 Georgia,serif}
+.portal-home .portal-discovery>header a{color:#d1b15f;font:700 10px/1 Inter,sans-serif;text-decoration:none}
+.portal-home .portal-discovery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.portal-home .portal-discovery-card{
+  min-height:155px;padding:80px 18px 15px;display:grid;align-content:end;color:#fff!important;text-decoration:none!important;background-size:cover;background-position:center;
+}
+.portal-home .discovery-region{background-image:linear-gradient(180deg,transparent,rgba(2,8,14,.94)),url('/assets/dashboard-v1/tile-world-desktop.webp')}
+.portal-home .discovery-monster{background-image:linear-gradient(180deg,transparent,rgba(2,8,14,.94)),url('/assets/dashboard-v1/tile-monsters-desktop.webp')}
+.portal-home .discovery-item{background-image:linear-gradient(180deg,transparent,rgba(2,8,14,.94)),url('/assets/dashboard-v1/tile-items-desktop.webp')}
+.portal-home .portal-discovery-card small{position:relative;z-index:4;color:#dfbd57;font:800 8px/1 Inter,sans-serif;letter-spacing:.08em}
+.portal-home .portal-discovery-card strong{position:relative;z-index:4;margin-top:4px;color:#f1e5c8;font:700 18px/1.05 Georgia,serif}
+.portal-home .portal-discovery-card span{position:relative;z-index:4;margin-top:5px;color:#c9d4da;font:500 10px/1.3 Inter,sans-serif}
+
+.portal-home .portal-runtime-compat{display:none!important}
+
+@media(max-width:900px){
+  .portal-home .portal-shell{width:calc(100% - 12px);padding-bottom:92px;gap:8px}
+  .portal-home .portal-hero{min-height:520px;padding:34px 22px;align-items:flex-start;background-image:linear-gradient(180deg,rgba(2,8,14,.34),rgba(2,8,14,.68) 52%,rgba(2,8,14,.96)),url('/assets/dashboard-v1/continue-adventure-mobile.webp')}
+  .portal-home .portal-hero-copy{max-width:100%}
+  .portal-home .portal-hero h1{font-size:54px}
+  .portal-home .portal-hero p{font-size:20px}
+  .portal-home .portal-hero-character{width:88%;max-height:340px;right:-17%;bottom:-12px}
+  .portal-home .portal-status-strip{grid-template-columns:1fr}
+  .portal-home .portal-status{border-right:0;border-bottom:1px solid rgba(221,188,99,.20)}
+  .portal-home .portal-primary-grid{grid-template-columns:1fr;grid-template-areas:"world" "characters" "monsters" "codex"}
+  .portal-home .portal-secondary-grid,.portal-home .portal-community-grid{grid-template-columns:1fr 1fr}
+  .portal-home .portal-support{grid-column:1/-1}
+  .portal-home .portal-card{min-height:230px}
+  .portal-home .portal-world{min-height:310px;background-image:linear-gradient(90deg,rgba(2,8,14,.88),rgba(2,8,14,.20)),url('/assets/dashboard-v1/tile-world-mobile.webp')}
+  .portal-home .portal-characters{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-characters-mobile.webp')}
+  .portal-home .portal-monsters{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-monsters-mobile.webp')}
+  .portal-home .portal-codex{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-codex-mobile.webp')}
+  .portal-home .portal-items{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-items-mobile.webp')}
+  .portal-home .portal-manga{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-manga-mobile.webp')}
+  .portal-home .portal-support{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-support-mobile.webp')}
+  .portal-home .portal-card-copy{width:70%;padding:24px 20px 20px}
+  .portal-home .portal-card h2{font-size:30px}
+  .portal-home .world-traveler{width:48%;right:-4px}
+  .portal-home .portal-story{grid-template-columns:1fr;min-height:330px;background-image:linear-gradient(180deg,rgba(3,10,18,.75),rgba(3,10,18,.94)),url('/assets/dashboard-v1/continue-adventure-mobile.webp')}
+  .portal-home .portal-story-copy{padding:34px 24px}
+  .portal-home .portal-story-art{display:none}
+  .portal-home .portal-discovery-grid{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+  .portal-home .portal-secondary-grid,.portal-home .portal-community-grid{grid-template-columns:1fr}
+  .portal-home .portal-hero{min-height:500px}
+  .portal-home .portal-hero h1{font-size:46px}
+  .portal-home .portal-hero-actions{display:grid;grid-template-columns:1fr}
+  .portal-home .portal-btn{width:100%}
+  .portal-home .portal-card-copy{width:76%}
+}
+/* PORTAL V1 BUILD MARKER */
