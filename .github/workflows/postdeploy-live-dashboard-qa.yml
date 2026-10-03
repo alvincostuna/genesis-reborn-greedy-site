@@ -25,7 +25,7 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Capture live viewports
         run: |
-          cat > /tmp/capture-live.mjs <<'JS'
+          cat > capture-live.mjs <<'JS'
           import { chromium } from 'playwright';
           import fs from 'node:fs';
           const url='https://genesis-reborn-greedy.hirangnalupa.workers.dev/';
@@ -89,7 +89,7 @@ jobs:
           fs.writeFileSync('qa-captures/report.json',JSON.stringify(report,null,2));
           console.log(JSON.stringify(report,null,2));
           JS
-          node /tmp/capture-live.mjs
+          node capture-live.mjs
       - name: Commit live QA captures
         run: |
           git config user.name "genesis-qa-bot"
