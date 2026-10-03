@@ -78,6 +78,36 @@ jobs:
                   objectFit:style(q('.cinematic-hero-poster')).objectFit,
                   objectPosition:style(q('.cinematic-hero-poster')).objectPosition,
                   transform:style(q('.cinematic-hero-poster')).transform
+                }:null,
+                feedDebug:q('.adventure-feed-content')?{
+                  html:q('.adventure-feed-content').innerHTML,
+                  display:style(q('.adventure-feed-content')).display,
+                  color:style(q('.adventure-feed-content')).color,
+                  zIndex:style(q('.adventure-feed-content')).zIndex,
+                  opacity:style(q('.adventure-feed-content')).opacity,
+                  child:q('.adventure-feed-content').firstElementChild?{
+                    cls:q('.adventure-feed-content').firstElementChild.className,
+                    display:style(q('.adventure-feed-content').firstElementChild).display,
+                    color:style(q('.adventure-feed-content').firstElementChild).color,
+                    zIndex:style(q('.adventure-feed-content').firstElementChild).zIndex,
+                    opacity:style(q('.adventure-feed-content').firstElementChild).opacity,
+                    visibility:style(q('.adventure-feed-content').firstElementChild).visibility
+                  }:null
+                }:null,
+                bulletinDebug:q('.system-bulletin-list')?{
+                  html:q('.system-bulletin-list').innerHTML,
+                  display:style(q('.system-bulletin-list')).display,
+                  color:style(q('.system-bulletin-list')).color,
+                  zIndex:style(q('.system-bulletin-list')).zIndex,
+                  opacity:style(q('.system-bulletin-list')).opacity,
+                  first:q('.system-bulletin-list').firstElementChild?{
+                    cls:q('.system-bulletin-list').firstElementChild.className,
+                    display:style(q('.system-bulletin-list').firstElementChild).display,
+                    color:style(q('.system-bulletin-list').firstElementChild).color,
+                    zIndex:style(q('.system-bulletin-list').firstElementChild).zIndex,
+                    opacity:style(q('.system-bulletin-list').firstElementChild).opacity,
+                    visibility:style(q('.system-bulletin-list').firstElementChild).visibility
+                  }:null
                 }:null
               };
             });
@@ -103,4 +133,5 @@ jobs:
 # rerun-after-dashboard-v1-packaging
 
 
-# visual-repair-live-rerun
+
+# mobile-content-debug
