@@ -15,7 +15,7 @@
   <link rel="preload" as="image" href="/assets/v27/rewards/early-genesis-world-panorama.webp" fetchpriority="high">
   <link rel="preload" as="image" href="/assets/v27/rewards/maya-villareal.webp" fetchpriority="high">
 </head>
-<body data-page="home" data-home-layout="world-portal-v1" data-design-version="portal-v1" class="genesis-home web-ds-v2 portal-home">
+<body data-page="home" data-home-layout="portal-box-skeleton-v1" data-design-version="skeleton-v1" class="genesis-home web-ds-v2 portal-home box-skeleton-v1">
   <header class="game-nav v2-nav">
     <button class="v2-mobile-menu" type="button" aria-label="Open navigation">☰</button>
     <a class="game-brand v2-brand" href="/site-preview/" aria-label="GENESIS: REBORN GREEDY home">
@@ -42,83 +42,267 @@
     </div>
   </header>
 
-  <main class="portal-shell">
-    <section class="portal-hero" aria-label="GENESIS: REBORN GREEDY">
-      <div class="portal-hero-copy">
-        <span class="portal-kicker">OFFICIAL LIGHT NOVEL</span>
-        <h1>GENESIS <small>REBORN GREEDY</small></h1>
-        <p>A Second Life. One Future to Forge.</p>
-        <div class="portal-hero-actions">
-          <a class="portal-btn portal-btn-primary" href="/site-preview/read/">▤ READ NOW</a>
-          <a class="portal-btn" href="/site-preview/world/">✧ EXPLORE WORLD</a>
+  <main class="portal-shell skeleton-shell" aria-label="Portal Box Skeleton V1">
+    
+      <section class="skeleton-box skeleton-hero" data-name="HERO" data-role="Primary identity" data-desktop="100% × 560px" data-mobile="100% × 480px">
+        <div class="skeleton-zone skeleton-text-zone">left 40%</div>
+        <div class="skeleton-zone skeleton-overlay-zone">right 35%, top/right/bottom overflow</div>
+        <div class="skeleton-spec">
+          <strong>HERO</strong>
+          <span>Primary identity</span>
+          <span>Desktop: 100% × 560px</span>
+          <span>Mobile: 100% × 480px</span>
+          <span>Text-safe: left 40%</span>
+          <span>Overlay-safe: right 35%, top/right/bottom overflow</span>
         </div>
-      </div>
-      <img class="portal-hero-character" src="/assets/overlays/world-traveler-overlay.svg" alt="" aria-hidden="true">
+      </section>
+    <section class="skeleton-status-row" aria-label="Status strip">
+      
+      <section class="skeleton-box skeleton-status" data-name="NEXT RELEASE" data-role="Status cell" data-desktop="1/3 × 104px" data-mobile="100% × 82px">
+        <div class="skeleton-zone skeleton-text-zone">center</div>
+        <div class="skeleton-zone skeleton-overlay-zone">none</div>
+        <div class="skeleton-spec">
+          <strong>NEXT RELEASE</strong>
+          <span>Status cell</span>
+          <span>Desktop: 1/3 × 104px</span>
+          <span>Mobile: 100% × 82px</span>
+          <span>Text-safe: center</span>
+          <span>Overlay-safe: none</span>
+        </div>
+      </section>
+      
+      <section class="skeleton-box skeleton-status" data-name="CONTINUE READING" data-role="Status cell" data-desktop="1/3 × 104px" data-mobile="100% × 82px">
+        <div class="skeleton-zone skeleton-text-zone">center</div>
+        <div class="skeleton-zone skeleton-overlay-zone">none</div>
+        <div class="skeleton-spec">
+          <strong>CONTINUE READING</strong>
+          <span>Status cell</span>
+          <span>Desktop: 1/3 × 104px</span>
+          <span>Mobile: 100% × 82px</span>
+          <span>Text-safe: center</span>
+          <span>Overlay-safe: none</span>
+        </div>
+      </section>
+      
+      <section class="skeleton-box skeleton-status" data-name="READER PROFILE" data-role="Status cell" data-desktop="1/3 × 104px" data-mobile="100% × 82px">
+        <div class="skeleton-zone skeleton-text-zone">center</div>
+        <div class="skeleton-zone skeleton-overlay-zone">none</div>
+        <div class="skeleton-spec">
+          <strong>READER PROFILE</strong>
+          <span>Status cell</span>
+          <span>Desktop: 1/3 × 104px</span>
+          <span>Mobile: 100% × 82px</span>
+          <span>Text-safe: center</span>
+          <span>Overlay-safe: none</span>
+        </div>
+      </section>
     </section>
 
-    <section id="home-release-command" class="portal-status-strip" aria-label="Reader status">
-      <div class="portal-status">
-        <span>◷</span><div><small>NEXT RELEASE</small><strong id="home-release-time">-- PHT</strong><b id="home-release-part">Next verified Part</b><em id="home-release-state">CHECKING RELEASE</em></div>
-      </div>
-      <div class="portal-status">
-        <span>▤</span><div><small>CONTINUE READING</small><strong id="home-reading-title">Begin your journey</strong><b id="home-reading-episode">Reader progress</b><a id="home-reading-continue" href="/site-preview/read/?start=1">Continue →</a></div>
-      </div>
-      <div class="portal-status">
-        <span>♙</span><div><small>READER PROFILE</small><strong>Sign In to Sync</strong><b>Your progress, favorites, and rewards.</b><a href="/site-preview/account/">Account →</a></div>
-      </div>
-      <span id="home-countdown-hours" hidden>--</span><span id="home-countdown-minutes" hidden>--</span><span id="home-countdown-seconds" hidden>--</span>
-      <span id="home-release-detail" hidden>3 Parts · Monday–Saturday</span>
+    <section class="skeleton-primary-row">
+      
+      <section class="skeleton-box skeleton-world" data-name="WORLD" data-role="Primary portal" data-desktop="58% × 400px" data-mobile="100% × 300px">
+        <div class="skeleton-zone skeleton-text-zone">left 45%</div>
+        <div class="skeleton-zone skeleton-overlay-zone">top-right</div>
+        <div class="skeleton-spec">
+          <strong>WORLD</strong>
+          <span>Primary portal</span>
+          <span>Desktop: 58% × 400px</span>
+          <span>Mobile: 100% × 300px</span>
+          <span>Text-safe: left 45%</span>
+          <span>Overlay-safe: top-right</span>
+        </div>
+      </section>
+      
+      <section class="skeleton-box skeleton-characters" data-name="CHARACTERS" data-role="Primary portal" data-desktop="42% × 400px" data-mobile="100% × 260px">
+        <div class="skeleton-zone skeleton-text-zone">lower-left</div>
+        <div class="skeleton-zone skeleton-overlay-zone">top-left + top-right</div>
+        <div class="skeleton-spec">
+          <strong>CHARACTERS</strong>
+          <span>Primary portal</span>
+          <span>Desktop: 42% × 400px</span>
+          <span>Mobile: 100% × 260px</span>
+          <span>Text-safe: lower-left</span>
+          <span>Overlay-safe: top-left + top-right</span>
+        </div>
+      </section>
     </section>
 
-    <section class="portal-primary-grid" aria-label="Explore Genesis">
-      <a class="portal-card portal-world" href="/site-preview/world/">
-        <div class="portal-card-copy"><span>✧</span><h2>WORLD</h2><p>Explore regions, cities, dungeons, and the world of Genesis.</p><b>Explore World →</b></div>
-        <img class="portal-card-character world-traveler" src="/assets/overlays/world-traveler-overlay.svg" alt="" aria-hidden="true">
-      </a>
-      <a class="portal-card portal-characters" href="/site-preview/codex/?type=npc">
-        <div class="portal-card-copy"><span>♙</span><h2>CHARACTERS</h2><p>Meet the people who shape the story.</p><b>View Characters →</b></div>
-      </a>
-      <a class="portal-card portal-monsters" href="/site-preview/codex/?type=monster">
-        <div class="portal-card-copy"><span>✦</span><h2>MONSTERS</h2><p>Discover the creatures and enemies of Genesis.</p><b>Browse Monsters →</b></div>
-      </a>
-      <a class="portal-card portal-codex" href="/site-preview/codex/">
-        <div class="portal-card-copy"><span>▤</span><h2>CODEX</h2><p>Lore, encyclopedia, factions, systems, and more.</p><b>Open Codex →</b></div>
-      </a>
+    <section class="skeleton-primary-row">
+      
+      <section class="skeleton-box skeleton-monsters" data-name="MONSTERS" data-role="Primary portal" data-desktop="58% × 330px" data-mobile="100% × 250px">
+        <div class="skeleton-zone skeleton-text-zone">lower-left</div>
+        <div class="skeleton-zone skeleton-overlay-zone">top-right</div>
+        <div class="skeleton-spec">
+          <strong>MONSTERS</strong>
+          <span>Primary portal</span>
+          <span>Desktop: 58% × 330px</span>
+          <span>Mobile: 100% × 250px</span>
+          <span>Text-safe: lower-left</span>
+          <span>Overlay-safe: top-right</span>
+        </div>
+      </section>
+      
+      <section class="skeleton-box skeleton-codex" data-name="CODEX" data-role="Primary portal" data-desktop="42% × 330px" data-mobile="100% × 230px">
+        <div class="skeleton-zone skeleton-text-zone">left 45%</div>
+        <div class="skeleton-zone skeleton-overlay-zone">bottom-right</div>
+        <div class="skeleton-spec">
+          <strong>CODEX</strong>
+          <span>Primary portal</span>
+          <span>Desktop: 42% × 330px</span>
+          <span>Mobile: 100% × 230px</span>
+          <span>Text-safe: left 45%</span>
+          <span>Overlay-safe: bottom-right</span>
+        </div>
+      </section>
     </section>
 
-    <section class="portal-secondary-grid" aria-label="More destinations">
-      <a class="portal-card portal-items" href="/site-preview/codex/?type=equipment"><div class="portal-card-copy"><span>⚒</span><h2>ITEMS</h2><p>Weapons, armor, accessories, materials, and more.</p><b>View Items →</b></div></a>
-      <a class="portal-card portal-manga" href="/site-preview/manga/"><div class="portal-card-copy"><span>▣</span><h2>MANGA</h2><p>Illustrations and manga content.</p><b>Read Manga →</b></div></a>
-      <a class="portal-card portal-support" href="/site-preview/support/"><div class="portal-card-copy"><span>♥</span><h2>SUPPORT</h2><p>Help, information, support, and contact.</p><b>Support Genesis →</b></div></a>
+    <section class="skeleton-secondary-row">
+      
+      <section class="skeleton-box skeleton-items" data-name="ITEMS" data-role="Secondary portal" data-desktop="1/3 × 245px" data-mobile="100% × 210px">
+        <div class="skeleton-zone skeleton-text-zone">left/bottom</div>
+        <div class="skeleton-zone skeleton-overlay-zone">diagonal corner</div>
+        <div class="skeleton-spec">
+          <strong>ITEMS</strong>
+          <span>Secondary portal</span>
+          <span>Desktop: 1/3 × 245px</span>
+          <span>Mobile: 100% × 210px</span>
+          <span>Text-safe: left/bottom</span>
+          <span>Overlay-safe: diagonal corner</span>
+        </div>
+      </section>
+      
+      <section class="skeleton-box skeleton-manga" data-name="MANGA" data-role="Secondary portal" data-desktop="1/3 × 245px" data-mobile="100% × 210px">
+        <div class="skeleton-zone skeleton-text-zone">left/bottom</div>
+        <div class="skeleton-zone skeleton-overlay-zone">top-right</div>
+        <div class="skeleton-spec">
+          <strong>MANGA</strong>
+          <span>Secondary portal</span>
+          <span>Desktop: 1/3 × 245px</span>
+          <span>Mobile: 100% × 210px</span>
+          <span>Text-safe: left/bottom</span>
+          <span>Overlay-safe: top-right</span>
+        </div>
+      </section>
+      
+      <section class="skeleton-box skeleton-support" data-name="SUPPORT" data-role="Secondary portal" data-desktop="1/3 × 245px" data-mobile="100% × 220px">
+        <div class="skeleton-zone skeleton-text-zone">left/bottom</div>
+        <div class="skeleton-zone skeleton-overlay-zone">top-right</div>
+        <div class="skeleton-spec">
+          <strong>SUPPORT</strong>
+          <span>Secondary portal</span>
+          <span>Desktop: 1/3 × 245px</span>
+          <span>Mobile: 100% × 220px</span>
+          <span>Text-safe: left/bottom</span>
+          <span>Overlay-safe: top-right</span>
+        </div>
+      </section>
     </section>
 
-    <section class="portal-story" aria-label="Continue the story">
-      <div class="portal-story-copy">
-        <span>▤ CONTINUE THE STORY</span>
-        <h2 id="home-reading-title-shadow">Episode 001</h2>
-        <h3>The Second Life Begins</h3>
-        <p id="home-reading-summary">Your story begins in the Reader. Once Parts are published, your exact progress will appear here.</p>
-        <a class="portal-btn portal-btn-primary" href="/site-preview/read/">Continue Reading →</a>
-      </div>
-      <a id="home-reading-art" class="portal-story-art" href="/site-preview/read/" aria-label="Open current story"></a>
-      <a id="home-reading-view-episode" class="sr-only" href="/site-preview/read/">View Episode</a>
+    
+      <section class="skeleton-box skeleton-story" data-name="CONTINUE STORY" data-role="Narrative banner" data-desktop="100% × 350px" data-mobile="100% × 300px">
+        <div class="skeleton-zone skeleton-text-zone">left 42%</div>
+        <div class="skeleton-zone skeleton-overlay-zone">right/bottom</div>
+        <div class="skeleton-spec">
+          <strong>CONTINUE STORY</strong>
+          <span>Narrative banner</span>
+          <span>Desktop: 100% × 350px</span>
+          <span>Mobile: 100% × 300px</span>
+          <span>Text-safe: left 42%</span>
+          <span>Overlay-safe: right/bottom</span>
+        </div>
+      </section>
+
+    <section class="skeleton-discovery-row">
+      
+      <section class="skeleton-box skeleton-discovery" data-name="FEATURED REGION" data-role="Discovery card" data-desktop="1/3 × 180px" data-mobile="100% × 160px">
+        <div class="skeleton-zone skeleton-text-zone">lower-left</div>
+        <div class="skeleton-zone skeleton-overlay-zone">restrained</div>
+        <div class="skeleton-spec">
+          <strong>FEATURED REGION</strong>
+          <span>Discovery card</span>
+          <span>Desktop: 1/3 × 180px</span>
+          <span>Mobile: 100% × 160px</span>
+          <span>Text-safe: lower-left</span>
+          <span>Overlay-safe: restrained</span>
+        </div>
+      </section>
+      
+      <section class="skeleton-box skeleton-discovery" data-name="FEATURED MONSTER" data-role="Discovery card" data-desktop="1/3 × 180px" data-mobile="100% × 160px">
+        <div class="skeleton-zone skeleton-text-zone">lower-left</div>
+        <div class="skeleton-zone skeleton-overlay-zone">restrained</div>
+        <div class="skeleton-spec">
+          <strong>FEATURED MONSTER</strong>
+          <span>Discovery card</span>
+          <span>Desktop: 1/3 × 180px</span>
+          <span>Mobile: 100% × 160px</span>
+          <span>Text-safe: lower-left</span>
+          <span>Overlay-safe: restrained</span>
+        </div>
+      </section>
+      
+      <section class="skeleton-box skeleton-discovery" data-name="FEATURED ITEM" data-role="Discovery card" data-desktop="1/3 × 180px" data-mobile="100% × 160px">
+        <div class="skeleton-zone skeleton-text-zone">lower-left</div>
+        <div class="skeleton-zone skeleton-overlay-zone">restrained</div>
+        <div class="skeleton-spec">
+          <strong>FEATURED ITEM</strong>
+          <span>Discovery card</span>
+          <span>Desktop: 1/3 × 180px</span>
+          <span>Mobile: 100% × 160px</span>
+          <span>Text-safe: lower-left</span>
+          <span>Overlay-safe: restrained</span>
+        </div>
+      </section>
     </section>
 
-    <section class="portal-discovery" aria-label="World discovery">
-      <header><h2>WORLD DISCOVERY</h2><a href="/site-preview/world/">View All →</a></header>
-      <div class="portal-discovery-grid">
-        <a class="portal-discovery-card discovery-region" href="/site-preview/world/"><small>FEATURED REGION</small><strong>Aeloria Kingdom</strong><span>A prosperous kingdom of trade and adventure.</span></a>
-        <a class="portal-discovery-card discovery-monster" href="/site-preview/codex/?type=monster"><small>FEATURED MONSTER</small><strong>Genesis Bestiary</strong><span>Discover creatures across the world.</span></a>
-        <a class="portal-discovery-card discovery-item" href="/site-preview/codex/?type=equipment"><small>FEATURED ITEM</small><strong>Equipment Archive</strong><span>Weapons and items with a story.</span></a>
-      </div>
+    <section class="skeleton-community-row">
+      
+      <section class="skeleton-box skeleton-community" data-name="COMMUNITY" data-role="Community portal" data-desktop="50% × 250px" data-mobile="100% × 220px">
+        <div class="skeleton-zone skeleton-text-zone">left 50%</div>
+        <div class="skeleton-zone skeleton-overlay-zone">top-right</div>
+        <div class="skeleton-spec">
+          <strong>COMMUNITY</strong>
+          <span>Community portal</span>
+          <span>Desktop: 50% × 250px</span>
+          <span>Mobile: 100% × 220px</span>
+          <span>Text-safe: left 50%</span>
+          <span>Overlay-safe: top-right</span>
+        </div>
+      </section>
+      
+      <section class="skeleton-box skeleton-community" data-name="SUPPORT & FAN PAGE" data-role="Community portal" data-desktop="50% × 250px" data-mobile="100% × 220px">
+        <div class="skeleton-zone skeleton-text-zone">left 50%</div>
+        <div class="skeleton-zone skeleton-overlay-zone">top-right</div>
+        <div class="skeleton-spec">
+          <strong>SUPPORT & FAN PAGE</strong>
+          <span>Community portal</span>
+          <span>Desktop: 50% × 250px</span>
+          <span>Mobile: 100% × 220px</span>
+          <span>Text-safe: left 50%</span>
+          <span>Overlay-safe: top-right</span>
+        </div>
+      </section>
     </section>
 
-    <section class="portal-community-grid">
-      <a class="portal-card portal-community" href="/site-preview/fan-page/"><div class="portal-card-copy"><span>♣</span><h2>COMMUNITY</h2><p>News, discussions, fan content, and fellow readers.</p><b>Join Community →</b></div></a>
-      <a class="portal-card portal-fan-support" href="/site-preview/support/"><div class="portal-card-copy"><span>♥</span><h2>SUPPORT & FAN PAGE</h2><p>Help, contact, donations, and official fan resources.</p><b>Visit Support →</b></div></a>
-    </section>
+    
+      <section class="skeleton-box skeleton-footer" data-name="FOOTER" data-role="Site footer" data-desktop="100% × 96px" data-mobile="100% × 100px">
+        <div class="skeleton-zone skeleton-text-zone">center</div>
+        <div class="skeleton-zone skeleton-overlay-zone">none</div>
+        <div class="skeleton-spec">
+          <strong>FOOTER</strong>
+          <span>Site footer</span>
+          <span>Desktop: 100% × 96px</span>
+          <span>Mobile: 100% × 100px</span>
+          <span>Text-safe: center</span>
+          <span>Overlay-safe: none</span>
+        </div>
+      </section>
 
     <section class="portal-runtime-compat" hidden aria-hidden="true">
+      <div id="home-release-command"></div>
+      <span id="home-release-time">-- PHT</span><span id="home-release-part"></span><span id="home-release-state"></span>
+      <span id="home-countdown-hours">--</span><span id="home-countdown-minutes">--</span><span id="home-countdown-seconds">--</span><span id="home-release-detail"></span>
+      <span id="home-reading-title"></span><span id="home-reading-episode"></span><span id="home-reading-summary"></span>
+      <a id="home-reading-continue" href="/site-preview/read/"></a><a id="home-reading-art" href="/site-preview/read/"></a><a id="home-reading-view-episode" href="/site-preview/read/"></a>
       <div id="home-access-guest"></div><div id="home-access-reader"></div>
       <img id="home-access-avatar" alt=""><span id="home-access-name"></span><span id="home-access-title"></span><span id="home-access-tier"></span>
       <i id="home-access-exp-fill"></i><span id="home-access-exp-total"></span><span id="home-access-next-tier"></span>
