@@ -99,6 +99,60 @@ jobs:
           js.write_text(text,encoding='utf-8')
           PY
 
+      - name: Verify exact dashboard-v1 live-package manifest
+        run: |
+          set -euo pipefail
+          expected=(
+            "release-monitor-desktop.webp"
+            "release-monitor-mobile.webp"
+            "continue-adventure-desktop.webp"
+            "continue-adventure-mobile.webp"
+            "reader-profile-desktop.webp"
+            "reader-profile-mobile.webp"
+            "adventure-feed-desktop.webp"
+            "adventure-feed-mobile.webp"
+            "system-bulletin-desktop.webp"
+            "system-bulletin-mobile.webp"
+            "tile-read-desktop.webp"
+            "tile-read-mobile.webp"
+            "tile-world-desktop.webp"
+            "tile-world-mobile.webp"
+            "tile-codex-desktop.webp"
+            "tile-codex-mobile.webp"
+            "tile-characters-desktop.webp"
+            "tile-characters-mobile.webp"
+            "tile-monsters-desktop.webp"
+            "tile-monsters-mobile.webp"
+            "tile-items-desktop.webp"
+            "tile-items-mobile.webp"
+            "tile-manga-desktop.webp"
+            "tile-manga-mobile.webp"
+            "tile-support-desktop.webp"
+            "tile-support-mobile.webp"
+            "tile-fan-page-desktop.webp"
+            "tile-fan-page-mobile.webp"
+          )
+          mapfile -t actual < <(find .live-assets/assets/dashboard-v1 -maxdepth 1 -type f -name '*.webp' -printf '%f\n' | sort)
+          mapfile -t wanted < <(printf '%s\n' "${expected[@]}" | sort)
+
+          missing="$(comm -23 <(printf '%s\n' "${wanted[@]}") <(printf '%s\n' "${actual[@]}") || true)"
+          extra="$(comm -13 <(printf '%s\n' "${wanted[@]}") <(printf '%s\n' "${actual[@]}") || true)"
+
+          if [ -n "$missing" ]; then
+            echo "::error::Missing live-package dashboard-v1 WebP assets:"
+            printf '%s\n' "$missing"
+          fi
+          if [ -n "$extra" ]; then
+            echo "::error::Unexpected live-package dashboard-v1 WebP assets:"
+            printf '%s\n' "$extra"
+          fi
+
+          if [ "${#wanted[@]}" -ne 28 ] || [ "${#actual[@]}" -ne 28 ] || [ -n "$missing" ] || [ -n "$extra" ]; then
+            exit 1
+          fi
+
+          echo "PASS: dashboard-v1 live-package manifest is exactly 28/28 with no extras."
+
       - name: Verify locked hero asset hash
         run: |
           set -euo pipefail
@@ -295,6 +349,21 @@ jobs:
               dashboard_v1_failed=1
             fi
           done
+          {
+            echo "### Dashboard-v1 live-candidate HTTP report"
+            echo ""
+            echo "| # | Asset | HTTP | Result |"
+            echo "|---:|---|---:|---|"
+            i=1
+            for file in "${dashboard_v1_assets[@]}"; do
+              status="$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/assets/dashboard-v1/$file" || true)"
+              result="PASS"
+              if [ "$status" != "200" ]; then result="FAIL"; fi
+              echo "| $i | `$file` | $status | $result |"
+              i=$((i+1))
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
           if [ "$dashboard_v1_failed" -ne 0 ]; then
             echo "::error::One or more dashboard-v1 live-candidate assets failed HTTP 200 verification."
             exit 1
