@@ -117,6 +117,36 @@
         "objectFit": "cover",
         "objectPosition": "50% 50%",
         "transform": "none"
+      },
+      "feedDebug": {
+        "html": "<div class=\"deck-prelaunch-state\"><span class=\"deck-prelaunch-mark\" aria-hidden=\"true\">✦</span><div><small>RELEASE ARCHIVE</small><strong>The first adventure is being prepared.</strong><p>After launch, the newest published Parts will appear here automatically.</p></div><a href=\"/site-preview/read/\">Open Reader ›</a></div>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "child": {
+          "cls": "deck-prelaunch-state",
+          "display": "grid",
+          "color": "rgb(240, 238, 232)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
+      },
+      "bulletinDebug": {
+        "html": "<div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◆</span><p><strong>Story launch in preparation</strong><small>The Reader is ready for the first published Part.</small></p><time>Soon</time></div><div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div><a class=\"deck-announcement-row\" href=\"/site-preview/account/\"><span class=\"deck-announcement-icon\">◇</span><p><strong>Prepare your reader profile</strong><small>Sign in now to keep progress, EXP, rewards, and your collection together.</small></p><time>Open</time></a>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "first": {
+          "cls": "deck-announcement-row",
+          "display": "grid",
+          "color": "rgb(242, 240, 233)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
       }
     }
   },
@@ -238,6 +268,36 @@
         "objectFit": "cover",
         "objectPosition": "50% 50%",
         "transform": "none"
+      },
+      "feedDebug": {
+        "html": "<div class=\"deck-prelaunch-state\"><span class=\"deck-prelaunch-mark\" aria-hidden=\"true\">✦</span><div><small>RELEASE ARCHIVE</small><strong>The first adventure is being prepared.</strong><p>After launch, the newest published Parts will appear here automatically.</p></div><a href=\"/site-preview/read/\">Open Reader ›</a></div>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "child": {
+          "cls": "deck-prelaunch-state",
+          "display": "grid",
+          "color": "rgb(240, 238, 232)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
+      },
+      "bulletinDebug": {
+        "html": "<div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◆</span><p><strong>Story launch in preparation</strong><small>The Reader is ready for the first published Part.</small></p><time>Soon</time></div><div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div><a class=\"deck-announcement-row\" href=\"/site-preview/account/\"><span class=\"deck-announcement-icon\">◇</span><p><strong>Prepare your reader profile</strong><small>Sign in now to keep progress, EXP, rewards, and your collection together.</small></p><time>Open</time></a>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "first": {
+          "cls": "deck-announcement-row",
+          "display": "grid",
+          "color": "rgb(242, 240, 233)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
       }
     }
   },
@@ -359,6 +419,36 @@
         "objectFit": "cover",
         "objectPosition": "50% 50%",
         "transform": "none"
+      },
+      "feedDebug": {
+        "html": "<div class=\"deck-prelaunch-state\"><span class=\"deck-prelaunch-mark\" aria-hidden=\"true\">✦</span><div><small>RELEASE ARCHIVE</small><strong>The first adventure is being prepared.</strong><p>After launch, the newest published Parts will appear here automatically.</p></div><a href=\"/site-preview/read/\">Open Reader ›</a></div>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "child": {
+          "cls": "deck-prelaunch-state",
+          "display": "grid",
+          "color": "rgb(240, 238, 232)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
+      },
+      "bulletinDebug": {
+        "html": "<div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◆</span><p><strong>Story launch in preparation</strong><small>The Reader is ready for the first published Part.</small></p><time>Soon</time></div><div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div><a class=\"deck-announcement-row\" href=\"/site-preview/account/\"><span class=\"deck-announcement-icon\">◇</span><p><strong>Prepare your reader profile</strong><small>Sign in now to keep progress, EXP, rewards, and your collection together.</small></p><time>Open</time></a>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "first": {
+          "cls": "deck-announcement-row",
+          "display": "grid",
+          "color": "rgb(242, 240, 233)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
       }
     }
   },
@@ -480,6 +570,36 @@
         "objectFit": "cover",
         "objectPosition": "50% 50%",
         "transform": "none"
+      },
+      "feedDebug": {
+        "html": "<div class=\"deck-prelaunch-state\"><span class=\"deck-prelaunch-mark\" aria-hidden=\"true\">✦</span><div><small>RELEASE ARCHIVE</small><strong>The first adventure is being prepared.</strong><p>After launch, the newest published Parts will appear here automatically.</p></div><a href=\"/site-preview/read/\">Open Reader ›</a></div>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "child": {
+          "cls": "deck-prelaunch-state",
+          "display": "grid",
+          "color": "rgb(240, 238, 232)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
+      },
+      "bulletinDebug": {
+        "html": "<div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◆</span><p><strong>Story launch in preparation</strong><small>The Reader is ready for the first published Part.</small></p><time>Soon</time></div><div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div><a class=\"deck-announcement-row\" href=\"/site-preview/account/\"><span class=\"deck-announcement-icon\">◇</span><p><strong>Prepare your reader profile</strong><small>Sign in now to keep progress, EXP, rewards, and your collection together.</small></p><time>Open</time></a>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "first": {
+          "cls": "deck-announcement-row",
+          "display": "grid",
+          "color": "rgb(242, 240, 233)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
       }
     }
   },
@@ -601,6 +721,36 @@
         "objectFit": "cover",
         "objectPosition": "50% 50%",
         "transform": "none"
+      },
+      "feedDebug": {
+        "html": "<div class=\"deck-prelaunch-state\"><span class=\"deck-prelaunch-mark\" aria-hidden=\"true\">✦</span><div><small>RELEASE ARCHIVE</small><strong>The first adventure is being prepared.</strong><p>After launch, the newest published Parts will appear here automatically.</p></div><a href=\"/site-preview/read/\">Open Reader ›</a></div>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "child": {
+          "cls": "deck-prelaunch-state",
+          "display": "grid",
+          "color": "rgb(240, 238, 232)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
+      },
+      "bulletinDebug": {
+        "html": "<div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◆</span><p><strong>Story launch in preparation</strong><small>The Reader is ready for the first published Part.</small></p><time>Soon</time></div><div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div><a class=\"deck-announcement-row\" href=\"/site-preview/account/\"><span class=\"deck-announcement-icon\">◇</span><p><strong>Prepare your reader profile</strong><small>Sign in now to keep progress, EXP, rewards, and your collection together.</small></p><time>Open</time></a>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "first": {
+          "cls": "deck-announcement-row",
+          "display": "grid",
+          "color": "rgb(242, 240, 233)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
       }
     }
   },
@@ -722,6 +872,36 @@
         "objectFit": "cover",
         "objectPosition": "50% 50%",
         "transform": "none"
+      },
+      "feedDebug": {
+        "html": "<div class=\"deck-prelaunch-state\"><span class=\"deck-prelaunch-mark\" aria-hidden=\"true\">✦</span><div><small>RELEASE ARCHIVE</small><strong>The first adventure is being prepared.</strong><p>After launch, the newest published Parts will appear here automatically.</p></div><a href=\"/site-preview/read/\">Open Reader ›</a></div>",
+        "display": "block",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "child": {
+          "cls": "deck-prelaunch-state",
+          "display": "grid",
+          "color": "rgb(240, 238, 232)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
+      },
+      "bulletinDebug": {
+        "html": "<div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◆</span><p><strong>Story launch in preparation</strong><small>The Reader is ready for the first published Part.</small></p><time>Soon</time></div><div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div><a class=\"deck-announcement-row\" href=\"/site-preview/account/\"><span class=\"deck-announcement-icon\">◇</span><p><strong>Prepare your reader profile</strong><small>Sign in now to keep progress, EXP, rewards, and your collection together.</small></p><time>Open</time></a>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "first": {
+          "cls": "deck-announcement-row",
+          "display": "grid",
+          "color": "rgb(242, 240, 233)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
       }
     }
   },
@@ -843,6 +1023,36 @@
         "objectFit": "cover",
         "objectPosition": "50% 50%",
         "transform": "none"
+      },
+      "feedDebug": {
+        "html": "<div class=\"deck-prelaunch-state\"><span class=\"deck-prelaunch-mark\" aria-hidden=\"true\">✦</span><div><small>RELEASE ARCHIVE</small><strong>The first adventure is being prepared.</strong><p>After launch, the newest published Parts will appear here automatically.</p></div><a href=\"/site-preview/read/\">Open Reader ›</a></div>",
+        "display": "block",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "child": {
+          "cls": "deck-prelaunch-state",
+          "display": "grid",
+          "color": "rgb(240, 238, 232)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
+      },
+      "bulletinDebug": {
+        "html": "<div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◆</span><p><strong>Story launch in preparation</strong><small>The Reader is ready for the first published Part.</small></p><time>Soon</time></div><div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div><a class=\"deck-announcement-row\" href=\"/site-preview/account/\"><span class=\"deck-announcement-icon\">◇</span><p><strong>Prepare your reader profile</strong><small>Sign in now to keep progress, EXP, rewards, and your collection together.</small></p><time>Open</time></a>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "first": {
+          "cls": "deck-announcement-row",
+          "display": "grid",
+          "color": "rgb(242, 240, 233)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
       }
     }
   },
@@ -964,6 +1174,36 @@
         "objectFit": "cover",
         "objectPosition": "50% 50%",
         "transform": "none"
+      },
+      "feedDebug": {
+        "html": "<div class=\"deck-prelaunch-state\"><span class=\"deck-prelaunch-mark\" aria-hidden=\"true\">✦</span><div><small>RELEASE ARCHIVE</small><strong>The first adventure is being prepared.</strong><p>After launch, the newest published Parts will appear here automatically.</p></div><a href=\"/site-preview/read/\">Open Reader ›</a></div>",
+        "display": "block",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "child": {
+          "cls": "deck-prelaunch-state",
+          "display": "grid",
+          "color": "rgb(240, 238, 232)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
+      },
+      "bulletinDebug": {
+        "html": "<div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◆</span><p><strong>Story launch in preparation</strong><small>The Reader is ready for the first published Part.</small></p><time>Soon</time></div><div class=\"deck-announcement-row\"><span class=\"deck-announcement-icon\">◷</span><p><strong>Official release cycle</strong><small>8:00 AM · 2:00 PM · 8:00 PM · Monday–Saturday</small></p><time>PHT</time></div><a class=\"deck-announcement-row\" href=\"/site-preview/account/\"><span class=\"deck-announcement-icon\">◇</span><p><strong>Prepare your reader profile</strong><small>Sign in now to keep progress, EXP, rewards, and your collection together.</small></p><time>Open</time></a>",
+        "display": "grid",
+        "color": "rgb(240, 238, 232)",
+        "zIndex": "4",
+        "opacity": "1",
+        "first": {
+          "cls": "deck-announcement-row",
+          "display": "grid",
+          "color": "rgb(242, 240, 233)",
+          "zIndex": "auto",
+          "opacity": "1",
+          "visibility": "visible"
+        }
       }
     }
   }
