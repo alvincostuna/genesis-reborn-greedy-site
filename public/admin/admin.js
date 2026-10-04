@@ -132,32 +132,48 @@ async function loadProduction(){
     }
   }
 
-  try{
-    const [payload,control]=await Promise.all([
-      api("/admin/api/production"),
-      api("/admin/api/production/control")
-    ]);
+  const legacyResults=await Promise.allSettled([
+    api("/admin/api/production"),
+    api("/admin/api/production/control")
+  ]);
+  const payload=legacyResults[0].status==="fulfilled"?(legacyResults[0].value||{}):{};
+  const control=legacyResults[1].status==="fulfilled"?(legacyResults[1].value||{}):{};
+  const legacyError=[
+    legacyResults[0].status==="rejected"?legacyResults[0].reason?.message:"",
+    legacyResults[1].status==="rejected"?legacyResults[1].reason?.message:""
+  ].filter(Boolean).join(" · ");
 
-    const bridgeRow=Array.isArray(bridgeEnvelope?.data)?bridgeEnvelope.data[0]:null;
-    const runtime=bridgeRow||payload.runtime||control.runtime||{};
-    const dash=payload.dashboard||{};
-    const metrics=dash.metrics||{};
-    const paused=metrics.releases_paused!==false;
-    const caps=control.capabilities||{};
-    const hold=control.open_hold||null;
-    const packets=control.active_packets||[];
-    const bridgeConnected=Boolean(bridgeRow);
+  const bridgeRow=Array.isArray(bridgeEnvelope?.data)?bridgeEnvelope.data[0]:null;
+  const runtime=bridgeRow||payload.runtime||control.runtime||{};
+  const dash=payload.dashboard||{};
+  const metrics=dash.metrics||{};
+  const paused=metrics.releases_paused!==false;
+  const caps=control.capabilities||{};
+  const hold=control.open_hold||null;
+  const packets=control.active_packets||[];
+  const bridgeConnected=Boolean(bridgeRow);
+  const legacyAvailable=legacyResults.every((x)=>x.status==="fulfilled");
 
+  if($("#release-badge")){
     $("#release-badge").textContent=paused?"RELEASES PAUSED":"RELEASES ACTIVE";
     $("#release-badge").className="badge "+(paused?"danger":"good");
+  }
 
-    const bridgePanel=bridgeConnected
-      ?'<div class="panel admin-note compact"><div class="database-head"><span>GENESIS PLATFORM bridge</span><small>READ-ONLY · CONNECTED</small></div><p>Production status is reading through the isolated Platform bridge. Core remains authoritative; direct genesis_private access is not exposed.</p><div class="cutover-actions"><button id="platform-bridge-disconnect" type="button">Disconnect Platform session</button></div></div>'
-      :'<div class="panel admin-note compact"><div class="database-head"><span>GENESIS PLATFORM bridge</span><small>'+(bridgeError?'RECONNECT REQUIRED':'NOT CONNECTED')+'</small></div><p>'+(bridgeError?escapeHtml(bridgeError):'Connect your GENESIS PLATFORM admin account once in this browser tab. The Production Dashboard will then read its authoritative status through the isolated read-only bridge.')+'</p><div class="bridge-inline-login"><input id="platform-bridge-email" type="email" autocomplete="username" placeholder="Platform admin email"><input id="platform-bridge-password" type="password" autocomplete="current-password" placeholder="Platform admin password"><button id="platform-bridge-connect" type="button">Connect Platform</button></div></div>';
+  const bridgePanel=bridgeConnected
+    ?'<div class="panel admin-note compact"><div class="database-head"><span>GENESIS PLATFORM bridge</span><small>READ-ONLY · CONNECTED</small></div><p>Production status is reading through the isolated Platform bridge. Core remains authoritative; direct genesis_private access is not exposed.</p><div class="cutover-actions"><button id="platform-bridge-disconnect" type="button">Disconnect Platform session</button></div></div>'
+    :'<div class="panel admin-note compact"><div class="database-head"><span>GENESIS PLATFORM bridge</span><small>'+(bridgeError?'RECONNECT REQUIRED':'CONNECT REQUIRED')+'</small></div><p>'+(bridgeError?escapeHtml(bridgeError):'Connect your GENESIS PLATFORM admin account. This bypasses the old quota-blocked Admin read path and reads the production status through the isolated read-only bridge.')+'</p><div class="bridge-inline-login"><input id="platform-bridge-email" type="email" autocomplete="username" placeholder="Platform admin email"><input id="platform-bridge-password" type="password" autocomplete="current-password" placeholder="Platform admin password"><button id="platform-bridge-connect" type="button">Connect Platform</button></div></div>';
 
-    root.innerHTML=
-      bridgePanel+
-      '<div class="cards">'+
+  const legacyNotice=!legacyAvailable
+    ?'<div class="panel admin-note compact"><div class="database-head"><span>Legacy Core admin path</span><small>QUOTA RESTRICTED</small></div><p>'+escapeHtml(legacyError||"Core service is currently restricted by Supabase quota.")+' The dashboard can still read production status through GENESIS PLATFORM. Write controls and packet actions stay disabled until the legacy Core control path is available again.</p></div>'
+    :'';
+
+  const hasRuntime=Boolean(runtime&&Object.keys(runtime).length);
+
+  root.innerHTML=
+    bridgePanel+
+    legacyNotice+
+    (hasRuntime
+      ?'<div class="cards">'+
         '<div class="card"><span>Stage 1 verified</span><strong>'+escapeHtml(runtime.stage1_verified_count??"—")+' / '+escapeHtml(runtime.expected_part_count??"—")+'</strong></div>'+
         '<div class="card"><span>Stage 2 verified</span><strong>'+escapeHtml(runtime.stage2_verified_count??"—")+' / '+escapeHtml(runtime.expected_part_count??"—")+'</strong></div>'+
         '<div class="card"><span>103 gate</span><strong>'+escapeHtml(runtime.ai1_103_gate||runtime.closeout_103_status||"—")+'</strong></div>'+
@@ -172,63 +188,65 @@ async function loadProduction(){
         '<div><small>Next action</small><strong>'+escapeHtml(runtime.next_action_code||"—")+'</strong></div>'+
         '<div><small>Active run</small><strong>'+escapeHtml(runtime.active_run_id||"—")+'</strong></div>'+
         '<div><small>AI-2 gate</small><strong>'+escapeHtml(runtime.ai2_gate||"—")+'</strong></div>'+
-      '</div>'+
-      '<div class="panel production-controls">'+
-        '<div class="database-head"><span>Production Routing Controls</span><small>014-safe operator intervention</small></div>'+
-        '<div class="production-control-body">'+
-          '<div class="admin-note compact"><strong>Normal role routing stays automatic.</strong><p>Bridge reads are isolated and read-only. Existing control commands continue through the protected Admin control path; they do not use the bridge login.</p></div>'+
-          (hold
-            ?'<div class="hold-banner"><strong>ADMIN HOLD ACTIVE</strong><span>'+escapeHtml(hold.hold_reason||"")+'</span><small>'+escapeHtml(hold.id||"")+'</small></div>'
+      '</div>'
+      :'<div class="panel"><div class="empty">Connect GENESIS PLATFORM to load the production state.</div></div>')+
+    '<div class="panel production-controls">'+
+      '<div class="database-head"><span>Production Routing Controls</span><small>'+(legacyAvailable?'014-safe operator intervention':'TEMPORARILY UNAVAILABLE')+'</small></div>'+
+      '<div class="production-control-body">'+
+        '<div class="admin-note compact"><strong>'+(legacyAvailable?'Normal role routing stays automatic.':'Read bridge is healthy; write controls remain isolated.')+'</strong><p>'+(legacyAvailable?'Bridge reads are isolated and read-only. Existing control commands continue through the protected Admin control path; they do not use the bridge login.':'No control action will be rerouted through the read-only bridge. This prevents accidental writes while the original Core service is quota-restricted.')+'</p></div>'+
+        (hold
+          ?'<div class="hold-banner"><strong>ADMIN HOLD ACTIVE</strong><span>'+escapeHtml(hold.hold_reason||"")+'</span><small>'+escapeHtml(hold.id||"")+'</small></div>'
+          :'')+
+        '<div class="cutover-actions">'+
+          (hasPermission("PRODUCTION_CONTROL")
+            ?'<button id="production-hold" '+(legacyAvailable&&caps.can_hold?"":"disabled")+'>Hold at current READY state</button>'+
+             '<button id="production-resume" '+(legacyAvailable&&caps.can_resume?"":"disabled")+'>Resume stored route</button>'
             :'')+
-          '<div class="cutover-actions">'+
-            (hasPermission("PRODUCTION_CONTROL")
-              ?'<button id="production-hold" '+(caps.can_hold?"":"disabled")+'>Hold at current READY state</button>'+
-               '<button id="production-resume" '+(caps.can_resume?"":"disabled")+'>Resume stored route</button>'
-              :'')+
-            (hasPermission("PRODUCTION_AUTHORIZE")
-              ?'<button id="production-emergency-stop" class="danger-action" '+(caps.can_emergency_stop?"":"disabled")+'>Emergency Stop</button>'
-              :'')+
-          '</div>'+
-          '<div class="packet-list">'+
-            '<div class="database-head"><span>Active Runtime Packets</span><small>'+escapeHtml(packets.length)+' active</small></div>'+
-            (packets.length
-              ?packets.map(p=>
-                '<div class="packet-row"><div><strong>'+escapeHtml(p.role)+' · '+escapeHtml(p.packet_kind)+'</strong><small>'+escapeHtml(p.id)+'</small><code>'+escapeHtml(p.packet_hash?String(p.packet_hash).slice(0,18)+"…":"—")+'</code></div>'+
-                (hasPermission("PRODUCTION_CONTROL")?'<button data-packet="'+escapeHtml(p.id)+'">Invalidate</button>':'')+
-                '</div>'
-              ).join("")
-              :'<div class="empty">No active runtime packets.</div>')+
-          '</div>'+
+          (hasPermission("PRODUCTION_AUTHORIZE")
+            ?'<button id="production-emergency-stop" class="danger-action" '+(legacyAvailable&&caps.can_emergency_stop?"":"disabled")+'>Emergency Stop</button>'
+            :'')+
         '</div>'+
-      '</div>';
+        '<div class="packet-list">'+
+          '<div class="database-head"><span>Active Runtime Packets</span><small>'+(legacyAvailable?escapeHtml(packets.length)+' active':'unavailable while Core control path is restricted')+'</small></div>'+
+          (legacyAvailable&&packets.length
+            ?packets.map(p=>
+              '<div class="packet-row"><div><strong>'+escapeHtml(p.role)+' · '+escapeHtml(p.packet_kind)+'</strong><small>'+escapeHtml(p.id)+'</small><code>'+escapeHtml(p.packet_hash?String(p.packet_hash).slice(0,18)+"…":"—")+'</code></div>'+
+              (hasPermission("PRODUCTION_CONTROL")?'<button data-packet="'+escapeHtml(p.id)+'">Invalidate</button>':'')+
+              '</div>'
+            ).join("")
+            :'<div class="empty">'+(legacyAvailable?'No active runtime packets.':'Packet control intentionally disabled until the Core control path returns.')+'</div>')+
+        '</div>'+
+      '</div>'+
+    '</div>';
 
-    const bridgeConnect=$("#platform-bridge-connect");
-    if(bridgeConnect)bridgeConnect.addEventListener("click",async()=>{
-      const email=$("#platform-bridge-email")?.value.trim()||"";
-      const password=$("#platform-bridge-password")?.value||"";
-      if(!email||!password){alert("Enter your GENESIS PLATFORM admin email and password.");return;}
-      bridgeConnect.disabled=true;
-      try{
-        await platformLogin(email,password);
-        if($("#platform-bridge-password"))$("#platform-bridge-password").value="";
-        await loadProduction();
-      }catch(error){
-        alert(error.message);
-        bridgeConnect.disabled=false;
-      }
-    });
-
-    const bridgePassword=$("#platform-bridge-password");
-    if(bridgePassword)bridgePassword.addEventListener("keydown",(event)=>{
-      if(event.key==="Enter")bridgeConnect?.click();
-    });
-
-    const bridgeDisconnect=$("#platform-bridge-disconnect");
-    if(bridgeDisconnect)bridgeDisconnect.addEventListener("click",async()=>{
-      clearPlatformSession();
+  const bridgeConnect=$("#platform-bridge-connect");
+  if(bridgeConnect)bridgeConnect.addEventListener("click",async()=>{
+    const email=$("#platform-bridge-email")?.value.trim()||"";
+    const password=$("#platform-bridge-password")?.value||"";
+    if(!email||!password){alert("Enter your GENESIS PLATFORM admin email and password.");return;}
+    bridgeConnect.disabled=true;
+    try{
+      await platformLogin(email,password);
+      if($("#platform-bridge-password"))$("#platform-bridge-password").value="";
       await loadProduction();
-    });
+    }catch(error){
+      alert(error.message);
+      bridgeConnect.disabled=false;
+    }
+  });
 
+  const bridgePassword=$("#platform-bridge-password");
+  if(bridgePassword)bridgePassword.addEventListener("keydown",(event)=>{
+    if(event.key==="Enter")bridgeConnect?.click();
+  });
+
+  const bridgeDisconnect=$("#platform-bridge-disconnect");
+  if(bridgeDisconnect)bridgeDisconnect.addEventListener("click",async()=>{
+    clearPlatformSession();
+    await loadProduction();
+  });
+
+  if(legacyAvailable){
     const holdButton=$("#production-hold");
     if(holdButton)holdButton.addEventListener("click",async()=>{
       const reason=prompt("Reason for holding production (minimum 8 characters):")||"";
@@ -270,8 +288,6 @@ async function loadProduction(){
       try{await apiPost("/admin/api/production/packets/"+id+"/invalidate",{reason});await loadProduction();}
       catch(error){alert(error.message);button.disabled=false;}
     }));
-  }catch(error){
-    root.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
   }
 }
 
