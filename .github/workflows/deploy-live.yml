@@ -88,6 +88,7 @@ jobs:
           if [ -d public/assets/v37 ]; then cp -R public/assets/v37 .live-assets/assets/v37; fi
           if [ -d public/assets/dashboard-v1 ]; then cp -R public/assets/dashboard-v1 .live-assets/assets/dashboard-v1; fi
           if [ -d public/assets/overlays ]; then cp -R public/assets/overlays .live-assets/assets/overlays; fi
+          if [ -d public/assets/portal-v1 ]; then cp -R public/assets/portal-v1 .live-assets/assets/portal-v1; fi
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
           python - <<'PY'
           from pathlib import Path
