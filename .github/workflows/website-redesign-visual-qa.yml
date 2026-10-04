@@ -645,7 +645,11 @@ jobs:
                         ['CONTINUE STORY',story,'continue-story-v5.webp'],
                         ['MANGA',manga,'manga-v2.webp'],
                         ['SUPPORT',support,'support-desktop.webp'],
-                        ['COMMUNITY',q('.skeleton-community[data-name="COMMUNITY"]'),'community-desktop.webp']
+                        ['COMMUNITY',q('.skeleton-community[data-name="COMMUNITY"]'),'community-v2.webp'],
+                        ['FEATURED REGION',q('.skeleton-discovery[data-name="FEATURED REGION"]'),'featured-region.webp'],
+                        ['FEATURED MONSTER',q('.skeleton-discovery[data-name="FEATURED MONSTER"]'),'featured-monster.webp'],
+                        ['FEATURED ITEM',q('.skeleton-discovery[data-name="FEATURED ITEM"]'),'featured-item.webp'],
+                        ['SUPPORT & FAN PAGE',q('.skeleton-community[data-name="SUPPORT & FAN PAGE"]'),'support-fan-page.webp']
                       ];
                       const seen=new Set();
                       for(const [label,el,file] of backgroundTargets){
@@ -656,8 +660,6 @@ jobs:
                       }
                       const neutral=[
                         ...status,
-                        ...discovery,
-                        q('.skeleton-community[data-name="SUPPORT & FAN PAGE"]'),
                         footer
                       ].filter(Boolean);
                       for(const el of neutral){

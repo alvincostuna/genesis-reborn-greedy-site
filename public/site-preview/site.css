@@ -15541,14 +15541,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .background-pass-v1 .skeleton-community[data-name="COMMUNITY"]{
   background-image:
     linear-gradient(90deg,rgba(3,9,15,.25),rgba(3,9,15,.02) 58%),
-    url('/assets/portal-v1/backgrounds/batch1/community-desktop.webp')!important;
+    url('/assets/portal-v1/backgrounds/batch2/community-v2.webp')!important;
   background-position:64% 50%!important;
 }
 
 /* Unfilled Batch 2 boxes stay deliberately neutral. */
 .background-pass-v1 .skeleton-status,
-.background-pass-v1 .skeleton-discovery,
-.background-pass-v1 .skeleton-community[data-name="SUPPORT & FAN PAGE"],
 .background-pass-v1 .skeleton-footer{
   background-image:none!important;
   background-color:#101820!important;
@@ -15578,3 +15576,44 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .background-pass-v1 .skeleton-characters{background-position:74% 50%!important}
 }
 /* PORTAL BACKGROUND PASS V1 BATCH 1 MARKER */
+
+
+/* PORTAL BACKGROUND PASS V1 — BATCH 2 LOWER PORTALS */
+.background-pass-v1 .skeleton-discovery[data-name="FEATURED REGION"]{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.50) 0%,rgba(3,9,15,.20) 42%,rgba(3,9,15,.03) 70%),
+    url('/assets/portal-v1/backgrounds/batch2/featured-region.webp')!important;
+  background-position:58% 50%!important;
+}
+.background-pass-v1 .skeleton-discovery[data-name="FEATURED MONSTER"]{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.54) 0%,rgba(3,9,15,.22) 42%,rgba(3,9,15,.03) 70%),
+    url('/assets/portal-v1/backgrounds/batch2/featured-monster.webp')!important;
+  background-position:68% 50%!important;
+}
+.background-pass-v1 .skeleton-discovery[data-name="FEATURED ITEM"]{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.52) 0%,rgba(3,9,15,.20) 42%,rgba(3,9,15,.03) 70%),
+    url('/assets/portal-v1/backgrounds/batch2/featured-item.webp')!important;
+  background-position:70% 50%!important;
+}
+.background-pass-v1 .skeleton-community[data-name="COMMUNITY"]{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.54) 0%,rgba(3,9,15,.20) 44%,rgba(3,9,15,.03) 72%),
+    url('/assets/portal-v1/backgrounds/batch2/community-v2.webp')!important;
+  background-position:68% 52%!important;
+}
+.background-pass-v1 .skeleton-community[data-name="SUPPORT & FAN PAGE"]{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.56) 0%,rgba(3,9,15,.24) 44%,rgba(3,9,15,.04) 72%),
+    url('/assets/portal-v1/backgrounds/batch2/support-fan-page.webp')!important;
+  background-position:70% 52%!important;
+}
+@media(max-width:900px){
+  .background-pass-v1 .skeleton-discovery[data-name="FEATURED REGION"]{background-position:62% 50%!important}
+  .background-pass-v1 .skeleton-discovery[data-name="FEATURED MONSTER"]{background-position:72% 50%!important}
+  .background-pass-v1 .skeleton-discovery[data-name="FEATURED ITEM"]{background-position:74% 50%!important}
+  .background-pass-v1 .skeleton-community[data-name="COMMUNITY"]{background-position:72% 52%!important}
+  .background-pass-v1 .skeleton-community[data-name="SUPPORT & FAN PAGE"]{background-position:74% 52%!important}
+}
+/* PORTAL BACKGROUND BATCH 2 LOWER MARKER */
