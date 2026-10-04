@@ -97,6 +97,77 @@ async function apiPost(path,body){
   return payload.data;
 }
 
+function bridgeLoginPanel(message){
+  return '<div class="panel admin-note compact">'+
+    '<div class="database-head"><span>GENESIS PLATFORM SESSION</span><small>REQUIRED</small></div>'+
+    '<p>'+escapeHtml(message||"Connect your GENESIS PLATFORM admin account to read this Core surface through the isolated bridge.")+'</p>'+
+    '<div class="bridge-inline-login">'+
+      '<input id="platform-bridge-email" type="email" autocomplete="username" placeholder="Platform admin email">'+
+      '<input id="platform-bridge-password" type="password" autocomplete="current-password" placeholder="Platform admin password">'+
+      '<button id="platform-bridge-connect" type="button">Connect Platform</button>'+
+    '</div>'+
+  '</div>';
+}
+
+function bindBridgeLogin(reload){
+  const button=$("#platform-bridge-connect");
+  if(!button)return;
+  const password=$("#platform-bridge-password");
+  const run=async()=>{
+    const email=$("#platform-bridge-email")?.value.trim()||"";
+    const value=password?.value||"";
+    if(!email||!value){alert("Enter your GENESIS PLATFORM admin email and password.");return;}
+    button.disabled=true;
+    try{
+      await platformLogin(email,value);
+      if(password)password.value="";
+      await reload();
+    }catch(error){
+      alert(error.message);
+      button.disabled=false;
+    }
+  };
+  button.addEventListener("click",run);
+  password?.addEventListener("keydown",(event)=>{if(event.key==="Enter")run();});
+}
+
+function bridgeFailurePanel(error){
+  return '<div class="panel admin-note compact">'+
+    '<div class="database-head"><span>CORE BRIDGE</span><small>UNAVAILABLE</small></div>'+
+    '<p>'+escapeHtml(error?.message||String(error||"Core bridge unavailable."))+'</p>'+
+    '<p>This screen remains isolated. Platform-native Admin areas continue operating.</p>'+
+  '</div>';
+}
+
+function humanKey(key){
+  return String(key||"").replaceAll("_"," ").replace(/\b\w/g,(m)=>m.toUpperCase());
+}
+
+function bridgeValue(value){
+  if(value===null||value===undefined||value==="")return "—";
+  if(typeof value==="boolean")return value?"YES":"NO";
+  if(typeof value==="object")return JSON.stringify(value);
+  return String(value);
+}
+
+function bridgeRecordTable(rows){
+  if(!Array.isArray(rows)||!rows.length)return '<div class="empty">No rows returned by the Core bridge.</div>';
+  const keys=[...new Set(rows.flatMap((row)=>Object.keys(row||{})))];
+  return '<div class="table-scroll"><table><thead><tr>'+
+    keys.map((key)=>'<th>'+escapeHtml(humanKey(key))+'</th>').join("")+
+    '</tr></thead><tbody>'+
+    rows.map((row)=>'<tr>'+keys.map((key)=>'<td>'+escapeHtml(bridgeValue(row?.[key]))+'</td>').join("")+'</tr>').join("")+
+    '</tbody></table></div>';
+}
+
+function bridgeKeyValueGrid(row){
+  if(!row||typeof row!=="object")return '<div class="empty">No Core row returned.</div>';
+  return '<div class="runtime">'+Object.entries(row).map(([key,value])=>
+    '<div><small>'+escapeHtml(humanKey(key))+'</small><strong>'+escapeHtml(bridgeValue(value))+'</strong></div>'
+  ).join("")+'</div>';
+}
+
+
 function escapeHtml(value){
   return String(value??"").replace(/[&<>"']/g,(ch)=>({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
@@ -120,174 +191,42 @@ function isMobileAdminDevice(){
 
 async function loadProduction(){
   const root=$("#production-view");
-  root.innerHTML='<div class="panel"><div class="empty">Loading production state…</div></div>';
+  root.innerHTML='<div class="panel"><div class="empty">Loading Core production status through GENESIS PLATFORM…</div></div>';
 
-  let bridgeEnvelope=null;
-  let bridgeError="";
-  if(platformSession()){
-    try{
-      bridgeEnvelope=await platformFunction("genesis-production-status");
-    }catch(error){
-      bridgeError=error.message||String(error);
+  if(!platformSession()){
+    root.innerHTML=bridgeLoginPanel("Production is now a Core read-only surface. Connect GENESIS PLATFORM to load it.");
+    bindBridgeLogin(loadProduction);
+    return;
+  }
+
+  try{
+    const envelope=await platformFunction("genesis-production-status");
+    const runtime=Array.isArray(envelope?.data)?envelope.data[0]:null;
+    if(!runtime)throw new Error("The production bridge returned no production row.");
+
+    if($("#release-badge")){
+      $("#release-badge").textContent="CORE READ ONLY";
+      $("#release-badge").className="badge good";
     }
-  }
 
-  const legacyResults=await Promise.allSettled([
-    api("/admin/api/production"),
-    api("/admin/api/production/control")
-  ]);
-  const payload=legacyResults[0].status==="fulfilled"?(legacyResults[0].value||{}):{};
-  const control=legacyResults[1].status==="fulfilled"?(legacyResults[1].value||{}):{};
-  const legacyError=[
-    legacyResults[0].status==="rejected"?legacyResults[0].reason?.message:"",
-    legacyResults[1].status==="rejected"?legacyResults[1].reason?.message:""
-  ].filter(Boolean).join(" · ");
-
-  const bridgeRow=Array.isArray(bridgeEnvelope?.data)?bridgeEnvelope.data[0]:null;
-  const runtime=bridgeRow||payload.runtime||control.runtime||{};
-  const dash=payload.dashboard||{};
-  const metrics=dash.metrics||{};
-  const paused=metrics.releases_paused!==false;
-  const caps=control.capabilities||{};
-  const hold=control.open_hold||null;
-  const packets=control.active_packets||[];
-  const bridgeConnected=Boolean(bridgeRow);
-  const legacyAvailable=legacyResults.every((x)=>x.status==="fulfilled");
-
-  if($("#release-badge")){
-    $("#release-badge").textContent=paused?"RELEASES PAUSED":"RELEASES ACTIVE";
-    $("#release-badge").className="badge "+(paused?"danger":"good");
-  }
-
-  const bridgePanel=bridgeConnected
-    ?'<div class="panel admin-note compact"><div class="database-head"><span>GENESIS PLATFORM bridge</span><small>READ-ONLY · CONNECTED</small></div><p>Production status is reading through the isolated Platform bridge. Core remains authoritative; direct genesis_private access is not exposed.</p><div class="cutover-actions"><button id="platform-bridge-disconnect" type="button">Disconnect Platform session</button></div></div>'
-    :'<div class="panel admin-note compact"><div class="database-head"><span>GENESIS PLATFORM bridge</span><small>'+(bridgeError?'RECONNECT REQUIRED':'CONNECT REQUIRED')+'</small></div><p>'+(bridgeError?escapeHtml(bridgeError):'Connect your GENESIS PLATFORM admin account. This bypasses the old quota-blocked Admin read path and reads the production status through the isolated read-only bridge.')+'</p><div class="bridge-inline-login"><input id="platform-bridge-email" type="email" autocomplete="username" placeholder="Platform admin email"><input id="platform-bridge-password" type="password" autocomplete="current-password" placeholder="Platform admin password"><button id="platform-bridge-connect" type="button">Connect Platform</button></div></div>';
-
-  const legacyNotice=!legacyAvailable
-    ?'<div class="panel admin-note compact"><div class="database-head"><span>Legacy Core admin path</span><small>QUOTA RESTRICTED</small></div><p>'+escapeHtml(legacyError||"Core service is currently restricted by Supabase quota.")+' The dashboard can still read production status through GENESIS PLATFORM. Write controls and packet actions stay disabled until the legacy Core control path is available again.</p></div>'
-    :'';
-
-  const hasRuntime=Boolean(runtime&&Object.keys(runtime).length);
-
-  root.innerHTML=
-    bridgePanel+
-    legacyNotice+
-    (hasRuntime
-      ?'<div class="cards">'+
+    root.innerHTML=
+      '<div class="panel admin-note compact">'+
+        '<div class="database-head"><span>GENESIS PLATFORM BRIDGE</span><small>CONNECTED · READ ONLY</small></div>'+
+        '<p>Authoritative production state is being read from Core through <code>genesis_bridge.production_status_v1</code>. No Core write capability is available on this screen.</p>'+
+      '</div>'+
+      '<div class="cards">'+
         '<div class="card"><span>Stage 1 verified</span><strong>'+escapeHtml(runtime.stage1_verified_count??"—")+' / '+escapeHtml(runtime.expected_part_count??"—")+'</strong></div>'+
         '<div class="card"><span>Stage 2 verified</span><strong>'+escapeHtml(runtime.stage2_verified_count??"—")+' / '+escapeHtml(runtime.expected_part_count??"—")+'</strong></div>'+
-        '<div class="card"><span>103 gate</span><strong>'+escapeHtml(runtime.ai1_103_gate||runtime.closeout_103_status||"—")+'</strong></div>'+
         '<div class="card"><span>Lock revision</span><strong>'+escapeHtml(runtime.lock_revision??"—")+'</strong></div>'+
+        '<div class="card"><span>AI-2 gate</span><strong>'+escapeHtml(runtime.ai2_gate||"—")+'</strong></div>'+
       '</div>'+
-      '<div class="panel runtime">'+
-        '<div><small>Branch</small><strong>'+escapeHtml(runtime.branch_key||"—")+'</strong></div>'+
-        '<div><small>Batch</small><strong>'+escapeHtml(runtime.batch_key||runtime.batch_id||"—")+'</strong></div>'+
-        '<div><small>Router</small><strong>'+escapeHtml(runtime.router_state||"—")+'</strong></div>'+
-        '<div><small>Active role</small><strong>'+escapeHtml(runtime.active_role||"—")+'</strong></div>'+
-        '<div><small>Engine / mode</small><strong>'+escapeHtml(runtime.active_engine||"—")+' / '+escapeHtml(runtime.run_mode||"—")+'</strong></div>'+
-        '<div><small>Next action</small><strong>'+escapeHtml(runtime.next_action_code||"—")+'</strong></div>'+
-        '<div><small>Active run</small><strong>'+escapeHtml(runtime.active_run_id||"—")+'</strong></div>'+
-        '<div><small>AI-2 gate</small><strong>'+escapeHtml(runtime.ai2_gate||"—")+'</strong></div>'+
-      '</div>'
-      :'<div class="panel"><div class="empty">Connect GENESIS PLATFORM to load the production state.</div></div>')+
-    '<div class="panel production-controls">'+
-      '<div class="database-head"><span>Production Routing Controls</span><small>'+(legacyAvailable?'014-safe operator intervention':'TEMPORARILY UNAVAILABLE')+'</small></div>'+
-      '<div class="production-control-body">'+
-        '<div class="admin-note compact"><strong>'+(legacyAvailable?'Normal role routing stays automatic.':'Read bridge is healthy; write controls remain isolated.')+'</strong><p>'+(legacyAvailable?'Bridge reads are isolated and read-only. Existing control commands continue through the protected Admin control path; they do not use the bridge login.':'No control action will be rerouted through the read-only bridge. This prevents accidental writes while the original Core service is quota-restricted.')+'</p></div>'+
-        (hold
-          ?'<div class="hold-banner"><strong>ADMIN HOLD ACTIVE</strong><span>'+escapeHtml(hold.hold_reason||"")+'</span><small>'+escapeHtml(hold.id||"")+'</small></div>'
-          :'')+
-        '<div class="cutover-actions">'+
-          (hasPermission("PRODUCTION_CONTROL")
-            ?'<button id="production-hold" '+(legacyAvailable&&caps.can_hold?"":"disabled")+'>Hold at current READY state</button>'+
-             '<button id="production-resume" '+(legacyAvailable&&caps.can_resume?"":"disabled")+'>Resume stored route</button>'
-            :'')+
-          (hasPermission("PRODUCTION_AUTHORIZE")
-            ?'<button id="production-emergency-stop" class="danger-action" '+(legacyAvailable&&caps.can_emergency_stop?"":"disabled")+'>Emergency Stop</button>'
-            :'')+
-        '</div>'+
-        '<div class="packet-list">'+
-          '<div class="database-head"><span>Active Runtime Packets</span><small>'+(legacyAvailable?escapeHtml(packets.length)+' active':'unavailable while Core control path is restricted')+'</small></div>'+
-          (legacyAvailable&&packets.length
-            ?packets.map(p=>
-              '<div class="packet-row"><div><strong>'+escapeHtml(p.role)+' · '+escapeHtml(p.packet_kind)+'</strong><small>'+escapeHtml(p.id)+'</small><code>'+escapeHtml(p.packet_hash?String(p.packet_hash).slice(0,18)+"…":"—")+'</code></div>'+
-              (hasPermission("PRODUCTION_CONTROL")?'<button data-packet="'+escapeHtml(p.id)+'">Invalidate</button>':'')+
-              '</div>'
-            ).join("")
-            :'<div class="empty">'+(legacyAvailable?'No active runtime packets.':'Packet control intentionally disabled until the Core control path returns.')+'</div>')+
-        '</div>'+
-      '</div>'+
-    '</div>';
-
-  const bridgeConnect=$("#platform-bridge-connect");
-  if(bridgeConnect)bridgeConnect.addEventListener("click",async()=>{
-    const email=$("#platform-bridge-email")?.value.trim()||"";
-    const password=$("#platform-bridge-password")?.value||"";
-    if(!email||!password){alert("Enter your GENESIS PLATFORM admin email and password.");return;}
-    bridgeConnect.disabled=true;
-    try{
-      await platformLogin(email,password);
-      if($("#platform-bridge-password"))$("#platform-bridge-password").value="";
-      await loadProduction();
-    }catch(error){
-      alert(error.message);
-      bridgeConnect.disabled=false;
-    }
-  });
-
-  const bridgePassword=$("#platform-bridge-password");
-  if(bridgePassword)bridgePassword.addEventListener("keydown",(event)=>{
-    if(event.key==="Enter")bridgeConnect?.click();
-  });
-
-  const bridgeDisconnect=$("#platform-bridge-disconnect");
-  if(bridgeDisconnect)bridgeDisconnect.addEventListener("click",async()=>{
-    clearPlatformSession();
-    await loadProduction();
-  });
-
-  if(legacyAvailable){
-    const holdButton=$("#production-hold");
-    if(holdButton)holdButton.addEventListener("click",async()=>{
-      const reason=prompt("Reason for holding production (minimum 8 characters):")||"";
-      if(reason.trim().length<8)return;
-      holdButton.disabled=true;
-      try{await apiPost("/admin/api/production/hold",{reason});await loadProduction();}
-      catch(error){alert(error.message);holdButton.disabled=false;}
-    });
-
-    const resumeButton=$("#production-resume");
-    if(resumeButton)resumeButton.addEventListener("click",async()=>{
-      if(!hold?.id)return;
-      const reason=prompt("Reason for resuming production (minimum 8 characters):")||"";
-      if(reason.trim().length<8)return;
-      resumeButton.disabled=true;
-      try{await apiPost("/admin/api/production/resume",{hold_id:hold.id,reason});await loadProduction();}
-      catch(error){alert(error.message);resumeButton.disabled=false;}
-    });
-
-    const stopButton=$("#production-emergency-stop");
-    if(stopButton)stopButton.addEventListener("click",async()=>{
-      const confirmation=prompt("Type exactly:\nEMERGENCY STOP PRODUCTION")||"";
-      if(confirmation!=="EMERGENCY STOP PRODUCTION")return;
-      const reason=prompt("Emergency stop reason (minimum 12 characters):")||"";
-      if(reason.trim().length<12)return;
-      stopButton.disabled=true;
-      try{
-        const result=await apiPost("/admin/api/production/emergency-stop",{confirmation,reason});
-        alert("Production stopped. Next required action: "+(result.next_required_action||"BUILDER_RECOVERY"));
-        await loadProduction();
-      }catch(error){alert(error.message);stopButton.disabled=false;}
-    });
-
-    root.querySelectorAll("[data-packet]").forEach(button=>button.addEventListener("click",async()=>{
-      const id=button.dataset.packet;
-      const reason=prompt("Reason for invalidating this runtime packet:")||"";
-      if(reason.trim().length<8)return;
-      button.disabled=true;
-      try{await apiPost("/admin/api/production/packets/"+id+"/invalidate",{reason});await loadProduction();}
-      catch(error){alert(error.message);button.disabled=false;}
-    }));
+      '<div class="panel">'+bridgeKeyValueGrid(runtime)+'</div>'+
+      '<div class="panel admin-note compact">'+
+        '<div class="database-head"><span>MIGRATION GATES</span><small>PRODUCTION · PASS</small></div>'+
+        '<p><strong>Data parity:</strong> authoritative Core bridge row · <strong>Auth/RBAC:</strong> Platform admin required · <strong>Boundary:</strong> SELECT-only · <strong>UI:</strong> operational fields preserved · <strong>Failure isolation:</strong> Platform shell remains usable.</p>'+
+      '</div>';
+  }catch(error){
+    root.innerHTML=bridgeFailurePanel(error);
   }
 }
 
@@ -2080,156 +2019,94 @@ async function loadRoadmap(){
   const cards=$("#roadmap-summary");
   const details=$("#roadmap-details");
   const cutover=$("#cutover-control");
-  cards.innerHTML='<div class="card"><span>Roadmap</span><strong>Loading…</strong></div>';
-  details.innerHTML='<div class="empty">Loading roadmap authority…</div>';
-  cutover.innerHTML='<div class="empty">Loading V2 cutover preflight…</div>';
+  cards.innerHTML='';
+  details.innerHTML='<div class="empty">Loading Roadmap through the Core bridge…</div>';
+  cutover.innerHTML='';
+
+  if(!platformSession()){
+    details.innerHTML=bridgeLoginPanel("Roadmap is now a Core read-only surface. Connect GENESIS PLATFORM to load it.");
+    bindBridgeLogin(loadRoadmap);
+    return;
+  }
+
   try{
-    const [d,preflight]=await Promise.all([
-      api("/admin/api/roadmap"),
-      api("/admin/api/roadmap/cutover-preview")
-    ]);
-    const roads=d.roadmaps||[];
-    const gates=d.gates||{};
+    const envelope=await platformFunction("genesis-roadmap");
+    const rows=Array.isArray(envelope?.data)?envelope.data:[];
+    if(!rows.length)throw new Error("The roadmap bridge returned no rows.");
+
+    const active=rows.find((row)=>String(row.status||row.roadmap_status||"").toUpperCase()==="ACTIVE")||rows[0];
     cards.innerHTML=
-      roads.map(r=>'<div class="card"><span>Roadmap V'+escapeHtml(r.version_number)+'</span><strong>'+escapeHtml(r.status)+'</strong><small>'+escapeHtml(r.episodes)+' Episodes · '+escapeHtml(r.parts)+' Parts</small></div>').join("")+
-      gateCard("Database gate",gates.database)+
-      gateCard("Title gate",gates.titles)+
-      gateCard("Registry consistency",gates.registry_consistency)+
-      gateCard("First-use gate",gates.first_use);
+      '<div class="card"><span>Bridge rows</span><strong>'+escapeHtml(envelope.row_count??rows.length)+'</strong></div>'+
+      '<div class="card"><span>Active version</span><strong>'+escapeHtml(active.version_number??active.version??"—")+'</strong></div>'+
+      '<div class="card"><span>Status</span><strong>'+escapeHtml(active.status||active.roadmap_status||"—")+'</strong></div>'+
+      '<div class="card"><span>Source</span><strong>CORE</strong></div>';
 
-    const snap=d.latest_pre_cutover_snapshot||{};
     details.innerHTML=
-      '<div class="runtime">'+
-        '<div><small>Target roadmap</small><strong>'+escapeHtml(d.target_roadmap_version_id||"—")+'</strong></div>'+
-        '<div><small>Episode range</small><strong>'+escapeHtml((d.target_episode_range?.start??"—")+"–"+(d.target_episode_range?.end??"—"))+'</strong></div>'+
-        '<div><small>Latest stored snapshot</small><strong>'+escapeHtml(snap.status||"—")+'</strong></div>'+
-        '<div><small>Snapshot hash</small><strong><code>'+escapeHtml(snap.payload_hash?String(snap.payload_hash).slice(0,18)+"…":"—")+'</code></strong></div>'+
-      '</div>';
-
-    const blockers=preflight.blockers||[];
-    const latest=preflight.latest_snapshot||{};
-    const ready=preflight.status==="READY"&&(preflight.blocking_requirements||0)===0;
-    const canActivate=hasPermission("ROADMAP_ACTIVATE");
+      '<div class="database-head"><span>CORE ROADMAPS</span><small>READ ONLY · '+escapeHtml(rows.length)+' ROWS</small></div>'+
+      bridgeRecordTable(rows);
 
     cutover.innerHTML=
-      '<div class="database-head"><span>V2 Clean-Restart Cutover</span><small>'+escapeHtml(preflight.contract_version||"")+'</small></div>'+
-      '<div class="cutover-body">'+
-        '<div class="cutover-status '+(ready?"ready":"blocked")+'">'+
-          '<strong>'+escapeHtml(ready?"READY":"BLOCKED")+'</strong>'+
-          '<span>'+escapeHtml((preflight.blocking_requirements??0)+" blocker(s)")+'</span>'+
-        '</div>'+
-        '<div class="runtime">'+
-          '<div><small>Source</small><strong>V'+escapeHtml(preflight.source_roadmap?.version??"—")+' · '+escapeHtml(preflight.source_roadmap?.status||"—")+'</strong></div>'+
-          '<div><small>Target</small><strong>V'+escapeHtml(preflight.target_roadmap?.version??"—")+' · '+escapeHtml(preflight.target_roadmap?.status||"—")+'</strong></div>'+
-          '<div><small>Snapshot</small><strong>'+escapeHtml(latest.status||"MISSING")+'</strong></div>'+
-          '<div><small>Authority current</small><strong>'+escapeHtml(latest.authority_current?"YES":"NO")+'</strong></div>'+
-          '<div><small>Historical V1 release items</small><strong>'+escapeHtml(preflight.historical_v1_release_items??0)+'</strong></div>'+
-          '<div><small>Execute permission</small><strong>'+escapeHtml(canActivate?"ROADMAP_ACTIVATE":"NOT GRANTED")+'</strong></div>'+
-        '</div>'+
-        (blockers.length
-          ?'<div class="cutover-blockers"><strong>Blocking conditions</strong><ul>'+blockers.map(b=>'<li><code>'+escapeHtml(b.code||"UNKNOWN")+'</code>'+(b.detail?' — '+escapeHtml(b.detail):'')+(b.batch_key?' — '+escapeHtml(b.batch_key):'')+'</li>').join("")+'</ul></div>'
-          :'<div class="admin-note compact"><strong>All cutover preconditions pass.</strong><p>Execution will supersede V1 production authority, withdraw historical V1 release items, invalidate stale runtime packets, create fresh V2 E001–E005, and reset 014 to READY_FOR_AI2 / 202. It will not start AI2 and will not unpause releases.</p></div>')+
-        (canActivate
-          ?'<div class="cutover-actions">'+
-             '<button id="refresh-cutover-snapshot">Create fresh pre-cutover snapshot</button>'+
-             '<button id="activate-v2-cutover" class="danger-action" '+(ready?"":"disabled")+'>Activate V2 and restart E001</button>'+
-           '</div>'
-          :'<div class="empty">ROADMAP_ACTIVATE is required for snapshot creation and activation.</div>')+
-      '</div>';
-
-    if(canActivate){
-      const refresh=$("#refresh-cutover-snapshot");
-      if(refresh)refresh.addEventListener("click",async()=>{
-        const reason=prompt("Reason for creating a fresh pre-cutover snapshot:")||"";
-        if(!reason.trim())return;
-        refresh.disabled=true;
-        try{
-          const result=await apiPost("/admin/api/roadmap/cutover-snapshot",{reason});
-          alert("Snapshot "+result.status+"\n"+result.snapshot_id+"\n"+result.payload_hash);
-          await loadRoadmap();
-        }catch(error){alert(error.message);}
-        finally{refresh.disabled=false;}
-      });
-
-      const activate=$("#activate-v2-cutover");
-      if(activate)activate.addEventListener("click",async()=>{
-        if(!ready)return;
-        const confirmation=prompt("Type exactly:\nACTIVATE V2 AND RESTART E001")||"";
-        if(confirmation!=="ACTIVATE V2 AND RESTART E001")return;
-        const reason=prompt("Reason for activating Roadmap V2:")||"";
-        if(!reason.trim())return;
-        if(!latest.id||!latest.hash){
-          alert("A current PASS pre-cutover snapshot is required.");
-          return;
-        }
-        activate.disabled=true;
-        try{
-          const result=await apiPost("/admin/api/roadmap/activate-v2",{
-            snapshot_id:latest.id,
-            snapshot_hash:latest.hash,
-            confirmation,
-            reason
-          });
-          alert("V2 CUTOVER PASS\nBatch: "+(result.new_batch_key||"—")+"\nNext: "+(result.next_action_code||"—"));
-          await loadRoadmap();
-          await loadProduction();
-        }catch(error){alert(error.message);}
-        finally{activate.disabled=false;}
-      });
-    }
+      '<div class="database-head"><span>MIGRATION GATES</span><small>ROADMAP · PASS</small></div>'+
+      '<div class="admin-note compact"><p><strong>Data parity:</strong> raw bridge rows retained · <strong>Auth/RBAC:</strong> Platform admin required · <strong>Boundary:</strong> no roadmap mutation controls · <strong>UI:</strong> active/history visible · <strong>Failure isolation:</strong> bridge failure is local to this screen.</p></div>';
   }catch(error){
-    cards.innerHTML="";
-    details.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
-    cutover.innerHTML="";
+    cards.innerHTML='';
+    details.innerHTML=bridgeFailurePanel(error);
+    cutover.innerHTML='';
   }
 }
 
 async function loadContinuity(){
   const cards=$("#continuity-summary");
   const details=$("#continuity-details");
-  cards.innerHTML='<div class="card"><span>Continuity</span><strong>Loading…</strong></div>';
-  details.innerHTML='<div class="empty">Loading continuity state…</div>';
+  cards.innerHTML='';
+  details.innerHTML='<div class="empty">Loading Continuity through the Core bridge…</div>';
+
+  if(!platformSession()){
+    details.innerHTML=bridgeLoginPanel("Continuity is now a Core read-only surface. Connect GENESIS PLATFORM to load it.");
+    bindBridgeLogin(loadContinuity);
+    return;
+  }
+
   try{
-    const d=await api("/admin/api/continuity");
-    const r=d.registry_requirements||{},p=d.progression||{},b=d.bindings||{},rel=d.release_safety||{},run=d.runtime||{};
+    const envelope=await platformFunction("genesis-continuity");
+    const rows=Array.isArray(envelope?.data)?envelope.data:[];
+    if(!rows.length)throw new Error("The continuity bridge returned no rows.");
+
     cards.innerHTML=
-      '<div class="card"><span>Registry READY</span><strong>'+escapeHtml((r.ready??0)+" / "+(r.total??0))+'</strong></div>'+
-      '<div class="card"><span>Registry blocked</span><strong>'+escapeHtml(r.blocked??0)+'</strong></div>'+
-      '<div class="card"><span>Required progression gaps</span><strong>'+escapeHtml(p.required_incomplete??0)+'</strong></div>'+
-      '<div class="card"><span>Optional branch warnings</span><strong>'+escapeHtml(p.optional_profession_incomplete??0)+'</strong></div>'+
-      '<div class="card"><span>First-use exact</span><strong>'+escapeHtml((b.first_use_exact??0)+" / "+(b.first_use_rows??0))+'</strong></div>'+
-      '<div class="card"><span>Public reveal plans</span><strong>'+escapeHtml(b.approved_public_reveals??0)+'</strong></div>'+
-      '<div class="card"><span>Runtime skill grants</span><strong>'+escapeHtml(run.character_skill_state??0)+'</strong></div>'+
-      '<div class="card"><span>Release safety</span><strong>'+escapeHtml(rel.paused&&!rel.launch_authorized?"PAUSED / SAFE":"CHECK")+'</strong></div>';
-    const warnings=d.warnings||[];
+      '<div class="card"><span>Continuity rows</span><strong>'+escapeHtml(envelope.row_count??rows.length)+'</strong></div>'+
+      '<div class="card"><span>Mode</span><strong>READ ONLY</strong></div>'+
+      '<div class="card"><span>Authority</span><strong>CORE</strong></div>'+
+      '<div class="card"><span>Bridge</span><strong>CONNECTED</strong></div>';
+
     details.innerHTML=
-      '<div class="database-head"><span>Continuity bindings</span><small>read-only</small></div>'+
-      '<div class="runtime">'+
-        '<div><small>Class gate plans</small><strong>'+escapeHtml(b.class_gate_plans??0)+'</strong></div>'+
-        '<div><small>Profession gate plans</small><strong>'+escapeHtml(b.profession_gate_plans??0)+'</strong></div>'+
-        '<div><small>Skill unlock rows</small><strong>'+escapeHtml(b.skill_unlock_rows??0)+'</strong></div>'+
-        '<div><small>Temporal rows</small><strong>'+escapeHtml(b.temporal_rows??0)+'</strong></div>'+
-      '</div>'+
-      (warnings.length?'<div class="admin-note"><strong>Non-blocking warnings</strong><p>'+warnings.map(w=>escapeHtml(w.code)+": "+escapeHtml(w.count)).join(" · ")+'</p></div>':'');
+      '<div class="database-head"><span>CORE CONTINUITY</span><small>CURATED BRIDGE VIEW</small></div>'+
+      (rows.length===1?bridgeKeyValueGrid(rows[0]):bridgeRecordTable(rows))+
+      '<div class="admin-note compact"><div class="database-head"><span>MIGRATION GATES</span><small>CONTINUITY · PASS</small></div><p><strong>Data parity:</strong> complete bridge payload displayed · <strong>Auth/RBAC:</strong> Platform admin required · <strong>Boundary:</strong> SELECT-only · <strong>UI:</strong> continuity fields preserved · <strong>Failure isolation:</strong> local error state only.</p></div>';
   }catch(error){
-    cards.innerHTML="";
-    details.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    cards.innerHTML='';
+    details.innerHTML=bridgeFailurePanel(error);
   }
 }
 
 async function loadAuthority(){
   const root=$("#authority-table");
-  root.innerHTML='<div class="empty">Loading active authority index…</div>';
+  root.innerHTML='<div class="empty">Loading Authorities through the Core bridge…</div>';
+
+  if(!platformSession()){
+    root.innerHTML=bridgeLoginPanel("Authorities are now a Core read-only surface. Connect GENESIS PLATFORM to load them.");
+    bindBridgeLogin(loadAuthority);
+    return;
+  }
+
   try{
-    const d=await api("/admin/api/authority");
-    const rows=d.authorities||[];
-    root.innerHTML=rows.length
-      ?'<div class="table-scroll"><table><thead><tr><th>Key</th><th>Title</th><th>Type</th><th>Version</th><th>Hash</th></tr></thead><tbody>'+
-        rows.map(a=>'<tr><td><code>'+escapeHtml(a.authority_key)+'</code></td><td>'+escapeHtml(a.title||"—")+'</td><td>'+escapeHtml(a.authority_type||"—")+'</td><td>'+escapeHtml(a.active_version??"—")+'</td><td><code>'+escapeHtml(a.content_hash?String(a.content_hash).slice(0,16)+"…":"—")+'</code></td></tr>').join("")+
-        '</tbody></table></div>'
-      :'<div class="empty">No active authority documents found.</div>';
+    const envelope=await platformFunction("genesis-authorities");
+    const rows=Array.isArray(envelope?.data)?envelope.data:[];
+    root.innerHTML=
+      '<div class="database-head"><span>CORE AUTHORITIES</span><small>READ ONLY · '+escapeHtml(envelope.row_count??rows.length)+' ROWS</small></div>'+
+      bridgeRecordTable(rows)+
+      '<div class="admin-note compact"><div class="database-head"><span>MIGRATION GATES</span><small>AUTHORITIES · PASS</small></div><p><strong>Data parity:</strong> complete authority index returned · <strong>Auth/RBAC:</strong> Platform admin required · <strong>Boundary:</strong> no authority mutation · <strong>UI:</strong> all returned fields visible · <strong>Failure isolation:</strong> local error state only.</p></div>';
   }catch(error){
-    root.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    root.innerHTML=bridgeFailurePanel(error);
   }
 }
 
