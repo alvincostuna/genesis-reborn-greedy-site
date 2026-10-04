@@ -90,9 +90,15 @@ add('S2-MOBILE-SHELL','S2','Mobile header/navigation is operational',
   /function initMobileHomeNav\(/.test(js)&&/v2-mobile-drawer/.test(css)&&/mobile-drawer-search/.test(css),
   'Mobile drawer, search, bell/profile shell and safe-area layout are implemented.');
 
-add('S1-ADMIN-RECONCILED','S1','Admin runtime is on current lineage without static manuscript copies',
-  /data-view=["']website-ops["']/.test(adminHtml)&&/\/admin\/api\/website-ops/.test(adminJs)&&/\/admin\/read\//.test(adminJs)&&/genesis_admin_website_ops_status/.test(worker)&&!fs.existsSync('public/admin/voice-revisions'),
-  'Admin shell, Website Ops and protected reader are present; static manuscript snapshot directory is absent.');
+add('S1-ADMIN-RECONCILED','S1','Admin runtime is on current bridge lineage without static manuscript copies',
+  /data-view=["']website-ops["']/.test(adminHtml)&&
+  /data-view=["']manuscripts["']/.test(adminHtml)&&
+  /\/admin\/api\/website-ops/.test(adminJs)&&
+  /platformFunction\("genesis-manuscripts-index"/.test(adminJs)&&
+  /PLATFORM_SESSION_KEY/.test(adminJs)&&
+  /genesis_admin_website_ops_status/.test(worker)&&
+  !fs.existsSync('public/admin/voice-revisions'),
+  'Admin shell retains Website Ops while Manuscripts uses the authenticated Platform read-only bridge; static manuscript snapshot directory is absent.');
 
 add('S1-CI-COVERAGE','S1','Visual QA covers main and final candidate',
   /- main/.test(visualWorkflow)&&/- website-finish-v1/.test(visualWorkflow)&&/pull_request/.test(visualWorkflow),
