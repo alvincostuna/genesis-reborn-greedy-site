@@ -517,3 +517,142 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* DEPLOY MARKER: ADMIN V3.4 OFFICIAL MATERIAL ALIGNMENT */
+
+
+/* =========================================================
+   GENESIS ADMIN SHELL V2 — PHASE 1
+   Grouped architecture shell only. No Core data mutation.
+   ========================================================= */
+.shell{grid-template-columns:272px minmax(0,1fr)}
+.sidebar{padding:22px 16px;gap:20px;overflow-y:auto;max-height:100vh;position:sticky;top:0}
+.admin-nav{display:grid;gap:20px}
+.nav-group{display:grid;gap:5px}
+.nav-group-label{
+  padding:0 12px 5px;
+  color:#708399;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.16em;
+}
+.nav{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:38px;
+  padding:9px 11px;
+  border:1px solid transparent;
+}
+.nav-icon{
+  width:20px;
+  display:inline-grid;
+  place-items:center;
+  flex:0 0 20px;
+  color:#8295aa;
+  font-family:Georgia,serif;
+}
+.nav:hover{border-color:#1b2c40}
+.nav.active{
+  border-color:#3c4f65;
+  box-shadow:inset 3px 0 0 var(--gold);
+  background:linear-gradient(90deg,rgba(214,173,85,.10),rgba(17,31,48,.9));
+}
+.nav.active .nav-icon{color:var(--gold)}
+.title-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.source-badge{
+  display:inline-flex;
+  align-items:center;
+  width:max-content;
+  min-height:24px;
+  padding:4px 8px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  font-size:10px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.09em;
+  white-space:nowrap;
+}
+.source-badge.core{color:#a9c9ff;border-color:#36587a;background:#0c1b2b}
+.source-badge.platform{color:#91e8bd;border-color:#2b624b;background:#0b2119}
+.source-badge.hybrid{color:#efca77;border-color:#705c32;background:#241d0e}
+.source-badge.bridge{color:#c0b7ff;border-color:#504b7b;background:#17152b}
+.badge.neutral{color:#b7c5d4;border-color:#35465a;background:#0e1a27}
+
+.overview-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(360px,.9fr);
+  gap:24px;
+  padding:26px;
+  margin-bottom:18px;
+  overflow:visible;
+}
+.overview-hero h2{font-size:27px;margin-bottom:9px}
+.overview-hero p:not(.eyebrow){margin:0;color:var(--muted);line-height:1.65;max-width:760px}
+.overview-architecture{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:14px;
+}
+.overview-architecture>div:not(.architecture-arrow){
+  min-height:122px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#091522;
+  padding:18px;
+  display:grid;
+  align-content:center;
+  gap:5px;
+}
+.overview-architecture small{color:var(--gold);font-weight:800;letter-spacing:.12em}
+.overview-architecture strong{font-family:Georgia,serif;font-size:20px}
+.overview-architecture span{color:var(--muted);font-size:12px;line-height:1.45}
+.architecture-arrow{color:var(--gold);font-size:22px}
+.overview-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+.overview-tile{padding:18px;min-height:180px;overflow:visible}
+.overview-tile h3{margin:16px 0 8px;font-family:Georgia,serif;font-size:20px}
+.overview-tile p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+.migration-band{margin-bottom:18px}
+.migration-steps{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+}
+.migration-steps>div{
+  min-height:96px;
+  padding:16px;
+  border-right:1px solid var(--line);
+  display:grid;
+  grid-template-columns:30px 1fr;
+  gap:10px;
+  align-items:start;
+}
+.migration-steps>div:last-child{border-right:0}
+.migration-steps strong{
+  width:28px;height:28px;border-radius:50%;
+  display:grid;place-items:center;
+  border:1px solid var(--line);
+  color:var(--muted);
+}
+.migration-steps span{font-size:12px;line-height:1.45;color:var(--muted)}
+.migration-steps .done strong{background:#0d2b20;border-color:#2c654c;color:var(--green)}
+.migration-steps .done span{color:var(--text)}
+
+@media(max-width:1180px){
+  .overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .migration-steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  .overview-hero{grid-template-columns:1fr}
+  .overview-architecture{grid-template-columns:1fr}
+  .architecture-arrow{transform:rotate(90deg);justify-self:center}
+  .overview-grid{grid-template-columns:1fr}
+  .migration-steps{grid-template-columns:1fr}
+  .migration-steps>div{border-right:0;border-bottom:1px solid var(--line)}
+  .migration-steps>div:last-child{border-bottom:0}
+  .title-row{align-items:flex-start}
+}
