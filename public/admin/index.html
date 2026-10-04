@@ -76,8 +76,27 @@
             <span id="source-badge" class="source-badge platform">PLATFORM · CONTROL PLANE</span>
           </div>
         </div>
-        <div id="release-badge" class="badge neutral">ADMIN ONLINE</div>
+        <div class="topbar-actions">
+          <button id="platform-session-button" class="badge neutral session-button" type="button">PLATFORM SIGN IN</button>
+          <div id="release-badge" class="badge neutral">ADMIN ONLINE</div>
+        </div>
       </header>
+
+      <dialog id="platform-login-dialog" class="viewer platform-login-dialog">
+        <div class="viewer-head">
+          <div><span class="eyebrow">GENESIS PLATFORM</span><strong>Admin Session</strong></div>
+          <button id="platform-login-close" type="button">Close</button>
+        </div>
+        <div class="viewer-body">
+          <p class="admin-note compact">Sign in once for this Admin browser tab. The same Platform session is shared by bridge-backed and Platform-native screens.</p>
+          <form id="platform-login-form" class="bridge-inline-login">
+            <input id="platform-login-email" type="email" autocomplete="username" placeholder="Platform admin email" required>
+            <input id="platform-login-password" type="password" autocomplete="current-password" placeholder="Platform admin password" required>
+            <button id="platform-login-submit" type="submit">Sign in</button>
+          </form>
+          <div id="platform-login-result" class="muted"></div>
+        </div>
+      </dialog>
 
       <section id="overview-view" class="view">
         <div class="overview-hero panel">
