@@ -1,4 +1,5 @@
-const state={manuscripts:[],activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[],activeDatabaseRecord:null,databaseAllowedFields:{},artAssetsManifest:null};
+const state={
+  platformReloadAfterLogin:null,manuscripts:[],activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[],activeDatabaseRecord:null,databaseAllowedFields:{},artAssetsManifest:null};
 const $=(s)=>document.querySelector(s);
 const $$=(s)=>[...document.querySelectorAll(s)];
 
@@ -48,7 +49,9 @@ async function platformLogin(email,password){
   if(!response.ok||!payload?.access_token){
     throw new Error(payload?.msg||payload?.message||payload?.error_description||("Platform login failed ("+response.status+")"));
   }
-  return storePlatformSession(payload);
+  const session=storePlatformSession(payload);
+  updatePlatformSessionControl();
+  return session;
 }
 
 async function platformFunction(name,params){
@@ -98,38 +101,40 @@ async function apiPost(path,body){
   return payload.data;
 }
 
+function updatePlatformSessionControl(){
+  const button=$("#platform-session-button");
+  if(!button)return;
+  const session=platformSession();
+  button.textContent=session?"PLATFORM CONNECTED":"PLATFORM SIGN IN";
+  button.classList.toggle("connected",Boolean(session));
+}
+
+function openPlatformLogin(){
+  const dialog=$("#platform-login-dialog");
+  if(!dialog)return;
+  $("#platform-login-result").textContent=platformSession()
+    ?"A GENESIS PLATFORM session is already active in this Admin tab."
+    :"";
+  dialog.showModal();
+}
+
 function bridgeLoginPanel(message){
-  return '<div class="panel admin-note compact">'+
-    '<div class="database-head"><span>GENESIS PLATFORM SESSION</span><small>REQUIRED</small></div>'+
-    '<p>'+escapeHtml(message||"Connect your GENESIS PLATFORM admin account to read this Core surface through the isolated bridge.")+'</p>'+
-    '<div class="bridge-inline-login">'+
-      '<input id="platform-bridge-email" type="email" autocomplete="username" placeholder="Platform admin email">'+
-      '<input id="platform-bridge-password" type="password" autocomplete="current-password" placeholder="Platform admin password">'+
-      '<button id="platform-bridge-connect" type="button">Connect Platform</button>'+
-    '</div>'+
+  return '<div class="panel admin-note compact platform-session-notice">'+
+    '<div><div class="database-head"><span>GENESIS PLATFORM SESSION</span><small>REQUIRED</small></div>'+
+    '<p>'+escapeHtml(message||"Sign in to GENESIS PLATFORM once for this Admin browser tab.")+'</p></div>'+
+    '<button type="button" data-open-platform-login>Sign in to Platform</button>'+
   '</div>';
 }
 
 function bindBridgeLogin(reload){
-  const button=$("#platform-bridge-connect");
-  if(!button)return;
-  const password=$("#platform-bridge-password");
-  const run=async()=>{
-    const email=$("#platform-bridge-email")?.value.trim()||"";
-    const value=password?.value||"";
-    if(!email||!value){alert("Enter your GENESIS PLATFORM admin email and password.");return;}
-    button.disabled=true;
-    try{
-      await platformLogin(email,value);
-      if(password)password.value="";
-      await reload();
-    }catch(error){
-      alert(error.message);
-      button.disabled=false;
-    }
-  };
-  button.addEventListener("click",run);
-  password?.addEventListener("keydown",(event)=>{if(event.key==="Enter")run();});
+  document.querySelectorAll("[data-open-platform-login]").forEach((button)=>{
+    if(button.dataset.bound==="1")return;
+    button.dataset.bound="1";
+    button.addEventListener("click",()=>{
+      openPlatformLogin();
+      if(typeof reload==="function")state.platformReloadAfterLogin=reload;
+    });
+  });
 }
 
 function bridgeFailurePanel(error){
@@ -544,7 +549,7 @@ async function loadDatabaseSummary(){
   root.innerHTML='<div class="card"><span>World Database</span><strong>Loading…</strong></div>';
 
   if(!platformSession()){
-    root.innerHTML=bridgeLoginPanel("World Database now reads through the isolated Core bridge. Sign in with the GENESIS PLATFORM Admin account.");
+    root.innerHTML=bridgeLoginPanel("World Database now reads through the isolated Core bridge. Sign in once to continue.");
     bindBridgeLogin(async()=>{await Promise.all([loadDatabaseSummary(),loadDatabase()]);});
     return;
   }
@@ -582,8 +587,7 @@ async function loadDatabase(){
   table.innerHTML='<div class="empty">Loading World Database through GENESIS PLATFORM…</div>';
 
   if(!platformSession()){
-    table.innerHTML=bridgeLoginPanel("World Database now reads through the isolated Core bridge. Sign in with the GENESIS PLATFORM Admin account.");
-    bindBridgeLogin(async()=>{await Promise.all([loadDatabaseSummary(),loadDatabase()]);});
+    table.innerHTML='<div class="empty">Waiting for the shared GENESIS PLATFORM Admin session.</div>';
     return;
   }
 
@@ -2385,5 +2389,38 @@ $("#art-assets-search").addEventListener("input",renderArtAssets);
   document.querySelectorAll(".sidebar .nav").forEach(button=>button.addEventListener("click",closeMenu));
   window.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu();});
 })();
+
+
+$("#platform-session-button")?.addEventListener("click",openPlatformLogin);
+$("#platform-login-close")?.addEventListener("click",()=>$("#platform-login-dialog")?.close());
+$("#platform-login-form")?.addEventListener("submit",async(event)=>{
+  event.preventDefault();
+  const submit=$("#platform-login-submit");
+  const result=$("#platform-login-result");
+  const email=$("#platform-login-email")?.value.trim()||"";
+  const password=$("#platform-login-password")?.value||"";
+  if(!email||!password)return;
+  submit.disabled=true;
+  result.textContent="Signing in…";
+  try{
+    await platformLogin(email,password);
+    $("#platform-login-password").value="";
+    updatePlatformSessionControl();
+    result.textContent="Platform session connected.";
+    const reload=state.platformReloadAfterLogin;
+    state.platformReloadAfterLogin=null;
+    $("#platform-login-dialog").close();
+    if(typeof reload==="function")await reload();
+    else{
+      const active=document.querySelector(".nav.active");
+      if(active?.dataset.view)switchView(active.dataset.view);
+    }
+  }catch(error){
+    result.textContent=error.message;
+  }finally{
+    submit.disabled=false;
+  }
+});
+updatePlatformSessionControl();
 
 initializeAdmin();
