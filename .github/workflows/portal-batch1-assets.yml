@@ -1,0 +1,50 @@
+name: Portal Batch 1 Asset Import
+
+on:
+  push:
+    branches:
+      - art/portal-background-batch1-live
+
+permissions:
+  contents: write
+
+jobs:
+  import-assets:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: art/portal-background-batch1-live
+          fetch-depth: 0
+      - name: Download approved Batch 1 WebPs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets/portal-v1/backgrounds/batch1
+          curl -L --fail --retry 3 'https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-04e8-8211-adf9-1bd7ff3cf0a0/raw?se=2026-10-04T07%3A28%3A19Z&sp=r&sv=2026-02-06&sr=b&scid=52bb5d41-8b4f-5bab-9be9-a3c0f0420bc8&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T00%3A41%3A00Z&ske=2026-10-05T00%3A41%3A00Z&sks=b&skv=2026-02-06&sig=N00sYMooDs42OAxFgRygrTaXi46eUWECV5TRhMWyxcE%3D' -o public/assets/portal-v1/backgrounds/batch1/hero-desktop.webp
+          curl -L --fail --retry 3 'https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-8838-8211-a360-31483b41a6b9/raw?se=2026-10-04T07%3A28%3A22Z&sp=r&sv=2026-02-06&sr=b&scid=b864d033-7963-5e74-b64f-2fa7e10f1056&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T00%3A37%3A39Z&ske=2026-10-05T00%3A37%3A39Z&sks=b&skv=2026-02-06&sig=ZBUolbzlXebFynsa9Z39FyjzLoVE9tJe0JrID38etDY%3D' -o public/assets/portal-v1/backgrounds/batch1/world-desktop.webp
+          curl -L --fail --retry 3 'https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-36f4-8211-8ffa-4f6d7744d369/raw?se=2026-10-04T07%3A28%3A25Z&sp=r&sv=2026-02-06&sr=b&scid=3beb4295-062b-5c5a-a30f-10f80d527906&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T05%3A17%3A10Z&ske=2026-10-05T05%3A17%3A10Z&sks=b&skv=2026-02-06&sig=sl67eV4gh8Qyq/bfMqc18gEMr7n7pxYpSuCOxWnsEbw%3D' -o public/assets/portal-v1/backgrounds/batch1/characters-desktop.webp
+          curl -L --fail --retry 3 'https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-9304-8211-9b0f-7cda45ba8610/raw?se=2026-10-04T07%3A28%3A27Z&sp=r&sv=2026-02-06&sr=b&scid=cbd416bf-4b85-5859-b125-5e5f9f841ab3&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-03T18%3A48%3A48Z&ske=2026-10-04T18%3A48%3A48Z&sks=b&skv=2026-02-06&sig=DrSoVyxOP6PPnCG/5t0riMZg%2Bj2pHSBpRZ2xbUqx4U0%3D' -o public/assets/portal-v1/backgrounds/batch1/monsters-desktop.webp
+          curl -L --fail --retry 3 'https://sdmntprseasia.oaiusercontent.com/files/00000000-7d70-8207-92b9-e9414e85d8e4/raw?se=2026-10-04T07%3A28%3A30Z&sp=r&sv=2026-02-06&sr=b&scid=6e8430d1-b200-5bfe-acd8-0e14e1e1c29c&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-03T18%3A55%3A08Z&ske=2026-10-04T18%3A55%3A08Z&sks=b&skv=2026-02-06&sig=aX9tVUw/rHDMHXRhsEH0bs2XrJGk17REkBTJtUMklrg%3D' -o public/assets/portal-v1/backgrounds/batch1/codex-desktop.webp
+          curl -L --fail --retry 3 'https://sdmntprseasia.oaiusercontent.com/files/00000000-76d4-8207-bb82-080f84bdad68/raw?se=2026-10-04T07%3A28%3A32Z&sp=r&sv=2026-02-06&sr=b&scid=cdd134b5-0d60-5594-b160-51e2c40086b0&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T00%3A44%3A00Z&ske=2026-10-05T00%3A44%3A00Z&sks=b&skv=2026-02-06&sig=Pjxsli6Arwb/p2cJ/wkf8b2wDRI2dsBlXPuPWMvn5f4%3D' -o public/assets/portal-v1/backgrounds/batch1/items-desktop.webp
+          curl -L --fail --retry 3 'https://sdmntprcentralindia.oaiusercontent.com/files/00000000-478c-8208-89fb-098a5bdf7487/raw?se=2026-10-04T07%3A28%3A34Z&sp=r&sv=2026-02-06&sr=b&scid=6493147e-af7e-5b74-ba4d-272f165dd9fd&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T03%3A10%3A14Z&ske=2026-10-05T03%3A10%3A14Z&sks=b&skv=2026-02-06&sig=fdDpwQfUdYyi6H/R2BFvr4Nix6ixlI2qFvMnth7TwsE%3D' -o public/assets/portal-v1/backgrounds/batch1/continue-story-desktop.webp
+          curl -L --fail --retry 3 'https://sdmntprseasia.oaiusercontent.com/files/00000000-98cc-8207-bb5e-70cc45fe99c7/raw?se=2026-10-04T07%3A28%3A37Z&sp=r&sv=2026-02-06&sr=b&scid=3a72ad2f-8828-5def-96b2-9da53a44abcc&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-03T18%3A53%3A03Z&ske=2026-10-04T18%3A53%3A03Z&sks=b&skv=2026-02-06&sig=AE26CLLO7bJa1tTVDJFTuOhZ7pIvpWIg6OVSnTQxl1E%3D' -o public/assets/portal-v1/backgrounds/batch1/manga-desktop.webp
+          curl -L --fail --retry 3 'https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-2538-8211-9bff-992a6034443d/raw?se=2026-10-04T07%3A28%3A39Z&sp=r&sv=2026-02-06&sr=b&scid=9ed9ae03-fab3-5955-b9b1-326e7784e0bc&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-03T18%3A48%3A50Z&ske=2026-10-04T18%3A48%3A50Z&sks=b&skv=2026-02-06&sig=fyAZK7H9mSaTMdxFFKTLJgrQFU5MUixK%2BBEAHkNNjg0%3D' -o public/assets/portal-v1/backgrounds/batch1/support-desktop.webp
+          curl -L --fail --retry 3 'https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-6344-8211-b053-5a61ac0deb90/raw?se=2026-10-04T07%3A28%3A42Z&sp=r&sv=2026-02-06&sr=b&scid=a421d4e3-9487-5666-a339-3eb7aaf5fdc3&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T03%3A10%3A08Z&ske=2026-10-05T03%3A10%3A08Z&sks=b&skv=2026-02-06&sig=/uNPbZc%2BlqKL2MNH3y5svirf3vwE2OzeJr0%2BhB6a94I%3D' -o public/assets/portal-v1/backgrounds/batch1/community-desktop.webp
+
+          for f in public/assets/portal-v1/backgrounds/batch1/*.webp; do
+            test -s "$f"
+            head -c 4 "$f" | grep -q RIFF
+          done
+          ls -lh public/assets/portal-v1/backgrounds/batch1
+
+      - name: Commit imported assets
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/portal-v1/backgrounds/batch1
+          git diff --cached --quiet && exit 0
+          git commit -m "Import approved Portal Batch 1 backgrounds"
+          git push origin HEAD:art/portal-background-batch1-live
