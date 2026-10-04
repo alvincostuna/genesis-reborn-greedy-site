@@ -659,3 +659,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 .migration-steps .current strong{background:#251f10;border-color:#7a6433;color:var(--gold);box-shadow:0 0 0 3px rgba(214,173,85,.08)}
 .migration-steps .current span{color:var(--text);font-weight:700}
+
+.topbar-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.session-button{cursor:pointer;font:inherit}
+.session-button.connected{color:#91e8bd;border-color:#2b624b;background:#0b2119}
+.platform-login-dialog{width:min(560px,calc(100vw - 32px))}
+.platform-login-dialog .viewer-body{display:grid;gap:14px}
+.platform-login-dialog .bridge-inline-login{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
+.platform-session-notice{display:flex;align-items:center;justify-content:space-between;gap:12px}
+@media(max-width:720px){
+  .platform-login-dialog .bridge-inline-login{grid-template-columns:1fr}
+}
