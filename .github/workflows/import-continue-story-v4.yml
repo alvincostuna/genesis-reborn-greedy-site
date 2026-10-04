@@ -1,0 +1,36 @@
+name: Import Continue Story V4
+
+on:
+  push:
+    branches:
+      - art/continue-story-v4-panorama
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: art/continue-story-v4-panorama
+          fetch-depth: 0
+      - name: Download Continue Story V4
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets/portal-v1/backgrounds/batch1
+          curl -L --fail --retry 3 'https://sdmntprseasia.oaiusercontent.com/files/00000000-a8f4-8207-bda0-05a4754d5fb3/raw?se=2026-10-04T16%3A23%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=801eaa96-150c-5004-ad35-548dc3761078&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T13%3A05%3A50Z&ske=2026-10-05T13%3A05%3A50Z&sks=b&skv=2026-02-06&sig=BuYC4rRvp813osCSbAk5yGjes7PaP2B1q0IegKe%2BGW8%3D' -o public/assets/portal-v1/backgrounds/batch1/continue-story-v4.webp
+          test -s public/assets/portal-v1/backgrounds/batch1/continue-story-v4.webp
+          head -c 4 public/assets/portal-v1/backgrounds/batch1/continue-story-v4.webp | grep -q RIFF
+      - name: Commit asset
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/portal-v1/backgrounds/batch1/continue-story-v4.webp
+          git diff --cached --quiet && exit 0
+          git commit -m "Import Continue Story V4 panoramic background"
+          git push origin HEAD:art/continue-story-v4-panorama
