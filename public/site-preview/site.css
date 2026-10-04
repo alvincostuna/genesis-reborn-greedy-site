@@ -15461,3 +15461,109 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   }
 }
 /* HOMEPAGE SHARED TOP SHELL LOCK MARKER */
+
+
+/* ==========================================================================
+   PORTAL BACKGROUND PASS V1 — BATCH 1
+   Background art only. No foreground overlays and no final wording.
+   ========================================================================== */
+.background-pass-v1 .skeleton-box{
+  overflow:visible;
+  background-color:#0b141d!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+  box-shadow:inset 0 0 0 1px rgba(220,190,105,.10)!important;
+}
+.background-pass-v1 .skeleton-spec{display:none!important}
+.background-pass-v1 .skeleton-zone{
+  color:transparent!important;
+  opacity:.16;
+  mix-blend-mode:screen;
+}
+.background-pass-v1 .skeleton-text-zone{background:rgba(35,120,78,.08)}
+.background-pass-v1 .skeleton-overlay-zone{background:rgba(160,70,70,.07)}
+
+.background-pass-v1 .skeleton-hero{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.34) 0%,rgba(3,9,15,.08) 48%,rgba(3,9,15,.02) 100%),
+    url('/assets/portal-v1/backgrounds/batch1/hero-desktop.webp')!important;
+  background-position:center 50%!important;
+}
+.background-pass-v1 .skeleton-world{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.24),rgba(3,9,15,.02) 58%),
+    url('/assets/portal-v1/backgrounds/batch1/world-desktop.webp')!important;
+  background-position:58% 50%!important;
+}
+.background-pass-v1 .skeleton-characters{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.24),rgba(3,9,15,.02) 58%),
+    url('/assets/portal-v1/backgrounds/batch1/characters-desktop.webp')!important;
+  background-position:64% 52%!important;
+}
+.background-pass-v1 .skeleton-monsters{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.28),rgba(3,9,15,.02) 56%),
+    url('/assets/portal-v1/backgrounds/batch1/monsters-desktop.webp')!important;
+  background-position:66% 50%!important;
+}
+.background-pass-v1 .skeleton-codex{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.28),rgba(3,9,15,.02) 58%),
+    url('/assets/portal-v1/backgrounds/batch1/codex-desktop.webp')!important;
+  background-position:62% 50%!important;
+}
+.background-pass-v1 .skeleton-items{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.24),rgba(3,9,15,.02) 58%),
+    url('/assets/portal-v1/backgrounds/batch1/items-desktop.webp')!important;
+  background-position:64% 50%!important;
+}
+.background-pass-v1 .skeleton-story{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.30),rgba(3,9,15,.02) 55%),
+    url('/assets/portal-v1/backgrounds/batch1/continue-story-desktop.webp')!important;
+  background-position:60% 50%!important;
+}
+.background-pass-v1 .skeleton-manga{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.25),rgba(3,9,15,.02) 58%),
+    url('/assets/portal-v1/backgrounds/batch1/manga-desktop.webp')!important;
+  background-position:66% 52%!important;
+}
+.background-pass-v1 .skeleton-support{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.25),rgba(3,9,15,.02) 58%),
+    url('/assets/portal-v1/backgrounds/batch1/support-desktop.webp')!important;
+  background-position:64% 50%!important;
+}
+.background-pass-v1 .skeleton-community[data-name="COMMUNITY"]{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.25),rgba(3,9,15,.02) 58%),
+    url('/assets/portal-v1/backgrounds/batch1/community-desktop.webp')!important;
+  background-position:64% 50%!important;
+}
+
+/* Unfilled Batch 2 boxes stay deliberately neutral. */
+.background-pass-v1 .skeleton-status,
+.background-pass-v1 .skeleton-discovery,
+.background-pass-v1 .skeleton-community[data-name="SUPPORT & FAN PAGE"],
+.background-pass-v1 .skeleton-footer{
+  background-image:none!important;
+  background-color:#101820!important;
+}
+
+@media(max-width:900px){
+  .background-pass-v1 .skeleton-hero{background-position:60% 50%!important}
+  .background-pass-v1 .skeleton-world{background-position:62% 50%!important}
+  .background-pass-v1 .skeleton-characters{background-position:68% 50%!important}
+  .background-pass-v1 .skeleton-monsters{background-position:66% 50%!important}
+  .background-pass-v1 .skeleton-codex{background-position:62% 50%!important}
+}
+@media(max-width:620px){
+  .background-pass-v1 .skeleton-zone{opacity:.10}
+  .background-pass-v1 .skeleton-hero{background-position:66% 50%!important}
+  .background-pass-v1 .skeleton-world{background-position:65% 50%!important}
+  .background-pass-v1 .skeleton-characters{background-position:70% 50%!important}
+}
+/* PORTAL BACKGROUND PASS V1 BATCH 1 MARKER */
