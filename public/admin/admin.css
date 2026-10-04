@@ -656,3 +656,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .migration-steps>div:last-child{border-bottom:0}
   .title-row{align-items:flex-start}
 }
+
+.migration-steps .current strong{background:#251f10;border-color:#7a6433;color:var(--gold);box-shadow:0 0 0 3px rgba(214,173,85,.08)}
+.migration-steps .current span{color:var(--text);font-weight:700}
