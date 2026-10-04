@@ -120,6 +120,32 @@ async function platformRest(path,params={}){
   return payload;
 }
 
+async function platformRestWrite(path,method,body,params={}){
+  const session=platformSession();
+  if(!session)throw new Error("GENESIS PLATFORM session required.");
+  const url=new URL(PLATFORM_URL+"/rest/v1/"+path);
+  Object.entries(params).forEach(([k,v])=>{
+    if(v!==undefined&&v!==null&&String(v)!=="")url.searchParams.set(k,String(v));
+  });
+  const response=await fetch(url.toString(),{
+    method,
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:"Bearer "+session.access_token,
+      apikey:PLATFORM_PUBLISHABLE_KEY,
+      Prefer:"return=representation"
+    },
+    body:body===undefined?undefined:JSON.stringify(body)
+  });
+  const payload=await response.json().catch(()=>null);
+  if(!response.ok){
+    const message=payload?.message||payload?.error_description||payload?.error||("Platform write failed ("+response.status+")");
+    throw new Error(message);
+  }
+  return payload;
+}
+
+
 
 
 async function api(path){
@@ -1370,52 +1396,112 @@ async function loadCodex(){
 async function loadSupport(){
   const root=$("#support-summary");
   root.innerHTML='<div class="card"><span>Support</span><strong>Loading…</strong></div>';
+
+  if(!platformSession()){
+    root.innerHTML=bridgeLoginPanel("Support is now Platform-native. Sign in once to GENESIS PLATFORM.");
+    bindBridgeLogin(loadSupport);
+    return;
+  }
+
   try{
-    const d=await api("/admin/api/support/summary");
+    const [settings,messages,fanPosts,reports]=await Promise.all([
+      platformRest("platform_settings",{select:"setting_key,value"}),
+      platformRest("contact_messages",{select:"id,read_by_admin,sender_type"}),
+      platformRest("community_fan_posts",{select:"id,status"}),
+      platformRest("community_reports",{select:"id,status"})
+    ]);
+
+    const smap=Object.fromEntries((settings||[]).map(x=>[x.setting_key,x.value||{}]));
+    const unread=(messages||[]).filter(m=>m.sender_type==="READER"&&!m.read_by_admin).length;
+    const pendingFan=(fanPosts||[]).filter(x=>x.status==="PENDING").length;
+    const openReports=(reports||[]).filter(x=>x.status==="OPEN").length;
+
     const rows=[
-      ["Payments",d.payments_enabled?"ENABLED":"OFF"],
-      ["Pure support",d.pure_support_enabled?"ENABLED":"OFF"],
-      ["Share rewards",d.share_rewards_enabled?"ENABLED":"OFF"],
-      ["Fan posting",d.fan_posting_enabled?"ENABLED":"OFF"],
-      ["Open messages",d.open_messages??0],
-      ["Pending shares",d.pending_share_claims??0],
-      ["Pending fan posts",d.pending_fan_posts??0],
-      ["Active VIPs",d.active_vips??0]
+      ["Payments",smap.payments?.enabled?"ENABLED":"OFF"],
+      ["Pure support",smap.feature_pure_support?.enabled?"ENABLED":"OFF"],
+      ["Share rewards",smap.feature_share_rewards?.enabled?"ENABLED":"OFF"],
+      ["Fan posting",smap.feature_fan_posting?.enabled?"ENABLED":"OFF"],
+      ["Unread reader messages",unread],
+      ["Pending fan posts",pendingFan],
+      ["Open community reports",openReports],
+      ["Owner","PLATFORM"]
     ];
-    root.innerHTML=rows.map(([k,v])=>'<div class="card"><span>'+escapeHtml(k)+'</span><strong>'+escapeHtml(v)+'</strong></div>').join("");
+    root.innerHTML=rows.map(([k,v])=>'<div class="card"><span>'+escapeHtml(k)+'</span><strong>'+escapeHtml(v)+'</strong></div>').join("")+
+      '<div class="admin-note compact"><p>Support state is now assembled entirely from GENESIS PLATFORM. Payment/support mutations remain disabled until their Platform mutation contracts are enabled.</p></div>';
+
+    $("#release-badge").textContent="PLATFORM SUPPORT";
+    $("#release-badge").className="badge good";
   }catch(error){
-    root.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+    root.innerHTML=bridgeFailurePanel(error);
   }
 }
 
 async function loadMessages(){
   const root=$("#message-inbox");
-  root.innerHTML='<div class="panel"><div class="empty">Loading reader messages…</div></div>';
+  root.innerHTML='<div class="panel"><div class="empty">Loading Platform reader messages…</div></div>';
+
+  if(!platformSession()){
+    root.innerHTML=bridgeLoginPanel("Messages is now Platform-native. Sign in once to GENESIS PLATFORM.");
+    bindBridgeLogin(loadMessages);
+    return;
+  }
+
   try{
-    const rows=await api("/admin/api/messages");
-    if(!Array.isArray(rows)||!rows.length){
-      root.innerHTML='<div class="panel"><div class="empty"><strong>No reader messages yet.</strong><br>Support → Contact Us conversations will appear here.</div></div>';
+    const [conversations,messages,profiles]=await Promise.all([
+      platformRest("contact_conversations",{select:"id,user_id,subject,status,last_message_at,created_at",order:"last_message_at.desc"}),
+      platformRest("contact_messages",{select:"id,conversation_id,sender_user_id,sender_type,body,read_by_admin,created_at",order:"created_at.asc"}),
+      platformRest("profiles",{select:"user_id,display_name"})
+    ]);
+
+    const profileById=new Map((profiles||[]).map(p=>[p.user_id,p]));
+    const msgsByConv=new Map();
+    (messages||[]).forEach(m=>{
+      if(!msgsByConv.has(m.conversation_id))msgsByConv.set(m.conversation_id,[]);
+      msgsByConv.get(m.conversation_id).push(m);
+    });
+
+    const rows=(conversations||[]).map(conv=>{
+      const convMessages=msgsByConv.get(conv.id)||[];
+      const reader=profileById.get(conv.user_id)||{};
+      return {
+        ...conv,
+        display_name:reader.display_name||"Reader",
+        unread_count:convMessages.filter(m=>m.sender_type==="READER"&&!m.read_by_admin).length,
+        messages:convMessages.map(m=>({
+          ...m,
+          sender_label:m.sender_type==="ADMIN"?"Admin":(m.sender_type==="READER"?(reader.display_name||"Reader"):"System")
+        }))
+      };
+    });
+
+    if(!rows.length){
+      root.innerHTML='<div class="panel"><div class="empty"><strong>No Platform reader messages yet.</strong><br>Support → Contact Us conversations will appear here after the reader-side contact flow is migrated.</div></div>';
       return;
     }
+
     root.innerHTML=rows.map(x=>
       '<details class="message-thread" '+((x.unread_count||0)>0?'open':'')+'>'+
-        '<summary><span><strong>'+escapeHtml(x.subject||"No subject")+'</strong><small>'+escapeHtml(x.display_name||"Reader")+' '+adminBadge(x.badge)+'</small></span><span>'+escapeHtml(x.unread_count||0)+' unread</span></summary>'+
+        '<summary><span><strong>'+escapeHtml(x.subject||"No subject")+'</strong><small>'+escapeHtml(x.display_name||"Reader")+'</small></span><span>'+escapeHtml(x.unread_count||0)+' unread</span></summary>'+
         '<div class="message-transcript">'+(x.messages||[]).map(m=>
           '<article class="message-bubble '+(m.sender_type==="ADMIN"?"admin":"reader")+'"><div><strong>'+escapeHtml(m.sender_label||m.sender_type)+'</strong><small>'+escapeHtml(m.created_at||"")+'</small></div><p>'+escapeHtml(m.body||"")+'</p></article>'
         ).join("")+
-        '<form class="admin-reply-form" data-conversation="'+escapeHtml(x.conversation_id)+'">'+
+        '<form class="admin-reply-form" data-conversation="'+escapeHtml(x.id)+'">'+
           '<textarea rows="3" maxlength="5000" placeholder="Reply to this reader…" required></textarea>'+
           '<button type="submit">Send reply</button>'+
           '<span class="reply-status"></span>'+
         '</form>'+
         '</div></details>'
     ).join("");
-    root.querySelectorAll(".admin-reply-form").forEach(form=>form.addEventListener("submit",(e)=>{
-      e.preventDefault();
+
+    root.querySelectorAll(".admin-reply-form").forEach(form=>form.addEventListener("submit",(ev)=>{
+      ev.preventDefault();
       sendAdminReply(form);
     }));
+
+    $("#release-badge").textContent="PLATFORM MESSAGES";
+    $("#release-badge").className="badge good";
   }catch(error){
-    root.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+    root.innerHTML=bridgeFailurePanel(error);
   }
 }
 
@@ -1426,10 +1512,26 @@ async function sendAdminReply(form){
   const status=form.querySelector(".reply-status");
   const body=textarea.value.trim();
   if(!body)return;
+
+  const session=platformSession();
+  if(!session){openPlatformLogin();return;}
+
   button.disabled=true;
   status.textContent="Sending…";
   try{
-    await apiPost("/admin/api/messages/"+conversation+"/reply",{body});
+    const tokenPayload=JSON.parse(atob(session.access_token.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));
+    const userId=tokenPayload.sub;
+    await platformRestWrite("contact_messages","POST",{
+      conversation_id:conversation,
+      sender_user_id:userId,
+      sender_type:"ADMIN",
+      body,
+      read_by_admin:true
+    });
+    await platformRestWrite("contact_conversations","PATCH",{
+      last_message_at:new Date().toISOString(),
+      updated_at:new Date().toISOString()
+    },{id:"eq."+conversation});
     textarea.value="";
     status.textContent="Reply sent.";
     await loadMessages();
@@ -1439,7 +1541,6 @@ async function sendAdminReply(form){
     button.disabled=false;
   }
 }
-
 
 async function loadReaders(){
   const summary=$("#readers-summary");
