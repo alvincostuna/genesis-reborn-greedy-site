@@ -346,7 +346,7 @@ async function loadManuscripts(){
       }).join("")+
       '</tbody></table>';
 
-    $("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>openPart(row.dataset.part)));
+    document.querySelectorAll("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>openPart(row.dataset.part)));
   }catch(error){
     table.innerHTML=bridgeFailurePanel(error);
   }
