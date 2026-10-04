@@ -22,7 +22,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p public/assets/portal-v1/backgrounds/batch1
-          curl -L --fail --retry 3 'https://sdmntprseasia.oaiusercontent.com/files/00000000-2b44-8207-a767-2051219b443f/raw?se=2026-10-04T08%3A38%3A08Z&sp=r&sv=2026-02-06&sr=b&scid=af3e4336-d938-5351-9205-8427dbfbb353&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T00%3A41%3A00Z&ske=2026-10-05T00%3A41%3A00Z&sks=b&skv=2026-02-06&sig=HqT/yq6NNLh5ibqOrASiS9POHdxHTF2VxIT7pI84qjk%3D' -o public/assets/portal-v1/backgrounds/batch1/continue-story-v2.webp
+          curl -L --fail --retry 3 'https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-4da0-8211-814c-c6df7312bcb7/raw?se=2026-10-04T08%3A45%3A08Z&sp=r&sv=2026-02-06&sr=b&scid=549cf9dd-12d4-53fd-9785-50a2b9e2e18b&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T06%3A31%3A07Z&ske=2026-10-05T06%3A31%3A07Z&sks=b&skv=2026-02-06&sig=5SaD%2BKjzDT42pcyGQmEE62U5Br8Ey9UJkaUZvCvhB1o%3D' -o public/assets/portal-v1/backgrounds/batch1/continue-story-v2.webp
           test -s public/assets/portal-v1/backgrounds/batch1/continue-story-v2.webp
           head -c 4 public/assets/portal-v1/backgrounds/batch1/continue-story-v2.webp | grep -q RIFF
       - name: Commit asset
