@@ -1859,25 +1859,22 @@ async function loadSettings(){
 }
 
 async function initializeAdmin(){
+  if(!platformSession()){
+    state.rbac=null;
+    switchView("overview");
+    return;
+  }
   try{
-    const rbac=await api("/admin/api/rbac");
+    const rbac=await platformRpc("platform_admin_access_summary");
     state.rbac=rbac;
-    if(rbac.bootstrap_required||!rbac.principal_exists||rbac.principal_status!=="ENABLED"){
+    if(!rbac.principal_exists||rbac.principal_status!=="ENABLED"){
       switchView("access");
       return;
     }
     switchView("overview");
   }catch(error){
-    // Phase 1 isolation rule: a legacy Core/Admin API failure must not erase the shell.
     state.rbac=null;
     switchView("overview");
-    const root=$("#overview-view");
-    if(root){
-      const warning=document.createElement("div");
-      warning.className="panel admin-note compact";
-      warning.innerHTML='<div class="database-head"><span>LEGACY ADMIN PATH</span><small>UNAVAILABLE</small></div><p>'+escapeHtml(error.message)+' Platform-native navigation remains available while Core-dependent screens migrate to the read-only bridge.</p>';
-      root.prepend(warning);
-    }
   }
 }
 
