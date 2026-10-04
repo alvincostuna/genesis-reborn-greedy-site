@@ -1092,12 +1092,16 @@ async function renderDatabaseStaging(domain,record){
   let protectedDetailError="";
   const entityBacked=!["loot","crafting"].includes(domain);
   if(["monsters","maps","items"].includes(domain)){
-    try{protectedDetail=await api("/admin/api/database/detail/"+encodeURIComponent(domain)+"/"+encodeURIComponent(record.id));}
-    catch(error){protectedDetailError=error.message;}
+    try{
+      const envelope=await platformFunction("genesis-world-detail",{domain,entity_id:record.id});
+      protectedDetail=envelope?.data||null;
+    }catch(error){protectedDetailError=error.message;}
   }
   if(entityBacked){
-    try{atlas=await api("/admin/api/atlas-gates/"+encodeURIComponent(record.id));}
-    catch(error){atlasError=error.message;}
+    try{
+      const envelope=await platformFunction("genesis-atlas-gate",{entity_id:record.id});
+      atlas=envelope?.data||null;
+    }catch(error){atlasError=error.message;}
   }else{
     atlasError="Atlas gate is not applicable to this non-entity database domain.";
   }
@@ -1163,38 +1167,8 @@ async function renderDatabaseStaging(domain,record){
     '<div class="db-detail-section">'+atlasPanel+'</div>'+
     '<div class="db-detail-section">'+artPanel+'</div>'+
     '<div class="db-stage-body">'+
-      '<div><small>Allowed staged-edit fields</small><p class="db-allowed-fields">'+escapeHtml(allowed.join(", ")||"Loading allowlist…")+'</p></div>'+
-      (hasPermission("DATABASE_EDIT")
-        ?'<form id="database-proposal-form" class="admin-control-form">'+
-           '<strong>Create staged patch</strong>'+
-           '<textarea name="patch" rows="7">{}</textarea>'+
-           '<input name="reason" placeholder="Why this canonical database change is needed" required>'+
-           '<button type="submit">Validate & Stage Proposal</button>'+
-         '</form>'
-        :'<div class="empty">DATABASE_EDIT is required to stage changes. Detail, Atlas and Visual Status remain view-only.</div>')+
+      '<div><small>Edit boundary</small><p class="db-allowed-fields">READ ONLY — protected detail and Atlas migration complete. Database proposal staging remains isolated until a separate Platform-owned mutation contract is approved.</p></div>'+
     '</div>';
-
-  const form=$("#database-proposal-form");
-  if(form)form.addEventListener("submit",async(e)=>{
-    e.preventDefault();
-    const fd=new FormData(form);
-    let patch={};
-    try{patch=JSON.parse(String(fd.get("patch")||"{}"));}catch{alert("Patch must be valid JSON.");return;}
-    const reason=String(fd.get("reason")||"");
-    if(reason.trim().length<8)return;
-    const button=form.querySelector("button");
-    button.disabled=true;
-    try{
-      const result=await apiPost("/admin/api/database/proposals",{
-        domain,target_code:String(record.code||""),patch,reason
-      });
-      alert("Proposal "+result.status+"\n"+result.proposal_id);
-      state.activeDatabaseRecord=null;
-      $("#database-staging").innerHTML='<div class="empty">Proposal staged. Select another database record to open its detail.</div>';
-      await loadDatabaseProposals();
-    }catch(error){alert(error.message);}
-    finally{button.disabled=false;}
-  });
 }
 
 
