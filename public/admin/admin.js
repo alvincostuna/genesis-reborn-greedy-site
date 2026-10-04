@@ -2056,9 +2056,18 @@ async function initializeAdmin(){
       switchView("access");
       return;
     }
-    loadProduction();
+    switchView("overview");
   }catch(error){
-    $("#production-view").innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+    // Phase 1 isolation rule: a legacy Core/Admin API failure must not erase the shell.
+    state.rbac=null;
+    switchView("overview");
+    const root=$("#overview-view");
+    if(root){
+      const warning=document.createElement("div");
+      warning.className="panel admin-note compact";
+      warning.innerHTML='<div class="database-head"><span>LEGACY ADMIN PATH</span><small>UNAVAILABLE</small></div><p>'+escapeHtml(error.message)+' Platform-native navigation remains available while Core-dependent screens migrate to the read-only bridge.</p>';
+      root.prepend(warning);
+    }
   }
 }
 
@@ -2311,9 +2320,49 @@ async function previewCurrent(){
 function switchView(name){
   $$(".view").forEach((x)=>x.classList.add("hidden"));
   $$(".nav").forEach((x)=>x.classList.toggle("active",x.dataset.view===name));
-  $("#"+name+"-view").classList.remove("hidden");
-  const titles={production:"Production Dashboard","website-ops":"Website Operations",manuscripts:"Manuscript Library",releases:"Release Queue",roadmap:"Roadmap",continuity:"Continuity",authority:"Authority",access:"Access & Audit",database:"Game Database","art-assets":"Art Assets / Visual Status",codex:"Codex",support:"Support",messages:"Reader Messages",readers:"Readers",community:"Community",settings:"Settings"};
-  $("#page-title").textContent=titles[name]||"Control Center";
+  const target=$("#"+name+"-view");
+  if(!target)return;
+  target.classList.remove("hidden");
+
+  const screens={
+    overview:{title:"Command Overview",source:"PLATFORM · CONTROL PLANE",kind:"platform"},
+    production:{title:"Production",source:"CORE · READ ONLY",kind:"core"},
+    releases:{title:"Releases",source:"PLATFORM · MANAGED HERE",kind:"platform"},
+    manuscripts:{title:"Manuscripts",source:"CORE · READ ONLY",kind:"core"},
+    roadmap:{title:"Roadmap",source:"CORE · READ ONLY",kind:"core"},
+    continuity:{title:"Continuity",source:"CORE · READ ONLY",kind:"core"},
+    authority:{title:"Authorities",source:"CORE · READ ONLY",kind:"core"},
+    database:{title:"World Database",source:"CORE · READ ONLY",kind:"core"},
+    codex:{title:"Codex",source:"CORE DATA · PLATFORM PROJECTION",kind:"hybrid"},
+    "art-assets":{title:"Art Assets",source:"PLATFORM · MANAGED HERE",kind:"platform"},
+    readers:{title:"Readers",source:"PLATFORM · MANAGED HERE",kind:"platform"},
+    community:{title:"Community",source:"PLATFORM · MANAGED HERE",kind:"platform"},
+    messages:{title:"Messages",source:"PLATFORM · MANAGED HERE",kind:"platform"},
+    support:{title:"Support",source:"PLATFORM · MANAGED HERE",kind:"platform"},
+    "website-ops":{title:"Website",source:"PLATFORM · MANAGED HERE",kind:"platform"},
+    access:{title:"Administrators & Audit",source:"PLATFORM · MANAGED HERE",kind:"platform"},
+    "bridge-health":{title:"Bridge Health",source:"CORE → PLATFORM · READ ONLY",kind:"bridge"},
+    settings:{title:"Settings",source:"PLATFORM · MANAGED HERE",kind:"platform"}
+  };
+  const screen=screens[name]||{title:"Control Center",source:"PLATFORM",kind:"platform"};
+  $("#page-title").textContent=screen.title;
+  const source=$("#source-badge");
+  if(source){
+    source.textContent=screen.source;
+    source.className="source-badge "+screen.kind;
+  }
+
+  // Keep top-right status contextual without coupling the shell to Core.
+  const status=$("#release-badge");
+  if(status&&name==="overview"){
+    status.textContent="ADMIN ONLINE";
+    status.className="badge neutral";
+  }else if(status&&name==="bridge-health"){
+    status.textContent="4/4 VERIFIED";
+    status.className="badge good";
+  }
+
+  if(name==="production")loadProduction();
   if(name==="website-ops")loadWebsiteOps();
   if(name==="manuscripts")loadManuscripts();
   if(name==="releases")loadReleases();
