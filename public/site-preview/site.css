@@ -15497,9 +15497,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 .background-pass-v1 .skeleton-characters{
   background-image:
-    linear-gradient(90deg,rgba(3,9,15,.24),rgba(3,9,15,.02) 58%),
+    linear-gradient(90deg,rgba(3,9,15,.64) 0%,rgba(3,9,15,.34) 38%,rgba(3,9,15,.08) 62%,rgba(3,9,15,.02) 100%),
+    linear-gradient(0deg,rgba(3,9,15,.42) 0%,rgba(3,9,15,.12) 44%,rgba(3,9,15,0) 70%),
     url('/assets/portal-v1/backgrounds/batch1/characters-desktop.webp')!important;
-  background-position:64% 52%!important;
+  background-position:69% 52%!important;
 }
 .background-pass-v1 .skeleton-monsters{
   background-image:
@@ -15521,9 +15522,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 .background-pass-v1 .skeleton-story{
   background-image:
-    linear-gradient(90deg,rgba(3,9,15,.30),rgba(3,9,15,.02) 55%),
-    url('/assets/portal-v1/backgrounds/batch1/continue-story-desktop.webp')!important;
-  background-position:60% 50%!important;
+    linear-gradient(90deg,rgba(3,9,15,.58) 0%,rgba(3,9,15,.28) 34%,rgba(3,9,15,.06) 58%,rgba(3,9,15,.01) 100%),
+    url('/assets/portal-v1/backgrounds/batch1/continue-story-v2.webp')!important;
+  background-position:62% 50%!important;
 }
 .background-pass-v1 .skeleton-manga{
   background-image:
@@ -15533,9 +15534,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 .background-pass-v1 .skeleton-support{
   background-image:
-    linear-gradient(90deg,rgba(3,9,15,.25),rgba(3,9,15,.02) 58%),
+    linear-gradient(90deg,rgba(3,9,15,.74) 0%,rgba(3,9,15,.44) 38%,rgba(3,9,15,.12) 62%,rgba(3,9,15,.02) 100%),
     url('/assets/portal-v1/backgrounds/batch1/support-desktop.webp')!important;
-  background-position:64% 50%!important;
+  background-position:70% 50%!important;
 }
 .background-pass-v1 .skeleton-community[data-name="COMMUNITY"]{
   background-image:
@@ -15554,16 +15555,26 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 @media(max-width:900px){
-  .background-pass-v1 .skeleton-hero{background-position:60% 50%!important}
+  .background-pass-v1 .skeleton-hero{
+    background-image:
+      linear-gradient(90deg,rgba(3,9,15,.72) 0%,rgba(3,9,15,.40) 34%,rgba(3,9,15,.12) 58%,rgba(3,9,15,.02) 100%),
+      url('/assets/portal-v1/backgrounds/batch1/hero-desktop.webp')!important;
+    background-position:64% 50%!important;
+  }
   .background-pass-v1 .skeleton-world{background-position:62% 50%!important}
-  .background-pass-v1 .skeleton-characters{background-position:68% 50%!important}
+  .background-pass-v1 .skeleton-characters{background-position:72% 50%!important}
   .background-pass-v1 .skeleton-monsters{background-position:66% 50%!important}
   .background-pass-v1 .skeleton-codex{background-position:62% 50%!important}
 }
 @media(max-width:620px){
   .background-pass-v1 .skeleton-zone{opacity:.10}
-  .background-pass-v1 .skeleton-hero{background-position:66% 50%!important}
+  .background-pass-v1 .skeleton-hero{
+    background-image:
+      linear-gradient(90deg,rgba(3,9,15,.80) 0%,rgba(3,9,15,.50) 40%,rgba(3,9,15,.16) 64%,rgba(3,9,15,.03) 100%),
+      url('/assets/portal-v1/backgrounds/batch1/hero-desktop.webp')!important;
+    background-position:70% 50%!important;
+  }
   .background-pass-v1 .skeleton-world{background-position:65% 50%!important}
-  .background-pass-v1 .skeleton-characters{background-position:70% 50%!important}
+  .background-pass-v1 .skeleton-characters{background-position:74% 50%!important}
 }
 /* PORTAL BACKGROUND PASS V1 BATCH 1 MARKER */
