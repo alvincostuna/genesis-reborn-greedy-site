@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>GENESIS Admin — Bridge Test</title>
+  <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
+  <link rel="stylesheet" href="/admin/admin.css">
+  <style>
+    .bridge-shell{max-width:980px;margin:0 auto;padding:28px}
+    .bridge-grid{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:18px}
+    .bridge-panel{padding:22px}
+    .bridge-field{display:grid;gap:7px;margin:14px 0}
+    .bridge-field input{width:100%;box-sizing:border-box}
+    .bridge-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .bridge-result{white-space:pre-wrap;word-break:break-word;min-height:260px;max-height:520px;overflow:auto}
+    .bridge-status{display:inline-flex;align-items:center;gap:8px;margin-top:8px}
+    .bridge-dot{width:9px;height:9px;border-radius:50%;background:#888}
+    .bridge-dot.ok{background:#46c77b}.bridge-dot.bad{background:#ef6b6b}.bridge-dot.wait{background:#d5a848}
+    .bridge-note{font-size:13px;opacity:.8;line-height:1.55}
+    .bridge-back{display:inline-block;margin-bottom:18px}
+    @media(max-width:800px){.bridge-grid{grid-template-columns:1fr}.bridge-shell{padding:18px}}
+  </style>
+</head>
+<body>
+  <main class="bridge-shell">
+    <a class="bridge-back" href="/admin/">← Back to Control Center</a>
+    <p class="eyebrow">GENESIS: REBORN GREEDY</p>
+    <h1>Platform Bridge Test</h1>
+    <p class="bridge-note">
+      Temporary protected test panel. This page is behind the existing GENESIS Admin Cloudflare Access gate.
+      Your Platform password is sent directly from this browser to GENESIS PLATFORM Supabase Auth and is cleared immediately after login.
+    </p>
+
+    <div class="bridge-grid">
+      <section class="panel bridge-panel">
+        <h2>1. Login to GENESIS PLATFORM</h2>
+        <div class="bridge-field">
+          <label for="bridge-email">Admin email</label>
+          <input id="bridge-email" type="email" autocomplete="username" placeholder="Admin email">
+        </div>
+        <div class="bridge-field">
+          <label for="bridge-password">Admin password</label>
+          <input id="bridge-password" type="password" autocomplete="current-password" placeholder="Admin password">
+        </div>
+        <div class="bridge-actions">
+          <button id="bridge-login" type="button">Login</button>
+          <button id="bridge-test-all" type="button" disabled>Test All 4</button>
+          <button id="bridge-logout" type="button" disabled>Clear Session</button>
+        </div>
+        <div class="bridge-status">
+          <span id="bridge-dot" class="bridge-dot"></span>
+          <strong id="bridge-status">Not logged in</strong>
+        </div>
+
+        <hr>
+        <h2>2. Individual checks</h2>
+        <div class="bridge-actions">
+          <button class="bridge-test-one" data-endpoint="genesis-production-status" disabled>Production Status</button>
+          <button class="bridge-test-one" data-endpoint="genesis-roadmap" disabled>Roadmap</button>
+          <button class="bridge-test-one" data-endpoint="genesis-continuity" disabled>Continuity</button>
+          <button class="bridge-test-one" data-endpoint="genesis-authorities" disabled>Authorities</button>
+        </div>
+      </section>
+
+      <section class="panel bridge-panel">
+        <h2>Result</h2>
+        <pre id="bridge-result" class="bridge-result">Waiting for login.</pre>
+      </section>
+    </div>
+  </main>
+
+<script>
+const PLATFORM_URL = "https://qtfdqurbcqkpkpnvkvdh.supabase.co";
+const PLATFORM_PUBLISHABLE_KEY = "sb_publishable_V7DrgmlPJfe1d-KZX3rSsg_VpSouhlp";
+const endpoints = [
+  "genesis-production-status",
+  "genesis-roadmap",
+  "genesis-continuity",
+  "genesis-authorities"
+];
+
+let accessToken = null;
+
+const emailEl = document.getElementById("bridge-email");
+const passwordEl = document.getElementById("bridge-password");
+const loginBtn = document.getElementById("bridge-login");
+const testAllBtn = document.getElementById("bridge-test-all");
+const logoutBtn = document.getElementById("bridge-logout");
+const resultEl = document.getElementById("bridge-result");
+const statusEl = document.getElementById("bridge-status");
+const dotEl = document.getElementById("bridge-dot");
+const oneButtons = [...document.querySelectorAll(".bridge-test-one")];
+
+function setState(text, kind){
+  statusEl.textContent = text;
+  dotEl.className = "bridge-dot" + (kind ? " " + kind : "");
+}
+function enableTests(enabled){
+  testAllBtn.disabled = !enabled;
+  logoutBtn.disabled = !enabled;
+  oneButtons.forEach((b)=> b.disabled = !enabled);
+}
+function clearSession(){
+  accessToken = null;
+  passwordEl.value = "";
+  enableTests(false);
+  setState("Not logged in", "");
+  resultEl.textContent = "Session cleared.";
+}
+async function login(){
+  const email = emailEl.value.trim();
+  const password = passwordEl.value;
+  if (!email || !password) {
+    resultEl.textContent = "Enter the GENESIS PLATFORM admin email and password first.";
+    return;
+  }
+
+  loginBtn.disabled = true;
+  enableTests(false);
+  setState("Logging in…", "wait");
+  resultEl.textContent = "Authenticating directly with GENESIS PLATFORM…";
+
+  try {
+    const resp = await fetch(PLATFORM_URL + "/auth/v1/token?grant_type=password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": PLATFORM_PUBLISHABLE_KEY
+      },
+      body: JSON.stringify({ email, password })
+    });
+    const payload = await resp.json().catch(()=> ({}));
+    passwordEl.value = "";
+
+    if (!resp.ok || !payload.access_token) {
+      accessToken = null;
+      setState("Login failed", "bad");
+      resultEl.textContent = "HTTP " + resp.status + "\n\n" + JSON.stringify(payload, null, 2);
+      return;
+    }
+
+    accessToken = payload.access_token;
+    setState("Platform admin session ready", "ok");
+    enableTests(true);
+    resultEl.textContent = "Login successful. Click Test All 4.";
+  } catch (error) {
+    accessToken = null;
+    setState("Login error", "bad");
+    resultEl.textContent = String(error?.message || error);
+  } finally {
+    loginBtn.disabled = false;
+  }
+}
+
+async function testEndpoint(endpoint){
+  if (!accessToken) throw new Error("Login first.");
+  const resp = await fetch(PLATFORM_URL + "/functions/v1/" + endpoint, {
+    method: "GET",
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+      "apikey": PLATFORM_PUBLISHABLE_KEY
+    }
+  });
+  const raw = await resp.text();
+  let data;
+  try { data = JSON.parse(raw); } catch { data = raw; }
+  return { endpoint, status: resp.status, ok: resp.ok, data };
+}
+
+async function testOne(endpoint){
+  setState("Testing " + endpoint + "…", "wait");
+  resultEl.textContent = "Running " + endpoint + "…";
+  try {
+    const result = await testEndpoint(endpoint);
+    setState(result.ok ? "Bridge check passed" : "Bridge check failed", result.ok ? "ok" : "bad");
+    resultEl.textContent = JSON.stringify(result, null, 2);
+  } catch (error) {
+    setState("Bridge check error", "bad");
+    resultEl.textContent = String(error?.message || error);
+  }
+}
+
+async function testAll(){
+  setState("Testing all four bridge endpoints…", "wait");
+  resultEl.textContent = "Running all four checks…";
+  const results = [];
+  for (const endpoint of endpoints) {
+    try {
+      results.push(await testEndpoint(endpoint));
+    } catch (error) {
+      results.push({ endpoint, status: 0, ok: false, error: String(error?.message || error) });
+    }
+  }
+  const passed = results.filter((r)=>r.ok).length;
+  setState(passed + "/4 bridge checks passed", passed === 4 ? "ok" : "bad");
+  resultEl.textContent = JSON.stringify(results, null, 2);
+}
+
+loginBtn.addEventListener("click", login);
+testAllBtn.addEventListener("click", testAll);
+logoutBtn.addEventListener("click", clearSession);
+oneButtons.forEach((button)=>{
+  button.addEventListener("click", ()=> testOne(button.dataset.endpoint));
+});
+passwordEl.addEventListener("keydown", (event)=>{
+  if (event.key === "Enter") login();
+});
+</script>
+</body>
+</html>
