@@ -541,141 +541,93 @@ function compactMeta(meta){
 
 async function loadDatabaseSummary(){
   const root=$("#database-summary");
-  root.innerHTML='<div class="card"><span>Database</span><strong>Loading…</strong></div>';
+  root.innerHTML='<div class="card"><span>World Database</span><strong>Loading…</strong></div>';
+
+  if(!platformSession()){
+    root.innerHTML=bridgeLoginPanel("World Database now reads through the isolated Core bridge. Sign in with the GENESIS PLATFORM Admin account.");
+    bindBridgeLogin(async()=>{await Promise.all([loadDatabaseSummary(),loadDatabase()]);});
+    return;
+  }
+
   try{
-    const data=await api("/admin/api/database/summary");
-    const core=data.core_counts||data.counts||{};
-    const expanded=data.expanded_counts||{};
-    const projection=data.public_projection||{};
+    const envelope=await platformFunction("genesis-world-summary");
+    const rows=Array.isArray(envelope?.data)?envelope.data:[];
+    const counts={};
+    const projection={};
+    rows.forEach((row)=>{
+      if(row.summary_kind==="DOMAIN_COUNT")counts[row.key]=Number(row.row_count||0);
+      if(row.summary_kind==="PUBLIC_PROJECTION")projection[row.key]=row;
+    });
     const readerSafeNow=Object.values(projection).reduce((sum,row)=>sum+Number(row?.reader_safe_now||0),0);
     const groups=[
-      ["Core Monsters",core.monsters??0],["Bestiary Projection",expanded.monster_catalog??0],
-      ["Core Items",core.items??0],["Equipment Registry",expanded.equipment_catalog??0],
-      ["Maps",core.maps??0],["Routes",expanded.routes??0],
-      ["Shops",expanded.shops??0],["Transport Nodes",expanded.transport_nodes??0],
-      ["Civilizations",expanded.civilizations??0],["Race Structures",expanded.races??0],
-      ["Settlements",expanded.settlements??0],["Freight Corridors",expanded.freight_corridors??0],
-      ["Currencies",expanded.currencies??0],["Guild Skills",expanded.guild_skills??0],
-      ["Competition Venues",expanded.competitions??0],["Reader-safe Now",readerSafeNow]
+      ["Core Monsters",counts.monsters??0],["Bestiary Projection",counts.monster_catalog??0],
+      ["Core Items",counts.items??0],["Equipment Registry",counts.equipment_catalog??0],
+      ["Maps",counts.maps??0],["Routes",counts.routes??0],
+      ["Shops",counts.shops??0],["Transport Nodes",counts.transport_nodes??0],
+      ["Civilizations",counts.civilizations??0],["Race Structures",counts.races??0],
+      ["Settlements",counts.settlements??0],["Freight Corridors",counts.freight_corridors??0],
+      ["Currencies",counts.currencies??0],["Guild Skills",counts.guild_skills??0],
+      ["Competition Venues",counts.competitions??0],["Reader-safe Now",readerSafeNow]
     ];
     root.innerHTML=groups.map(([k,v])=>
       '<div class="card"><span>'+escapeHtml(k)+'</span><strong>'+escapeHtml(v)+'</strong></div>'
     ).join("");
   }catch(error){
-    root.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+    root.innerHTML=bridgeFailurePanel(error);
   }
 }
 
 async function loadDatabase(){
   const table=$("#database-table");
-  table.innerHTML='<div class="empty">Loading game database…</div>';
+  table.innerHTML='<div class="empty">Loading World Database through GENESIS PLATFORM…</div>';
+
+  if(!platformSession()){
+    table.innerHTML=bridgeLoginPanel("World Database now reads through the isolated Core bridge. Sign in with the GENESIS PLATFORM Admin account.");
+    bindBridgeLogin(async()=>{await Promise.all([loadDatabaseSummary(),loadDatabase()]);});
+    return;
+  }
+
   const domain=$("#database-domain").value;
-  const q=new URLSearchParams({domain,limit:"100"});
+  const params={domain,limit:"100",offset:"0"};
   const search=$("#database-search").value.trim();
-  if(search)q.set("q",search);
+  if(search)params.q=search;
+
   try{
-    const data=await api("/admin/api/database?"+q.toString());
-    const items=data.items||[];
-    const readOnly=Boolean(data.read_only);
-    items.forEach(item=>{item._readOnly=readOnly;item._layer=data.layer||"";});
+    const data=await platformFunction("genesis-world-database",params);
+    const items=Array.isArray(data?.data)?data.data:[];
     if(!items.length){
       table.innerHTML='<div class="empty"><strong>No records.</strong><br>'+escapeHtml(domain)+' returned no matching rows.</div>';
       return;
     }
+
+    const layer=data.layer||items[0]?.layer||"";
     table.innerHTML=
-      '<div class="database-head"><span>'+escapeHtml(domain.toUpperCase())+(readOnly?' · READ-ONLY DESIGN':' · CORE')+'</span><small>'+escapeHtml(data.total??items.length)+' total records</small></div>'+
+      '<div class="database-head"><span>'+escapeHtml(domain.toUpperCase())+' · READ ONLY</span><small>'+escapeHtml(data.total??items.length)+' total records · '+escapeHtml(layer||"CORE")+'</small></div>'+
       '<div class="table-scroll"><table><thead><tr><th>Name</th><th>Code</th><th>Status</th><th>Key metadata</th><th>Detail</th></tr></thead><tbody>'+
       items.map((x)=>
         '<tr><td><strong>'+escapeHtml(x.name||"—")+'</strong></td>'+
         '<td><code>'+escapeHtml(x.code||"—")+'</code></td>'+
         '<td><span class="status review">'+escapeHtml(x.status||"—")+'</span></td>'+
         '<td class="meta-text">'+escapeHtml(compactMeta(x.meta))+'</td>'+
-        '<td><button class="db-stage-button" data-db-code="'+escapeHtml(x.code||"")+'">'+(x._readOnly?'View read-only design':(hasPermission("DATABASE_EDIT")?'Open detail / stage':'View detail'))+'</button></td></tr>'
+        '<td><button class="db-stage-button" disabled title="Protected detail migrates in the next World phase">Detail migration pending</button></td></tr>'
       ).join("")+
       '</tbody></table></div>';
-
-    table.querySelectorAll("[data-db-code]").forEach(button=>button.addEventListener("click",()=>{
-      const record=items.find(x=>String(x.code)===button.dataset.dbCode);
-      if(record)renderDatabaseStaging(domain,record);
-    }));
   }catch(error){
-    table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    table.innerHTML=bridgeFailurePanel(error);
   }
 }
 
 async function loadDatabaseProposals(){
   const root=$("#database-proposals");
   const staging=$("#database-staging");
-  root.innerHTML='<div class="empty">Loading staged changes…</div>';
-  if(!state.activeDatabaseRecord)staging.innerHTML='<div class="empty">Open a database record to inspect protected detail, Atlas gates and Visual Status. Direct table editing is disabled.</div>';
-  try{
-    const d=await api("/admin/api/database/proposals?limit=200");
-    state.databaseAllowedFields=d.allowed_fields||{};
-    const rows=d.proposals||[];
-    root.innerHTML=
-      '<div class="database-head"><span>Staged Database Changes</span><small>'+escapeHtml(rows.length)+' proposal(s)</small></div>'+
-      (rows.length
-        ?'<div class="table-scroll"><table><thead><tr><th>Target</th><th>Status</th><th>Patch</th><th>Validation</th><th>Created by</th><th>Actions</th></tr></thead><tbody>'+
-          rows.map(p=>{
-            const actions=[];
-            if(["DRAFT","VALIDATED"].includes(p.status)&&hasPermission("DATABASE_EDIT")){
-              actions.push('<button data-db-proposal="update" data-id="'+escapeHtml(p.id)+'">Edit / revalidate</button>');
-            }
-            if(p.status==="VALIDATED"&&hasPermission("DATABASE_APPROVE")){
-              actions.push('<button data-db-proposal="apply" data-id="'+escapeHtml(p.id)+'" class="danger-mini">Apply</button>');
-            }
-            if(["DRAFT","VALIDATED"].includes(p.status)&&hasPermission("DATABASE_APPROVE")){
-              actions.push('<button data-db-proposal="reject" data-id="'+escapeHtml(p.id)+'">Reject</button>');
-            }
-            const validation=(p.validation_errors||[]).length
-              ?JSON.stringify(p.validation_errors)
-              :"PASS";
-            return '<tr>'+
-              '<td><strong>'+escapeHtml(p.domain)+'</strong><br><code>'+escapeHtml(p.target_code)+'</code></td>'+
-              '<td><span class="status '+(p.status==="APPLIED"?"final":"review")+'">'+escapeHtml(p.status)+'</span></td>'+
-              '<td><code class="json-cell">'+escapeHtml(JSON.stringify(p.patch||{}))+'</code></td>'+
-              '<td><code class="json-cell">'+escapeHtml(validation)+'</code></td>'+
-              '<td>'+escapeHtml(p.created_by||"—")+'<br><small>'+escapeHtml(p.created_at||"")+'</small></td>'+
-              '<td><div class="release-row-actions">'+(actions.join("")||'<span class="muted">No action</span>')+'</div></td>'+
-            '</tr>';
-          }).join("")+
-          '</tbody></table></div>'
-        :'<div class="empty">No staged database changes.</div>');
-
-    root.querySelectorAll("[data-db-proposal]").forEach(button=>button.addEventListener("click",async()=>{
-      const id=button.dataset.id;
-      const action=button.dataset.dbProposal;
-      const row=rows.find(x=>x.id===id);
-      if(!row)return;
-      button.disabled=true;
-      try{
-        if(action==="update"){
-          const raw=prompt("Patch JSON:",JSON.stringify(row.patch||{},null,2));
-          if(raw===null){button.disabled=false;return;}
-          let patch={};
-          try{patch=JSON.parse(raw);}catch{alert("Patch must be valid JSON.");button.disabled=false;return;}
-          const reason=prompt("Reason for updating/revalidating this proposal:",row.reason||"")||"";
-          if(reason.trim().length<8){button.disabled=false;return;}
-          await apiPost("/admin/api/database/proposals/"+id+"/update",{patch,reason});
-        }else if(action==="apply"){
-          const confirmation=prompt("Type exactly:\nAPPLY STAGED DATABASE CHANGE")||"";
-          if(confirmation!=="APPLY STAGED DATABASE CHANGE"){button.disabled=false;return;}
-          const reason=prompt("Approval reason (minimum 12 characters):")||"";
-          if(reason.trim().length<12){button.disabled=false;return;}
-          await apiPost("/admin/api/database/proposals/"+id+"/apply",{confirmation,reason});
-        }else if(action==="reject"){
-          const reason=prompt("Reason for rejecting this proposal:")||"";
-          if(reason.trim().length<8){button.disabled=false;return;}
-          await apiPost("/admin/api/database/proposals/"+id+"/reject",{reason});
-        }
-        await Promise.all([loadDatabase(),loadDatabaseSummary(),loadDatabaseProposals()]);
-      }catch(error){alert(error.message);button.disabled=false;}
-    }));
-  }catch(error){
-    root.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+  state.databaseAllowedFields={};
+  if(staging){
+    staging.innerHTML='<div class="empty"><strong>Protected detail migration pending.</strong><br>Monster / Map / Item detail, Atlas gates and Visual Status remain isolated until their dedicated read-only bridge contract is deployed.</div>';
   }
+  root.innerHTML=
+    '<div class="database-head"><span>Database Change Proposals</span><small>CONTROL PATH ISOLATED</small></div>'+
+    '<div class="admin-note compact"><p>Proposal staging/apply controls are intentionally disabled during the World Database bridge migration. This prevents the quota-blocked legacy Core control path from being mixed with the new read-only World bridge.</p></div>';
 }
-
 
 async function ensureArtAssetsManifest(){
   if(state.artAssetsManifest)return state.artAssetsManifest;
