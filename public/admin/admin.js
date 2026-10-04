@@ -1,6 +1,78 @@
 const state={manuscripts:[],activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[],activeDatabaseRecord:null,databaseAllowedFields:{},artAssetsManifest:null};
 const $=(s)=>document.querySelector(s);
-const $$=(s)=>[...document.querySelectorAll(s)];
+const $=(s)=>[...document.querySelectorAll(s)];
+
+const PLATFORM_URL="https://qtfdqurbcqkpkpnvkvdh.supabase.co";
+const PLATFORM_PUBLISHABLE_KEY="sb_publishable_V7DrgmlPJfe1d-KZX3rSsg_VpSouhlp";
+const PLATFORM_SESSION_KEY="genesis_platform_admin_session_v1";
+
+function platformSession(){
+  try{
+    const raw=sessionStorage.getItem(PLATFORM_SESSION_KEY);
+    if(!raw)return null;
+    const parsed=JSON.parse(raw);
+    if(!parsed?.access_token)return null;
+    if(parsed.expires_at&&Date.now()>=Number(parsed.expires_at)*1000){
+      sessionStorage.removeItem(PLATFORM_SESSION_KEY);
+      return null;
+    }
+    return parsed;
+  }catch{
+    sessionStorage.removeItem(PLATFORM_SESSION_KEY);
+    return null;
+  }
+}
+
+function storePlatformSession(data){
+  const session={
+    access_token:String(data?.access_token||""),
+    refresh_token:String(data?.refresh_token||""),
+    expires_at:Number(data?.expires_at||0)
+  };
+  if(!session.access_token)throw new Error("GENESIS PLATFORM did not return an access token.");
+  sessionStorage.setItem(PLATFORM_SESSION_KEY,JSON.stringify(session));
+  return session;
+}
+
+function clearPlatformSession(){
+  sessionStorage.removeItem(PLATFORM_SESSION_KEY);
+}
+
+async function platformLogin(email,password){
+  const response=await fetch(PLATFORM_URL+"/auth/v1/token?grant_type=password",{
+    method:"POST",
+    headers:{"Content-Type":"application/json",apikey:PLATFORM_PUBLISHABLE_KEY},
+    body:JSON.stringify({email,password})
+  });
+  const payload=await response.json().catch(()=>null);
+  if(!response.ok||!payload?.access_token){
+    throw new Error(payload?.msg||payload?.message||payload?.error_description||("Platform login failed ("+response.status+")"));
+  }
+  return storePlatformSession(payload);
+}
+
+async function platformFunction(name){
+  const session=platformSession();
+  if(!session)throw new Error("GENESIS PLATFORM session required.");
+  const response=await fetch(PLATFORM_URL+"/functions/v1/"+name,{
+    method:"GET",
+    headers:{
+      Authorization:"Bearer "+session.access_token,
+      apikey:PLATFORM_PUBLISHABLE_KEY,
+      Accept:"application/json"
+    },
+    cache:"no-store"
+  });
+  const payload=await response.json().catch(()=>null);
+  if(response.status===401){
+    clearPlatformSession();
+    throw new Error("GENESIS PLATFORM session expired. Connect again.");
+  }
+  if(!response.ok){
+    throw new Error(payload?.error||payload?.message||("Bridge request failed ("+response.status+")"));
+  }
+  return payload;
+}
 
 async function api(path){
   const response=await fetch(path,{credentials:"same-origin",cache:"no-store",headers:{Accept:"application/json","Cache-Control":"no-cache","Pragma":"no-cache"}});
@@ -49,41 +121,62 @@ function isMobileAdminDevice(){
 async function loadProduction(){
   const root=$("#production-view");
   root.innerHTML='<div class="panel"><div class="empty">Loading production state…</div></div>';
+
+  let bridgeEnvelope=null;
+  let bridgeError="";
+  if(platformSession()){
+    try{
+      bridgeEnvelope=await platformFunction("genesis-production-status");
+    }catch(error){
+      bridgeError=error.message||String(error);
+    }
+  }
+
   try{
     const [payload,control]=await Promise.all([
       api("/admin/api/production"),
       api("/admin/api/production/control")
     ]);
-    const runtime=payload.runtime||control.runtime||{};
+
+    const bridgeRow=Array.isArray(bridgeEnvelope?.data)?bridgeEnvelope.data[0]:null;
+    const runtime=bridgeRow||payload.runtime||control.runtime||{};
     const dash=payload.dashboard||{};
     const metrics=dash.metrics||{};
     const paused=metrics.releases_paused!==false;
     const caps=control.capabilities||{};
     const hold=control.open_hold||null;
     const packets=control.active_packets||[];
+    const bridgeConnected=Boolean(bridgeRow);
 
     $("#release-badge").textContent=paused?"RELEASES PAUSED":"RELEASES ACTIVE";
     $("#release-badge").className="badge "+(paused?"danger":"good");
 
+    const bridgePanel=bridgeConnected
+      ?'<div class="panel admin-note compact"><div class="database-head"><span>GENESIS PLATFORM bridge</span><small>READ-ONLY · CONNECTED</small></div><p>Production status is reading through the isolated Platform bridge. Core remains authoritative; direct genesis_private access is not exposed.</p><div class="cutover-actions"><button id="platform-bridge-disconnect" type="button">Disconnect Platform session</button></div></div>'
+      :'<div class="panel admin-note compact"><div class="database-head"><span>GENESIS PLATFORM bridge</span><small>'+(bridgeError?'RECONNECT REQUIRED':'NOT CONNECTED')+'</small></div><p>'+(bridgeError?escapeHtml(bridgeError):'Connect your GENESIS PLATFORM admin account once in this browser tab. The Production Dashboard will then read its authoritative status through the isolated read-only bridge.')+'</p><div class="bridge-inline-login"><input id="platform-bridge-email" type="email" autocomplete="username" placeholder="Platform admin email"><input id="platform-bridge-password" type="password" autocomplete="current-password" placeholder="Platform admin password"><button id="platform-bridge-connect" type="button">Connect Platform</button></div></div>';
+
     root.innerHTML=
+      bridgePanel+
       '<div class="cards">'+
         '<div class="card"><span>Stage 1 verified</span><strong>'+escapeHtml(runtime.stage1_verified_count??"—")+' / '+escapeHtml(runtime.expected_part_count??"—")+'</strong></div>'+
         '<div class="card"><span>Stage 2 verified</span><strong>'+escapeHtml(runtime.stage2_verified_count??"—")+' / '+escapeHtml(runtime.expected_part_count??"—")+'</strong></div>'+
-        '<div class="card"><span>103 closeout</span><strong>'+escapeHtml(runtime.closeout_103_status||"—")+'</strong></div>'+
-        '<div class="card"><span>Release buffer</span><strong>'+escapeHtml(metrics.production_buffer??0)+'</strong></div>'+
+        '<div class="card"><span>103 gate</span><strong>'+escapeHtml(runtime.ai1_103_gate||runtime.closeout_103_status||"—")+'</strong></div>'+
+        '<div class="card"><span>Lock revision</span><strong>'+escapeHtml(runtime.lock_revision??"—")+'</strong></div>'+
       '</div>'+
       '<div class="panel runtime">'+
         '<div><small>Branch</small><strong>'+escapeHtml(runtime.branch_key||"—")+'</strong></div>'+
-        '<div><small>Batch</small><strong>'+escapeHtml(runtime.batch_key||"—")+'</strong></div>'+
+        '<div><small>Batch</small><strong>'+escapeHtml(runtime.batch_key||runtime.batch_id||"—")+'</strong></div>'+
         '<div><small>Router</small><strong>'+escapeHtml(runtime.router_state||"—")+'</strong></div>'+
         '<div><small>Active role</small><strong>'+escapeHtml(runtime.active_role||"—")+'</strong></div>'+
         '<div><small>Engine / mode</small><strong>'+escapeHtml(runtime.active_engine||"—")+' / '+escapeHtml(runtime.run_mode||"—")+'</strong></div>'+
         '<div><small>Next action</small><strong>'+escapeHtml(runtime.next_action_code||"—")+'</strong></div>'+
+        '<div><small>Active run</small><strong>'+escapeHtml(runtime.active_run_id||"—")+'</strong></div>'+
+        '<div><small>AI-2 gate</small><strong>'+escapeHtml(runtime.ai2_gate||"—")+'</strong></div>'+
       '</div>'+
       '<div class="panel production-controls">'+
         '<div class="database-head"><span>Production Routing Controls</span><small>014-safe operator intervention</small></div>'+
         '<div class="production-control-body">'+
-          '<div class="admin-note compact"><strong>Normal role routing stays automatic.</strong><p>These controls do not execute 202/203/103/102. Hold and Resume operate only at safe READY states; Emergency Stop interrupts the current run and requires Builder recovery.</p></div>'+
+          '<div class="admin-note compact"><strong>Normal role routing stays automatic.</strong><p>Bridge reads are isolated and read-only. Existing control commands continue through the protected Admin control path; they do not use the bridge login.</p></div>'+
           (hold
             ?'<div class="hold-banner"><strong>ADMIN HOLD ACTIVE</strong><span>'+escapeHtml(hold.hold_reason||"")+'</span><small>'+escapeHtml(hold.id||"")+'</small></div>'
             :'')+
@@ -108,6 +201,33 @@ async function loadProduction(){
           '</div>'+
         '</div>'+
       '</div>';
+
+    const bridgeConnect=$("#platform-bridge-connect");
+    if(bridgeConnect)bridgeConnect.addEventListener("click",async()=>{
+      const email=$("#platform-bridge-email")?.value.trim()||"";
+      const password=$("#platform-bridge-password")?.value||"";
+      if(!email||!password){alert("Enter your GENESIS PLATFORM admin email and password.");return;}
+      bridgeConnect.disabled=true;
+      try{
+        await platformLogin(email,password);
+        if($("#platform-bridge-password"))$("#platform-bridge-password").value="";
+        await loadProduction();
+      }catch(error){
+        alert(error.message);
+        bridgeConnect.disabled=false;
+      }
+    });
+
+    const bridgePassword=$("#platform-bridge-password");
+    if(bridgePassword)bridgePassword.addEventListener("keydown",(event)=>{
+      if(event.key==="Enter")bridgeConnect?.click();
+    });
+
+    const bridgeDisconnect=$("#platform-bridge-disconnect");
+    if(bridgeDisconnect)bridgeDisconnect.addEventListener("click",async()=>{
+      clearPlatformSession();
+      await loadProduction();
+    });
 
     const holdButton=$("#production-hold");
     if(holdButton)holdButton.addEventListener("click",async()=>{
