@@ -642,7 +642,7 @@ jobs:
                         ['MONSTERS',monsters,'monsters-desktop.webp'],
                         ['CODEX',codex,'codex-desktop.webp'],
                         ['ITEMS',items,'items-desktop.webp'],
-                        ['CONTINUE STORY',story,'continue-story-desktop.webp'],
+                        ['CONTINUE STORY',story,'continue-story-v2.webp'],
                         ['MANGA',manga,'manga-desktop.webp'],
                         ['SUPPORT',support,'support-desktop.webp'],
                         ['COMMUNITY',q('.skeleton-community[data-name="COMMUNITY"]'),'community-desktop.webp']
