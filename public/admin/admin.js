@@ -98,6 +98,29 @@ async function platformRpc(name,args={}){
   return payload;
 }
 
+async function platformRest(path,params={}){
+  const session=platformSession();
+  if(!session)throw new Error("GENESIS PLATFORM session required.");
+  const url=new URL(PLATFORM_URL+"/rest/v1/"+path);
+  Object.entries(params).forEach(([k,v])=>{
+    if(v!==undefined&&v!==null&&String(v)!=="")url.searchParams.set(k,String(v));
+  });
+  const response=await fetch(url.toString(),{
+    headers:{
+      Authorization:"Bearer "+session.access_token,
+      apikey:PLATFORM_PUBLISHABLE_KEY,
+      Accept:"application/json"
+    }
+  });
+  const payload=await response.json().catch(()=>[]);
+  if(!response.ok){
+    const message=payload?.message||payload?.error_description||payload?.error||("Platform read failed ("+response.status+")");
+    throw new Error(message);
+  }
+  return payload;
+}
+
+
 
 async function api(path){
   const response=await fetch(path,{credentials:"same-origin",cache:"no-store",headers:{Accept:"application/json","Cache-Control":"no-cache","Pragma":"no-cache"}});
@@ -1423,171 +1446,122 @@ async function loadReaders(){
   const list=$("#readers-list");
   const detail=$("#reader-detail");
   summary.innerHTML='<div class="card"><span>Readers</span><strong>Loading…</strong></div>';
-  list.innerHTML='<div class="empty">Loading reader accounts…</div>';
-  if(!state.activeReader)detail.innerHTML='<div class="empty">Select a reader to inspect progress and access.</div>';
-  const q=($("#reader-search")?.value||"").trim();
+  list.innerHTML='<div class="empty">Loading Platform reader accounts…</div>';
+  if(!state.activeReader)detail.innerHTML='<div class="empty">Select a reader to inspect Platform progress and points.</div>';
+
+  if(!platformSession()){
+    summary.innerHTML=bridgeLoginPanel("Readers is now Platform-native. Sign in once to GENESIS PLATFORM.");
+    bindBridgeLogin(loadReaders);
+    list.innerHTML="";
+    return;
+  }
+
+  const q=($("#reader-search")?.value||"").trim().toLowerCase();
   try{
-    const params=new URLSearchParams({limit:"200"});
-    if(q)params.set("q",q);
-    const d=await api("/admin/api/readers?"+params.toString());
-    const readers=d.readers||[];
-    state.readerEligibleParts=d.eligible_advance_parts||[];
-    const suspended=readers.filter(r=>r.comments_suspended).length;
-    const vip=readers.filter(r=>r.active_vip).length;
-    const supporters=readers.filter(r=>Number(r.confirmed_support_php||0)>0).length;
+    const [profiles,readerProfiles,points,progress]=await Promise.all([
+      platformRest("profiles",{select:"user_id,display_name,created_at,updated_at",order:"created_at.desc"}),
+      platformRest("reader_profiles",{select:"user_id,username,bio,created_at,updated_at",order:"created_at.desc"}),
+      platformRest("reader_points",{select:"user_id,balance,lifetime_earned,updated_at"}),
+      platformRest("reader_progress",{select:"user_id,episode_key,progress_percent,completed,last_read_at",order:"last_read_at.desc"})
+    ]);
+
+    const byId=new Map();
+    (profiles||[]).forEach(x=>byId.set(x.user_id,{user_id:x.user_id,display_name:x.display_name||null,created_at:x.created_at}));
+    (readerProfiles||[]).forEach(x=>{
+      const row=byId.get(x.user_id)||{user_id:x.user_id};
+      row.username=x.username||null; row.bio=x.bio||null; byId.set(x.user_id,row);
+    });
+    (points||[]).forEach(x=>{
+      const row=byId.get(x.user_id)||{user_id:x.user_id};
+      row.balance=Number(x.balance||0); row.lifetime_earned=Number(x.lifetime_earned||0); byId.set(x.user_id,row);
+    });
+    const progressById=new Map();
+    (progress||[]).forEach(x=>{
+      if(!progressById.has(x.user_id))progressById.set(x.user_id,[]);
+      progressById.get(x.user_id).push(x);
+    });
+
+    let readers=[...byId.values()].map(r=>{
+      const p=progressById.get(r.user_id)||[];
+      return {...r,recent_progress:p,completed_count:p.filter(x=>x.completed).length,last_read_at:p[0]?.last_read_at||null};
+    });
+    if(q)readers=readers.filter(r=>String(r.display_name||"").toLowerCase().includes(q)||String(r.username||"").toLowerCase().includes(q)||String(r.user_id).toLowerCase().includes(q));
+
+    state.platformReaderRows=readers;
     summary.innerHTML=
-      '<div class="card"><span>Total readers</span><strong>'+escapeHtml(d.total??readers.length)+'</strong></div>'+
-      '<div class="card"><span>Comment suspended</span><strong>'+escapeHtml(suspended)+'</strong></div>'+
-      '<div class="card"><span>Active VIP</span><strong>'+escapeHtml(vip)+'</strong></div>'+
-      '<div class="card"><span>Confirmed supporters</span><strong>'+escapeHtml(supporters)+'</strong></div>';
+      '<div class="card"><span>Total readers</span><strong>'+escapeHtml(readers.length)+'</strong></div>'+
+      '<div class="card"><span>With progress</span><strong>'+escapeHtml(readers.filter(r=>r.recent_progress.length).length)+'</strong></div>'+
+      '<div class="card"><span>Completed entries</span><strong>'+escapeHtml(readers.reduce((n,r)=>n+r.completed_count,0))+'</strong></div>'+
+      '<div class="card"><span>Lifetime points</span><strong>'+escapeHtml(readers.reduce((n,r)=>n+Number(r.lifetime_earned||0),0))+'</strong></div>';
 
     list.innerHTML=
-      '<div class="database-head"><span>Reader Accounts</span><small>'+escapeHtml(readers.length)+' shown</small></div>'+
+      '<div class="database-head"><span>Platform Reader Accounts</span><small>'+escapeHtml(readers.length)+' shown</small></div>'+
       (readers.length?readers.map(r=>
         '<button class="reader-row '+(state.activeReader===r.user_id?"active":"")+'" data-reader-id="'+escapeHtml(r.user_id)+'">'+
-          '<div><strong>'+escapeHtml(r.display_name||"Reader")+'</strong><small>'+escapeHtml(r.email||"")+'</small></div>'+
-          '<div class="reader-row-meta">'+
-            (r.badge?'<span class="status final">'+escapeHtml(r.badge)+'</span>':'')+
-            (r.comments_suspended?'<span class="status review">COMMENTS SUSPENDED</span>':'')+
-            '<span>Ep '+escapeHtml(r.highest_episode_read??0)+'</span>'+
-          '</div>'+
+          '<div><strong>'+escapeHtml(r.display_name||r.username||"Reader")+'</strong><small>'+escapeHtml(r.username||r.user_id)+'</small></div>'+
+          '<div class="reader-row-meta"><span>Points '+escapeHtml(r.balance??0)+'</span><span>'+escapeHtml(r.completed_count)+' completed</span></div>'+
         '</button>'
-      ).join(""):'<div class="empty">No reader accounts match this search.</div>');
+      ).join(""):'<div class="empty">No Platform reader accounts match this search.</div>');
 
-    list.querySelectorAll("[data-reader-id]").forEach(button=>button.addEventListener("click",async()=>{
+    list.querySelectorAll("[data-reader-id]").forEach(button=>button.addEventListener("click",()=>{
       state.activeReader=button.dataset.readerId;
-      await loadReaderDetail(state.activeReader);
+      loadReaderDetail(state.activeReader);
       list.querySelectorAll(".reader-row").forEach(x=>x.classList.toggle("active",x.dataset.readerId===state.activeReader));
     }));
 
     if(state.activeReader){
       const stillVisible=readers.some(r=>r.user_id===state.activeReader);
       if(stillVisible)await loadReaderDetail(state.activeReader);
-      else{state.activeReader=null;detail.innerHTML='<div class="empty">Select a reader to inspect progress and access.</div>';}
+      else{state.activeReader=null;detail.innerHTML='<div class="empty">Select a reader to inspect Platform progress and points.</div>';}
     }
+    $("#release-badge").textContent="PLATFORM READERS";
+    $("#release-badge").className="badge good";
   }catch(error){
     summary.innerHTML="";
-    list.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    list.innerHTML=bridgeFailurePanel(error);
   }
 }
 
 async function loadReaderDetail(userId){
   const root=$("#reader-detail");
-  root.innerHTML='<div class="empty">Loading reader detail…</div>';
+  root.innerHTML='<div class="empty">Loading Platform reader detail…</div>';
   try{
-    const d=await api("/admin/api/readers/"+userId);
-    const u=d.user||{};
-    const m=d.moderation||{};
-    const grants=d.advance_grants||[];
-    const progress=d.recent_progress||[];
-    const support=d.support_summary||{};
-    const activeAdminGrants=grants.filter(g=>g.source_type==="ADMIN"&&!g.revoked_at);
-
+    const base=(state.platformReaderRows||[]).find(r=>r.user_id===userId)||{user_id:userId};
+    const [progress,bookmarks,points]=await Promise.all([
+      platformRest("reader_progress",{select:"episode_key,last_position,progress_percent,completed,last_read_at",user_id:"eq."+userId,order:"last_read_at.desc",limit:"100"}),
+      platformRest("reader_bookmarks",{select:"episode_key,note,created_at",user_id:"eq."+userId,order:"created_at.desc",limit:"100"}),
+      platformRest("reader_points",{select:"balance,lifetime_earned,updated_at",user_id:"eq."+userId,limit:"1"})
+    ]);
+    const pt=points?.[0]||{balance:0,lifetime_earned:0};
     root.innerHTML=
-      '<div class="database-head"><span>'+escapeHtml(u.display_name||"Reader")+'</span><small>'+escapeHtml(u.email||"")+'</small></div>'+
+      '<div class="database-head"><span>'+escapeHtml(base.display_name||base.username||"Reader")+'</span><small>'+escapeHtml(base.username||userId)+'</small></div>'+
       '<div class="reader-detail-body">'+
         '<div class="runtime">'+
-          '<div><small>Highest Episode</small><strong>'+escapeHtml(u.highest_episode_read??0)+'</strong></div>'+
-          '<div><small>Highest Part</small><strong>'+escapeHtml(u.highest_part_key||"—")+'</strong></div>'+
-          '<div><small>Badge</small><strong>'+escapeHtml(u.badge||"NONE")+'</strong></div>'+
-          '<div><small>Advance credits</small><strong>'+escapeHtml(d.credit_balance??0)+'</strong></div>'+
-          '<div><small>Confirmed support</small><strong>₱'+escapeHtml(support.confirmed_total_php??0)+'</strong></div>'+
-          '<div><small>Active VIP</small><strong>'+escapeHtml(support.active_vip?"YES":"NO")+'</strong></div>'+
+          '<div><small>Point balance</small><strong>'+escapeHtml(pt.balance??0)+'</strong></div>'+
+          '<div><small>Lifetime earned</small><strong>'+escapeHtml(pt.lifetime_earned??0)+'</strong></div>'+
+          '<div><small>Progress rows</small><strong>'+escapeHtml(progress.length)+'</strong></div>'+
+          '<div><small>Bookmarks</small><strong>'+escapeHtml(bookmarks.length)+'</strong></div>'+
         '</div>'+
-        '<div class="admin-note compact"><strong>Comment privilege</strong><p>'+
-          (m.comments_suspended
-            ?'Suspended until '+escapeHtml(m.comments_suspended_until||"—")
-            :'Commenting is currently allowed.')+
-        '</p></div>'+
-        '<div class="cutover-actions">'+
-          (hasPermission("READER_MODERATE")
-            ?(m.comments_suspended
-              ?'<button id="reader-clear-suspension">Clear comment suspension</button>'
-              :'<button id="reader-suspend-comments" class="danger-action">Suspend comments</button>')
-            :'')+
-        '</div>'+
-        '<div class="reader-access-section">'+
-          '<div class="database-head"><span>Advance Access</span><small>'+escapeHtml(grants.length)+' grant record(s)</small></div>'+
-          (hasPermission("READER_ENTITLEMENT_ADMIN")&&state.readerEligibleParts.length
-            ?'<form id="reader-advance-grant-form" class="admin-control-form">'+
-              '<strong>Grant scheduled Part access</strong>'+
-              '<select name="part_id">'+state.readerEligibleParts.map(p=>'<option value="'+escapeHtml(p.part_id)+'">'+escapeHtml(p.part_key+" · "+p.title+" · "+p.publish_at)+'</option>').join("")+'</select>'+
-              '<input name="reason" placeholder="Grant reason" required>'+
-              '<button type="submit">Grant Advance Part</button>'+
-             '</form>'
-            :'<div class="empty">'+(state.readerEligibleParts.length?'No entitlement permission.':'No future scheduled Final Canon Parts are eligible right now.')+'</div>')+
-          (grants.length
-            ?'<div class="table-scroll"><table><thead><tr><th>Part</th><th>Source</th><th>Granted</th><th>Revoked</th><th>Action</th></tr></thead><tbody>'+
-              grants.map(g=>'<tr><td>'+escapeHtml(g.part_key||"—")+'<br><small>'+escapeHtml(g.title||"")+'</small></td><td>'+escapeHtml(g.source_type||"—")+'</td><td>'+escapeHtml(g.granted_at||"—")+'</td><td>'+escapeHtml(g.revoked_at||"—")+'</td><td>'+
-                (hasPermission("READER_ENTITLEMENT_ADMIN")&&g.source_type==="ADMIN"&&!g.revoked_at
-                  ?'<button data-revoke-access="'+escapeHtml(g.id)+'" class="danger-mini">Revoke</button>'
-                  :'<span class="muted">—</span>')+
-              '</td></tr>').join("")+
-              '</tbody></table></div>'
-            :'')+
-        '</div>'+
+        '<div class="admin-note compact"><strong>Platform migration boundary</strong><p>Reader progress, bookmarks and points are now Platform-native. Comment suspension, VIP/support and advance-access administration stay disabled until their Platform-owned tables and mutation contracts are migrated.</p></div>'+
         '<div class="reader-progress-section">'+
           '<div class="database-head"><span>Recent Reading Progress</span><small>'+escapeHtml(progress.length)+' row(s)</small></div>'+
           (progress.length
-            ?'<div class="table-scroll"><table><thead><tr><th>Part</th><th>Progress</th><th>Completed</th><th>Active time</th></tr></thead><tbody>'+
-              progress.map(p=>'<tr><td>'+escapeHtml(p.part_key||"—")+'<br><small>'+escapeHtml(p.title||"")+'</small></td><td>'+escapeHtml(p.progress_percent??0)+'%</td><td>'+escapeHtml(p.completed?"YES":"NO")+'</td><td>'+escapeHtml(p.active_seconds??0)+'s</td></tr>').join("")+
-              '</tbody></table></div>'
+            ?'<div class="table-scroll"><table><thead><tr><th>Episode</th><th>Progress</th><th>Completed</th><th>Last read</th></tr></thead><tbody>'+
+              progress.map(p=>'<tr><td>'+escapeHtml(p.episode_key||"—")+'</td><td>'+escapeHtml(p.progress_percent??0)+'%</td><td>'+escapeHtml(p.completed?"YES":"NO")+'</td><td>'+escapeHtml(p.last_read_at||"—")+'</td></tr>').join("")+
+             '</tbody></table></div>'
             :'<div class="empty">No reading-progress records yet.</div>')+
         '</div>'+
+        '<div class="reader-progress-section">'+
+          '<div class="database-head"><span>Bookmarks</span><small>'+escapeHtml(bookmarks.length)+' row(s)</small></div>'+
+          (bookmarks.length
+            ?'<div class="table-scroll"><table><thead><tr><th>Episode</th><th>Note</th><th>Created</th></tr></thead><tbody>'+
+              bookmarks.map(b=>'<tr><td>'+escapeHtml(b.episode_key||"—")+'</td><td>'+escapeHtml(b.note||"—")+'</td><td>'+escapeHtml(b.created_at||"—")+'</td></tr>').join("")+
+             '</tbody></table></div>'
+            :'<div class="empty">No bookmarks yet.</div>')+
+        '</div>'+
       '</div>';
-
-    const suspend=$("#reader-suspend-comments");
-    if(suspend)suspend.addEventListener("click",async()=>{
-      const days=Number(prompt("Suspend commenting for how many days?","7"));
-      if(!Number.isFinite(days)||days<=0)return;
-      const reason=prompt("Reason for comment suspension:")||"";
-      if(reason.trim().length<6)return;
-      const until=new Date(Date.now()+days*86400000).toISOString();
-      suspend.disabled=true;
-      try{
-        await apiPost("/admin/api/readers/"+userId+"/comment-suspension",{suspended_until:until,reason});
-        await loadReaders();
-      }catch(error){alert(error.message);suspend.disabled=false;}
-    });
-
-    const clear=$("#reader-clear-suspension");
-    if(clear)clear.addEventListener("click",async()=>{
-      const reason=prompt("Reason for clearing comment suspension:")||"";
-      if(reason.trim().length<6)return;
-      clear.disabled=true;
-      try{
-        await apiPost("/admin/api/readers/"+userId+"/comment-suspension",{suspended_until:null,reason});
-        await loadReaders();
-      }catch(error){alert(error.message);clear.disabled=false;}
-    });
-
-    const grantForm=$("#reader-advance-grant-form");
-    if(grantForm)grantForm.addEventListener("submit",async(e)=>{
-      e.preventDefault();
-      const fd=new FormData(grantForm);
-      const button=grantForm.querySelector("button");
-      button.disabled=true;
-      try{
-        await apiPost("/admin/api/readers/"+userId+"/advance-grants",{
-          part_id:String(fd.get("part_id")||""),
-          reason:String(fd.get("reason")||"")
-        });
-        await loadReaders();
-      }catch(error){alert(error.message);}
-      finally{button.disabled=false;}
-    });
-
-    root.querySelectorAll("[data-revoke-access]").forEach(button=>button.addEventListener("click",async()=>{
-      const reason=prompt("Reason for revoking this Admin advance grant:")||"";
-      if(reason.trim().length<8)return;
-      button.disabled=true;
-      try{
-        await apiPost("/admin/api/readers/advance-grants/"+button.dataset.revokeAccess+"/revoke",{reason});
-        await loadReaders();
-      }catch(error){alert(error.message);button.disabled=false;}
-    }));
   }catch(error){
-    root.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    root.innerHTML=bridgeFailurePanel(error);
   }
 }
 
@@ -1595,134 +1569,64 @@ async function loadCommunity(){
   const fan=$("#pending-fan-posts");
   const reports=$("#community-reports");
   const summary=$("#community-summary");
-  fan.innerHTML='<div class="empty">Loading Fan Page moderation…</div>';
-  reports.innerHTML='<div class="empty">Loading reports…</div>';
+  fan.innerHTML='<div class="empty">Loading Platform community queue…</div>';
+  reports.innerHTML='<div class="empty">Loading Platform reports…</div>';
+
+  if(!platformSession()){
+    summary.innerHTML=bridgeLoginPanel("Community is now Platform-native. Sign in once to GENESIS PLATFORM.");
+    bindBridgeLogin(loadCommunity);
+    fan.innerHTML="";
+    reports.innerHTML="";
+    return;
+  }
+
   try{
-    const queue=await api("/admin/api/community?limit=200");
-    const counts=queue.counts||{};
-    const canModerate=hasPermission("COMMUNITY_MODERATE");
-
+    const [posts,rs]=await Promise.all([
+      platformRest("community_fan_posts",{select:"id,user_id,caption,media_object_path,status,comments_locked,spoiler_episode_key,created_at,updated_at",order:"created_at.desc",limit:"200"}),
+      platformRest("community_reports",{select:"id,reporter_user_id,target_type,target_id,reason,status,target_snapshot,created_at,resolved_at",order:"created_at.desc",limit:"200"})
+    ]);
+    const counts={
+      pending_fan_posts:posts.filter(p=>p.status==="PENDING").length,
+      visible_fan_posts:posts.filter(p=>p.status==="VISIBLE").length,
+      open_reports:rs.filter(r=>r.status==="OPEN").length
+    };
     summary.innerHTML=
-      '<div class="card"><span>Pending fan posts</span><strong>'+escapeHtml(counts.pending_fan_posts??0)+'</strong></div>'+
-      '<div class="card"><span>Visible fan posts</span><strong>'+escapeHtml(counts.visible_fan_posts??0)+'</strong></div>'+
-      '<div class="card"><span>Open reports</span><strong>'+escapeHtml(counts.open_reports??0)+'</strong></div>'+
-      '<div class="card"><span>Hidden comments</span><strong>'+escapeHtml((counts.hidden_part_comments??0)+(counts.hidden_fan_comments??0))+'</strong></div>';
+      '<div class="card"><span>Pending fan posts</span><strong>'+escapeHtml(counts.pending_fan_posts)+'</strong></div>'+
+      '<div class="card"><span>Visible fan posts</span><strong>'+escapeHtml(counts.visible_fan_posts)+'</strong></div>'+
+      '<div class="card"><span>Open reports</span><strong>'+escapeHtml(counts.open_reports)+'</strong></div>'+
+      '<div class="card"><span>Owner</span><strong>PLATFORM</strong></div>';
 
-    const posts=queue.fan_posts||[];
     fan.innerHTML=
-      '<div class="database-head"><span>Fan Page Posts</span><small>'+escapeHtml(posts.length)+' shown</small></div>'+
-      (posts.length?posts.map(p=>{
-        const actions=[];
-        if(canModerate){
-          if(p.status==="PENDING")actions.push('<button data-fan-action="approve" data-id="'+escapeHtml(p.id)+'">Approve</button>');
-          if(p.status==="VISIBLE")actions.push('<button data-fan-action="hide" data-id="'+escapeHtml(p.id)+'">Hide</button>');
-          if(["HIDDEN","REMOVED"].includes(p.status))actions.push('<button data-fan-action="restore" data-id="'+escapeHtml(p.id)+'">Restore</button>');
-          if(p.status!=="REMOVED")actions.push('<button data-fan-action="remove" data-id="'+escapeHtml(p.id)+'" class="danger-mini">Remove</button>');
-          actions.push('<button data-fan-lock="'+(p.comments_locked?"unlock":"lock")+'" data-id="'+escapeHtml(p.id)+'">'+(p.comments_locked?"Unlock comments":"Lock comments")+'</button>');
-        }
-        return '<div class="moderation-card">'+
-          '<div class="moderation-card-head"><div><strong>'+escapeHtml(p.author_label||"Reader")+'</strong>'+adminBadge(p.badge)+'<small>'+escapeHtml(p.created_at||"")+'</small></div><span class="status '+(p.status==="VISIBLE"?"final":"review")+'">'+escapeHtml(p.status||"—")+'</span></div>'+
+      '<div class="database-head"><span>Platform Fan Page Posts</span><small>'+escapeHtml(posts.length)+' shown</small></div>'+
+      (posts.length?posts.map(p=>
+        '<div class="moderation-card">'+
+          '<div class="moderation-card-head"><div><strong>'+escapeHtml(p.user_id||"Reader")+'</strong><small>'+escapeHtml(p.created_at||"")+'</small></div><span class="status '+(p.status==="VISIBLE"?"final":"review")+'">'+escapeHtml(p.status||"—")+'</span></div>'+
           '<p>'+escapeHtml(p.caption||"No caption")+'</p>'+
           '<code>'+escapeHtml(p.media_object_path||"")+'</code>'+
-          '<div class="moderation-meta"><span>Comments: '+escapeHtml(p.comments_locked?"LOCKED":"OPEN")+'</span>'+(p.spoiler_part_id?'<span>Spoiler-tagged</span>':'')+'</div>'+
-          '<div class="release-row-actions">'+(actions.join("")||'<span class="muted">No moderation permission</span>')+'</div>'+
-        '</div>';
-      }).join(""):'<div class="empty">No Fan Page posts yet.</div>');
+          '<div class="moderation-meta"><span>Comments: '+escapeHtml(p.comments_locked?"LOCKED":"OPEN")+'</span>'+(p.spoiler_episode_key?'<span>Spoiler '+escapeHtml(p.spoiler_episode_key)+'</span>':'')+'</div>'+
+        '</div>'
+      ).join(""):'<div class="empty">No Platform Fan Page posts yet.</div>');
 
-    const rs=queue.reports||[];
     reports.innerHTML=
-      '<div class="database-head"><span>Community Reports</span><small>'+escapeHtml(rs.length)+' shown</small></div>'+
+      '<div class="database-head"><span>Platform Community Reports</span><small>'+escapeHtml(rs.length)+' shown</small></div>'+
       (rs.length?rs.map(r=>{
         const target=r.target_snapshot||{};
-        const targetActions=[];
-        if(canModerate&&r.status==="OPEN"){
-          if(r.target_type==="FAN_POST"){
-            if(target.status==="VISIBLE")targetActions.push('<button data-report-target-action="hide" data-report-target-type="fan-post" data-target-id="'+escapeHtml(r.target_id)+'">Hide target</button>');
-            if(["HIDDEN","REMOVED"].includes(target.status))targetActions.push('<button data-report-target-action="restore" data-report-target-type="fan-post" data-target-id="'+escapeHtml(r.target_id)+'">Restore target</button>');
-            if(target.status!=="REMOVED")targetActions.push('<button data-report-target-action="remove" data-report-target-type="fan-post" data-target-id="'+escapeHtml(r.target_id)+'" class="danger-mini">Remove target</button>');
-          }else if(r.target_type==="PART_COMMENT"||r.target_type==="FAN_COMMENT"){
-            const type=r.target_type==="PART_COMMENT"?"part":"fan";
-            if(target.status==="VISIBLE")targetActions.push('<button data-report-target-action="hide" data-report-target-type="'+type+'" data-target-id="'+escapeHtml(r.target_id)+'">Hide comment</button>');
-            if(["HIDDEN","REMOVED"].includes(target.status))targetActions.push('<button data-report-target-action="restore" data-report-target-type="'+type+'" data-target-id="'+escapeHtml(r.target_id)+'">Restore comment</button>');
-            if(target.status!=="REMOVED")targetActions.push('<button data-report-target-action="remove" data-report-target-type="'+type+'" data-target-id="'+escapeHtml(r.target_id)+'" class="danger-mini">Remove comment</button>');
-          }
-        }
         return '<div class="moderation-card report-card">'+
           '<div class="moderation-card-head"><div><strong>'+escapeHtml(r.target_type||"REPORT")+'</strong><small>'+escapeHtml(r.created_at||"")+'</small></div><span class="status '+(r.status==="OPEN"?"review":"final")+'">'+escapeHtml(r.status||"—")+'</span></div>'+
           '<p><strong>Report:</strong> '+escapeHtml(r.reason||"")+'</p>'+
           '<p class="target-preview"><strong>Target:</strong> '+escapeHtml(target.body||target.caption||"No text preview")+'</p>'+
           '<code>'+escapeHtml(r.target_id||"")+'</code>'+
-          '<div class="release-row-actions">'+targetActions.join("")+
-            (canModerate&&r.status==="OPEN"
-              ?'<button data-report-action="resolve" data-id="'+escapeHtml(r.id)+'">Resolve report</button><button data-report-action="dismiss" data-id="'+escapeHtml(r.id)+'">Dismiss report</button>'
-              :'')+
-          '</div>'+
         '</div>';
-      }).join(""):'<div class="empty">No community reports.</div>');
+      }).join(""):'<div class="empty">No Platform community reports.</div>')+
+      '<div class="admin-note compact"><p>Moderation mutations remain disabled until the Platform moderation action contract is deployed. This screen no longer falls back to the quota-blocked Core API.</p></div>';
 
-    fan.querySelectorAll("[data-fan-action]").forEach(button=>button.addEventListener("click",async()=>{
-      const action=button.dataset.fanAction;
-      const reason=prompt("Reason to "+action+" this Fan Page post:")||"";
-      if(reason.trim().length<4)return;
-      button.disabled=true;
-      try{
-        await apiPost("/admin/api/community/fan-posts/"+button.dataset.id+"/"+action,{reason});
-        await loadCommunity();
-      }catch(error){alert(error.message);button.disabled=false;}
-    }));
-
-    fan.querySelectorAll("[data-fan-lock]").forEach(button=>button.addEventListener("click",async()=>{
-      const action=button.dataset.fanLock;
-      const reason=prompt("Reason to "+action+" comments on this Fan Page post:")||"";
-      if(reason.trim().length<4)return;
-      button.disabled=true;
-      try{
-        await apiPost("/admin/api/community/fan-posts/"+button.dataset.id+"/comments-"+action,{reason});
-        await loadCommunity();
-      }catch(error){alert(error.message);button.disabled=false;}
-    }));
-
-    reports.querySelectorAll("[data-report-action]").forEach(button=>button.addEventListener("click",async()=>{
-      const action=button.dataset.reportAction;
-      const reason=prompt("Reason to "+action+" this report:")||"";
-      if(reason.trim().length<4)return;
-      button.disabled=true;
-      try{
-        await apiPost("/admin/api/community/reports/"+button.dataset.id+"/"+action,{reason});
-        await loadCommunity();
-      }catch(error){alert(error.message);button.disabled=false;}
-    }));
-
-    reports.querySelectorAll("[data-report-target-action]").forEach(button=>button.addEventListener("click",async()=>{
-      const action=button.dataset.reportTargetAction;
-      const type=button.dataset.reportTargetType;
-      const reason=prompt("Reason to "+action+" this reported target:")||"";
-      if(reason.trim().length<4)return;
-      button.disabled=true;
-      try{
-        if(type==="fan-post"){
-          await apiPost("/admin/api/community/fan-posts/"+button.dataset.targetId+"/"+action,{reason});
-        }else{
-          await apiPost("/admin/api/community/comments/"+type+"/"+button.dataset.targetId+"/"+action,{reason});
-        }
-        await loadCommunity();
-      }catch(error){alert(error.message);button.disabled=false;}
-    }));
+    $("#release-badge").textContent="PLATFORM COMMUNITY";
+    $("#release-badge").className="badge good";
   }catch(error){
-    summary.innerHTML='';
-    fan.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
-    reports.innerHTML='';
+    summary.innerHTML="";
+    fan.innerHTML=bridgeFailurePanel(error);
+    reports.innerHTML="";
   }
-}
-
-
-function hasPermission(key){
-  return Boolean(state.rbac?.is_owner||(state.rbac?.permissions||[]).includes(key));
-}
-
-function permissionOptions(){
-  const rows=state.rbac?.permission_catalog||[];
-  return rows.map(p=>'<option value="'+escapeHtml(p.permission_key)+'">'+escapeHtml(p.category+" · "+p.permission_key+" · "+p.risk_level)+'</option>').join("");
 }
 
 async function loadAccess(){
