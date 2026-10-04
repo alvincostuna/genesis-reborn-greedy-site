@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow">
-  <title>GENESIS Admin — Control Center</title>\n  <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
+  <title>GENESIS Admin — Control Center</title>
+  <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
   <link rel="stylesheet" href="/admin/admin.css">
 </head>
 <body>
@@ -19,27 +20,49 @@
         </div>
       </div>
 
-      <nav>
-        <button class="nav active" data-view="production">Production</button>
-        <button class="nav" data-view="website-ops">Website Ops</button>
-        <button class="nav" data-view="manuscripts">Manuscripts</button>
-        <button class="nav" data-view="releases">Release Queue</button>
-        <button class="nav" data-view="roadmap">Roadmap</button>
-        <button class="nav" data-view="continuity">Continuity</button>
-        <button class="nav" data-view="authority">Authority</button>
-        <button class="nav" data-view="access">Access & Audit</button>
-        <button class="nav" data-view="database">Game Database</button>
-        <button class="nav" data-view="art-assets">Art Assets</button>
-        <button class="nav" data-view="codex">Codex</button>
-        <button class="nav" data-view="support">Support</button>
-        <button class="nav" data-view="messages">Messages</button>
-        <button class="nav" data-view="readers">Readers</button>
-        <button class="nav" data-view="community">Community</button>
+      <nav class="admin-nav" aria-label="GENESIS Admin navigation">
+        <div class="nav-group">
+          <span class="nav-group-label">COMMAND</span>
+          <button class="nav active" data-view="overview"><span class="nav-icon">⌂</span><span>Overview</span></button>
+          <button class="nav" data-view="production"><span class="nav-icon">◈</span><span>Production</span></button>
+          <button class="nav" data-view="releases"><span class="nav-icon">◷</span><span>Releases</span></button>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-group-label">STORY</span>
+          <button class="nav" data-view="manuscripts"><span class="nav-icon">▤</span><span>Manuscripts</span></button>
+          <button class="nav" data-view="roadmap"><span class="nav-icon">◫</span><span>Roadmap</span></button>
+          <button class="nav" data-view="continuity"><span class="nav-icon">⟡</span><span>Continuity</span></button>
+          <button class="nav" data-view="authority"><span class="nav-icon">§</span><span>Authorities</span></button>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-group-label">WORLD</span>
+          <button class="nav" data-view="database"><span class="nav-icon">◎</span><span>World Database</span></button>
+          <button class="nav" data-view="codex"><span class="nav-icon">◇</span><span>Codex</span></button>
+          <button class="nav" data-view="art-assets"><span class="nav-icon">◧</span><span>Art Assets</span></button>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-group-label">AUDIENCE</span>
+          <button class="nav" data-view="readers"><span class="nav-icon">♙</span><span>Readers</span></button>
+          <button class="nav" data-view="community"><span class="nav-icon">◎</span><span>Community</span></button>
+          <button class="nav" data-view="messages"><span class="nav-icon">✉</span><span>Messages</span></button>
+          <button class="nav" data-view="support"><span class="nav-icon">♡</span><span>Support</span></button>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-group-label">PLATFORM</span>
+          <button class="nav" data-view="website-ops"><span class="nav-icon">⌂</span><span>Website</span></button>
+          <button class="nav" data-view="access"><span class="nav-icon">♜</span><span>Administrators & Audit</span></button>
+          <button class="nav" data-view="bridge-health"><span class="nav-icon">⇄</span><span>Bridge Health</span></button>
+          <button class="nav" data-view="settings"><span class="nav-icon">⚙</span><span>Settings</span></button>
+        </div>
       </nav>
 
       <div class="sidebar-note">
-        <strong>PRE-LAUNCH / READ-ONLY</strong>
-        <span>Supabase-native control view. Releases remain paused.</span>
+        <strong>CORE + PLATFORM</strong>
+        <span>Core stays authoritative. Platform manages identity, readers, release control and bridge access.</span>
       </div>
     </aside>
 
@@ -48,12 +71,64 @@
         <button id="mobile-menu-button" class="mobile-menu-button" type="button" aria-label="Open Admin menu" aria-expanded="false">☰</button>
         <div>
           <p class="eyebrow">GENESIS: REBORN GREEDY</p>
-          <h1 id="page-title">Production Dashboard</h1>
+          <div class="title-row">
+            <h1 id="page-title">Command Overview</h1>
+            <span id="source-badge" class="source-badge platform">PLATFORM · CONTROL PLANE</span>
+          </div>
         </div>
-        <div id="release-badge" class="badge danger">LOADING</div>
+        <div id="release-badge" class="badge neutral">ADMIN ONLINE</div>
       </header>
 
-      <section id="production-view" class="view"></section>
+      <section id="overview-view" class="view">
+        <div class="overview-hero panel">
+          <div>
+            <p class="eyebrow">CONTROL PLANE</p>
+            <h2>GENESIS Administration</h2>
+            <p>The Admin shell is now separated by authority boundary. Core remains authoritative for story, production and world data; GENESIS PLATFORM manages identity, readers, release control, audit and bridge access.</p>
+          </div>
+          <div class="overview-architecture">
+            <div><small>CORE</small><strong>Authoritative</strong><span>Read through curated bridge surfaces</span></div>
+            <div class="architecture-arrow">→</div>
+            <div><small>PLATFORM</small><strong>Control Plane</strong><span>Auth · Readers · Releases · Audit</span></div>
+          </div>
+        </div>
+
+        <div class="overview-grid">
+          <article class="panel overview-tile">
+            <span class="source-badge core">CORE · READ ONLY</span>
+            <h3>Production & Story</h3>
+            <p>Production, Manuscripts, Roadmap, Continuity and Authorities migrate to curated read-only Core bridge endpoints.</p>
+          </article>
+          <article class="panel overview-tile">
+            <span class="source-badge platform">PLATFORM · MANAGED HERE</span>
+            <h3>Audience & Identity</h3>
+            <p>Administrators, Readers, Community, Messages, Support, release state and audit stay on GENESIS PLATFORM.</p>
+          </article>
+          <article class="panel overview-tile">
+            <span class="source-badge hybrid">CORE DATA · PLATFORM PROJECTION</span>
+            <h3>World & Codex</h3>
+            <p>Canonical entities remain in Core while Platform manages safe projections, asset workflow and reader visibility.</p>
+          </article>
+          <article class="panel overview-tile">
+            <span class="source-badge bridge">BRIDGE · VERIFIED</span>
+            <h3>Isolation Contract</h3>
+            <p>The bridge is SELECT-only. A Core outage must not take down Platform-native Admin functions.</p>
+          </article>
+        </div>
+
+        <div class="panel migration-band">
+          <div class="database-head"><span>PHASE 1 · SHELL MIGRATION</span><small>NON-DESTRUCTIVE</small></div>
+          <div class="migration-steps">
+            <div class="done"><strong>1</strong><span>New grouped Admin shell</span></div>
+            <div><strong>2</strong><span>Production / Roadmap / Continuity / Authorities</span></div>
+            <div><strong>3</strong><span>Manuscripts</span></div>
+            <div><strong>4</strong><span>World Database</span></div>
+            <div><strong>5</strong><span>Audience / Website / Art</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="production-view" class="view hidden"></section>
 
       <section id="website-ops-view" class="view hidden">
         <div class="panel section-intro">
@@ -254,6 +329,27 @@
             <h2>Open Reports</h2>
             <div id="community-reports" class="panel"></div>
           </div>
+        </div>
+      </section>
+
+      <section id="bridge-health-view" class="view hidden">
+        <div class="panel section-intro">
+          <strong>Core Bridge Health</strong>
+          <span>Permanent health surface for the isolated read-only Core → Platform bridge. No secret values are displayed here.</span>
+        </div>
+        <div id="bridge-health-summary" class="cards">
+          <div class="card"><span>Production Status</span><strong>Verified</strong></div>
+          <div class="card"><span>Roadmap</span><strong>Verified</strong></div>
+          <div class="card"><span>Continuity</span><strong>Verified</strong></div>
+          <div class="card"><span>Authorities</span><strong>Verified</strong></div>
+        </div>
+        <div class="panel runtime">
+          <div><small>Mode</small><strong>READ ONLY</strong></div>
+          <div><small>Direct genesis_private access</small><strong>DENIED</strong></div>
+          <div><small>Credential exposure</small><strong>SECRET ONLY</strong></div>
+          <div><small>Write bridge</small><strong>NOT PERMITTED</strong></div>
+          <div><small>Platform Auth</small><strong>REQUIRED</strong></div>
+          <div><small>Last validation</small><strong>4 / 4 PASS</strong></div>
         </div>
       </section>
 
