@@ -93,7 +93,9 @@ add('S2-MOBILE-SHELL','S2','Mobile header/navigation is operational',
 add('S1-ADMIN-RECONCILED','S1','Admin runtime is on current bridge lineage without static manuscript copies',
   /data-view=["']website-ops["']/.test(adminHtml)&&
   /data-view=["']manuscripts["']/.test(adminHtml)&&
-  /\/admin\/api\/website-ops/.test(adminJs)&&
+  /function loadWebsiteOps\(/.test(adminJs)&&
+  /platformRest\("platform_settings"/.test(adminJs)&&
+  /platformFunction\("genesis-production-status"/.test(adminJs)&&
   /platformFunction\("genesis-manuscripts-index"/.test(adminJs)&&
   /PLATFORM_SESSION_KEY/.test(adminJs)&&
   /genesis_admin_website_ops_status/.test(worker)&&
