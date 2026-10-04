@@ -311,68 +311,82 @@ async function loadWebsiteOps(){
   const integrity=$("#website-ops-integrity");
   const queue=$("#website-ops-queue");
   const publicRoot=$("#website-ops-public");
+
   summary.innerHTML='<div class="card"><span>Website operations</span><strong>Loading…</strong></div>';
-  integrity.innerHTML='<div class="empty">Checking production → release handoff…</div>';
-  queue.innerHTML='<div class="empty">Loading release queue state…</div>';
-  publicRoot.innerHTML='<div class="empty">Loading public-site state…</div>';
+  integrity.innerHTML='<div class="empty">Checking Core production handoff through the read-only bridge…</div>';
+  queue.innerHTML='<div class="empty">Loading Platform release-control state…</div>';
+  publicRoot.innerHTML='<div class="empty">Loading Platform public-site state…</div>';
+
+  if(!platformSession()){
+    summary.innerHTML=bridgeLoginPanel("Website Operations is Platform-native with narrow read-only Core production facts. Sign in once to GENESIS PLATFORM.");
+    bindBridgeLogin(loadWebsiteOps);
+    integrity.innerHTML="";
+    queue.innerHTML="";
+    publicRoot.innerHTML="";
+    return;
+  }
+
   try{
-    const d=await api("/admin/api/website-ops");
-    const production=d.production||{};
-    const handoff=d.handoff_integrity||{};
-    const release=d.release_queue||{};
-    const pub=d.public_site||{};
-    const controls=d.release_controls||{};
-    const lock=d.production_lock||{};
-    const clock=pub.clock||{};
-    const healthy=handoff.health==="PASS";
+    const [settings,productionEnvelope]=await Promise.all([
+      platformRest("platform_settings",{select:"setting_key,value,updated_at"}),
+      platformFunction("genesis-production-status")
+    ]);
+
+    const smap=Object.fromEntries((settings||[]).map(x=>[x.setting_key,x.value||{}]));
+    const production=Array.isArray(productionEnvelope?.data)?(productionEnvelope.data[0]||{}):(productionEnvelope?.data||productionEnvelope||{});
+    const releaseCtl=smap.release_launch||{};
+    const live=smap.live_verification||{};
+    const finalCount=Number(production.final_canon_count??production.final_canon??production.final_count??0);
+    const stage1=Number(production.stage1_verified_count??production.stage1_available??0);
+    const stage2=Number(production.stage2_verified_count??production.stage2_available??0);
+    const branch=production.branch_key||production.active_branch||"—";
+    const router=production.router_state||production.ai2_router_state||"—";
+    const lock=production.lock_revision??production.lock_rev??"—";
 
     summary.innerHTML=
-      '<div class="card"><span>Operational state</span><strong class="'+(healthy?"good-text":"danger-text")+'">'+escapeHtml(d.operational_status||"UNKNOWN")+'</strong></div>'+
-      '<div class="card"><span>Handoff integrity</span><strong class="'+(healthy?"good-text":"danger-text")+'">'+escapeHtml(handoff.health||"UNKNOWN")+'</strong></div>'+
-      '<div class="card"><span>AI-2 Stage 1</span><strong>'+escapeHtml(production.stage1_available??0)+'</strong></div>'+
-      '<div class="card"><span>AI-1 / Stage 2</span><strong>'+escapeHtml(production.stage2_available??0)+'</strong></div>'+
-      '<div class="card"><span>Final Canon</span><strong>'+escapeHtml(production.final_canon??0)+'</strong></div>'+
-      '<div class="card"><span>Public Parts</span><strong>'+escapeHtml(pub.published_story_parts??0)+'</strong></div>';
+      '<div class="card"><span>Control plane</span><strong>PLATFORM</strong></div>'+
+      '<div class="card"><span>Core facts</span><strong>READ ONLY</strong></div>'+
+      '<div class="card"><span>Stage 1 verified</span><strong>'+escapeHtml(stage1)+'</strong></div>'+
+      '<div class="card"><span>Stage 2 verified</span><strong>'+escapeHtml(stage2)+'</strong></div>'+
+      '<div class="card"><span>Final Canon</span><strong>'+escapeHtml(finalCount)+'</strong></div>'+
+      '<div class="card"><span>Live verification</span><strong>'+escapeHtml(live.status||"PENDING")+'</strong></div>';
 
-    const latest=production.latest_final_canon||null;
     integrity.innerHTML=
-      '<div class="database-head"><span>Automatic Story Handoff</span><small>'+escapeHtml(d.contract_version||"")+'</small></div>'+
+      '<div class="database-head"><span>Production → Website Boundary</span><small>CORE FACTS / PLATFORM CONTROL</small></div>'+
       '<div class="ops-health">'+
-        '<div class="ops-health-row"><span>Active branch</span><strong>'+escapeHtml(d.active_context?.branch_key||"—")+'</strong></div>'+
-        '<div class="ops-health-row"><span>Production router</span><strong>'+escapeHtml(lock.router_state||"—")+'</strong></div>'+
-        '<div class="ops-health-row"><span>Final Canon without queue item</span><strong class="'+((handoff.final_canon_without_release_item||0)===0?"good-text":"danger-text")+'">'+escapeHtml(handoff.final_canon_without_release_item??0)+'</strong></div>'+
-        '<div class="ops-health-row"><span>Release pointer mismatches</span><strong class="'+((handoff.release_pointer_mismatches||0)===0?"good-text":"danger-text")+'">'+escapeHtml(handoff.release_pointer_mismatches??0)+'</strong></div>'+
-        '<div class="ops-health-row"><span>Auto-queue trigger</span><strong>'+escapeHtml(handoff.auto_queue_trigger||"—")+'</strong></div>'+
-        '<div class="ops-health-row"><span>Latest Final Canon</span><strong>'+(latest?escapeHtml(latest.part_key+" · "+latest.title):"Waiting for Final Canon")+'</strong></div>'+
-      '</div>';
-
-    const next=release.next_item||null;
-    queue.innerHTML=
-      '<div class="database-head"><span>Release Queue</span><small>Final Canon enters HIDDEN automatically</small></div>'+
-      '<div class="runtime">'+
-        '<div><small>Hidden</small><strong>'+escapeHtml(release.hidden??0)+'</strong></div>'+
-        '<div><small>Ready</small><strong>'+escapeHtml(release.ready??0)+'</strong></div>'+
-        '<div><small>Scheduled</small><strong>'+escapeHtml(release.scheduled??0)+'</strong></div>'+
-        '<div><small>Published</small><strong>'+escapeHtml(release.published??0)+'</strong></div>'+
-        '<div><small>Withdrawn</small><strong>'+escapeHtml(release.withdrawn??0)+'</strong></div>'+
-        '<div><small>Next queue item</small><strong>'+(next?escapeHtml(next.part_key+" · "+next.release_status):"None yet")+'</strong></div>'+
-      '</div>';
-
-    const slots=Array.isArray(clock.daily_slots)?clock.daily_slots.join(" / "):"08:00 / 14:00 / 20:00";
-    publicRoot.innerHTML=
-      '<div class="database-head"><span>Official Website Publication State</span><small>Public site reads published content only</small></div>'+
-      '<div class="runtime">'+
-        '<div><small>Releases</small><strong>'+escapeHtml(controls.releases_paused?"PAUSED":"ACTIVE")+'</strong></div>'+
-        '<div><small>Launch authorized</small><strong>'+escapeHtml(controls.launch_authorized?"YES":"NO")+'</strong></div>'+
-        '<div><small>Cadence</small><strong>'+escapeHtml(slots)+' PHT</strong></div>'+
-        '<div><small>Sunday</small><strong>'+escapeHtml(clock.sunday_rest?"REST DAY":"ACTIVE")+'</strong></div>'+
-        '<div><small>Next scheduled publish</small><strong>'+escapeHtml(clock.next_publish_at||"NOT SET")+'</strong></div>'+
-        '<div><small>Published Parts</small><strong>'+escapeHtml(clock.released_parts??0)+'</strong></div>'+
+        '<div class="ops-health-row"><span>Active branch</span><strong>'+escapeHtml(branch)+'</strong></div>'+
+        '<div class="ops-health-row"><span>Production router</span><strong>'+escapeHtml(router)+'</strong></div>'+
+        '<div class="ops-health-row"><span>Core lock</span><strong>'+escapeHtml(lock)+'</strong></div>'+
+        '<div class="ops-health-row"><span>Production writes from Website</span><strong class="good-text">FORBIDDEN</strong></div>'+
+        '<div class="ops-health-row"><span>Core access mode</span><strong class="good-text">CURATED READ ONLY</strong></div>'+
       '</div>'+
-      '<div class="admin-note compact"><strong>Operational contract</strong><p>Production remains authoritative. A Part becomes website-eligible only after FINAL_CANON. The database automatically creates a hidden release item. Admin controls readiness/scheduling; only PUBLISHED Parts become public. This view is read-only and cannot resume story production.</p></div>';
+      '<div class="admin-note compact"><strong>Isolation contract</strong><p>Website Operations cannot resume AI production or edit canonical story records. Canonical production facts are read only through the existing bridge; operational website state belongs to GENESIS PLATFORM.</p></div>';
+
+    queue.innerHTML=
+      '<div class="database-head"><span>Release Queue</span><small>PLATFORM MIGRATION BOUNDARY</small></div>'+
+      '<div class="runtime">'+
+        '<div><small>Launch authorized</small><strong>'+escapeHtml(releaseCtl.launch_authorized?"YES":"NO")+'</strong></div>'+
+        '<div><small>Release migration</small><strong>'+escapeHtml(releaseCtl.migration_state||"PENDING_RELEASE_CUTOVER")+'</strong></div>'+
+        '<div><small>Queue reads</small><strong>DISABLED HERE</strong></div>'+
+        '<div><small>Queue writes</small><strong>DISABLED HERE</strong></div>'+
+      '</div>'+
+      '<div class="admin-note compact"><p>The old Core release queue is no longer queried from this screen. Queue visibility and controls will return when the dedicated Releases migration is complete.</p></div>';
+
+    publicRoot.innerHTML=
+      '<div class="database-head"><span>Official Website Publication State</span><small>PLATFORM CONTROL PLANE</small></div>'+
+      '<div class="runtime">'+
+        '<div><small>Live-site verification</small><strong>'+escapeHtml(live.status||"PENDING_RELEASE_CUTOVER")+'</strong></div>'+
+        '<div><small>Comments</small><strong>'+escapeHtml(smap.feature_comments?.enabled?"ON":"OFF")+'</strong></div>'+
+        '<div><small>Fan posting</small><strong>'+escapeHtml(smap.feature_fan_posting?.enabled?"ON":"OFF")+'</strong></div>'+
+        '<div><small>Share rewards</small><strong>'+escapeHtml(smap.feature_share_rewards?.enabled?"ON":"OFF")+'</strong></div>'+
+        '<div><small>Reader payments</small><strong>'+escapeHtml(smap.payments?.enabled?"ON":"OFF")+'</strong></div>'+
+      '</div>';
+
+    $("#release-badge").textContent="PLATFORM WEBSITE";
+    $("#release-badge").className="badge good";
   }catch(error){
     summary.innerHTML="";
-    integrity.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    integrity.innerHTML=bridgeFailurePanel(error);
     queue.innerHTML="";
     publicRoot.innerHTML="";
   }
@@ -705,9 +719,66 @@ async function loadDatabaseProposals(){
 
 async function ensureArtAssetsManifest(){
   if(state.artAssetsManifest)return state.artAssetsManifest;
-  state.artAssetsManifest=await api("/admin/api/art-assets");
+  if(!platformSession())throw new Error("GENESIS PLATFORM session required.");
+
+  const rows=await platformRest("admin_asset_manifest",{
+    select:"id,bucket_name,object_path,asset_kind,status,checksum_sha256,metadata,created_by,created_at,updated_at",
+    order:"updated_at.desc",
+    limit:"1000"
+  });
+
+  const items=(rows||[]).map(row=>{
+    const m=row.metadata||{};
+    return {
+      asset_id:row.id,
+      entity_type:m.entity_type||m.type||row.asset_kind||"OTHER",
+      entity_key:m.entity_key||m.code||"",
+      display_name:m.display_name||m.name||row.object_path,
+      supabase_entity_id:m.supabase_entity_id||m.entity_id||"",
+      supabase_entity_table:m.supabase_entity_table||m.entity_table||"",
+      approval_status:String(m.approval_status||row.status||"staged").toUpperCase(),
+      review_status:String(m.review_status||row.status||"staged").toUpperCase(),
+      cdn_status:String(m.cdn_status||"NOT_EXPORTED").toUpperCase(),
+      public_visibility:String(m.public_visibility||"HIDDEN").toUpperCase(),
+      reader_safe:m.reader_safe===true,
+      public_eligible:m.public_eligible===true,
+      asset_role:m.asset_role||row.asset_kind||"other",
+      variant_key:m.variant_key||"",
+      version:m.version||"—",
+      final_approver:m.final_approver||"",
+      reviewed_at:m.reviewed_at||null,
+      reviewer:m.reviewer||"",
+      web_path:m.web_path||"",
+      drive_file_id:m.drive_file_id||"",
+      master_drive_file_id:m.master_drive_file_id||"",
+      drive_folder_id:m.drive_folder_id||"",
+      replaces_asset_id:m.replaces_asset_id||"",
+      replaced_by_asset_id:m.replaced_by_asset_id||"",
+      retired_at:m.retired_at||null,
+      profile_route:m.profile_route||"",
+      atlas_route:m.atlas_route||"",
+      item_route:m.item_route||"",
+      bucket_name:row.bucket_name,
+      object_path:row.object_path,
+      checksum_sha256:row.checksum_sha256,
+      created_at:row.created_at,
+      updated_at:row.updated_at
+    };
+  });
+
+  state.artAssetsManifest={
+    source:{
+      manifest_title:"GENESIS PLATFORM Art Asset Manifest",
+      source_modified_at:items[0]?.updated_at||null
+    },
+    safety:{
+      public_visibility_rule:"Artwork existence or approval never grants reader visibility. Reader visibility remains a separate Codex/publication decision."
+    },
+    items
+  };
   return state.artAssetsManifest;
 }
+
 
 function atlasGateClass(value){
   const gate=String(value||"HIDDEN").toUpperCase();
@@ -1264,17 +1335,32 @@ function renderArtAssets(){
 async function loadArtAssets(){
   const root=$("#art-assets-table");
   const summary=$("#art-assets-summary");
-  root.innerHTML='<div class="empty">Loading protected art manifest snapshot…</div>';
+  root.innerHTML='<div class="empty">Loading GENESIS PLATFORM art manifest…</div>';
   summary.innerHTML='<div class="card"><span>Art manifest</span><strong>Loading…</strong></div>';
+
+  if(!platformSession()){
+    summary.innerHTML=bridgeLoginPanel("Art Assets is now Platform-native. Sign in once to GENESIS PLATFORM.");
+    bindBridgeLogin(async()=>{
+      state.artAssetsManifest=null;
+      await loadArtAssets();
+    });
+    root.innerHTML="";
+    return;
+  }
+
   try{
+    state.artAssetsManifest=null;
     await ensureArtAssetsManifest();
     renderArtAssets();
+    $("#release-badge").textContent="PLATFORM ART";
+    $("#release-badge").className="badge good";
   }catch(error){
     state.artAssetsManifest=null;
     summary.innerHTML="";
-    root.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    root.innerHTML=bridgeFailurePanel(error);
   }
 }
+
 
 function adminBadge(badge){
   if(!badge)return "";
