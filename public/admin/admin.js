@@ -1,6 +1,6 @@
 const state={manuscripts:[],activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[],activeDatabaseRecord:null,databaseAllowedFields:{},artAssetsManifest:null};
 const $=(s)=>document.querySelector(s);
-const $=(s)=>[...document.querySelectorAll(s)];
+const $$=(s)=>[...document.querySelectorAll(s)];
 
 const PLATFORM_URL="https://qtfdqurbcqkpkpnvkvdh.supabase.co";
 const PLATFORM_PUBLISHABLE_KEY="sb_publishable_V7DrgmlPJfe1d-KZX3rSsg_VpSouhlp";
