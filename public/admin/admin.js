@@ -2255,7 +2255,120 @@ function switchView(name){
   if(name==="readers")loadReaders();
   if(name==="community")loadCommunity();
   if(name==="settings")loadSettings();
+  if(name==="bridge-health")bindManuscriptBridgeDiagnostics();
 }
+async function runManuscriptBridgeDiagnostics(){
+  const out=$("#manuscript-bridge-test-result");
+  const button=$("#run-manuscript-bridge-tests");
+  if(!out||!button)return;
+  button.disabled=true;
+  out.textContent="Running Manuscripts bridge gates…";
+
+  const results=[];
+  try{
+    const noAuth=await fetch(PLATFORM_URL+"/functions/v1/genesis-manuscripts-index",{
+      method:"GET",
+      headers:{apikey:PLATFORM_PUBLISHABLE_KEY}
+    });
+    results.push({
+      gate:"missing_auth",
+      expected:401,
+      actual:noAuth.status,
+      pass:noAuth.status===401
+    });
+
+    const session=platformSession();
+    if(!session){
+      results.push({gate:"platform_admin_session",pass:false,error:"Connect GENESIS PLATFORM from Production first."});
+      out.textContent=JSON.stringify(results,null,2);
+      return;
+    }
+
+    const indexResp=await fetch(PLATFORM_URL+"/functions/v1/genesis-manuscripts-index?limit=200&offset=0",{
+      headers:{
+        Authorization:"Bearer "+session.access_token,
+        apikey:PLATFORM_PUBLISHABLE_KEY
+      }
+    });
+    const indexData=await indexResp.json().catch(()=>null);
+    const rows=Array.isArray(indexData?.data)?indexData.data:[];
+    results.push({
+      gate:"index_read",
+      expected:200,
+      actual:indexResp.status,
+      row_count:indexData?.row_count,
+      total:indexData?.total,
+      pass:indexResp.status===200&&rows.length>0
+    });
+
+    const sample=rows[0]||null;
+    if(sample?.production_part_id){
+      const versionUrl=PLATFORM_URL+"/functions/v1/genesis-manuscript-version?part_id="+encodeURIComponent(sample.production_part_id)+"&stage=stage1";
+      const versionResp=await fetch(versionUrl,{
+        headers:{
+          Authorization:"Bearer "+session.access_token,
+          apikey:PLATFORM_PUBLISHABLE_KEY
+        }
+      });
+      const versionData=await versionResp.json().catch(()=>null);
+      results.push({
+        gate:"stage1_version_read",
+        part_key:sample.part_key,
+        expected:200,
+        actual:versionResp.status,
+        word_count:versionData?.data?.[0]?.word_count,
+        content_hash:versionData?.data?.[0]?.content_hash||null,
+        pass:versionResp.status===200&&Boolean(versionData?.data?.[0]?.body_text)
+      });
+
+      const compareUrl=PLATFORM_URL+"/functions/v1/genesis-manuscript-compare?part_id="+encodeURIComponent(sample.production_part_id)+"&from=stage1&to=stage2";
+      const compareResp=await fetch(compareUrl,{
+        headers:{
+          Authorization:"Bearer "+session.access_token,
+          apikey:PLATFORM_PUBLISHABLE_KEY
+        }
+      });
+      const compareData=await compareResp.json().catch(()=>null);
+      results.push({
+        gate:"stage2_absence_handled",
+        current_core_state:"Stage 2 count is 0",
+        expected:404,
+        actual:compareResp.status,
+        error:compareData?.error||null,
+        pass:compareResp.status===404&&compareData?.error==="manuscript_version_not_found"
+      });
+    }
+
+    const invalidResp=await fetch(PLATFORM_URL+"/functions/v1/genesis-manuscript-version?part_id=not-a-uuid&stage=stage1",{
+      headers:{
+        Authorization:"Bearer "+session.access_token,
+        apikey:PLATFORM_PUBLISHABLE_KEY
+      }
+    });
+    results.push({
+      gate:"input_validation",
+      expected:422,
+      actual:invalidResp.status,
+      pass:invalidResp.status===422
+    });
+
+    const passed=results.filter((x)=>x.pass).length;
+    out.textContent="Passed "+passed+"/"+results.length+" live checks\n\n"+JSON.stringify(results,null,2);
+  }catch(error){
+    results.push({gate:"diagnostic_runtime",pass:false,error:String(error?.message||error)});
+    out.textContent=JSON.stringify(results,null,2);
+  }finally{
+    button.disabled=false;
+  }
+}
+
+function bindManuscriptBridgeDiagnostics(){
+  const button=$("#run-manuscript-bridge-tests");
+  if(!button||button.dataset.bound==="1")return;
+  button.dataset.bound="1";
+  button.addEventListener("click",runManuscriptBridgeDiagnostics);
+}
+
 
 $$(".nav").forEach((b)=>b.addEventListener("click",()=>switchView(b.dataset.view)));
 $("#refresh-manuscripts").addEventListener("click",loadManuscripts);
