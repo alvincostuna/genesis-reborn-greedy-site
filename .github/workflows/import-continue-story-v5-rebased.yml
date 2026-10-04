@@ -1,0 +1,36 @@
+name: Import Continue Story V5 Rebased
+
+on:
+  push:
+    branches:
+      - art/continue-story-v5-final-rebased
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: art/continue-story-v5-final-rebased
+          fetch-depth: 0
+      - name: Download Continue Story V5
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets/portal-v1/backgrounds/batch1
+          curl -L --fail --retry 3 'https://sdmntprseasia.oaiusercontent.com/files/00000000-7e0c-8207-a576-f4b66349e0dd/raw?se=2026-10-04T16%3A54%3A44Z&sp=r&sv=2026-02-06&sr=b&scid=1fb64c25-284c-523d-95b3-1a6067e9c8b7&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-03T18%3A50%3A56Z&ske=2026-10-04T18%3A50%3A56Z&sks=b&skv=2026-02-06&sig=zWl7BXk11A/VdxGbL4IfB65SgeJ4IsV8FqiYMDihLfA%3D' -o public/assets/portal-v1/backgrounds/batch1/continue-story-v5.webp
+          test -s public/assets/portal-v1/backgrounds/batch1/continue-story-v5.webp
+          head -c 4 public/assets/portal-v1/backgrounds/batch1/continue-story-v5.webp | grep -q RIFF
+      - name: Commit asset
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/portal-v1/backgrounds/batch1/continue-story-v5.webp
+          git diff --cached --quiet && exit 0
+          git commit -m "Import Continue Story V5 final background"
+          git push origin HEAD:art/continue-story-v5-final-rebased
