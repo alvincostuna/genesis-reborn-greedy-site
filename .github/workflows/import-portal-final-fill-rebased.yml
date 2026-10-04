@@ -1,0 +1,42 @@
+name: Import Portal Final Fill Rebased
+
+on:
+  push:
+    branches:
+      - art/portal-background-final-fill-rebased
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: art/portal-background-final-fill-rebased
+          fetch-depth: 0
+      - name: Download final-fill WebPs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets/portal-v1/backgrounds/final-fill
+          curl -L --fail --retry 3 'https://sdmntprseasia.oaiusercontent.com/files/00000000-a9e0-8207-995a-2903356a7016/raw?se=2026-10-04T17%3A57%3A32Z&sp=r&sv=2026-02-06&sr=b&scid=11e0be6d-b454-518b-9b37-888574fad7f3&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T05%3A17%3A53Z&ske=2026-10-05T05%3A17%3A53Z&sks=b&skv=2026-02-06&sig=u/b8V2OFWTN4Z5YX%2BhXa/6Ih1Cw4Lk5yiW39HIAFDt4%3D' -o public/assets/portal-v1/backgrounds/final-fill/next-release.webp
+          curl -L --fail --retry 3 'https://sdmntprseasia.oaiusercontent.com/files/00000000-c58c-8207-bd32-28d3ef4f98cb/raw?se=2026-10-04T17%3A57%3A35Z&sp=r&sv=2026-02-06&sr=b&scid=881bbe80-8abc-55d5-93d6-a4f34b7b36f1&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T06%3A31%3A06Z&ske=2026-10-05T06%3A31%3A06Z&sks=b&skv=2026-02-06&sig=m%2BSibBmUzJebRtI23nrAXn6ydQDp522h/VImEoXAEWM%3D' -o public/assets/portal-v1/backgrounds/final-fill/continue-reading.webp
+          curl -L --fail --retry 3 'https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-4948-8211-be2a-408521c26fa5/raw?se=2026-10-04T17%3A57%3A38Z&sp=r&sv=2026-02-06&sr=b&scid=2d5b24fc-e561-5175-9d5a-32ce12d8994f&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-03T18%3A57%3A10Z&ske=2026-10-04T18%3A57%3A10Z&sks=b&skv=2026-02-06&sig=CjwQ31IKI5id/mQDfICl3gSpUIPuJOiqLN%2BuqB4BRWI%3D' -o public/assets/portal-v1/backgrounds/final-fill/reader-profile.webp
+          curl -L --fail --retry 3 'https://sdmntprseasia.oaiusercontent.com/files/00000000-9234-8207-b2ad-c143ac32792f/raw?se=2026-10-04T17%3A57%3A40Z&sp=r&sv=2026-02-06&sr=b&scid=726f2afb-03dd-5916-ba33-ed62e408d5a0&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T05%3A17%3A12Z&ske=2026-10-05T05%3A17%3A12Z&sks=b&skv=2026-02-06&sig=G%2BxD/tLxHktk0jYGOdtQV7hHyX%2BYPxEnnABWHcmg/TU%3D' -o public/assets/portal-v1/backgrounds/final-fill/featured-item-v2.webp
+          curl -L --fail --retry 3 'https://sdmntprseasia.oaiusercontent.com/files/00000000-c764-8207-82bb-0c40350b49bb/raw?se=2026-10-04T17%3A57%3A44Z&sp=r&sv=2026-02-06&sr=b&scid=269a1632-1a7d-5d08-85a7-36d2e440989e&skoid=45d5558d-260a-4eed-aec4-6bc512bdfda4&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-04T00%3A41%3A00Z&ske=2026-10-05T00%3A41%3A00Z&sks=b&skv=2026-02-06&sig=IoZP0KAWbG%2BBREvsHNt387MQRxml11w3r5u974tIeOA%3D' -o public/assets/portal-v1/backgrounds/final-fill/footer-strip.webp
+          for f in public/assets/portal-v1/backgrounds/final-fill/*.webp; do
+            test -s "$f"
+            head -c 4 "$f" | grep -q RIFF
+          done
+      - name: Commit final-fill assets
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/portal-v1/backgrounds/final-fill
+          git diff --cached --quiet && exit 0
+          git commit -m "Import final Portal background fill"
+          git push origin HEAD:art/portal-background-final-fill-rebased
