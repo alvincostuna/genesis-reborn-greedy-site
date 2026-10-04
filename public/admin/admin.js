@@ -51,10 +51,11 @@ async function platformLogin(email,password){
   return storePlatformSession(payload);
 }
 
-async function platformFunction(name){
+async function platformFunction(name,params){
   const session=platformSession();
   if(!session)throw new Error("GENESIS PLATFORM session required.");
-  const response=await fetch(PLATFORM_URL+"/functions/v1/"+name,{
+  const query=params?("?"+new URLSearchParams(params).toString()):"";
+  const response=await fetch(PLATFORM_URL+"/functions/v1/"+name+query,{
     method:"GET",
     headers:{
       Authorization:"Bearer "+session.access_token,
@@ -304,46 +305,50 @@ async function loadWebsiteOps(){
 
 async function loadManuscripts(){
   const table=$("#manuscript-table");
-  table.innerHTML='<div class="empty">Loading manuscripts…</div>';
-  const q=new URLSearchParams();
+  table.innerHTML='<div class="empty">Loading manuscripts through GENESIS PLATFORM…</div>';
+
+  if(!platformSession()){
+    table.innerHTML=bridgeLoginPanel("Manuscripts now read through the isolated Core bridge. Sign in with the GENESIS PLATFORM Admin account.");
+    bindBridgeLogin(loadManuscripts);
+    return;
+  }
+
   const search=$("#search").value.trim();
   const episode=$("#episode-filter").value;
-  if(search)q.set("q",search);
-  if(episode)q.set("episode",episode);
+  const params={limit:"200",offset:"0"};
+  if(search)params.q=search;
+  if(episode)params.episode=episode;
 
   try{
-    const data=await api("/admin/api/manuscripts?"+q.toString());
-    state.manuscripts=data.items||[];
+    const envelope=await platformFunction("genesis-manuscripts-index",params);
+    state.manuscripts=Array.isArray(envelope?.data)?envelope.data:[];
     if(!state.manuscripts.length){
       table.innerHTML='<div class="empty">No manuscripts match this filter.</div>';
       return;
     }
+
     table.innerHTML=
+      '<div class="database-head"><span>CORE MANUSCRIPTS</span><small>READ ONLY · '+escapeHtml(envelope.total??state.manuscripts.length)+' MATCHING</small></div>'+
       '<table><thead><tr>'+
-      '<th>Part</th><th>Title</th><th>State</th><th>S1</th><th>S2</th><th>Final</th><th>Words (S2)</th>'+
+      '<th>Part</th><th>Title</th><th>State</th><th>S1</th><th>S2</th><th>Final</th><th>Words (latest)</th>'+
       '</tr></thead><tbody>'+
-      state.manuscripts.map((p)=>
-        '<tr data-part="'+escapeHtml(p.production_part_id)+'">'+
-        '<td>'+escapeHtml(p.part_key)+'</td>'+
-        '<td>'+escapeHtml(p.title)+'</td>'+
-        '<td><span class="status '+statusClass(p.dashboard_state)+'">'+escapeHtml(p.dashboard_state)+'</span></td>'+
-        '<td>'+(p.stage1_available?"✓":"—")+'</td>'+
-        '<td>'+(p.stage2_available?"✓":"—")+'</td>'+
-        '<td>'+(p.final_canon_available?"✓":"—")+'</td>'+
-        '<td>'+escapeHtml(p.stage2_word_count??"—")+'</td>'+
-        '</tr>'
-      ).join("")+
+      state.manuscripts.map((p)=>{
+        const latestWords=p.final_word_count??p.stage2_word_count??p.stage1_word_count??"—";
+        return '<tr data-part="'+escapeHtml(p.production_part_id)+'">'+
+          '<td>'+escapeHtml(p.part_key)+'</td>'+
+          '<td>'+escapeHtml(p.title)+'</td>'+
+          '<td><span class="status '+statusClass(p.dashboard_state)+'">'+escapeHtml(p.dashboard_state)+'</span></td>'+
+          '<td>'+(p.stage1_available?"✓":"—")+'</td>'+
+          '<td>'+(p.stage2_available?"✓":"—")+'</td>'+
+          '<td>'+(p.final_canon_available?"✓":"—")+'</td>'+
+          '<td>'+escapeHtml(latestWords)+'</td>'+
+          '</tr>';
+      }).join("")+
       '</tbody></table>';
 
-    $("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>{
-      if(isMobileAdminDevice()){
-        location.href="/admin/read/?part="+encodeURIComponent(row.dataset.part)+"&stage=best";
-        return;
-      }
-      openPart(row.dataset.part);
-    }));
+    $("#manuscript-table tbody tr").forEach((row)=>row.addEventListener("click",()=>openPart(row.dataset.part)));
   }catch(error){
-    table.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    table.innerHTML=bridgeFailurePanel(error);
   }
 }
 
@@ -2128,19 +2133,25 @@ async function showVersion(stage){
   const body=$("#manuscript-body");
   body.textContent="Loading manuscript…";
   $$(".tabs [data-stage]").forEach((b)=>b.classList.toggle("active",b.dataset.stage===stage));
+
   try{
-    const data=await api("/admin/api/manuscripts/"+state.activePart.production_part_id+"/versions/"+stage);
-    if(data.status&&data.status!=="OK"){
-      renderMeta({stage,version_number:"—",word_count:"—",content_hash:null,source_system:"—",created_by_engine:"—"});
-      body.textContent=stage==="final"
-        ?"Final Canon is not available yet. The real 103 closeout has not run."
-        :"Version not available.";
-      return;
-    }
+    const envelope=await platformFunction("genesis-manuscript-version",{
+      part_id:state.activePart.production_part_id,
+      stage
+    });
+    const data=Array.isArray(envelope?.data)?envelope.data[0]:null;
+    if(!data)throw new Error("Version not available.");
     renderMeta(data);
     body.textContent=data.body_text||"";
   }catch(error){
-    body.textContent=error.message;
+    renderMeta({stage,version_number:"—",word_count:"—",content_hash:null,source_system:"—",created_by_engine:"—"});
+    if(String(error.message).includes("manuscript_version_not_found")){
+      body.textContent=stage==="final"
+        ?"Final Canon is not available yet."
+        :(stage==="stage2"?"Stage 2 is not available yet.":"Version not available.");
+    }else{
+      body.textContent=error.message;
+    }
   }
 }
 
@@ -2151,15 +2162,27 @@ async function openPart(partId){
   $("#viewer-key").textContent=p.part_key;
   $("#viewer-title").textContent=p.title;
   $("#viewer").showModal();
-  await showVersion("stage2");
+
+  const preferred=p.final_canon_available?"final":(p.stage2_available?"stage2":"stage1");
+  await showVersion(preferred);
 }
 
 async function compareCurrent(){
   if(!state.activePart)return;
   const body=$("#manuscript-body");
+
+  if(!state.activePart.stage1_available||!state.activePart.stage2_available){
+    body.textContent="Comparison requires both Stage 1 and Stage 2. Stage 2 is not available for this Part yet.";
+    return;
+  }
+
   body.textContent="Loading comparison…";
   try{
-    const data=await api("/admin/api/manuscripts/"+state.activePart.production_part_id+"/compare?from=stage1&to=stage2");
+    const data=await platformFunction("genesis-manuscript-compare",{
+      part_id:state.activePart.production_part_id,
+      from:"stage1",
+      to:"stage2"
+    });
     const a=(data.from?.body_text||"").split(/\n\s*\n/);
     const b=(data.to?.body_text||"").split(/\n\s*\n/);
     const max=Math.max(a.length,b.length);
@@ -2185,8 +2208,12 @@ async function compareCurrent(){
 async function previewCurrent(){
   if(!state.activePart)return;
   try{
-    const data=await api("/admin/api/manuscripts/"+state.activePart.production_part_id+"/preview?stage="+state.activeStage);
-    if(data.status&&data.status!=="OK")throw new Error("This version is not available for preview.");
+    const envelope=await platformFunction("genesis-manuscript-version",{
+      part_id:state.activePart.production_part_id,
+      stage:state.activeStage
+    });
+    const data=Array.isArray(envelope?.data)?envelope.data[0]:null;
+    if(!data)throw new Error("This version is not available for preview.");
     $("#preview-body").textContent=data.body_text||"";
     $("#preview").showModal();
   }catch(error){
