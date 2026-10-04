@@ -528,6 +528,7 @@ jobs:
                   /* BOX SKELETON V1 QA CONTRACT
                      Geometry-only authority. No art/background/overlay judgement. */
                   const isSkeletonV1=document.body?.dataset?.designVersion==='skeleton-v1';
+                  const isBackgroundPassV1=document.body?.classList?.contains('background-pass-v1');
                   if(isSkeletonV1){
                     const issues=[];
                     const q=(sel)=>document.querySelector(sel);
@@ -632,10 +633,44 @@ jobs:
                     if(qa('.skeleton-text-zone').length<10)issues.push('text-safe zone annotations missing');
                     if(qa('.skeleton-overlay-zone').length<10)issues.push('overlay-safe zone annotations missing');
                     if(document.querySelector('.portal-card-character,.portal-hero-character'))issues.push('final overlay art leaked into skeleton');
-                    if(getComputedStyle(hero).backgroundImage!=='none')issues.push('final background art leaked into hero skeleton');
+
+                    if(isBackgroundPassV1){
+                      const backgroundTargets=[
+                        ['HERO',hero,'hero-desktop.webp'],
+                        ['WORLD',world,'world-desktop.webp'],
+                        ['CHARACTERS',characters,'characters-desktop.webp'],
+                        ['MONSTERS',monsters,'monsters-desktop.webp'],
+                        ['CODEX',codex,'codex-desktop.webp'],
+                        ['ITEMS',items,'items-desktop.webp'],
+                        ['CONTINUE STORY',story,'continue-story-desktop.webp'],
+                        ['MANGA',manga,'manga-desktop.webp'],
+                        ['SUPPORT',support,'support-desktop.webp'],
+                        ['COMMUNITY',q('.skeleton-community[data-name="COMMUNITY"]'),'community-desktop.webp']
+                      ];
+                      const seen=new Set();
+                      for(const [label,el,file] of backgroundTargets){
+                        const bg=el?getComputedStyle(el).backgroundImage:'none';
+                        if(!bg||bg==='none'||!bg.includes(file))issues.push(label+' Batch 1 background missing: '+file);
+                        if(seen.has(bg))issues.push('duplicate Batch 1 background detected at '+label);
+                        seen.add(bg);
+                      }
+                      const neutral=[
+                        ...status,
+                        ...discovery,
+                        q('.skeleton-community[data-name="SUPPORT & FAN PAGE"]'),
+                        footer
+                      ].filter(Boolean);
+                      for(const el of neutral){
+                        if(getComputedStyle(el).backgroundImage!=='none')issues.push('Batch 2 box received background early: '+(el.dataset?.name||el.className));
+                      }
+                      const specs=qa('.skeleton-spec');
+                      if(specs.some(el=>getComputedStyle(el).display!=='none'))issues.push('skeleton annotation wording still visible during background pass');
+                    }else{
+                      if(getComputedStyle(hero).backgroundImage!=='none')issues.push('final background art leaked into hero skeleton');
+                    }
 
                     if(document.documentElement.scrollWidth>width+2)issues.push('skeleton horizontal overflow');
-                    return {issues,skeleton:true,width};
+                    return {issues,skeleton:true,backgroundPass:isBackgroundPassV1,width};
                   }
 
                   /* PORTAL V1 QA CONTRACT
