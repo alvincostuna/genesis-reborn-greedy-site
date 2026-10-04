@@ -78,6 +78,27 @@ async function platformFunction(name,params){
   return payload;
 }
 
+async function platformRpc(name,args={}){
+  const session=platformSession();
+  if(!session)throw new Error("GENESIS PLATFORM session required.");
+  const response=await fetch(PLATFORM_URL+"/rest/v1/rpc/"+name,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:"Bearer "+session.access_token,
+      apikey:PLATFORM_PUBLISHABLE_KEY
+    },
+    body:JSON.stringify(args)
+  });
+  const payload=await response.json().catch(()=>null);
+  if(!response.ok){
+    const message=payload?.message||payload?.error_description||payload?.error||("Platform RPC failed ("+response.status+")");
+    throw new Error(message);
+  }
+  return payload;
+}
+
+
 async function api(path){
   const response=await fetch(path,{credentials:"same-origin",cache:"no-store",headers:{Accept:"application/json","Cache-Control":"no-cache","Pragma":"no-cache"}});
   const payload=await response.json().catch(()=>null);
@@ -1712,240 +1733,114 @@ async function loadAccess(){
   const controls=$("#access-controls");
   const audit=$("#access-audit");
 
-  cards.innerHTML='<div class="card"><span>RBAC</span><strong>Loading…</strong></div>';
+  cards.innerHTML='<div class="card"><span>Platform RBAC</span><strong>Loading…</strong></div>';
   bootstrap.classList.add("hidden");
   management.classList.add("hidden");
   principals.innerHTML="";
   controls.innerHTML="";
-  audit.innerHTML='<div class="empty">Loading Admin security state…</div>';
+  audit.innerHTML='<div class="empty">Loading Platform audit state…</div>';
+
+  if(!platformSession()){
+    cards.innerHTML=bridgeLoginPanel("Administrators & Audit is now Platform-native. Sign in once to GENESIS PLATFORM.");
+    bindBridgeLogin(loadAccess);
+    audit.innerHTML="";
+    return;
+  }
 
   try{
-    const rbac=await api("/admin/api/rbac");
+    const rbac=await platformRpc("platform_admin_access_summary");
     state.rbac=rbac;
-    const perms=rbac.permissions||[];
+    const perms=Array.isArray(rbac.permissions)?rbac.permissions:[];
     cards.innerHTML=
-      '<div class="card"><span>Actor</span><strong class="small-strong">'+escapeHtml(rbac.actor||"—")+'</strong></div>'+
+      '<div class="card"><span>Actor</span><strong class="small-strong">'+escapeHtml(rbac.actor||"Platform Admin")+'</strong></div>'+
       '<div class="card"><span>Principal</span><strong>'+escapeHtml(rbac.principal_status||"—")+'</strong></div>'+
       '<div class="card"><span>Owner</span><strong>'+escapeHtml(rbac.is_owner?"YES":"NO")+'</strong></div>'+
       '<div class="card"><span>Permissions</span><strong>'+escapeHtml(perms.length)+'</strong></div>';
 
-    if(rbac.bootstrap_required){
-      bootstrap.classList.remove("hidden");
-      bootstrap.innerHTML=
-        '<strong>One-time Owner bootstrap required</strong>'+
-        '<p>Your Cloudflare Access identity is authenticated, but Supabase RBAC has no enabled Admin principal yet. Bootstrap can succeed only once.</p>'+
-        '<button id="bootstrap-owner" class="danger-action">Initialize this Access identity as GENESIS Owner</button>'+
-        '<p class="muted">You will be required to type: <code>BOOTSTRAP GENESIS OWNER</code></p>';
-      $("#bootstrap-owner").addEventListener("click",async()=>{
-        const confirmation=prompt('Type exactly: BOOTSTRAP GENESIS OWNER')||"";
-        if(confirmation!=="BOOTSTRAP GENESIS OWNER")return;
-        const button=$("#bootstrap-owner");
-        button.disabled=true;
-        try{
-          await apiPost("/admin/api/rbac/bootstrap",{confirmation});
-          await loadAccess();
-          switchView("production");
-        }catch(error){
-          alert(error.message);
-          button.disabled=false;
-        }
-      });
-      audit.innerHTML='<div class="empty">Audit history starts when the Owner bootstrap succeeds.</div>';
-      $("#release-badge").textContent="RBAC SETUP";
-      $("#release-badge").className="badge danger";
-      return;
-    }
-
     if(!rbac.principal_exists||rbac.principal_status!=="ENABLED"){
       bootstrap.classList.remove("hidden");
-      bootstrap.innerHTML=
-        '<strong>Access not provisioned</strong>'+
-        '<p>This Cloudflare Access identity is not an enabled Supabase Admin principal. An Owner must add or enable this email.</p>';
-      audit.innerHTML='<div class="empty">Audit visibility requires ADMIN_ACCESS_VIEW.</div>';
-      $("#release-badge").textContent="RBAC DENIED";
-      $("#release-badge").className="badge danger";
+      bootstrap.innerHTML='<strong>Platform access not provisioned</strong><p>This Platform identity is not an enabled Admin principal.</p>';
+      audit.innerHTML="";
       return;
     }
 
     if(hasPermission("ADMIN_ACCESS_VIEW")){
       const [principalData,auditData]=await Promise.all([
-        api("/admin/api/rbac/principals"),
-        api("/admin/api/rbac/audit?limit=100")
+        platformRpc("platform_admin_principals"),
+        platformRpc("platform_admin_audit",{p_limit:100})
       ]);
       management.classList.remove("hidden");
       const rows=principalData.principals||[];
       principals.innerHTML=rows.length
-        ?'<div class="table-scroll"><table><thead><tr><th>Email</th><th>Status</th><th>Owner</th><th>Permissions</th></tr></thead><tbody>'+
-          rows.map(p=>'<tr><td>'+escapeHtml(p.email)+'</td><td>'+escapeHtml(p.status)+'</td><td>'+escapeHtml(p.is_owner?"YES":"NO")+'</td><td class="meta-text">'+escapeHtml(p.is_owner?"ALL (implicit)":(p.permissions||[]).join(", ")||"—")+'</td></tr>').join("")+
+        ?'<div class="table-scroll"><table><thead><tr><th>Identity</th><th>Status</th><th>Owner</th><th>Permissions</th></tr></thead><tbody>'+
+          rows.map(p=>'<tr><td>'+escapeHtml(p.email||p.user_id||"—")+'</td><td>'+escapeHtml(p.status||"—")+'</td><td>'+escapeHtml(p.is_owner?"YES":"NO")+'</td><td class="meta-text">'+escapeHtml(p.is_owner?"ALL (implicit)":(p.permissions||[]).join(", ")||"—")+'</td></tr>').join("")+
           '</tbody></table></div>'
-        :'<div class="empty">No Admin principals.</div>';
+        :'<div class="empty">No Platform Admin principals.</div>';
 
       const auditRows=auditData.rows||[];
       audit.innerHTML=auditRows.length
         ?'<div class="table-scroll"><table><thead><tr><th>Time</th><th>Actor</th><th>Action</th><th>Permission</th><th>Target</th><th>Reason</th></tr></thead><tbody>'+
           auditRows.map(a=>'<tr><td>'+escapeHtml(a.created_at||"—")+'</td><td>'+escapeHtml(a.actor_email||"—")+'</td><td>'+escapeHtml(a.action_key||"—")+'</td><td><code>'+escapeHtml(a.permission_key||"—")+'</code></td><td>'+escapeHtml((a.target_type||"—")+(a.target_id?" · "+a.target_id:""))+'</td><td class="meta-text">'+escapeHtml(a.reason||"—")+'</td></tr>').join("")+
           '</tbody></table></div>'
-        :'<div class="empty">No Admin mutation audit rows yet.</div>';
+        :'<div class="empty">No Platform Admin mutation audit rows yet.</div>';
 
-      if(hasPermission("ADMIN_ACCESS_MANAGE")){
-        controls.innerHTML=
-          '<form id="principal-form" class="admin-control-form">'+
-            '<strong>Add / update non-owner Admin</strong>'+
-            '<input name="email" type="email" placeholder="admin@example.com" required>'+
-            '<input name="display_name" placeholder="Display name">'+
-            '<select name="enabled"><option value="true">Enabled</option><option value="false">Disabled</option></select>'+
-            '<input name="reason" placeholder="Reason" required>'+
-            '<button type="submit">Save Admin</button>'+
-          '</form>'+
-          '<form id="permission-form" class="admin-control-form">'+
-            '<strong>Grant / revoke permission</strong>'+
-            '<input name="email" type="email" placeholder="admin@example.com" required>'+
-            '<select name="permission">'+permissionOptions()+'</select>'+
-            '<select name="granted"><option value="true">Grant</option><option value="false">Revoke</option></select>'+
-            '<input name="reason" placeholder="Reason" required>'+
-            '<button type="submit">Apply Permission</button>'+
-          '</form>';
-
-        $("#principal-form").addEventListener("submit",async(e)=>{
-          e.preventDefault();
-          const form=e.currentTarget;
-          const fd=new FormData(form);
-          const button=form.querySelector("button");
-          button.disabled=true;
-          try{
-            await apiPost("/admin/api/rbac/principals",{
-              email:String(fd.get("email")||""),
-              display_name:String(fd.get("display_name")||""),
-              enabled:String(fd.get("enabled"))==="true",
-              reason:String(fd.get("reason")||"")
-            });
-            form.reset();
-            await loadAccess();
-          }catch(error){alert(error.message);}
-          finally{button.disabled=false;}
-        });
-
-        $("#permission-form").addEventListener("submit",async(e)=>{
-          e.preventDefault();
-          const form=e.currentTarget;
-          const fd=new FormData(form);
-          const button=form.querySelector("button");
-          button.disabled=true;
-          try{
-            await apiPost("/admin/api/rbac/permissions",{
-              email:String(fd.get("email")||""),
-              permission:String(fd.get("permission")||""),
-              granted:String(fd.get("granted"))==="true",
-              reason:String(fd.get("reason")||"")
-            });
-            await loadAccess();
-          }catch(error){alert(error.message);}
-          finally{button.disabled=false;}
-        });
-      }else{
-        controls.innerHTML='<div class="empty">You can view Admin access, but ADMIN_ACCESS_MANAGE is required to change it.</div>';
-      }
+      controls.innerHTML=
+        '<div class="admin-note compact">'+
+          '<div class="database-head"><span>ADMIN MANAGEMENT</span><small>SAFE CUTOVER HOLD</small></div>'+
+          '<p>Viewing and audit are now Platform-native. Add/disable Admin and permission mutation controls remain disabled until the Platform mutation RPC migration passes the connector security gate.</p>'+
+        '</div>';
     }else{
-      management.classList.add("hidden");
-      audit.innerHTML='<div class="empty">ADMIN_ACCESS_VIEW is required to view principals or the audit trail.</div>';
+      audit.innerHTML='<div class="empty">ADMIN_ACCESS_VIEW is required to view Platform principals or audit history.</div>';
     }
+
+    $("#release-badge").textContent="PLATFORM RBAC";
+    $("#release-badge").className="badge good";
   }catch(error){
-    cards.innerHTML='<div class="panel"><div class="error">'+escapeHtml(error.message)+'</div></div>';
+    cards.innerHTML=bridgeFailurePanel(error);
     audit.innerHTML="";
   }
 }
-
 
 async function loadSettings(){
   const summary=$("#settings-summary");
   const features=$("#settings-features");
   const payments=$("#settings-payments");
-  summary.innerHTML='<div class="card"><span>Settings</span><strong>Loading…</strong></div>';
-  features.innerHTML='<div class="empty">Loading feature flags…</div>';
-  payments.innerHTML='<div class="empty">Loading payment provider…</div>';
-  try{
-    const d=await api("/admin/api/settings/features");
-    const s=d.support_settings||{};
-    const p=d.payment_provider||{};
-    const r=d.release_settings||{};
-    const v=d.latest_live_verification||{};
-    summary.innerHTML=
-      '<div class="card"><span>Launch authorized</span><strong>'+escapeHtml(r.launch_authorized?"YES":"NO")+'</strong></div>'+
-      '<div class="card"><span>Comments</span><strong>'+escapeHtml(s.comments_enabled?"ON":"OFF")+'</strong></div>'+
-      '<div class="card"><span>Fan posting</span><strong>'+escapeHtml(s.fan_posting_enabled?"ON":"OFF")+'</strong></div>'+
-      '<div class="card"><span>Payments</span><strong>'+escapeHtml(s.payments_enabled?"ON":"OFF")+'</strong></div>'+
-      '<div class="card"><span>PayMongo</span><strong>'+escapeHtml((p.mode||"—")+" / "+(p.provider_enabled?"ENABLED":"OFF"))+'</strong></div>'+
-      '<div class="card"><span>Live verification</span><strong>'+escapeHtml(v.status||"NONE")+'</strong></div>';
 
-    const flags=[
-      ["comments","Comments",Boolean(s.comments_enabled),false],
-      ["fan-posting","Fan Page posting",Boolean(s.fan_posting_enabled),true],
-      ["share-rewards","Share rewards",Boolean(s.share_rewards_enabled),true],
-      ["pure-support","Pure support / donation",Boolean(s.pure_support_enabled),true]
-    ];
-    features.innerHTML=
-      '<div class="database-head"><span>Website Feature Flags</span><small>Allowlisted controls</small></div>'+
-      '<div class="feature-list">'+
-      flags.map(([key,label,on,launchRequired])=>
-        '<div class="feature-row"><div><strong>'+escapeHtml(label)+'</strong><small>'+(launchRequired?'Requires public launch authorization':'May be changed prelaunch')+'</small></div>'+
-        '<span class="status '+(on?'final':'review')+'">'+(on?'ON':'OFF')+'</span>'+
-        (hasPermission("FEATURE_FLAGS")?'<button data-feature="'+key+'" data-enabled="'+(!on)+'">'+(on?'Disable':'Enable')+'</button>':'')+
-        '</div>'
-      ).join("")+
-      '</div>';
+  summary.innerHTML=
+    '<div class="card"><span>Settings owner</span><strong>GENESIS PLATFORM</strong></div>'+
+    '<div class="card"><span>Core dependency</span><strong>NONE</strong></div>'+
+    '<div class="card"><span>Persistence</span><strong>SEEDED</strong></div>'+
+    '<div class="card"><span>Mutation API</span><strong>HOLD</strong></div>';
 
-    features.querySelectorAll("[data-feature]").forEach(button=>button.addEventListener("click",async()=>{
-      const key=button.dataset.feature;
-      const enabled=button.dataset.enabled==="true";
-      const reason=prompt("Reason for "+(enabled?"enabling ":"disabling ")+key+":")||"";
-      if(reason.trim().length<6)return;
-      button.disabled=true;
-      try{await apiPost("/admin/api/settings/features/"+key,{enabled,reason});await loadSettings();}
-      catch(error){alert(error.message);button.disabled=false;}
-    }));
-
-    payments.innerHTML=
-      '<div class="database-head"><span>PayMongo / Payments</span><small>High-risk controls</small></div>'+
-      '<div class="settings-payment-grid">'+
-        '<div><small>Provider mode</small><strong>'+escapeHtml(p.mode||"—")+'</strong></div>'+
-        '<div><small>Provider enabled</small><strong>'+escapeHtml(p.provider_enabled?"YES":"NO")+'</strong></div>'+
-        '<div><small>Reader payments</small><strong>'+escapeHtml(s.payments_enabled?"ENABLED":"OFF")+'</strong></div>'+
-        '<div><small>Method</small><strong>'+escapeHtml(Array.isArray(p.payment_method_types)?p.payment_method_types.join(", "):"—")+'</strong></div>'+
-      '</div>'+
-      (hasPermission("PAYMENTS_ENABLE")
-        ?'<div class="admin-control-form inline-controls">'+
-           '<strong>Payment provider control</strong>'+
-           '<select id="payment-provider-mode"><option value="TEST" '+(p.mode==="TEST"?"selected":"")+'>TEST</option><option value="LIVE" '+(p.mode==="LIVE"?"selected":"")+'>LIVE</option></select>'+
-           '<button id="payment-provider-toggle">'+(p.provider_enabled?"Disable provider":"Enable provider")+'</button>'+
-           '<button id="reader-payments-toggle" class="'+(s.payments_enabled?"danger-action":"")+'">'+(s.payments_enabled?"Disable reader payments":"Enable reader payments")+'</button>'+
-         '</div>'
-        :'<div class="empty">PAYMENTS_ENABLE is required to change payment settings.</div>');
-
-    const providerButton=$("#payment-provider-toggle");
-    if(providerButton)providerButton.addEventListener("click",async()=>{
-      const enabled=!Boolean(p.provider_enabled);
-      const mode=$("#payment-provider-mode").value;
-      const reason=prompt("Reason for changing PayMongo provider state:")||"";
-      if(reason.trim().length<8)return;
-      providerButton.disabled=true;
-      try{await apiPost("/admin/api/settings/payment-provider",{enabled,mode,reason});await loadSettings();}
-      catch(error){alert(error.message);providerButton.disabled=false;}
-    });
-
-    const payButton=$("#reader-payments-toggle");
-    if(payButton)payButton.addEventListener("click",async()=>{
-      const enabled=!Boolean(s.payments_enabled);
-      const reason=prompt("Reason for "+(enabled?"enabling":"disabling")+" reader payments:")||"";
-      if(reason.trim().length<8)return;
-      payButton.disabled=true;
-      try{await apiPost("/admin/api/settings/payments",{enabled,reason});await loadSettings();}
-      catch(error){alert(error.message);payButton.disabled=false;}
-    });
-  }catch(error){
-    summary.innerHTML="";
-    features.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+  if(!platformSession()){
+    features.innerHTML=bridgeLoginPanel("Settings is Platform-native. Sign in once to GENESIS PLATFORM.");
+    bindBridgeLogin(loadSettings);
     payments.innerHTML="";
+    return;
   }
+
+  features.innerHTML=
+    '<div class="database-head"><span>Website Feature Flags</span><small>PLATFORM MIGRATION HOLD</small></div>'+
+    '<div class="feature-list">'+
+      '<div class="feature-row"><div><strong>Comments</strong><small>Seeded Platform baseline</small></div><span class="status final">ON</span></div>'+
+      '<div class="feature-row"><div><strong>Fan Page posting</strong><small>Seeded Platform baseline</small></div><span class="status review">OFF</span></div>'+
+      '<div class="feature-row"><div><strong>Share rewards</strong><small>Seeded Platform baseline</small></div><span class="status review">OFF</span></div>'+
+      '<div class="feature-row"><div><strong>Pure support / donation</strong><small>Seeded Platform baseline</small></div><span class="status review">OFF</span></div>'+
+    '</div>'+
+    '<div class="admin-note compact"><p>The old Core Settings API has been disconnected. Runtime mutation controls remain disabled until the Platform settings RPC layer passes the connector security gate.</p></div>';
+
+  payments.innerHTML=
+    '<div class="database-head"><span>Payments</span><small>SAFE DEFAULT</small></div>'+
+    '<div class="settings-payment-grid">'+
+      '<div><small>Provider</small><strong>PayMongo</strong></div>'+
+      '<div><small>Provider mode</small><strong>TEST</strong></div>'+
+      '<div><small>Provider enabled</small><strong>NO</strong></div>'+
+      '<div><small>Reader payments</small><strong>OFF</strong></div>'+
+    '</div>'+
+    '<div class="admin-note compact"><p>No payment setting can be enabled from this screen while the Platform mutation endpoint is on hold.</p></div>';
+
+  $("#release-badge").textContent="PLATFORM SETTINGS";
+  $("#release-badge").className="badge neutral";
 }
 
 async function initializeAdmin(){
