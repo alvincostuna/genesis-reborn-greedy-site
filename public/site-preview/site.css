@@ -14498,7 +14498,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   background-position:center center!important;transform:none!important;
 }
 .web-ds-v2.genesis-home .tile-codex::before{
-  background-image:linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.10) 43%,rgba(2,7,12,.66) 76%,rgba(2,7,12,.93)),url('/assets/dashboard-v1/tile-codex-desktop.webp')!important;
+  background-image:linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.10) 43%,rgba(2,7,12,.66) 76%,rgba(2,7,12,.93)),url('/assets/dashboard-v1/tile-codex-v2.webp')!important;
   background-position:center center!important;transform:none!important;
 }
 .web-ds-v2.genesis-home .tile-characters::before{
@@ -14506,7 +14506,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   background-position:center center!important;transform:none!important;
 }
 .web-ds-v2.genesis-home .tile-monsters::before{
-  background-image:linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.10) 43%,rgba(2,7,12,.66) 76%,rgba(2,7,12,.93)),url('/assets/dashboard-v1/tile-monsters-desktop.webp')!important;
+  background-image:linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.10) 43%,rgba(2,7,12,.66) 76%,rgba(2,7,12,.93)),url('/assets/dashboard-v1/tile-monsters-v2.webp')!important;
   background-position:center center!important;transform:none!important;
 }
 .web-ds-v2.genesis-home .tile-items::before{
@@ -14514,7 +14514,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   background-position:center center!important;transform:none!important;
 }
 .web-ds-v2.genesis-home .tile-manga::before{
-  background-image:linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.08) 43%,rgba(2,7,12,.62) 76%,rgba(2,7,12,.93)),url('/assets/dashboard-v1/tile-manga-desktop.webp')!important;
+  background-image:linear-gradient(180deg,rgba(0,0,0,.01),rgba(2,7,12,.08) 43%,rgba(2,7,12,.62) 76%,rgba(2,7,12,.93)),url('/assets/dashboard-v1/tile-manga-v2.webp')!important;
   background-position:center center!important;transform:none!important;
 }
 .web-ds-v2.genesis-home .tile-support::before{
@@ -15010,10 +15010,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 .portal-home .portal-world{grid-area:world;min-height:360px;background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.28) 52%,rgba(2,8,14,.14)),url('/assets/dashboard-v1/tile-world-desktop.webp')}
 .portal-home .portal-characters{grid-area:characters;background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-characters-desktop.webp')}
-.portal-home .portal-monsters{grid-area:monsters;background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-monsters-desktop.webp')}
-.portal-home .portal-codex{grid-area:codex;background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.16)),url('/assets/dashboard-v1/tile-codex-desktop.webp')}
+.portal-home .portal-monsters{grid-area:monsters;background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.18)),url('/assets/dashboard-v1/tile-monsters-v2.webp')}
+.portal-home .portal-codex{grid-area:codex;background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.16)),url('/assets/dashboard-v1/tile-codex-v2.webp')}
 .portal-home .portal-items{background-image:linear-gradient(90deg,rgba(2,8,14,.88),rgba(2,8,14,.12)),url('/assets/dashboard-v1/tile-items-desktop.webp')}
-.portal-home .portal-manga{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.14)),url('/assets/dashboard-v1/tile-manga-desktop.webp')}
+.portal-home .portal-manga{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.14)),url('/assets/dashboard-v1/tile-manga-v2.webp')}
 .portal-home .portal-support{background-image:linear-gradient(90deg,rgba(2,8,14,.90),rgba(2,8,14,.14)),url('/assets/dashboard-v1/tile-support-desktop.webp')}
 .portal-home .portal-community{background-image:linear-gradient(90deg,rgba(2,8,14,.92),rgba(2,8,14,.16)),url('/assets/dashboard-v1/tile-fan-page-desktop.webp')}
 .portal-home .portal-fan-support{background-image:linear-gradient(90deg,rgba(2,8,14,.92),rgba(2,8,14,.16)),url('/assets/dashboard-v1/support-tile-desktop.webp')}
@@ -15050,7 +15050,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   min-height:155px;padding:80px 18px 15px;display:grid;align-content:end;color:#fff!important;text-decoration:none!important;background-size:cover;background-position:center;
 }
 .portal-home .discovery-region{background-image:linear-gradient(180deg,transparent,rgba(2,8,14,.94)),url('/assets/dashboard-v1/tile-world-desktop.webp')}
-.portal-home .discovery-monster{background-image:linear-gradient(180deg,transparent,rgba(2,8,14,.94)),url('/assets/dashboard-v1/tile-monsters-desktop.webp')}
+.portal-home .discovery-monster{background-image:linear-gradient(180deg,transparent,rgba(2,8,14,.94)),url('/assets/dashboard-v1/tile-monsters-v2.webp')}
 .portal-home .discovery-item{background-image:linear-gradient(180deg,transparent,rgba(2,8,14,.94)),url('/assets/dashboard-v1/tile-items-desktop.webp')}
 .portal-home .portal-discovery-card small{position:relative;z-index:4;color:#dfbd57;font:800 8px/1 Inter,sans-serif;letter-spacing:.08em}
 .portal-home .portal-discovery-card strong{position:relative;z-index:4;margin-top:4px;color:#f1e5c8;font:700 18px/1.05 Georgia,serif}
@@ -15505,13 +15505,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .background-pass-v1 .skeleton-monsters{
   background-image:
     linear-gradient(90deg,rgba(3,9,15,.28),rgba(3,9,15,.02) 56%),
-    url('/assets/portal-v1/backgrounds/batch1/monsters-desktop.webp')!important;
+    url('/assets/portal-v1/backgrounds/batch1/monsters-v2.webp')!important;
   background-position:66% 50%!important;
 }
 .background-pass-v1 .skeleton-codex{
   background-image:
     linear-gradient(90deg,rgba(3,9,15,.28),rgba(3,9,15,.02) 58%),
-    url('/assets/portal-v1/backgrounds/batch1/codex-desktop.webp')!important;
+    url('/assets/portal-v1/backgrounds/batch1/codex-v2.webp')!important;
   background-position:62% 50%!important;
 }
 .background-pass-v1 .skeleton-items{
@@ -15523,13 +15523,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .background-pass-v1 .skeleton-story{
   background-image:
     linear-gradient(90deg,rgba(3,9,15,.58) 0%,rgba(3,9,15,.28) 34%,rgba(3,9,15,.06) 58%,rgba(3,9,15,.01) 100%),
-    url('/assets/portal-v1/backgrounds/batch1/continue-story-v2.webp')!important;
+    url('/assets/portal-v1/backgrounds/batch1/continue-story-v3.webp')!important;
   background-position:62% 50%!important;
 }
 .background-pass-v1 .skeleton-manga{
   background-image:
     linear-gradient(90deg,rgba(3,9,15,.25),rgba(3,9,15,.02) 58%),
-    url('/assets/portal-v1/backgrounds/batch1/manga-desktop.webp')!important;
+    url('/assets/portal-v1/backgrounds/batch1/manga-v2.webp')!important;
   background-position:66% 52%!important;
 }
 .background-pass-v1 .skeleton-support{
