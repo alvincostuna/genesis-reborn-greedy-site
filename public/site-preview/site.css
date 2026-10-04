@@ -15546,11 +15546,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 /* Unfilled Batch 2 boxes stay deliberately neutral. */
-.background-pass-v1 .skeleton-status,
-.background-pass-v1 .skeleton-footer{
-  background-image:none!important;
-  background-color:#101820!important;
-}
+/* All frozen homepage boxes now have approved background art. */
 
 @media(max-width:900px){
   .background-pass-v1 .skeleton-hero{
@@ -15594,7 +15590,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .background-pass-v1 .skeleton-discovery[data-name="FEATURED ITEM"]{
   background-image:
     linear-gradient(90deg,rgba(3,9,15,.52) 0%,rgba(3,9,15,.20) 42%,rgba(3,9,15,.03) 70%),
-    url('/assets/portal-v1/backgrounds/batch2/featured-item.webp')!important;
+    url('/assets/portal-v1/backgrounds/final-fill/featured-item-v2.webp')!important;
   background-position:70% 50%!important;
 }
 .background-pass-v1 .skeleton-community[data-name="COMMUNITY"]{
@@ -15617,3 +15613,38 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .background-pass-v1 .skeleton-community[data-name="SUPPORT & FAN PAGE"]{background-position:74% 52%!important}
 }
 /* PORTAL BACKGROUND BATCH 2 LOWER MARKER */
+
+
+/* PORTAL BACKGROUND FINAL FILL — STATUS CELLS + FOOTER */
+.background-pass-v1 .skeleton-status[data-name="NEXT RELEASE"]{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.66) 0%,rgba(3,9,15,.28) 45%,rgba(3,9,15,.04) 78%),
+    url('/assets/portal-v1/backgrounds/final-fill/next-release.webp')!important;
+  background-position:34% 48%!important;
+}
+.background-pass-v1 .skeleton-status[data-name="CONTINUE READING"]{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.64) 0%,rgba(3,9,15,.26) 45%,rgba(3,9,15,.04) 78%),
+    url('/assets/portal-v1/backgrounds/final-fill/continue-reading.webp')!important;
+  background-position:62% 50%!important;
+}
+.background-pass-v1 .skeleton-status[data-name="READER PROFILE"]{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.66) 0%,rgba(3,9,15,.28) 45%,rgba(3,9,15,.04) 78%),
+    url('/assets/portal-v1/backgrounds/final-fill/reader-profile.webp')!important;
+  background-position:68% 50%!important;
+}
+.background-pass-v1 .skeleton-footer{
+  background-image:
+    linear-gradient(90deg,rgba(3,9,15,.58) 0%,rgba(3,9,15,.24) 48%,rgba(3,9,15,.06) 78%),
+    url('/assets/portal-v1/backgrounds/final-fill/footer-strip.webp')!important;
+  background-position:58% 55%!important;
+  background-color:#0b141d!important;
+}
+@media(max-width:900px){
+  .background-pass-v1 .skeleton-status[data-name="NEXT RELEASE"]{background-position:40% 50%!important}
+  .background-pass-v1 .skeleton-status[data-name="CONTINUE READING"]{background-position:66% 50%!important}
+  .background-pass-v1 .skeleton-status[data-name="READER PROFILE"]{background-position:72% 50%!important}
+  .background-pass-v1 .skeleton-footer{background-position:64% 54%!important}
+}
+/* PORTAL BACKGROUND FINAL FILL MARKER */

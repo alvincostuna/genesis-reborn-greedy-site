@@ -648,8 +648,12 @@ jobs:
                         ['COMMUNITY',q('.skeleton-community[data-name="COMMUNITY"]'),'community-v2.webp'],
                         ['FEATURED REGION',q('.skeleton-discovery[data-name="FEATURED REGION"]'),'featured-region.webp'],
                         ['FEATURED MONSTER',q('.skeleton-discovery[data-name="FEATURED MONSTER"]'),'featured-monster.webp'],
-                        ['FEATURED ITEM',q('.skeleton-discovery[data-name="FEATURED ITEM"]'),'featured-item.webp'],
-                        ['SUPPORT & FAN PAGE',q('.skeleton-community[data-name="SUPPORT & FAN PAGE"]'),'support-fan-page.webp']
+                        ['FEATURED ITEM',q('.skeleton-discovery[data-name="FEATURED ITEM"]'),'featured-item-v2.webp'],
+                        ['SUPPORT & FAN PAGE',q('.skeleton-community[data-name="SUPPORT & FAN PAGE"]'),'support-fan-page.webp'],
+                        ['NEXT RELEASE',q('.skeleton-status[data-name="NEXT RELEASE"]'),'next-release.webp'],
+                        ['CONTINUE READING',q('.skeleton-status[data-name="CONTINUE READING"]'),'continue-reading.webp'],
+                        ['READER PROFILE',q('.skeleton-status[data-name="READER PROFILE"]'),'reader-profile.webp'],
+                        ['FOOTER',footer,'footer-strip.webp']
                       ];
                       const seen=new Set();
                       for(const [label,el,file] of backgroundTargets){
@@ -658,13 +662,7 @@ jobs:
                         if(seen.has(bg))issues.push('duplicate Batch 1 background detected at '+label);
                         seen.add(bg);
                       }
-                      const neutral=[
-                        ...status,
-                        footer
-                      ].filter(Boolean);
-                      for(const el of neutral){
-                        if(getComputedStyle(el).backgroundImage!=='none')issues.push('Batch 2 box received background early: '+(el.dataset?.name||el.className));
-                      }
+                      const neutral=[];
                       const specs=qa('.skeleton-spec');
                       if(specs.some(el=>getComputedStyle(el).display!=='none'))issues.push('skeleton annotation wording still visible during background pass');
                     }else{
