@@ -201,7 +201,7 @@ jobs:
       - name: Install Playwright Chromium
         run: |
           npm install --legacy-peer-deps --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
 
       - name: Detect V2.7 reward asset package
         id: reward_assets
