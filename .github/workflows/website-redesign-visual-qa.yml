@@ -59,7 +59,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           live=Path("public/site-preview/site.css").read_text(encoding="utf-8")
           ref=Path("docs/WEB-DS-V3.0-TOKEN-SHEET.css").read_text(encoding="utf-8")
@@ -92,7 +92,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
           marker="WEB-DS V3.3 — LOGO MATERIAL HIERARCHY"
@@ -121,7 +121,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
           marker="WEB-DS V3.0 — LOGO ALIGNMENT PASS"
@@ -154,7 +154,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
           start=css.index("/* PERFORMANCE HOTFIX: keep command-deck imagery")
