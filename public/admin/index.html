@@ -354,13 +354,10 @@
       <section id="bridge-health-view" class="view hidden">
         <div class="panel section-intro">
           <strong>Core Bridge Health</strong>
-          <span>Permanent health surface for the isolated read-only Core → Platform bridge. No secret values are displayed here.</span>
+          <span>Live health surface for the isolated read-only Core → Platform bridge. Results are measured on demand; no secret values are displayed here.</span>
         </div>
         <div id="bridge-health-summary" class="cards">
-          <div class="card"><span>Production Status</span><strong>Verified</strong></div>
-          <div class="card"><span>Roadmap</span><strong>Verified</strong></div>
-          <div class="card"><span>Continuity</span><strong>Verified</strong></div>
-          <div class="card"><span>Authorities</span><strong>Verified</strong></div>
+          <div class="card"><span>Bridge health</span><strong>NOT RUN</strong></div>
         </div>
         <div class="panel runtime">
           <div><small>Mode</small><strong>READ ONLY</strong></div>
@@ -368,15 +365,15 @@
           <div><small>Credential exposure</small><strong>SECRET ONLY</strong></div>
           <div><small>Write bridge</small><strong>NOT PERMITTED</strong></div>
           <div><small>Platform Auth</small><strong>REQUIRED</strong></div>
-          <div><small>Last validation</small><strong>4 / 4 PASS</strong></div>
+          <div><small>Health source</small><strong>LIVE ENDPOINT CHECKS</strong></div>
         </div>
-        <div class="panel" id="manuscript-bridge-diagnostics">
-          <div class="database-head"><span>MANUSCRIPTS BRIDGE DIAGNOSTICS</span><small>PRE-CUTOVER</small></div>
-          <p class="admin-note compact">Runs live read-only checks against the new Platform Manuscripts endpoints. This does not switch the Manuscripts screen and does not modify Core data.</p>
+        <div class="panel" id="bridge-health-diagnostics">
+          <div class="database-head"><span>FULL BRIDGE DIAGNOSTICS</span><small>PHASE D</small></div>
+          <p class="admin-note compact">Runs live read-only checks across Production, Roadmap, Continuity, Authorities, Manuscripts, World Database, Codex, and protected detail paths. A failed surface keeps Bridge Health red; no Core mutation is performed.</p>
           <div class="cutover-actions">
-            <button id="run-manuscript-bridge-tests" type="button">Run Manuscripts Gates</button>
+            <button id="run-bridge-health-tests" type="button">Run Full Bridge Gates</button>
           </div>
-          <pre id="manuscript-bridge-test-result" class="bridge-result">Not run yet.</pre>
+          <pre id="bridge-health-test-result" class="bridge-result">Not run yet.</pre>
         </div>
       </section>
 
