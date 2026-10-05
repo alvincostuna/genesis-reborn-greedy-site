@@ -771,7 +771,7 @@ jobs:
                     const world=q('.v38-world');
                     const title=q('.v38-title-block h1');
                     const countdown=qa('.v38-countdown strong');
-                    const mobileDock=q('.v38-mobile-dock');
+                    const mobileDock=q('#v38-mobile-dock')||q('.v38-mobile-dock');
                     const required=[stage,copy,release,read,flavio,world,title];
                     if(required.some(x=>!visible(x)))issues.push('V3.8 cinematic homepage core structure incomplete');
                     if(countdown.length!==3)issues.push('V3.8 countdown cell count is not 3');
@@ -787,7 +787,7 @@ jobs:
                       if(r.left<-2||r.right>document.documentElement.clientWidth+2)issues.push('V3.8 countdown panel escapes viewport');
                     }
                     if(mode.startsWith('desktop-')){
-                      if(!visible(q('.v38-primary-nav')))issues.push('V3.8 desktop primary nav missing');
+                      if(!visible(q('#v38-primary-nav'))&&!visible(q('.v38-primary-nav')))issues.push('V3.8 desktop primary nav missing');
                       if(parseFloat(getComputedStyle(title).fontSize)<42)issues.push('V3.8 desktop title too small');
                     }else if(mode.startsWith('mobile-')){
                       if(!visible(mobileDock)&&window.innerHeight>=500)issues.push('V3.8 mobile shortcut dock missing');
