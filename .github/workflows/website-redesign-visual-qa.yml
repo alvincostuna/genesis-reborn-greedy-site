@@ -760,6 +760,41 @@ jobs:
                     if(overflow)issues.push('portal horizontal overflow');
                     return {issues,portal:true};
                   }
+                  const isV38=document.body?.dataset?.designVersion==='v38-cinematic-hammer';
+                  if(isV38){
+                    const issues=[];
+                    const stage=q('.v38-stage');
+                    const copy=q('.v38-copy');
+                    const release=q('#home-release-command');
+                    const read=q('.v38-read');
+                    const flavio=q('.v38-flavio');
+                    const world=q('.v38-world');
+                    const title=q('.v38-title-block h1');
+                    const countdown=qa('.v38-countdown strong');
+                    const mobileDock=q('.v38-mobile-dock');
+                    const required=[stage,copy,release,read,flavio,world,title];
+                    if(required.some(x=>!visible(x)))issues.push('V3.8 cinematic homepage core structure incomplete');
+                    if(countdown.length!==3)issues.push('V3.8 countdown cell count is not 3');
+                    if(document.documentElement.scrollWidth>document.documentElement.clientWidth+2)issues.push('V3.8 horizontal overflow');
+                    if(stage&&rect(stage).height<Math.min(620,window.innerHeight-2))issues.push('V3.8 stage too short');
+                    if(read){
+                      const rr=rect(read);
+                      if(rr.height<42)issues.push('V3.8 READ NOW target below 42px');
+                      if(rr.left<-2||rr.right>document.documentElement.clientWidth+2)issues.push('V3.8 READ NOW escapes viewport');
+                    }
+                    if(release){
+                      const r=rect(release);
+                      if(r.left<-2||r.right>document.documentElement.clientWidth+2)issues.push('V3.8 countdown panel escapes viewport');
+                    }
+                    if(mode.startsWith('desktop-')){
+                      if(!visible(q('.v38-primary-nav')))issues.push('V3.8 desktop primary nav missing');
+                      if(parseFloat(getComputedStyle(title).fontSize)<42)issues.push('V3.8 desktop title too small');
+                    }else if(mode.startsWith('mobile-')){
+                      if(!visible(mobileDock)&&window.innerHeight>=500)issues.push('V3.8 mobile shortcut dock missing');
+                      if(parseFloat(getComputedStyle(title).fontSize)<30)issues.push('V3.8 mobile title too small');
+                    }
+                    return {issues,v38:true,width:document.documentElement.clientWidth,height:window.innerHeight};
+                  }
                   const hero=document.querySelector('.cinematic-split-hero');
                   const media=document.querySelector('.cinematic-hero-media');
                   const deck=document.querySelector('.genesis-command-deck');
