@@ -171,8 +171,8 @@ jobs:
               if asset not in block:
                   raise SystemExit(f"Missing optimized command-deck asset: {asset}")
           html=Path("public/site-preview/index.html").read_text(encoding="utf-8")
-          if 'rel="preload" as="image" href="/assets/master-key-art-split-world-v1.webp"' not in html:
-              raise SystemExit("Hero preload missing.")
+          if 'rel="preload" as="image" href="/assets/portal-v1/backgrounds/batch1/hero-desktop.webp"' not in html:
+              raise SystemExit("V3.8 hero preload missing.")
           if 'rel="preconnect" href="https://lyhrwymhzhhxszquxnke.supabase.co"' not in html:
               raise SystemExit("Supabase preconnect missing.")
           print("PASS: homepage payload budget contract")
