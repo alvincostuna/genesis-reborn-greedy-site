@@ -285,9 +285,18 @@ jobs:
           grep -q '/assets/genesis-wordmark-v2.svg' /tmp/candidate-home.html \
             && echo "PASS: GENESIS wordmark reference" \
             || { echo "::error::FAIL: GENESIS wordmark reference missing"; exit 1; }
-          grep -q '/assets/master-key-art-split-world-v1.webp' /tmp/candidate-home.html \
-            && echo "PASS: cinematic split-world hero reference" \
-            || { echo "::error::FAIL: cinematic split-world hero reference missing"; exit 1; }
+          grep -q 'data-design-version="v38-cinematic-hammer-release"' /tmp/candidate-home.html \
+            && echo "PASS: V3.8 cinematic hammer homepage marker" \
+            || { echo "::error::FAIL: V3.8 cinematic hammer homepage marker missing"; exit 1; }
+          grep -q '/assets/portal-v1/backgrounds/batch1/hero-desktop.webp' /tmp/candidate-home.html \
+            && echo "PASS: V3.8 hero background reference" \
+            || { echo "::error::FAIL: V3.8 hero background reference missing"; exit 1; }
+          grep -q '/assets/v37/home-v38.css' /tmp/candidate-home.html \
+            && echo "PASS: V3.8 homepage stylesheet reference" \
+            || { echo "::error::FAIL: V3.8 homepage stylesheet reference missing"; exit 1; }
+          grep -q 'class="v38-hammer"' /tmp/candidate-home.html \
+            && echo "PASS: V3.8 hammer markup" \
+            || { echo "::error::FAIL: V3.8 hammer markup missing"; exit 1; }
           if grep -qE '/assets/v25/hero-home-(desktop|mobile)\.webp' /tmp/candidate-home.html; then
             echo "::error::FAIL: retired V2.5 hero reference still present"
             exit 1
@@ -378,7 +387,9 @@ jobs:
           echo "PASS: all 28 dashboard-v1 live-candidate assets returned HTTP 200."
 
           verify_candidate_asset "/assets/genesis-wordmark-v2.svg" "GENESIS wordmark asset"
-          verify_candidate_asset "/assets/master-key-art-split-world-v1.webp" "Cinematic split-world hero asset"
+          verify_candidate_asset "/assets/master-key-art-split-world-v1.webp" "Legacy cinematic split-world hero asset"
+          verify_candidate_asset "/assets/portal-v1/backgrounds/batch1/hero-desktop.webp" "V3.8 hero background asset"
+          verify_candidate_asset "/assets/v37/home-v38.css" "V3.8 homepage stylesheet"
           verify_candidate_asset "/assets/overlays/world-compass-crest.svg" "WORLD overlay compass crest"
 
           if grep -q '/site-preview/' /tmp/candidate-home.html; then
