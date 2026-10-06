@@ -135,8 +135,8 @@ jobs:
 
             echo "QA poll $attempt/45 for main commit $MERGE_SHA"
             for name in "${required[@]}"; do
-              row="$(printf '%s' "$runs" | python3 -c 'import json,sys; name=sys.argv[1]; xs=[x for x in json.load(sys.stdin).get("workflow_runs",[]) if x.get("name")==name]; x=max(xs,key=lambda v:v.get("run_number",0),default=None); print("missing\\t\\t" if x is None else "{}\\t{}\\t{}".format(x.get("status",""),x.get("conclusion") or "",x.get("html_url","")))' "$name")"
-              IFS=$'\t' read -r status conclusion url <<< "$row"
+              row="$(printf '%s' "$runs" | python3 -c 'import json,sys; name=sys.argv[1]; xs=[x for x in json.load(sys.stdin).get("workflow_runs",[]) if x.get("name")==name]; x=max(xs,key=lambda v:v.get("run_number",0),default=None); print("missing||" if x is None else "{}|{}|{}".format(x.get("status",""),x.get("conclusion") or "",x.get("html_url","")))' "$name")"
+              IFS='|' read -r status conclusion url <<< "$row"
               echo "  $name -> status=${status:-missing} conclusion=${conclusion:-pending}"
 
               if [ "$status" = "completed" ]; then
