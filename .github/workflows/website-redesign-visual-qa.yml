@@ -29,7 +29,7 @@ concurrency:
 
 jobs:
   visual-qa:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64]
     timeout-minutes: 20
     steps:
       - name: Checkout redesign branch
@@ -59,7 +59,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           live=Path("public/site-preview/site.css").read_text(encoding="utf-8")
           ref=Path("docs/WEB-DS-V3.0-TOKEN-SHEET.css").read_text(encoding="utf-8")
@@ -92,7 +92,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
           marker="WEB-DS V3.3 — LOGO MATERIAL HIERARCHY"
@@ -121,7 +121,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
           marker="WEB-DS V3.0 — LOGO ALIGNMENT PASS"
@@ -154,7 +154,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
           start=css.index("/* PERFORMANCE HOTFIX: keep command-deck imagery")
@@ -171,8 +171,8 @@ jobs:
               if asset not in block:
                   raise SystemExit(f"Missing optimized command-deck asset: {asset}")
           html=Path("public/site-preview/index.html").read_text(encoding="utf-8")
-          if 'rel="preload" as="image" href="/assets/master-key-art-split-world-v1.webp"' not in html:
-              raise SystemExit("Hero preload missing.")
+          if 'rel="preload" as="image" href="/assets/portal-v1/backgrounds/batch1/hero-desktop.webp"' not in html:
+              raise SystemExit("V3.8 hero preload missing.")
           if 'rel="preconnect" href="https://lyhrwymhzhhxszquxnke.supabase.co"' not in html:
               raise SystemExit("Supabase preconnect missing.")
           print("PASS: homepage payload budget contract")
@@ -201,7 +201,7 @@ jobs:
       - name: Install Playwright Chromium
         run: |
           npm install --legacy-peer-deps --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
 
       - name: Detect V2.7 reward asset package
         id: reward_assets
@@ -760,9 +760,11 @@ jobs:
                     if(overflow)issues.push('portal horizontal overflow');
                     return {issues,portal:true};
                   }
-                  const isV38=document.body?.dataset?.designVersion==='v38-cinematic-hammer';
+                  const isV38=(document.body?.dataset?.designVersion||'').startsWith('v38-cinematic-hammer');
                   if(isV38){
                     const issues=[];
+                    const q=(sel)=>document.querySelector(sel);
+                    const qa=(sel)=>[...document.querySelectorAll(sel)];
                     const stage=q('.v38-stage');
                     const copy=q('.v38-copy');
                     const release=q('#home-release-command');

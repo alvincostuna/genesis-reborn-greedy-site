@@ -28,7 +28,7 @@ concurrency:
 jobs:
   deploy-live:
     environment: genesis-live
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64]
     timeout-minutes: 15
 
     steps:
@@ -90,7 +90,7 @@ jobs:
           if [ -d public/assets/overlays ]; then cp -R public/assets/overlays .live-assets/assets/overlays; fi
           if [ -d public/assets/portal-v1 ]; then cp -R public/assets/portal-v1 .live-assets/assets/portal-v1; fi
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           for p in Path('.live-assets').rglob('*.html'):
               text=p.read_text(encoding='utf-8')
@@ -215,7 +215,7 @@ jobs:
           test -n "$VERSION_ID"
 
           npx wrangler versions view "$VERSION_ID" --config wrangler.live.toml --json > /tmp/live-version.json
-          python - <<'PY'
+          python3 - <<'PY'
           import json,sys
           data=json.load(open('/tmp/live-version.json',encoding='utf-8'))
           names=set()
@@ -237,7 +237,7 @@ jobs:
 
           CANDIDATE_NAME="genesis-live-check-${GITHUB_RUN_ID}"
           cp wrangler.live.toml wrangler.candidate.toml
-          python - <<PY
+          python3 - <<PY
           from pathlib import Path
           p=Path('wrangler.candidate.toml')
           s=p.read_text(encoding='utf-8')
