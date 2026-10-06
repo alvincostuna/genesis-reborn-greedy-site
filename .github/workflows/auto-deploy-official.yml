@@ -44,7 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           PRS="$(curl -fsSL -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/commits/$MERGE_SHA/pulls?per_page=20")"
-          mapfile -t MATCHES < <(printf '%s' "$PRS" | jq -r --arg sha "$MERGE_SHA" '.[] | select(.base.ref=="main" and .merged_at!=null and .merge_commit_sha==$sha) | .number')
+          mapfile -t MATCHES < <(printf '%s' "$PRS" | python3 -c 'import json,sys; sha=sys.argv[1]; [print(x["number"]) for x in json.load(sys.stdin) if x.get("base",{}).get("ref")=="main" and x.get("merged_at") is not None and x.get("merge_commit_sha")==sha]' "$MERGE_SHA")
 
           if [ "${#MATCHES[@]}" -eq 0 ]; then
             echo "::notice::Main commit $MERGE_SHA is not the exact merge commit of a merged PR. Automatic deployment skipped."
@@ -60,7 +60,7 @@ jobs:
 
           PR_NUMBER="${MATCHES[0]}"
           echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-          mapfile -t FILES < <(curl -fsSL -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/pulls/$PR_NUMBER/files?per_page=100" | jq -r '.[].filename')
+          mapfile -t FILES < <(curl -fsSL -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/pulls/$PR_NUMBER/files?per_page=100" | python3 -c 'import json,sys; [print(x["filename"]) for x in json.load(sys.stdin)]')
 
           if [ "${#FILES[@]}" -eq 0 ]; then
             echo "::error::No changed files returned for merged PR #$PR_NUMBER."
@@ -121,12 +121,7 @@ jobs:
 
             echo "QA poll $attempt/45 for main commit $MERGE_SHA"
             for name in "${required[@]}"; do
-              row="$(printf '%s' "$runs" | jq -r --arg name "$name" '
-                [.workflow_runs[] | select(.name == $name)]
-                | sort_by(.run_number)
-                | last
-                | if . == null then "missing\t\t" else [.status, (.conclusion // ""), .html_url] | @tsv end
-              ')"
+              row="$(printf '%s' "$runs" | python3 -c 'import json,sys; name=sys.argv[1]; xs=[x for x in json.load(sys.stdin).get("workflow_runs",[]) if x.get("name")==name]; x=max(xs,key=lambda v:v.get("run_number",0),default=None); print("missing\\t\\t" if x is None else "{}\\t{}\\t{}".format(x.get("status",""),x.get("conclusion") or "",x.get("html_url","")))' "$name")"
               IFS=$'\t' read -r status conclusion url <<< "$row"
               echo "  $name -> status=${status:-missing} conclusion=${conclusion:-pending}"
 
@@ -158,7 +153,7 @@ jobs:
           MERGE_SHA: ${{ steps.meta.outputs.merge_sha }}
         run: |
           set -euo pipefail
-          CURRENT_MAIN="$(curl -fsSL -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/commits/main" | jq -r '.sha')"
+          CURRENT_MAIN="$(curl -fsSL -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/commits/main" | python3 -c 'import json,sys; print(json.load(sys.stdin)["sha"])')"
           echo "Candidate:    $MERGE_SHA"
           echo "Current main: $CURRENT_MAIN"
           if [ "$CURRENT_MAIN" != "$MERGE_SHA" ]; then
