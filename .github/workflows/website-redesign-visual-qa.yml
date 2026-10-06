@@ -760,9 +760,11 @@ jobs:
                     if(overflow)issues.push('portal horizontal overflow');
                     return {issues,portal:true};
                   }
-                  const isV38=document.body?.dataset?.designVersion==='v38-cinematic-hammer';
+                  const isV38=(document.body?.dataset?.designVersion||'').startsWith('v38-cinematic-hammer');
                   if(isV38){
                     const issues=[];
+                    const q=(sel)=>document.querySelector(sel);
+                    const qa=(sel)=>[...document.querySelectorAll(sel)];
                     const stage=q('.v38-stage');
                     const copy=q('.v38-copy');
                     const release=q('#home-release-command');
