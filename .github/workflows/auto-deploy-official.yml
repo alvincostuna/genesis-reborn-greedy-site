@@ -43,7 +43,7 @@ jobs:
           MERGE_SHA: ${{ steps.meta.outputs.merge_sha }}
         run: |
           set -euo pipefail
-          PRS="$(gh api -H "Accept: application/vnd.github+json" "repos/$REPO/commits/$MERGE_SHA/pulls?per_page=20")"
+          PRS="$(curl -fsSL -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/commits/$MERGE_SHA/pulls?per_page=20")"
           mapfile -t MATCHES < <(printf '%s' "$PRS" | jq -r --arg sha "$MERGE_SHA" '.[] | select(.base.ref=="main" and .merged_at!=null and .merge_commit_sha==$sha) | .number')
 
           if [ "${#MATCHES[@]}" -eq 0 ]; then
@@ -60,7 +60,7 @@ jobs:
 
           PR_NUMBER="${MATCHES[0]}"
           echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-          mapfile -t FILES < <(gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files?per_page=100" --jq '.[].filename')
+          mapfile -t FILES < <(curl -fsSL -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/pulls/$PR_NUMBER/files?per_page=100" | jq -r '.[].filename')
 
           if [ "${#FILES[@]}" -eq 0 ]; then
             echo "::error::No changed files returned for merged PR #$PR_NUMBER."
@@ -116,7 +116,7 @@ jobs:
           )
 
           for attempt in $(seq 1 45); do
-            runs="$(gh api "repos/$REPO/actions/runs?head_sha=$MERGE_SHA&event=push&per_page=100")"
+            runs="$(curl -fsSL -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/actions/runs?head_sha=$MERGE_SHA&event=push&per_page=100")"
             all_green=true
 
             echo "QA poll $attempt/45 for main commit $MERGE_SHA"
@@ -158,7 +158,7 @@ jobs:
           MERGE_SHA: ${{ steps.meta.outputs.merge_sha }}
         run: |
           set -euo pipefail
-          CURRENT_MAIN="$(gh api "repos/$REPO/commits/main" --jq '.sha')"
+          CURRENT_MAIN="$(curl -fsSL -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/$REPO/commits/main" | jq -r '.sha')"
           echo "Candidate:    $MERGE_SHA"
           echo "Current main: $CURRENT_MAIN"
           if [ "$CURRENT_MAIN" != "$MERGE_SHA" ]; then
