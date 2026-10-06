@@ -23,6 +23,20 @@ jobs:
       merge_sha: ${{ steps.meta.outputs.merge_sha }}
       pr_number: ${{ steps.scope.outputs.pr_number }}
     steps:
+      - name: Preflight self-hosted gate dependencies
+        run: |
+          set -euo pipefail
+          required=(bash curl python3)
+          missing=()
+          for cmd in "${required[@]}"; do
+            command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
+          done
+          if [ "${#missing[@]}" -gt 0 ]; then
+            printf '::error::Missing self-hosted gate dependency: %s\n' "${missing[@]}"
+            exit 1
+          fi
+          echo "PASS: self-hosted gate dependencies present: ${required[*]}"
+
       - name: Capture immutable main commit
         id: meta
         env:
