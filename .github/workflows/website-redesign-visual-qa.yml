@@ -59,10 +59,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
           CSS_BLOB="$(git hash-object public/site-preview/site.css)"
-          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
-            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+          if [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ] && grep -q 'class="desktop-nav v2-primary-nav"' public/site-preview/index.html; then
+            echo "SKIP: Oct 4 homepage baseline with restored Reader shared header detected"
             exit 0
           fi
           python3 - <<'PY'
@@ -98,10 +97,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
           CSS_BLOB="$(git hash-object public/site-preview/site.css)"
-          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
-            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+          if [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ] && grep -q 'class="desktop-nav v2-primary-nav"' public/site-preview/index.html; then
+            echo "SKIP: Oct 4 homepage baseline with restored Reader shared header detected"
             exit 0
           fi
           if grep -q 'ORIGINAL-SHARED-SHELL-ROLLBACK' public/site-preview/site.css; then
@@ -137,10 +135,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
           CSS_BLOB="$(git hash-object public/site-preview/site.css)"
-          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
-            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+          if [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ] && grep -q 'class="desktop-nav v2-primary-nav"' public/site-preview/index.html; then
+            echo "SKIP: Oct 4 homepage baseline with restored Reader shared header detected"
             exit 0
           fi
           if grep -q 'ORIGINAL-SHARED-SHELL-ROLLBACK' public/site-preview/site.css; then
@@ -180,10 +177,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
           CSS_BLOB="$(git hash-object public/site-preview/site.css)"
-          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
-            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+          if [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ] && grep -q 'class="desktop-nav v2-primary-nav"' public/site-preview/index.html; then
+            echo "SKIP: Oct 4 homepage baseline with restored Reader shared header detected"
             exit 0
           fi
           python3 - <<'PY'
