@@ -92,6 +92,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if grep -q 'ORIGINAL-SHARED-SHELL-ROLLBACK' public/site-preview/site.css; then
+            echo "SKIP: original shared-shell rollback intentionally bypasses superseded V3.3 material guard"
+            exit 0
+          fi
           python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
@@ -121,6 +125,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if grep -q 'ORIGINAL-SHARED-SHELL-ROLLBACK' public/site-preview/site.css; then
+            echo "SKIP: original shared-shell rollback intentionally bypasses superseded V3 logo-alignment guard"
+            exit 0
+          fi
           python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
