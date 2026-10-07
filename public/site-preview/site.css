@@ -3432,7 +3432,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   margin:0 -14px 12px;
   border-bottom:1px solid rgba(231,189,99,.28);
   background-size:cover;
-  background-position:center;
+  background-position:center 46%;
   box-shadow:inset 0 -45px 40px rgba(2,8,14,.34);
 }
 .reward-category-card.picture-card .reward-preview-art{
@@ -15696,11 +15696,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   position:absolute;
   inset:0;
   z-index:0;
-  background-image:url("/assets/portal-v1/backgrounds/batch1/hero-desktop.webp");
+  background-image:url("/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png");
   background-size:cover;
   background-position:center;
   transform:scale(1.015);
-  filter:saturate(1.28) contrast(1.08) brightness(.92) sepia(.10);
+  filter:saturate(1.02) contrast(1.04) brightness(.94);
 }
 .home-cinematic-bg::after{
   content:"";
@@ -15713,16 +15713,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .home-cinematic-character{
   position:absolute;
   z-index:2;
-  right:-1.5%;
-  bottom:-7%;
-  width:min(59%,820px);
-  height:108%;
-  object-fit:cover;
-  object-position:50% 34%;
-  opacity:.98;
-  filter:saturate(1.28) contrast(1.07) brightness(1.03) sepia(.12);
-  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.3) 8%,#000 27%,#000 100%);
-  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.3) 8%,#000 27%,#000 100%);
+  right:-4%;
+  bottom:-6%;
+  width:min(79%,1135px);
+  height:auto;
+  max-width:none;
+  object-fit:contain;
+  opacity:.99;
+  filter:saturate(1.08) contrast(1.03) brightness(1.01);
+  pointer-events:none;
 }
 .home-cinematic-shade{
   position:absolute;
@@ -16028,15 +16027,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     background-position:63% center;
   }
   .home-cinematic-character{
-    top:0;
-    right:-31%;
+    top:2px;
+    right:-43%;
     bottom:auto;
-    width:106%;
-    height:58%;
-    object-position:50% 22%;
-    opacity:.90;
-    -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 60%,transparent 100%);
-    mask-image:linear-gradient(180deg,#000 0%,#000 60%,transparent 100%);
+    width:146%;
+    height:auto;
+    max-width:none;
+    opacity:.94;
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 66%,rgba(0,0,0,.88) 78%,transparent 100%);
+    mask-image:linear-gradient(180deg,#000 0%,#000 66%,rgba(0,0,0,.88) 78%,transparent 100%);
   }
   .home-cinematic-shade{
     background:linear-gradient(180deg,rgba(2,7,13,.08) 0%,rgba(2,7,13,.34) 32%,rgba(2,7,13,.96) 55%,rgba(2,7,13,.99) 100%);
