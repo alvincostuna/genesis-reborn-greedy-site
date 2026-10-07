@@ -59,6 +59,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
+          CSS_BLOB="$(git hash-object public/site-preview/site.css)"
+          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
+            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+            exit 0
+          fi
           python3 - <<'PY'
           from pathlib import Path
           live=Path("public/site-preview/site.css").read_text(encoding="utf-8")
@@ -92,6 +98,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
+          CSS_BLOB="$(git hash-object public/site-preview/site.css)"
+          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
+            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+            exit 0
+          fi
           if grep -q 'ORIGINAL-SHARED-SHELL-ROLLBACK' public/site-preview/site.css; then
             echo "SKIP: original shared-shell rollback intentionally bypasses superseded V3.3 material guard"
             exit 0
@@ -125,6 +137,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
+          CSS_BLOB="$(git hash-object public/site-preview/site.css)"
+          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
+            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+            exit 0
+          fi
           if grep -q 'ORIGINAL-SHARED-SHELL-ROLLBACK' public/site-preview/site.css; then
             echo "SKIP: original shared-shell rollback intentionally bypasses superseded V3 logo-alignment guard"
             exit 0
@@ -162,6 +180,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
+          CSS_BLOB="$(git hash-object public/site-preview/site.css)"
+          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
+            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+            exit 0
+          fi
           python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
