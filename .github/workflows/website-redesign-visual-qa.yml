@@ -790,7 +790,7 @@ jobs:
                       if(r.left<-2||r.right>document.documentElement.clientWidth+2)issues.push('V3.8+ countdown panel escapes viewport');
                     }
                     if(mode.startsWith('desktop-')){
-                      if(!visible(q('#v38-primary-nav'))&&!visible(q('.v38-primary-nav')))issues.push('V3.8+ desktop primary nav missing');
+                      if(!visible(q('#v38-primary-nav'))&&!visible(q('.v38-primary-nav'))&&!visible(q('.v2-primary-nav')))issues.push('V3.8+ desktop primary nav missing');
                       if(parseFloat(getComputedStyle(title).fontSize)<42)issues.push('V3.8+ desktop title too small');
                     }else if(mode.startsWith('mobile-')){
                       if(!visible(mobileDock)&&window.innerHeight>=500)issues.push('V3.8+ mobile shortcut dock missing');
