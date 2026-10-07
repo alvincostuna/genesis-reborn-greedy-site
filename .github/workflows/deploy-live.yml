@@ -69,16 +69,20 @@ jobs:
           fi
           echo "PASS: self-hosted deploy dependencies present: ${required[*]}"
 
-      - name: Verify V3.8 source contract before build
+      - name: Verify rebuilt homepage source contract before build
         run: |
           set -euo pipefail
           test -f public/site-preview/index.html
-          test -f public/assets/portal-v1/backgrounds/batch1/hero-desktop.webp
-          test -f public/assets/v37/home-v38.css
-          grep -Eq 'data-design-version="(v38-cinematic-hammer-release|v39-hero-lock)"' public/site-preview/index.html
-          grep -q 'class="v38-hammer"' public/site-preview/index.html
+          test -f public/site-preview/site.css
+          test -f public/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png
+          test -f public/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png
+          grep -q 'data-page="home"' public/site-preview/index.html
+          grep -q 'home-rebuild-v1' public/site-preview/index.html
+          grep -q 'NEXT RELEASE' public/site-preview/index.html
+          grep -q '/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png' public/site-preview/index.html
+          grep -q '/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png' public/site-preview/index.html
           grep -q 'name = "genesis-reborn-greedy"' wrangler.live.toml
-          echo "PASS: approved cinematic hero source and Cloudflare worker target are present."
+          echo "PASS: rebuilt cinematic homepage source and Cloudflare worker target are present."
 
       - name: Verify Cloudflare deployment credentials are available
         env:
@@ -320,18 +324,18 @@ jobs:
           grep -q '/assets/genesis-wordmark-v2.svg' /tmp/candidate-home.html \
             && echo "PASS: GENESIS wordmark reference" \
             || { echo "::error::FAIL: GENESIS wordmark reference missing"; exit 1; }
-          grep -Eq 'data-design-version="(v38-cinematic-hammer-release|v39-hero-lock)"' /tmp/candidate-home.html \
-            && echo "PASS: V3.8+/V3.9 cinematic hero marker" \
-            || { echo "::error::FAIL: V3.8+/V3.9 cinematic hero marker missing"; exit 1; }
-          grep -q '/assets/portal-v1/backgrounds/batch1/hero-desktop.webp' /tmp/candidate-home.html \
-            && echo "PASS: V3.8 hero background reference" \
-            || { echo "::error::FAIL: V3.8 hero background reference missing"; exit 1; }
-          grep -q '/assets/v37/home-v38.css' /tmp/candidate-home.html \
-            && echo "PASS: V3.8 homepage stylesheet reference" \
-            || { echo "::error::FAIL: V3.8 homepage stylesheet reference missing"; exit 1; }
-          grep -q 'class="v38-hammer"' /tmp/candidate-home.html \
-            && echo "PASS: V3.8 hammer markup" \
-            || { echo "::error::FAIL: V3.8 hammer markup missing"; exit 1; }
+          grep -q 'home-rebuild-v1' /tmp/candidate-home.html \
+            && echo "PASS: rebuilt homepage marker" \
+            || { echo "::error::FAIL: rebuilt homepage marker missing"; exit 1; }
+          grep -q '/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png' /tmp/candidate-home.html \
+            && echo "PASS: approved fiery city background reference" \
+            || { echo "::error::FAIL: approved fiery city background reference missing"; exit 1; }
+          grep -q '/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png' /tmp/candidate-home.html \
+            && echo "PASS: approved Flavio foreground reference" \
+            || { echo "::error::FAIL: approved Flavio foreground reference missing"; exit 1; }
+          grep -q '/site.css' /tmp/candidate-home.html \
+            && echo "PASS: rebuilt homepage stylesheet reference" \
+            || { echo "::error::FAIL: rebuilt homepage stylesheet reference missing"; exit 1; }
           if grep -qE '/assets/v25/hero-home-(desktop|mobile)\.webp' /tmp/candidate-home.html; then
             echo "::error::FAIL: retired V2.5 hero reference still present"
             exit 1
@@ -423,8 +427,9 @@ jobs:
 
           verify_candidate_asset "/assets/genesis-wordmark-v2.svg" "GENESIS wordmark asset"
           verify_candidate_asset "/assets/master-key-art-split-world-v1.webp" "Legacy cinematic split-world hero asset"
-          verify_candidate_asset "/assets/portal-v1/backgrounds/batch1/hero-desktop.webp" "V3.8 hero background asset"
-          verify_candidate_asset "/assets/v37/home-v38.css" "V3.8 homepage stylesheet"
+          verify_candidate_asset "/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png" "Approved fiery city background asset"
+          verify_candidate_asset "/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png" "Approved Flavio foreground asset"
+          verify_candidate_asset "/site.css" "Rebuilt homepage stylesheet"
           verify_candidate_asset "/assets/overlays/world-compass-crest.svg" "WORLD overlay compass crest"
 
           if grep -q '/site-preview/' /tmp/candidate-home.html; then
@@ -496,15 +501,15 @@ jobs:
             if grep -q 'data-page="home"' /tmp/home.html \
               && grep -q 'NEXT RELEASE' /tmp/home.html \
               && grep -q '/assets/genesis-wordmark-v2.svg' /tmp/home.html \
-              && grep -Eq 'data-design-version="(v38-cinematic-hammer-release|v39-hero-lock)"' /tmp/home.html \
-              && grep -q '/assets/portal-v1/backgrounds/batch1/hero-desktop.webp' /tmp/home.html \
-              && grep -q '/assets/v37/home-v38.css' /tmp/home.html \
-              && grep -q 'class="v38-hammer"' /tmp/home.html \
+              && grep -q 'home-rebuild-v1' /tmp/home.html \
+              && grep -q '/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png' /tmp/home.html \
+              && grep -q '/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png' /tmp/home.html \
+              && grep -q '/site.css' /tmp/home.html \
               && ! grep -qE '/assets/v25/hero-home-(desktop|mobile)\.webp' /tmp/home.html; then
               CONTENT_OK=1
               break
             fi
-            echo "Live V3.8+/V3.9 cinematic hero propagation attempt $attempt not complete yet."
+            echo "Live rebuilt cinematic homepage propagation attempt $attempt not complete yet."
             sleep 2
           done
           test "$CONTENT_OK" = "1"
@@ -526,9 +531,9 @@ jobs:
             return 1
           }
           verify_live_asset "/assets/genesis-wordmark-v2.svg" "Live GENESIS wordmark asset"
-          verify_live_asset "/assets/portal-v1/backgrounds/batch1/hero-desktop.webp" "Live V3.8 hero background asset"
-          verify_live_asset "/assets/v37/home-v38.css" "Live V3.8 homepage stylesheet"
-          verify_live_asset "/assets/v27/rewards/flavio-reyes.webp" "Live Flavio character asset"
+          verify_live_asset "/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png" "Live approved fiery city background asset"
+          verify_live_asset "/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png" "Live approved Flavio foreground asset"
+          verify_live_asset "/site.css" "Live rebuilt homepage stylesheet"
           verify_live_asset "/assets/overlays/world-compass-crest.svg" "Live WORLD overlay compass crest"
 
           ADMIN_STATUS="000"
