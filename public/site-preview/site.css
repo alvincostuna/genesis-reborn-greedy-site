@@ -9498,7 +9498,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   pointer-events:none;
 }
 
-.web-ds-v2 .home-hero-release{
+.web-ds-v2 .home-release-panel{
   position:absolute;
   top:3.2%;
   width:min(29%,410px);
@@ -9703,7 +9703,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     border-top:1px solid rgba(216,179,109,.32);
     background:linear-gradient(180deg,#071522,#04101a);
   }
-  .web-ds-v2 .home-hero-release{
+  .web-ds-v2 .home-release-panel{
     position:relative;
     inset:auto;
     width:auto;
@@ -9747,7 +9747,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     border-top:1px solid rgba(216,179,109,.28);
     background:linear-gradient(180deg,#071522,#04101a);
   }
-  .web-ds-v2 .home-hero-release{
+  .web-ds-v2 .home-release-panel{
     position:relative;
     inset:auto;
     width:auto;
@@ -9905,7 +9905,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .web-ds-v2 .home-ornate-corner-br{bottom:7px;right:7px;transform:scale(-1)}
 
 @media(min-width:901px){
-  .web-ds-v2 .home-hero-release{
+  .web-ds-v2 .home-release-panel{
     top:auto!important;
     bottom:24px!important;
     width:min(26.5%,360px)!important;
@@ -10243,7 +10243,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     border-top:1px solid rgba(216,179,109,.30)!important;
     background:linear-gradient(180deg,#071522,#04101a)!important;
   }
-  .web-ds-v2 .home-hero-release{
+  .web-ds-v2 .home-release-panel{
     position:relative!important;
     inset:auto!important;
     width:auto!important;
@@ -10358,7 +10358,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2 .home-release-command{
     grid-template-columns:1fr!important;
   }
-  .web-ds-v2 .home-hero-release{
+  .web-ds-v2 .home-release-panel{
     height:auto!important;
     min-height:0!important;
     padding:7px 9px!important;
