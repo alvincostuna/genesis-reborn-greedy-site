@@ -9498,7 +9498,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   pointer-events:none;
 }
 
-.web-ds-v2 .home-release-panel{
+.web-ds-v2 .home-hero-release{
   position:absolute;
   top:3.2%;
   width:min(29%,410px);
@@ -9703,7 +9703,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     border-top:1px solid rgba(216,179,109,.32);
     background:linear-gradient(180deg,#071522,#04101a);
   }
-  .web-ds-v2 .home-release-panel{
+  .web-ds-v2 .home-hero-release{
     position:relative;
     inset:auto;
     width:auto;
@@ -9747,7 +9747,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     border-top:1px solid rgba(216,179,109,.28);
     background:linear-gradient(180deg,#071522,#04101a);
   }
-  .web-ds-v2 .home-release-panel{
+  .web-ds-v2 .home-hero-release{
     position:relative;
     inset:auto;
     width:auto;
@@ -9905,7 +9905,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .web-ds-v2 .home-ornate-corner-br{bottom:7px;right:7px;transform:scale(-1)}
 
 @media(min-width:901px){
-  .web-ds-v2 .home-release-panel{
+  .web-ds-v2 .home-hero-release{
     top:auto!important;
     bottom:24px!important;
     width:min(26.5%,360px)!important;
@@ -10243,7 +10243,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     border-top:1px solid rgba(216,179,109,.30)!important;
     background:linear-gradient(180deg,#071522,#04101a)!important;
   }
-  .web-ds-v2 .home-release-panel{
+  .web-ds-v2 .home-hero-release{
     position:relative!important;
     inset:auto!important;
     width:auto!important;
@@ -10358,7 +10358,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .web-ds-v2 .home-release-command{
     grid-template-columns:1fr!important;
   }
-  .web-ds-v2 .home-release-panel{
+  .web-ds-v2 .home-hero-release{
     height:auto!important;
     min-height:0!important;
     padding:7px 9px!important;
@@ -15778,7 +15778,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   font:italic 500 clamp(17px,1.25vw,21px)/1.5 var(--gx3-story,"Cormorant Garamond",Georgia,serif);
   letter-spacing:.04em;
 }
-.home-release-panel{
+.home-hero-release{
   width:min(100%,560px);
   padding:16px 22px 17px;
   border:1px solid rgba(213,174,88,.72);
@@ -15799,6 +15799,26 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   color:#e7c878;
   font:700 11px/1 var(--gx3-display,"Cinzel",Georgia,serif);
   letter-spacing:.18em;
+}
+.home-rebuild-v1 #home-release-state{
+  color:#e7c878!important;
+  font:700 11px/1 var(--gx3-display,"Cinzel",Georgia,serif)!important;
+  letter-spacing:.18em!important;
+}
+.home-rebuild-v1 #home-release-part{
+  color:#b9c9d8!important;
+  font:600 10px/1.2 system-ui,sans-serif!important;
+  letter-spacing:.04em!important;
+}
+.home-rebuild-v1 #home-release-time{
+  color:#fff1c7!important;
+  font:700 13px/1.35 system-ui,sans-serif!important;
+}
+.home-rebuild-v1 #home-release-detail{
+  color:#aab8c7!important;
+  font:500 11px/1.35 system-ui,sans-serif!important;
+  white-space:normal!important;
+  max-width:none!important;
 }
 .home-release-heading b{
   max-width:55%;
@@ -15863,7 +15883,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   color:#e0bd62;
   text-align:center;
 }
-.home-read-now{
+.home-rebuild-v1 .home-read-now{
   width:min(100%,560px);
   min-height:66px;
   margin-top:15px;
@@ -15878,18 +15898,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   background:linear-gradient(180deg,rgba(145,36,29,.96),rgba(82,16,18,.98));
   box-shadow:inset 0 0 0 1px rgba(255,221,138,.18),0 10px 26px rgba(0,0,0,.28);
 }
-.home-read-now strong{
+.home-rebuild-v1 .home-read-now strong{
   text-align:center;
   color:#fff0ce;
   font:700 23px/1 var(--gx3-display,"Cinzel",Georgia,serif);
   letter-spacing:.05em;
 }
-.home-read-now b{
+.home-rebuild-v1 .home-read-now b{
   color:#efce7d;
   font-size:28px;
 }
-.home-read-now .v25-icon{color:#f1d483}
-.home-read-now:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.home-rebuild-v1 .home-read-now .v25-icon{color:#f1d483}
+.home-rebuild-v1 .home-read-now:hover{transform:translateY(-1px);filter:brightness(1.08)}
 .home-quick-links{
   width:min(100%,560px);
   display:grid;
@@ -16053,13 +16073,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .home-brand-title>span{font-size:43px}
   .home-brand-title>strong{font-size:21px;letter-spacing:.10em}
   .home-tagline{margin:10px 0 13px;font-size:16px}
-  .home-release-panel{padding:12px 14px}
+  .home-hero-release{padding:12px 14px}
   .home-countdown{padding:10px 0 8px}
   .home-countdown strong{font-size:39px}
   .home-release-meta p{font-size:11px}
   .home-release-meta small{font-size:10px;margin-left:0}
   .home-read-now{min-height:54px}
-  .home-read-now strong{font-size:18px}
+  .home-rebuild-v1 .home-read-now strong{font-size:18px}
   .home-quick-links{grid-template-columns:repeat(2,1fr)}
   .home-quick-links a{min-height:48px}
   .home-entry-grid{grid-template-columns:1fr}
