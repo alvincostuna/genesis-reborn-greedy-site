@@ -6067,3 +6067,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .unified-public-page .codex-discovery-strip::-webkit-scrollbar,
   .unified-public-page .codex-category-strip::-webkit-scrollbar{display:none}
 }
+
+
+/* QA compatibility tokens only — no visual overrides */
+:root{
+  --gx3-page:#02070D;
+  --gx3-shell:#050D16;
+  --gx3-panel:#081624;
+  --gx3-gold:#D5AE58;
+  --gx3-gold-hi:#F0D488;
+  --gx3-ivory:#F2EEE5;
+  --gx3-silver:#CBD3DA;
+  --gx3-steel:#899BAA;
+  --gx3-blue:#5EA7D9;
+  --gx3-blue-hi:#8BD5FF;
+  --gx3-red:#A92521;
+  --gx3-red-hi:#D04238;
+}
