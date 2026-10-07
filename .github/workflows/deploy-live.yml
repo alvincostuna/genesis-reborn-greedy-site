@@ -129,6 +129,8 @@ jobs:
           if [ -d public/assets/overlays ]; then cp -R public/assets/overlays .live-assets/assets/overlays; fi
           if [ -d public/assets/portal-v1 ]; then cp -R public/assets/portal-v1 .live-assets/assets/portal-v1; fi
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
+          cp public/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png .live-assets/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png
+          cp public/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png .live-assets/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png
           python3 - <<'PY'
           from pathlib import Path
           for p in Path('.live-assets').rglob('*.html'):
@@ -414,7 +416,7 @@ jobs:
               status="$(curl -sS -o /dev/null -w '%{http_code}' "$CANDIDATE_URL/assets/dashboard-v1/$file" || true)"
               result="PASS"
               if [ "$status" != "200" ]; then result="FAIL"; fi
-              echo "| $i | `$file` | $status | $result |"
+              echo "| $i | \\`$file\\` | $status | $result |"
               i=$((i+1))
             done
           } >> "$GITHUB_STEP_SUMMARY"
