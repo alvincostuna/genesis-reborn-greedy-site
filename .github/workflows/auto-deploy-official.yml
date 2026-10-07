@@ -16,7 +16,9 @@ concurrency:
 
 jobs:
   gate:
-    runs-on: [self-hosted, Linux, X64]
+    # Do not hold the self-hosted deployment/QA runner while polling QA.
+    # The actual deploy remains self-hosted through deploy-live.yml.
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
       eligible: ${{ steps.scope.outputs.eligible }}
