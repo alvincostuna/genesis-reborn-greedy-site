@@ -69,16 +69,21 @@ jobs:
           fi
           echo "PASS: self-hosted deploy dependencies present: ${required[*]}"
 
-      - name: Verify V3.8 source contract before build
+      - name: Verify approved homepage source contract before build
         run: |
           set -euo pipefail
           test -f public/site-preview/index.html
-          test -f public/assets/portal-v1/backgrounds/batch1/hero-desktop.webp
-          test -f public/assets/v37/home-v38.css
-          grep -Eq 'data-design-version="(v38-cinematic-hammer-release|v39-hero-lock)"' public/site-preview/index.html
-          grep -q 'class="v38-hammer"' public/site-preview/index.html
           grep -q 'name = "genesis-reborn-greedy"' wrangler.live.toml
-          echo "PASS: approved cinematic hero source and Cloudflare worker target are present."
+
+          if grep -q 'data-home-layout="portal-box-skeleton-v1"' public/site-preview/index.html              && grep -q 'class="desktop-nav v2-primary-nav"' public/site-preview/index.html              && [ ! -e public/assets/v37/home-v38.css ]; then
+            echo "PASS: approved Oct 4 baseline homepage with Reader shared header detected."
+          else
+            test -f public/assets/portal-v1/backgrounds/batch1/hero-desktop.webp
+            test -f public/assets/v37/home-v38.css
+            grep -Eq 'data-design-version="(v38-cinematic-hammer-release|v39-hero-lock)"' public/site-preview/index.html
+            grep -q 'class="v38-hammer"' public/site-preview/index.html
+            echo "PASS: approved cinematic homepage source detected."
+          fi
 
       - name: Verify Cloudflare deployment credentials are available
         env:
@@ -423,8 +428,10 @@ jobs:
 
           verify_candidate_asset "/assets/genesis-wordmark-v2.svg" "GENESIS wordmark asset"
           verify_candidate_asset "/assets/master-key-art-split-world-v1.webp" "Legacy cinematic split-world hero asset"
-          verify_candidate_asset "/assets/portal-v1/backgrounds/batch1/hero-desktop.webp" "V3.8 hero background asset"
-          verify_candidate_asset "/assets/v37/home-v38.css" "V3.8 homepage stylesheet"
+          if grep -q '/assets/v37/home-v38.css' /tmp/candidate-home.html; then
+            verify_candidate_asset "/assets/portal-v1/backgrounds/batch1/hero-desktop.webp" "Cinematic hero background asset"
+            verify_candidate_asset "/assets/v37/home-v38.css" "Cinematic homepage stylesheet"
+          fi
           verify_candidate_asset "/assets/overlays/world-compass-crest.svg" "WORLD overlay compass crest"
 
           if grep -q '/site-preview/' /tmp/candidate-home.html; then
@@ -526,9 +533,11 @@ jobs:
             return 1
           }
           verify_live_asset "/assets/genesis-wordmark-v2.svg" "Live GENESIS wordmark asset"
-          verify_live_asset "/assets/portal-v1/backgrounds/batch1/hero-desktop.webp" "Live V3.8 hero background asset"
-          verify_live_asset "/assets/v37/home-v38.css" "Live V3.8 homepage stylesheet"
-          verify_live_asset "/assets/v27/rewards/flavio-reyes.webp" "Live Flavio character asset"
+          if grep -q '/assets/v37/home-v38.css' /tmp/home.html; then
+            verify_live_asset "/assets/portal-v1/backgrounds/batch1/hero-desktop.webp" "Live cinematic hero background asset"
+            verify_live_asset "/assets/v37/home-v38.css" "Live cinematic homepage stylesheet"
+            verify_live_asset "/assets/v27/rewards/flavio-reyes.webp" "Live Flavio character asset"
+          fi
           verify_live_asset "/assets/overlays/world-compass-crest.svg" "Live WORLD overlay compass crest"
 
           ADMIN_STATUS="000"
