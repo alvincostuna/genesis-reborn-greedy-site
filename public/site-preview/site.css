@@ -15748,6 +15748,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 .home-brand-title{
   margin:0;
+  font-size:48px;
   color:#f2eee5;
   text-shadow:0 3px 24px rgba(0,0,0,.48);
   font-family:var(--gx3-display,"Cinzel",Georgia,serif);
@@ -16049,6 +16050,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     padding:0 20px 24px;
   }
   .home-cinematic-copy .eyebrow{font-size:9px}
+  .home-brand-title{font-size:34px}
   .home-brand-title>span{font-size:43px}
   .home-brand-title>strong{font-size:21px;letter-spacing:.10em}
   .home-tagline{margin:10px 0 13px;font-size:16px}
