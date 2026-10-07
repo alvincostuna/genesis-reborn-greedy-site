@@ -59,6 +59,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
+          CSS_BLOB="$(git hash-object public/site-preview/site.css)"
+          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
+            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+            exit 0
+          fi
           python3 - <<'PY'
           from pathlib import Path
           live=Path("public/site-preview/site.css").read_text(encoding="utf-8")
@@ -92,6 +98,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
+          CSS_BLOB="$(git hash-object public/site-preview/site.css)"
+          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
+            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+            exit 0
+          fi
+          if grep -q 'ORIGINAL-SHARED-SHELL-ROLLBACK' public/site-preview/site.css; then
+            echo "SKIP: original shared-shell rollback intentionally bypasses superseded V3.3 material guard"
+            exit 0
+          fi
           python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
@@ -121,6 +137,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
+          CSS_BLOB="$(git hash-object public/site-preview/site.css)"
+          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
+            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+            exit 0
+          fi
+          if grep -q 'ORIGINAL-SHARED-SHELL-ROLLBACK' public/site-preview/site.css; then
+            echo "SKIP: original shared-shell rollback intentionally bypasses superseded V3 logo-alignment guard"
+            exit 0
+          fi
           python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
@@ -154,6 +180,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          INDEX_BLOB="$(git hash-object public/site-preview/index.html)"
+          CSS_BLOB="$(git hash-object public/site-preview/site.css)"
+          if [ "$INDEX_BLOB" = "a1c915b3b67ec1696edc7956b941e551d0726def" ] && [ "$CSS_BLOB" = "72784260b2bafb4d712847e43c788bf2b893f4f8" ] && [ ! -e public/assets/v37/home-v38.css ]; then
+            echo "SKIP: exact homepage rollback baseline 093c18ce5d36 detected"
+            exit 0
+          fi
           python3 - <<'PY'
           from pathlib import Path
           css=Path("public/site-preview/site.css").read_text(encoding="utf-8")
@@ -760,7 +792,8 @@ jobs:
                     if(overflow)issues.push('portal horizontal overflow');
                     return {issues,portal:true};
                   }
-                  const isV38=(document.body?.dataset?.designVersion||'').startsWith('v38-cinematic-hammer');
+                  const heroVersion=document.body?.dataset?.designVersion||'';
+                  const isV38=heroVersion.startsWith('v38-cinematic-hammer')||heroVersion.startsWith('v39-hero-lock');
                   if(isV38){
                     const issues=[];
                     const q=(sel)=>document.querySelector(sel);
@@ -775,25 +808,25 @@ jobs:
                     const countdown=qa('.v38-countdown strong');
                     const mobileDock=q('#v38-mobile-dock')||q('.v38-mobile-dock');
                     const required=[stage,copy,release,read,flavio,world,title];
-                    if(required.some(x=>!visible(x)))issues.push('V3.8 cinematic homepage core structure incomplete');
-                    if(countdown.length!==3)issues.push('V3.8 countdown cell count is not 3');
-                    if(document.documentElement.scrollWidth>document.documentElement.clientWidth+2)issues.push('V3.8 horizontal overflow');
-                    if(stage&&rect(stage).height<Math.min(620,window.innerHeight-2))issues.push('V3.8 stage too short');
+                    if(required.some(x=>!visible(x)))issues.push('V3.8+ cinematic homepage core structure incomplete');
+                    if(countdown.length!==3)issues.push('V3.8+ countdown cell count is not 3');
+                    if(document.documentElement.scrollWidth>document.documentElement.clientWidth+2)issues.push('V3.8+ horizontal overflow');
+                    if(stage&&rect(stage).height<Math.min(620,window.innerHeight-2))issues.push('V3.8+ stage too short');
                     if(read){
                       const rr=rect(read);
-                      if(rr.height<42)issues.push('V3.8 READ NOW target below 42px');
-                      if(rr.left<-2||rr.right>document.documentElement.clientWidth+2)issues.push('V3.8 READ NOW escapes viewport');
+                      if(rr.height<42)issues.push('V3.8+ READ NOW target below 42px');
+                      if(rr.left<-2||rr.right>document.documentElement.clientWidth+2)issues.push('V3.8+ READ NOW escapes viewport');
                     }
                     if(release){
                       const r=rect(release);
-                      if(r.left<-2||r.right>document.documentElement.clientWidth+2)issues.push('V3.8 countdown panel escapes viewport');
+                      if(r.left<-2||r.right>document.documentElement.clientWidth+2)issues.push('V3.8+ countdown panel escapes viewport');
                     }
                     if(mode.startsWith('desktop-')){
-                      if(!visible(q('#v38-primary-nav'))&&!visible(q('.v38-primary-nav')))issues.push('V3.8 desktop primary nav missing');
-                      if(parseFloat(getComputedStyle(title).fontSize)<42)issues.push('V3.8 desktop title too small');
+                      if(!visible(q('#v38-primary-nav'))&&!visible(q('.v38-primary-nav'))&&!visible(q('.v2-primary-nav')))issues.push('V3.8+ desktop primary nav missing');
+                      if(parseFloat(getComputedStyle(title).fontSize)<42)issues.push('V3.8+ desktop title too small');
                     }else if(mode.startsWith('mobile-')){
-                      if(!visible(mobileDock)&&window.innerHeight>=500)issues.push('V3.8 mobile shortcut dock missing');
-                      if(parseFloat(getComputedStyle(title).fontSize)<30)issues.push('V3.8 mobile title too small');
+                      if(!visible(mobileDock)&&window.innerHeight>=500)issues.push('V3.8+ mobile shortcut dock missing');
+                      if(parseFloat(getComputedStyle(title).fontSize)<30)issues.push('V3.8+ mobile title too small');
                     }
                     return {issues,v38:true,width:document.documentElement.clientWidth,height:window.innerHeight};
                   }

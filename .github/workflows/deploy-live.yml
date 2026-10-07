@@ -75,10 +75,10 @@ jobs:
           test -f public/site-preview/index.html
           test -f public/assets/portal-v1/backgrounds/batch1/hero-desktop.webp
           test -f public/assets/v37/home-v38.css
-          grep -q 'data-design-version="v38-cinematic-hammer-release"' public/site-preview/index.html
+          grep -Eq 'data-design-version="(v38-cinematic-hammer-release|v39-hero-lock)"' public/site-preview/index.html
           grep -q 'class="v38-hammer"' public/site-preview/index.html
           grep -q 'name = "genesis-reborn-greedy"' wrangler.live.toml
-          echo "PASS: approved V3.8 source and Cloudflare worker target are present."
+          echo "PASS: approved cinematic hero source and Cloudflare worker target are present."
 
       - name: Verify Cloudflare deployment credentials are available
         env:
@@ -320,9 +320,9 @@ jobs:
           grep -q '/assets/genesis-wordmark-v2.svg' /tmp/candidate-home.html \
             && echo "PASS: GENESIS wordmark reference" \
             || { echo "::error::FAIL: GENESIS wordmark reference missing"; exit 1; }
-          grep -q 'data-design-version="v38-cinematic-hammer-release"' /tmp/candidate-home.html \
-            && echo "PASS: V3.8 cinematic hammer homepage marker" \
-            || { echo "::error::FAIL: V3.8 cinematic hammer homepage marker missing"; exit 1; }
+          grep -Eq 'data-design-version="(v38-cinematic-hammer-release|v39-hero-lock)"' /tmp/candidate-home.html \
+            && echo "PASS: V3.8+/V3.9 cinematic hero marker" \
+            || { echo "::error::FAIL: V3.8+/V3.9 cinematic hero marker missing"; exit 1; }
           grep -q '/assets/portal-v1/backgrounds/batch1/hero-desktop.webp' /tmp/candidate-home.html \
             && echo "PASS: V3.8 hero background reference" \
             || { echo "::error::FAIL: V3.8 hero background reference missing"; exit 1; }
@@ -496,7 +496,7 @@ jobs:
             if grep -q 'data-page="home"' /tmp/home.html \
               && grep -q 'NEXT RELEASE' /tmp/home.html \
               && grep -q '/assets/genesis-wordmark-v2.svg' /tmp/home.html \
-              && grep -q 'data-design-version="v38-cinematic-hammer-release"' /tmp/home.html \
+              && grep -Eq 'data-design-version="(v38-cinematic-hammer-release|v39-hero-lock)"' /tmp/home.html \
               && grep -q '/assets/portal-v1/backgrounds/batch1/hero-desktop.webp' /tmp/home.html \
               && grep -q '/assets/v37/home-v38.css' /tmp/home.html \
               && grep -q 'class="v38-hammer"' /tmp/home.html \
@@ -504,7 +504,7 @@ jobs:
               CONTENT_OK=1
               break
             fi
-            echo "Live V3.8 cinematic-hammer propagation attempt $attempt not complete yet."
+            echo "Live V3.8+/V3.9 cinematic hero propagation attempt $attempt not complete yet."
             sleep 2
           done
           test "$CONTENT_OK" = "1"
