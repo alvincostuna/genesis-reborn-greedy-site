@@ -76,11 +76,13 @@ jobs:
           test -f public/site-preview/site.css
           test -f public/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png
           test -f public/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png
+          test -f public/assets/1d53db1d-fc96-4e3c-9f15-70ece4780f50.png
           grep -q 'data-page="home"' public/site-preview/index.html
           grep -q 'home-rebuild-v1' public/site-preview/index.html
           grep -q 'NEXT RELEASE' public/site-preview/index.html
           grep -q '/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png' public/site-preview/index.html
           grep -q '/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png' public/site-preview/index.html
+          grep -q '/assets/1d53db1d-fc96-4e3c-9f15-70ece4780f50.png' public/site-preview/index.html
           grep -q 'name = "genesis-reborn-greedy"' wrangler.live.toml
           echo "PASS: rebuilt cinematic homepage source and Cloudflare worker target are present."
 
@@ -131,6 +133,7 @@ jobs:
           cp public/assets/master-key-art-split-world-v1.webp .live-assets/assets/master-key-art-split-world-v1.webp
           cp public/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png .live-assets/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png
           cp public/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png .live-assets/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png
+          cp public/assets/1d53db1d-fc96-4e3c-9f15-70ece4780f50.png .live-assets/assets/1d53db1d-fc96-4e3c-9f15-70ece4780f50.png
           python3 - <<'PY'
           from pathlib import Path
           for p in Path('.live-assets').rglob('*.html'):
@@ -365,6 +368,7 @@ jobs:
           verify_candidate_asset "/assets/v37/nav-brand.svg" "V3.7 nav brand"
           verify_candidate_asset "/assets/v37/panel-frame.svg" "V3.7 panel frame"
           verify_candidate_asset "/assets/v37/ornate-divider.svg" "V3.7 ornate divider"
+          verify_candidate_asset "/assets/1d53db1d-fc96-4e3c-9f15-70ece4780f50.png" "approved GENESIS release overlay"
 
           dashboard_v1_assets=(
             "release-monitor-desktop.webp"
