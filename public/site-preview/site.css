@@ -16727,6 +16727,12 @@ body.home-fullscreen-v2{
     justify-self:end!important;
   }
 }
+/* Approved Home-only horizontal nudge: move the whole header, not its contents. */
+@media (min-width:1101px) {
+  body.unified-public-page.home-fullscreen-v2 > header.game-nav.v2-nav {
+    transform:translateX(calc(-50% + 24px))!important;
+  }
+}
 /* On tablet and phone, preserve the existing menu/dock behavior and use one
    common header width and position without touching reading/application UI. */
 @media (max-width:1100px) {
