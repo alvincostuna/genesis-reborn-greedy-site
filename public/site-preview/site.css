@@ -16623,3 +16623,36 @@ body.home-fullscreen-v2{
     width:146%!important;
   }
 }
+
+/* Commander-approved hero depth polish — asset layers, not redesigned artwork.
+   Background < approved logo/clock overlay < Flavio. Header remains foremost. */
+.home-fullscreen-v2 .home-cinematic-bg{z-index:0!important;}
+.home-fullscreen-v2 .home-cinematic-shade{z-index:1!important;pointer-events:none!important;}
+.home-fullscreen-v2 .home-overlay-copy{z-index:3!important;}
+.home-fullscreen-v2 .home-cinematic-character{
+  z-index:4!important;
+  pointer-events:none!important;
+  filter:drop-shadow(-18px 22px 20px rgba(5,5,12,.48)) saturate(1.09) contrast(1.04) brightness(1.01)!important;
+}
+.home-fullscreen-v2 .game-nav{z-index:30!important;}
+/* Keep the live clock and link interactive despite foreground character artwork. */
+.home-fullscreen-v2 .home-overlay-countdown{z-index:5!important;}
+.home-fullscreen-v2 .home-overlay-read{z-index:6!important;}
+@media (min-width:1101px){
+  .home-fullscreen-v2 .home-overlay-copy{
+    width:min(40vw,640px)!important;
+    padding-left:clamp(80px,7.5vw,144px)!important;
+  }
+  .home-fullscreen-v2 .home-cinematic-character{
+    right:3.2vw!important;
+    width:min(83vw,1640px)!important;
+  }
+}
+@media (min-width:761px) and (max-width:1100px){
+  .home-fullscreen-v2 .home-overlay-copy{padding-left:clamp(40px,5.5vw,70px)!important;}
+  .home-fullscreen-v2 .home-cinematic-character{right:-1vw!important;}
+}
+@media (max-width:760px){
+  .home-fullscreen-v2 .home-overlay-copy{padding-left:10px!important;padding-right:10px!important;}
+  .home-fullscreen-v2 .home-cinematic-character{right:-15%!important;}
+}
