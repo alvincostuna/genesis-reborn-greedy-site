@@ -16676,3 +16676,53 @@ body.home-fullscreen-v2{
   /* Preserve bottom-anchored mobile artwork and avoid covering the lower read action. */
   .home-fullscreen-v2 .home-cinematic-character{right:-10%!important;}
 }
+
+/* DESTINATION DS STAGE 3 — reuse existing cinematic artwork.
+   Presentation only: Atlas, Codex, Fan and Manga remain intact beneath their heroes.
+   Read toolbar and Support payment content remain unchanged. Home untouched. */
+@media (min-width:821px) {
+  .unified-public-page .atlas-v1-hero.destination-hero,
+  .unified-public-page .v28-codex-hero.destination-hero,
+  .unified-public-page .fan-hero.destination-hero,
+  .unified-public-page .manga-hero.destination-hero {
+    position:relative!important;
+    display:block!important;
+    min-height:clamp(360px,49vh,560px)!important;
+    height:auto!important;
+    overflow:hidden!important;
+  }
+  .unified-public-page .atlas-v1-hero .world-hero-art,
+  .unified-public-page .v28-codex-hero .codex-hero-art,
+  .unified-public-page .fan-hero .fan-hero-art,
+  .unified-public-page .manga-hero .manga-hero-art {
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    background-size:cover!important;
+    background-repeat:no-repeat!important;
+    pointer-events:none!important;
+  }
+  .unified-public-page .atlas-v1-hero .world-hero-shade,
+  .unified-public-page .v28-codex-hero .codex-hero-shade,
+  .unified-public-page .fan-hero .fan-hero-shade,
+  .unified-public-page .manga-hero .manga-hero-shade {
+    position:absolute!important;
+    inset:0!important;
+    height:100%!important;
+    pointer-events:none!important;
+  }
+  .unified-public-page .atlas-v1-hero .world-hero-copy,
+  .unified-public-page .v28-codex-hero .codex-hero-copy,
+  .unified-public-page .fan-hero .fan-hero-copy,
+  .unified-public-page .manga-hero .manga-copy {
+    position:relative!important;
+    z-index:2!important;
+    padding:clamp(50px,8vh,96px) clamp(28px,5vw,80px)!important;
+    max-width:min(720px,65%)!important;
+  }
+  .unified-public-page .destination-hero .destination-signal {
+    position:relative!important;
+    z-index:3!important;
+  }
+}
