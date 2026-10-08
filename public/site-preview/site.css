@@ -16510,3 +16510,88 @@ body.home-fullscreen-v2{
     width:150%!important;
   }
 }
+
+
+/* HOME OVERLAY V5 — FINAL USER MOCKUP ALIGNMENT */
+/* Restore the four hero shortcuts exactly as shown in the approved mockup. */
+.home-fullscreen-v2 .v38-compat-dock{
+  position:static!important;
+  width:auto!important;
+  height:auto!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  overflow:visible!important;
+}
+.home-fullscreen-v2 .home-overlay-quick-links{
+  width:100%!important;
+  max-width:520px!important;
+  margin:8px 0 0!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,1fr)!important;
+  gap:8px!important;
+}
+.home-fullscreen-v2 .home-overlay-quick-links a{
+  min-height:52px!important;
+}
+
+/* Use the approved overlay at the same scale/placement as the latest mockup. */
+.home-fullscreen-v2 .home-overlay-copy{
+  width:min(33vw,520px)!important;
+  padding:clamp(100px,11vh,128px) 0 26px clamp(58px,5.2vw,98px)!important;
+}
+.home-fullscreen-v2 .home-overlay-art{
+  width:100%!important;
+  transform:none!important;
+}
+
+/* Give Flavio breathing room from the right edge without losing his hero scale. */
+.home-fullscreen-v2 .home-cinematic-character{
+  right:3vw!important;
+  bottom:-6vh!important;
+  width:min(75vw,1500px)!important;
+}
+
+@media (max-width:1100px){
+  .home-fullscreen-v2 .home-overlay-copy{
+    width:min(41vw,500px)!important;
+    padding:clamp(88px,10vh,110px) 0 24px 30px!important;
+  }
+  .home-fullscreen-v2 .home-cinematic-character{
+    right:-1vw!important;
+    width:min(84vw,1180px)!important;
+  }
+}
+
+@media (max-width:760px){
+  .home-fullscreen-v2 .home-overlay-copy{
+    left:0!important;
+    right:0!important;
+    bottom:0!important;
+    width:auto!important;
+    padding:0 12px 90px!important;
+  }
+  .home-fullscreen-v2 .home-overlay-art-shell{
+    width:min(100%,520px)!important;
+    margin:0 auto!important;
+  }
+  .home-fullscreen-v2 .home-overlay-quick-links{
+    width:min(100%,520px)!important;
+    max-width:none!important;
+    margin:8px auto 0!important;
+    grid-template-columns:repeat(4,1fr)!important;
+  }
+  .home-fullscreen-v2 .home-overlay-quick-links a{
+    min-height:48px!important;
+    padding:6px 4px!important;
+    gap:5px!important;
+  }
+  .home-fullscreen-v2 .home-overlay-quick-links b{
+    font-size:10px!important;
+  }
+  .home-fullscreen-v2 .home-cinematic-character{
+    top:44px!important;
+    right:-16%!important;
+    bottom:auto!important;
+    width:140%!important;
+  }
+}
