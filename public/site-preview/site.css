@@ -16676,3 +16676,21 @@ body.home-fullscreen-v2{
   /* Preserve bottom-anchored mobile artwork and avoid covering the lower read action. */
   .home-fullscreen-v2 .home-cinematic-character{right:-10%!important;}
 }
+
+/* OCT09 HEADER CONSISTENCY: Home desktop navigation follows destination header proportions.
+   Presentation-only: no hero, page body, routes or functionality changed. */
+@media (min-width:1101px) {
+  body.home-fullscreen-v2 > header.game-nav.v2-nav {
+    width:min(1424px,calc(100% - 32px))!important;
+    max-width:1424px!important;
+    min-height:82px!important;
+    grid-template-columns:300px minmax(0,1fr) 340px!important;
+  }
+  body.home-fullscreen-v2 > header.game-nav.v2-nav .v2-primary-nav {
+    min-width:0!important;
+    justify-content:center!important;
+  }
+  body.home-fullscreen-v2 > header.game-nav.v2-nav .v2-primary-nav a {
+    min-height:78px!important;
+  }
+}
