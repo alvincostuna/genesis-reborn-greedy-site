@@ -16436,3 +16436,77 @@ body.home-fullscreen-v2{
     width:136%!important;
   }
 }
+
+
+/* HOME OVERLAY V4 — SCALE + FLAVIO RECENTER */
+/* The four redundant hero shortcut buttons are gone; header navigation is authoritative. */
+.home-fullscreen-v2 .v38-compat-dock{
+  position:absolute!important;
+  left:0!important;
+  bottom:0!important;
+  width:1px!important;
+  height:1px!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  overflow:hidden!important;
+}
+
+/* Bring the approved transparent art closer to Flavio and give it more visual authority. */
+.home-fullscreen-v2 .home-overlay-copy{
+  width:min(44vw,710px)!important;
+  padding:clamp(94px,10.5vh,122px) 0 24px clamp(70px,7.2vw,136px)!important;
+}
+.home-fullscreen-v2 .home-overlay-art-shell{
+  width:100%!important;
+}
+.home-fullscreen-v2 .home-overlay-art{
+  width:100%!important;
+  transform:translateX(2.2vw);
+  transform-origin:center left;
+}
+
+/* Flavio becomes the dominant right-side focal point and sits immediately below the header. */
+.home-fullscreen-v2 .home-cinematic-character{
+  right:-2.5vw!important;
+  bottom:-7vh!important;
+  width:min(80vw,1600px)!important;
+  max-width:none!important;
+}
+
+@media (max-width:1100px){
+  .home-fullscreen-v2 .home-overlay-copy{
+    width:min(49vw,620px)!important;
+    padding:clamp(86px,10vh,108px) 0 22px 38px!important;
+  }
+  .home-fullscreen-v2 .home-overlay-art{
+    transform:translateX(1.5vw);
+  }
+  .home-fullscreen-v2 .home-cinematic-character{
+    right:-7vw!important;
+    bottom:-6vh!important;
+    width:min(91vw,1280px)!important;
+  }
+}
+
+@media (max-width:760px){
+  .home-fullscreen-v2 .home-overlay-copy{
+    left:0!important;
+    right:0!important;
+    bottom:0!important;
+    width:auto!important;
+    padding:0 8px 78px!important;
+  }
+  .home-fullscreen-v2 .home-overlay-art-shell{
+    width:min(112%,570px)!important;
+    margin:0 auto!important;
+  }
+  .home-fullscreen-v2 .home-overlay-art{
+    transform:translateX(2.5%)!important;
+  }
+  .home-fullscreen-v2 .home-cinematic-character{
+    top:42px!important;
+    right:-24%!important;
+    bottom:auto!important;
+    width:150%!important;
+  }
+}
