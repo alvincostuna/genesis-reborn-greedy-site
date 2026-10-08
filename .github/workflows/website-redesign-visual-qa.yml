@@ -821,7 +821,8 @@ jobs:
                       if(!visible(q('#v38-primary-nav'))&&!visible(q('.v38-primary-nav'))&&!visible(q('.v2-primary-nav')))issues.push('V3.8+ desktop primary nav missing');
                       if(parseFloat(getComputedStyle(title).fontSize)<42)issues.push('V3.8+ desktop title too small');
                     }else if(mode.startsWith('mobile-')){
-                      if(!visible(mobileDock)&&window.innerHeight>=500)issues.push('V3.8+ mobile shortcut dock missing');
+                      if(!visible(q('.mobile-bottom-nav'))&&!visible(q('.v2-mobile-menu'))&&window.innerHeight>=500)issues.push('V3.8+ mobile navigation missing');
+                      if(mobileDock&&visible(mobileDock))issues.push('V3.8+ redundant hero shortcut dock present');
                       if(parseFloat(getComputedStyle(title).fontSize)<30)issues.push('V3.8+ mobile title too small');
                     }
                     return {issues,v38:true,width:document.documentElement.clientWidth,height:window.innerHeight};
