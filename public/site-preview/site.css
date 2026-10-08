@@ -16595,3 +16595,31 @@ body.home-fullscreen-v2{
     width:140%!important;
   }
 }
+
+
+/* HOME HERO OCT08 — targeted desktop/mobile focus; preserve primary navigation */
+/* The redundant Story / World / Community / Support dock has been removed from homepage HTML. */
+@media (min-width:1101px){
+  .home-fullscreen-v2 .home-overlay-copy{
+    width:min(40vw,640px)!important;
+    padding:clamp(100px,11vh,128px) 0 26px clamp(56px,5vw,92px)!important;
+  }
+  .home-fullscreen-v2 .home-cinematic-character{
+    right:0!important;
+    bottom:-6vh!important;
+    width:min(83vw,1640px)!important;
+  }
+}
+@media (min-width:761px) and (max-width:1100px){
+  .home-fullscreen-v2 .home-overlay-copy{width:min(47vw,570px)!important;}
+  .home-fullscreen-v2 .home-cinematic-character{right:-4vw!important;width:min(90vw,1260px)!important;}
+}
+@media (max-width:760px){
+  .home-fullscreen-v2 .home-overlay-copy{padding:0 10px 76px!important;}
+  .home-fullscreen-v2 .home-overlay-art-shell{width:min(100%,560px)!important;}
+  .home-fullscreen-v2 .home-cinematic-character{
+    top:40px!important;
+    right:-19%!important;
+    width:146%!important;
+  }
+}
