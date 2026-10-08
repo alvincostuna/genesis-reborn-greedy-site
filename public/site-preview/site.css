@@ -16758,6 +16758,6 @@ body.home-fullscreen-v2{
    Keep Home's transparent glass treatment and approved cinematic hero untouched. */
 @media (min-width:1101px) {
   body.unified-public-page.home-fullscreen-v2 > header.game-nav.v2-nav {
-    transform:translateX(calc(-50% - 24px))!important;
+    transform:translateX(calc(-50% - 12px))!important;
   }
 }
