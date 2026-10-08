@@ -16656,3 +16656,23 @@ body.home-fullscreen-v2{
   .home-fullscreen-v2 .home-overlay-copy{padding-left:10px!important;padding-right:10px!important;}
   .home-fullscreen-v2 .home-cinematic-character{right:-15%!important;}
 }
+
+/* OCT08 Commander-approved cinematic overlap: foreground cape over clock art. */
+@media (min-width:1101px){
+  .home-fullscreen-v2 .home-overlay-copy{
+    padding-top:clamp(172px,20vh,225px)!important;
+  }
+  .home-fullscreen-v2 .home-cinematic-character{
+    right:7vw!important;
+  }
+}
+@media (min-width:761px) and (max-width:1100px){
+  .home-fullscreen-v2 .home-overlay-copy{
+    padding-top:clamp(150px,18vh,200px)!important;
+  }
+  .home-fullscreen-v2 .home-cinematic-character{right:2vw!important;}
+}
+@media (max-width:760px){
+  /* Preserve bottom-anchored mobile artwork and avoid covering the lower read action. */
+  .home-fullscreen-v2 .home-cinematic-character{right:-10%!important;}
+}
