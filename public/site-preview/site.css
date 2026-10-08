@@ -16684,12 +16684,12 @@ body.home-fullscreen-v2{
   }
   body.unified-public-page.home-fullscreen-v2 > header.game-nav.v2-nav {
     position:absolute!important;
-    top:14px!important;
+    top:0!important;
     left:50%!important;
     right:auto!important;
     transform:translateX(-50%)!important;
-    margin:0!important;
-    border-radius:8px!important;
+    margin:14px 0 0!important;
+    border-radius:8px 8px 0 0!important;
   }
   body.unified-public-page > header.game-nav.v2-nav > .v2-brand {
     box-sizing:border-box!important;
@@ -16737,10 +16737,10 @@ body.home-fullscreen-v2{
   }
   body.unified-public-page.home-fullscreen-v2 > header.game-nav.v2-nav {
     position:absolute!important;
-    top:12px!important;
+    top:0!important;
     left:50%!important;
     right:auto!important;
-    margin:0!important;
+    margin:12px 0 0!important;
     transform:translateX(-50%)!important;
   }
 }
@@ -16749,6 +16749,6 @@ body.home-fullscreen-v2{
     width:calc(100% - 16px)!important;
   }
   body.unified-public-page.home-fullscreen-v2 > header.game-nav.v2-nav {
-    top:8px!important;
+    margin-top:8px!important;
   }
 }
