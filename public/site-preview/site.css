@@ -16103,17 +16103,9 @@ body.home-fullscreen-v2{
   background:#02070d;
   overflow-x:hidden;
 }
+/* Home header shares Read geometry; only transparent cinematic finish is unique. */
 .home-fullscreen-v2 .game-nav{
-  position:absolute!important;
-  top:18px!important;
-  left:50%!important;
-  right:auto!important;
-  width:min(1440px,calc(100% - 32px))!important;
-  margin:0!important;
-  transform:translateX(-50%)!important;
   z-index:80!important;
-  border:1px solid rgba(220,181,89,.58)!important;
-  border-radius:8px!important;
   background:linear-gradient(180deg,rgba(3,11,20,.78),rgba(3,10,18,.62))!important;
   box-shadow:0 12px 40px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,225,148,.04)!important;
   backdrop-filter:blur(12px) saturate(1.1);
@@ -16205,10 +16197,7 @@ body.home-fullscreen-v2{
 }
 
 @media (max-width:1100px){
-  .home-fullscreen-v2 .game-nav{
-    top:12px!important;
-    width:calc(100% - 24px)!important;
-  }
+  /* Header sizing inherits the shared Read navigation contract. */
   .home-fullscreen-v2 .home-cinematic-copy{
     width:min(52vw,600px)!important;
     padding-left:38px!important;
@@ -16223,11 +16212,7 @@ body.home-fullscreen-v2{
   body.home-fullscreen-v2{
     min-height:100svh;
   }
-  .home-fullscreen-v2 .game-nav{
-    top:8px!important;
-    width:calc(100% - 16px)!important;
-    background:linear-gradient(180deg,rgba(3,11,20,.88),rgba(3,10,18,.70))!important;
-  }
+  /* Mobile header sizing inherits the shared navigation contract. */
   .home-fullscreen-v2 .home-cinematic-hero{
     min-height:max(100svh,820px)!important;
     height:max(100svh,820px)!important;
@@ -16675,24 +16660,6 @@ body.home-fullscreen-v2{
 @media (max-width:760px){
   /* Preserve bottom-anchored mobile artwork and avoid covering the lower read action. */
   .home-fullscreen-v2 .home-cinematic-character{right:-10%!important;}
-}
-
-/* OCT09 HEADER CONSISTENCY: Home desktop navigation follows destination header proportions.
-   Presentation-only: no hero, page body, routes or functionality changed. */
-@media (min-width:1101px) {
-  body.home-fullscreen-v2 > header.game-nav.v2-nav {
-    width:min(1424px,calc(100% - 32px))!important;
-    max-width:1424px!important;
-    min-height:82px!important;
-    grid-template-columns:300px minmax(0,1fr) 340px!important;
-  }
-  body.home-fullscreen-v2 > header.game-nav.v2-nav .v2-primary-nav {
-    min-width:0!important;
-    justify-content:center!important;
-  }
-  body.home-fullscreen-v2 > header.game-nav.v2-nav .v2-primary-nav a {
-    min-height:78px!important;
-  }
 }
 
 /* GENESIS NAVIGATION CONTRACT — 2026-10-09.
