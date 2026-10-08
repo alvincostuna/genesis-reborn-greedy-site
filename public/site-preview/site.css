@@ -16752,3 +16752,12 @@ body.home-fullscreen-v2{
     margin-top:8px!important;
   }
 }
+
+/* Commander-directed HOME navigation translation — Read's geometry remains intact.
+   Move the ENTIRE Home header left; do not resize or shift individual menu items.
+   Keep Home's transparent glass treatment and approved cinematic hero untouched. */
+@media (min-width:1101px) {
+  body.unified-public-page.home-fullscreen-v2 > header.game-nav.v2-nav {
+    transform:translateX(calc(-50% - 24px))!important;
+  }
+}
