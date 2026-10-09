@@ -326,7 +326,7 @@ jobs:
           grep -q 'NEXT RELEASE' /tmp/candidate-home.html \
             && echo "PASS: NEXT RELEASE marker" \
             || { echo "::error::FAIL: NEXT RELEASE marker missing"; exit 1; }
-          grep -q '/assets/genesis-wordmark-v2.svg' /tmp/candidate-home.html \
+          grep -q '/assets/overlays/official%20log.png' /tmp/candidate-home.html \
             && echo "PASS: GENESIS wordmark reference" \
             || { echo "::error::FAIL: GENESIS wordmark reference missing"; exit 1; }
           grep -q 'home-rebuild-v1' /tmp/candidate-home.html \
@@ -431,7 +431,7 @@ jobs:
           fi
           echo "PASS: all 28 dashboard-v1 live-candidate assets returned HTTP 200."
 
-          verify_candidate_asset "/assets/genesis-wordmark-v2.svg" "GENESIS wordmark asset"
+          verify_candidate_asset "/assets/overlays/official%20log.png" "Approved GENESIS navigation PNG"
           verify_candidate_asset "/assets/master-key-art-split-world-v1.webp" "Legacy cinematic split-world hero asset"
           verify_candidate_asset "/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png" "Approved fiery city background asset"
           verify_candidate_asset "/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png" "Approved Flavio foreground asset"
@@ -506,7 +506,7 @@ jobs:
             curl -fsS "$BASE/" -o /tmp/home.html || true
             if grep -q 'data-page="home"' /tmp/home.html \
               && grep -q 'NEXT RELEASE' /tmp/home.html \
-              && grep -q '/assets/genesis-wordmark-v2.svg' /tmp/home.html \
+              && grep -q '/assets/overlays/official%20log.png' /tmp/home.html \
               && grep -q 'home-rebuild-v1' /tmp/home.html \
               && grep -q '/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png' /tmp/home.html \
               && grep -q '/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png' /tmp/home.html \
@@ -536,7 +536,7 @@ jobs:
             echo "::error::FAIL: $LABEL unavailable after retries"
             return 1
           }
-          verify_live_asset "/assets/genesis-wordmark-v2.svg" "Live GENESIS wordmark asset"
+          verify_live_asset "/assets/overlays/official%20log.png" "Live approved GENESIS navigation PNG"
           verify_live_asset "/assets/bb1e1e9f-f1aa-4377-af91-fef06eb11117.png" "Live approved fiery city background asset"
           verify_live_asset "/assets/4754d44d-cfa2-4e2d-95f9-7de680ce4378.png" "Live approved Flavio foreground asset"
           verify_live_asset "/site.css" "Live rebuilt homepage stylesheet"
