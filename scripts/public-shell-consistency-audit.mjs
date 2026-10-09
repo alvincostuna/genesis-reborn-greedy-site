@@ -16,7 +16,6 @@ const pages=[
 const requiredHeader=[
   'class="game-nav v2-nav"',
   'class="game-brand v2-brand"',
-  '/assets/genesis-wordmark-v2.svg',
   'class="desktop-nav v2-primary-nav"',
   'id="global-search-input"',
   'id="notification-button"',
@@ -49,6 +48,10 @@ for(const [name,rel,unified] of pages){
   const pageFailures=[];
 
   for(const needle of requiredHeader)if(!html.includes(needle))pageFailures.push(`missing ${needle}`);
+  // Seven redesigned destinations use approved PNG; account/quests retain existing legacy asset.
+  const expectedBrand=['home','read','world','codex','fan','manga','support'].includes(name)
+    ? '/assets/overlays/official%20log.png' : '/assets/genesis-wordmark-v2.svg';
+  if(!html.includes(expectedBrand))pageFailures.push(`missing ${expectedBrand}`);
   for(const needle of requiredFooter)if(!html.includes(needle))pageFailures.push(`missing ${needle}`);
   if(unified&&!/class="[^"]*web-ds-v2[^"]*unified-public-page|class="[^"]*unified-public-page[^"]*web-ds-v2/.test(html)){
     pageFailures.push('missing web-ds-v2 unified-public-page body classes');
