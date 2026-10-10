@@ -434,7 +434,7 @@ async function loadManuscripts(){
     table.innerHTML=
       '<div class="database-head"><span>CORE MANUSCRIPTS</span><small>READ ONLY · '+escapeHtml(envelope.total??state.manuscripts.length)+' MATCHING</small></div>'+
       '<table><thead><tr>'+
-      '<th>Part</th><th>Title</th><th>State</th><th>S1</th><th>S2</th><th>Final</th><th>Words (latest)</th>'+
+      '<th>Part</th><th>Title</th><th>Current stage</th><th>Historical label</th><th>S1</th><th>S2</th><th>Final</th><th>Words (latest)</th>'+
       '</tr></thead><tbody>'+
       state.manuscripts.map((p)=>{
         const latestWords=p.final_word_count??p.stage2_word_count??p.stage1_word_count??"—";
@@ -442,6 +442,7 @@ async function loadManuscripts(){
           '<td>'+escapeHtml(p.part_key)+'</td>'+
           '<td>'+escapeHtml(p.title)+'</td>'+
           '<td><span class="status '+statusClass(manuscriptCurrentStatus(p))+'">'+escapeHtml(manuscriptCurrentStatus(p))+'</span></td>'+
+          '<td><small class="muted">'+escapeHtml(p.dashboard_state||'—')+'</small></td>'+
           '<td>'+(p.stage1_available?"✓":"—")+'</td>'+
           '<td>'+(p.stage2_available?"✓":"—")+'</td>'+
           '<td>'+(p.final_canon_available?"✓":"—")+'</td>'+
