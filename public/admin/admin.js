@@ -256,6 +256,21 @@ function statusClass(value){
   return"review";
 }
 
+// Show current, verifiable stage state. Legacy dashboard_state may refer to
+// an older AI2 version and must not override absent current Stage-2 evidence.
+function manuscriptCurrentStatus(part){
+  if(part.final_canon_available)return "Final Canon";
+  if(part.stage2_available)return "Stage 2 complete";
+  if(part.stage1_available){
+    const legacy=String(part.dashboard_state||"");
+    const repaired=part.stage1_version_kind==="REPAIR"||
+      part.stage1_kind==="REPAIR"||
+      /AI-2 Complete|AI-2 Final/i.test(legacy);
+    return repaired?"Stage 1 repaired · S2 pending":"Stage 1 ready · S2 pending";
+  }
+  return "Stage 1 pending";
+}
+
 function isMobileAdminDevice(){
   return Boolean(
     navigator.maxTouchPoints>0 ||
@@ -426,7 +441,7 @@ async function loadManuscripts(){
         return '<tr data-part="'+escapeHtml(p.production_part_id)+'">'+
           '<td>'+escapeHtml(p.part_key)+'</td>'+
           '<td>'+escapeHtml(p.title)+'</td>'+
-          '<td><span class="status '+statusClass(p.dashboard_state)+'">'+escapeHtml(p.dashboard_state)+'</span></td>'+
+          '<td><span class="status '+statusClass(manuscriptCurrentStatus(p))+'">'+escapeHtml(manuscriptCurrentStatus(p))+'</span></td>'+
           '<td>'+(p.stage1_available?"✓":"—")+'</td>'+
           '<td>'+(p.stage2_available?"✓":"—")+'</td>'+
           '<td>'+(p.final_canon_available?"✓":"—")+'</td>'+
