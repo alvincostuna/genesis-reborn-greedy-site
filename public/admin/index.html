@@ -400,9 +400,21 @@
       <button data-stage="final">Final Canon</button>
       <button id="compare-button">Compare S1 ↔ S2</button>
       <button id="preview-button">Preview as Reader</button>
+      <button id="edit-stage1-button">Edit Stage 1</button>
     </div>
 
     <div id="viewer-meta" class="meta-grid"></div>
+    <div id="stage1-editor" class="stage1-editor hidden">
+      <div class="editor-warning"><strong>Stage 1 Repair</strong><span>Writes a new repair version to Supabase. It does not overwrite prior versions or commit Stage 2. The live maintenance gate and word-count/voice checks still apply.</span></div>
+      <label for="stage1-editor-body">Manuscript body</label>
+      <textarea id="stage1-editor-body" spellcheck="true" placeholder="Load Stage 1, then edit the complete manuscript here…"></textarea>
+      <div class="editor-fields">
+        <label>Commander request<input id="stage1-editor-request" value="Commander-authorized Stage 1 manuscript repair" /></label>
+        <label>Repair summary<input id="stage1-editor-summary" value="Correct road encounter, first-kill rewards, and item ownership continuity." /></label>
+      </div>
+      <div class="editor-actions"><button id="stage1-editor-cancel" type="button">Cancel</button><button id="stage1-editor-save" type="button">Save Stage 1 Repair to Supabase</button></div>
+      <p id="stage1-editor-status" class="muted" role="status"></p>
+    </div>
     <article id="manuscript-body" class="manuscript"></article>
   </dialog>
 
