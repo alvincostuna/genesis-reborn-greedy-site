@@ -2002,6 +2002,53 @@ async function openPart(partId){
   await showVersion(preferred);
 }
 
+async function loadStage1IntoEditor(){
+  if(!state.activePart)throw new Error("Choose a manuscript first.");
+  const status=$("#stage1-editor-status");
+  status.textContent="Loading the current Stage 1 source…";
+  const envelope=await platformFunction("genesis-manuscript-version",{
+    part_id:state.activePart.production_part_id,
+    stage:"stage1"
+  });
+  const data=Array.isArray(envelope?.data)?envelope.data[0]:null;
+  if(!data?.body_text)throw new Error("Stage 1 source is not available for this Part.");
+  $("#stage1-editor-body").value=data.body_text;
+  $("#stage1-editor").classList.remove("hidden");
+  $("#manuscript-body").classList.add("hidden");
+  $("#stage1-editor-status").textContent="Loaded Stage 1 v"+(data.version_number??"—")+" · "+(data.word_count??"—")+" words. Edits remain local until you save.";
+}
+async function saveStage1Repair(){
+  const button=$("#stage1-editor-save");
+  const status=$("#stage1-editor-status");
+  if(!state.activePart)return;
+  const body=$("#stage1-editor-body").value;
+  const request=$("#stage1-editor-request").value.trim();
+  const summary=$("#stage1-editor-summary").value.trim();
+  if(!body.trim()||!request||!summary){status.textContent="Complete the manuscript, commander request, and repair summary.";return;}
+  const words=body.trim().split(/\\s+/).filter(Boolean).length;
+  if(words<1500||words>3500){status.textContent="Stage 1 requires 1,500–3,500 words. Current count: "+words+".";return;}
+  if(!confirm("Save a new Stage 1 REPAIR version to live Supabase for "+state.activePart.part_key+"? Prior versions remain preserved; production gates still apply."))return;
+  button.disabled=true;
+  status.textContent="Submitting repair to the live Supabase maintenance gate…";
+  try{
+    const result=await apiPost("/admin/api/manuscripts/stage1-repair",{
+      part_id:state.activePart.production_part_id,
+      body_text:body,
+      commander_request:request,
+      surgery_summary:summary,
+      defect_tags:["CONTINUITY","MECHANICS","REWARD_OWNERSHIP","VOICE"]
+    });
+    status.textContent="Repair call returned: "+JSON.stringify(result);
+    await loadManuscripts();
+    await showVersion("stage1");
+    status.textContent="Saved. Stage 1 was reloaded from the read bridge; verify the version number and hash above before treating the repair as complete.";
+  }catch(error){
+    status.textContent="NOT SAVED: "+error.message;
+  }finally{
+    button.disabled=false;
+  }
+}
+
 async function compareCurrent(){
   if(!state.activePart)return;
   const body=$("#manuscript-body");
@@ -2240,6 +2287,18 @@ $("#close-viewer").addEventListener("click",()=>$("#viewer").close());
 $("#close-preview").addEventListener("click",()=>$("#preview").close());
 $$(".tabs [data-stage]").forEach((b)=>b.addEventListener("click",()=>showVersion(b.dataset.stage)));
 $("#compare-button").addEventListener("click",compareCurrent);
+$("#edit-stage1-button").addEventListener("click",async()=>{
+  try{
+    await loadStage1IntoEditor();
+    state.activeStage="stage1";
+    $(".tabs [data-stage]").forEach((b)=>b.classList.toggle("active",b.dataset.stage==="stage1"));
+  }catch(error){$("#stage1-editor-status").textContent="Could not load Stage 1: "+error.message;$("#stage1-editor").classList.remove("hidden");}
+});
+$("#stage1-editor-cancel").addEventListener("click",()=>{
+  $("#stage1-editor").classList.add("hidden");
+  $("#manuscript-body").classList.remove("hidden");
+});
+$("#stage1-editor-save").addEventListener("click",saveStage1Repair);
 $("#preview-button").addEventListener("click",previewCurrent);
 $("#refresh-database").addEventListener("click",loadDatabase);
 $("#database-domain").addEventListener("change",loadDatabase);
