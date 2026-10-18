@@ -132,6 +132,33 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   const path = url.pathname;
 
   if (request.method === "POST") {
+    if (path === "/admin/api/manuscripts/stage1-repair") {
+      await requirePermission(email, env, "PRODUCTION_AUTHORIZE");
+      let body: any = null;
+      try { body = await request.json(); } catch {}
+      const partId = String(body?.part_id || "");
+      const textBody = String(body?.body_text || "");
+      const reason = String(body?.commander_request || "").trim();
+      const summary = String(body?.surgery_summary || "").trim();
+      if (!partId || !textBody.trim() || !reason || !summary) {
+        throw new HttpError(400, "MANUSCRIPT_REPAIR_FIELDS_REQUIRED", "Part, manuscript, commander request, and repair summary are required.");
+      }
+      const data = await rpc(env, "genesis_admin_manuscript_stage1_repair", {
+        p_actor: email,
+        p_part_id: partId,
+        p_body_text: textBody,
+        p_commander_request: reason,
+        p_defect_tags: Array.isArray(body?.defect_tags) ? body.defect_tags : ["CONTINUITY", "MECHANICS", "REWARD_OWNERSHIP"],
+        p_surgery_summary: summary,
+        p_competence_status: "CLEARED",
+        p_findings: body?.findings && typeof body.findings === "object" ? body.findings : {
+          source: "GENESIS Admin manuscript editor",
+          repair_summary: summary,
+          requested_by: email
+        }
+      });
+      return json({ ok: true, actor: email, data });
+    }
     if (path === "/admin/api/rbac/bootstrap") {
       let body: any = null;
       try { body = await request.json(); } catch {}
