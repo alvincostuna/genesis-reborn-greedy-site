@@ -670,3 +670,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:720px){
   .platform-login-dialog .bridge-inline-login{grid-template-columns:1fr}
 }
+
+
+/* Stage 1 Supabase repair editor */
+.stage1-editor{padding:16px;border:1px solid var(--line);border-radius:12px;background:#08131f;margin:14px 0;gap:12px}
+.stage1-editor:not(.hidden){display:grid}
+.stage1-editor label{display:grid;gap:7px;color:var(--muted);font-size:12px;font-weight:700}
+.stage1-editor textarea{width:100%;min-height:420px;resize:vertical;background:#050b12;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:14px;font:14px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}
+.stage1-editor input{width:100%;background:#050b12;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px}
+.editor-warning{display:grid;gap:5px;border:1px solid #7b5c2b;background:#20190d;border-radius:8px;padding:12px}
+.editor-warning strong{color:var(--gold)}.editor-warning span{color:var(--muted);line-height:1.5}
+.editor-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.editor-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.editor-actions button,#edit-stage1-button{background:#0b1724;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:10px 13px;font-weight:700;cursor:pointer}
+.editor-actions button:last-child{background:#d6ad55;color:#07101b;border-color:#d6ad55}
+.editor-actions button:disabled{opacity:.5;cursor:wait}
+@media(max-width:700px){.editor-fields{grid-template-columns:1fr}.stage1-editor textarea{min-height:300px}.editor-actions button{width:100%}}
