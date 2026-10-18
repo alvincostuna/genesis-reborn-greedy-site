@@ -2119,7 +2119,7 @@ function switchView(name){
     overview:{title:"Command Overview",source:"PLATFORM · CONTROL PLANE",kind:"platform"},
     production:{title:"Production",source:"CORE · READ ONLY",kind:"core"},
     releases:{title:"Releases",source:"PLATFORM · MANAGED HERE",kind:"platform"},
-    manuscripts:{title:"Manuscripts",source:"CORE · READ ONLY",kind:"core"},
+    manuscripts:{title:"Manuscripts",source:"CORE · GUARDED EDIT",kind:"core"},
     roadmap:{title:"Roadmap",source:"CORE · READ ONLY",kind:"core"},
     continuity:{title:"Continuity",source:"CORE · READ ONLY",kind:"core"},
     authority:{title:"Authorities",source:"CORE · READ ONLY",kind:"core"},
