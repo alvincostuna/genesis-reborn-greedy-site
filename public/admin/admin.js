@@ -2022,7 +2022,7 @@ async function saveStage1Repair(){
   const request=$("#stage1-editor-request").value.trim();
   const summary=$("#stage1-editor-summary").value.trim();
   if(!body.trim()||!request||!summary){status.textContent="Complete the manuscript, commander request, and repair summary.";return;}
-  const words=body.trim().split(/\\s+/).filter(Boolean).length;
+  const words=body.trim().split(/\s+/).filter(Boolean).length;
   if(words<1500||words>3500){status.textContent="Stage 1 requires 1,500–3,500 words. Current count: "+words+".";return;}
   if(!confirm("Save a new Stage 1 REPAIR version to live Supabase for "+state.activePart.part_key+"? Prior versions remain preserved; production gates still apply."))return;
   button.disabled=true;
