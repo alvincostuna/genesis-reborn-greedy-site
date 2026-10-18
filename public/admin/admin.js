@@ -2041,11 +2041,10 @@ async function saveStage1Repair(){
       throw new Error("Supabase read-back did not exactly match the submitted Stage 1 body. Do not treat this repair as complete.");
     }
     renderMeta(saved);
+    $("#stage1-editor-body").value=saved.body_text;
     $("#manuscript-body").textContent=saved.body_text;
-    $("#manuscript-body").classList.remove("hidden");
-    $("#stage1-editor").classList.add("hidden");
     await loadManuscripts();
-    status.textContent="Saved and verified from Core Supabase: Stage 1 v"+(saved.version_number??"—")+" · "+(saved.word_count??"—")+" words · "+(saved.content_hash||"hash unavailable")+".";
+    status.textContent="SAVED + VERIFIED FROM CORE SUPABASE: Stage 1 v"+(saved.version_number??"—")+" · "+(saved.word_count??"—")+" words · "+(saved.content_hash||"hash unavailable")+". The editor remains open for review.";
     $("#stage1-editor-status").textContent=status.textContent;
   }catch(error){
     status.textContent="NOT SAVED: "+error.message;
