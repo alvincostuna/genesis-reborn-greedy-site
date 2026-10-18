@@ -2005,17 +2005,14 @@ async function openPart(partId){
 async function loadStage1IntoEditor(){
   if(!state.activePart)throw new Error("Choose a manuscript first.");
   const status=$("#stage1-editor-status");
-  status.textContent="Loading the current Stage 1 source…";
-  const envelope=await platformFunction("genesis-manuscript-version",{
-    part_id:state.activePart.production_part_id,
-    stage:"stage1"
-  });
-  const data=Array.isArray(envelope?.data)?envelope.data[0]:null;
-  if(!data?.body_text)throw new Error("Stage 1 source is not available for this Part.");
+  status.textContent="Loading Stage 1 directly from Core Supabase…";
+  const data=await api("/admin/api/manuscripts/version?part_id="+encodeURIComponent(state.activePart.production_part_id)+"&stage=stage1");
+  if(data?.status!=="OK"||!data?.body_text)throw new Error(data?.message||"Stage 1 source is not available for this Part.");
   $("#stage1-editor-body").value=data.body_text;
   $("#stage1-editor").classList.remove("hidden");
   $("#manuscript-body").classList.add("hidden");
-  $("#stage1-editor-status").textContent="Loaded Stage 1 v"+(data.version_number??"—")+" · "+(data.word_count??"—")+" words. Edits remain local until you save.";
+  renderMeta(data);
+  status.textContent="Loaded live Core Stage 1 v"+(data.version_number??"—")+" · "+(data.word_count??"—")+" words. Edits remain local until you save.";
 }
 async function saveStage1Repair(){
   const button=$("#stage1-editor-save");
@@ -2031,17 +2028,25 @@ async function saveStage1Repair(){
   button.disabled=true;
   status.textContent="Submitting repair to the live Supabase maintenance gate…";
   try{
-    const result=await apiPost("/admin/api/manuscripts/stage1-repair",{
+    await apiPost("/admin/api/manuscripts/stage1-repair",{
       part_id:state.activePart.production_part_id,
       body_text:body,
       commander_request:request,
       surgery_summary:summary,
-      defect_tags:["CONTINUITY","MECHANICS","REWARD_OWNERSHIP","VOICE"]
+      defect_tags:["CONTINUITY","MECHANICS","REWARD_OWNERSHIP","VOICE"],
+      findings:{source:"GENESIS Admin manuscript editor",part_key:state.activePart.part_key,repair_summary:summary,requested_by:"Commander"}
     });
-    status.textContent="Repair call returned: "+JSON.stringify(result);
+    const saved=await api("/admin/api/manuscripts/version?part_id="+encodeURIComponent(state.activePart.production_part_id)+"&stage=stage1");
+    if(saved?.status!=="OK"||saved.body_text!==body){
+      throw new Error("Supabase read-back did not exactly match the submitted Stage 1 body. Do not treat this repair as complete.");
+    }
+    renderMeta(saved);
+    $("#manuscript-body").textContent=saved.body_text;
+    $("#manuscript-body").classList.remove("hidden");
+    $("#stage1-editor").classList.add("hidden");
     await loadManuscripts();
-    await showVersion("stage1");
-    status.textContent="Saved. Stage 1 was reloaded from the read bridge; verify the version number and hash above before treating the repair as complete.";
+    status.textContent="Saved and verified from Core Supabase: Stage 1 v"+(saved.version_number??"—")+" · "+(saved.word_count??"—")+" words · "+(saved.content_hash||"hash unavailable")+".";
+    $("#stage1-editor-status").textContent=status.textContent;
   }catch(error){
     status.textContent="NOT SAVED: "+error.message;
   }finally{
