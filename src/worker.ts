@@ -690,6 +690,20 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
     return json({ ok: true, actor: email, data });
   }
 
+  if (path === "/admin/api/manuscripts/version") {
+    await requirePermission(email, env, "MANUSCRIPTS_VIEW");
+    const partId = url.searchParams.get("part_id") || "";
+    if (!/^[0-9a-f-]{36}$/i.test(partId)) {
+      throw new HttpError(400, "MANUSCRIPT_PART_ID_INVALID", "A valid manuscript Part ID is required.");
+    }
+    const stage = stageName(url.searchParams.get("stage") || "stage1");
+    const data = await rpc(env, "genesis_admin_manuscript_version", {
+      p_part_id: partId,
+      p_stage: stage
+    });
+    return json({ ok: true, actor: email, data });
+  }
+
   if (path === "/admin/api/manuscripts") {
     await requirePermission(email, env, "MANUSCRIPTS_VIEW");
     const data = await rpc(env, "genesis_admin_manuscript_index", {
