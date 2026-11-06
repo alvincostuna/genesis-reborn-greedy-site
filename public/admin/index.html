@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex,nofollow">
   <title>GENESIS Admin — Control Center</title>
   <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
-  <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="stylesheet" href="/admin/admin.css?v=manuscript-nav-v2">
 </head>
 <body>
   <div class="shell">
@@ -404,6 +404,11 @@
     </div>
 
     <div id="viewer-meta" class="meta-grid"></div>
+    <div class="manuscript-nav" aria-label="Manuscript part navigation">
+      <button id="previous-part-button" type="button" aria-label="Previous manuscript Part">← Previous</button>
+      <span id="viewer-position" aria-live="polite"></span>
+      <button id="next-part-button" type="button" aria-label="Next manuscript Part">Next →</button>
+    </div>
     <div id="stage1-editor" class="stage1-editor hidden">
       <div class="editor-warning"><strong>Stage 1 Repair</strong><span>Writes a new repair version to Supabase. It does not overwrite prior versions or commit Stage 2. The live maintenance gate and word-count/voice checks still apply.</span></div>
       <label for="stage1-editor-body">Manuscript body</label>
@@ -424,6 +429,6 @@
     <article id="preview-body" class="reader-preview"></article>
   </dialog>
 
-  <script type="module" src="/admin/admin.js?v=phase-d-full-bridge-v1"></script>
+  <script type="module" src="/admin/admin.js?v=manuscript-nav-v2"></script>
 </body>
 </html>
