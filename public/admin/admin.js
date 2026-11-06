@@ -1,5 +1,5 @@
 const state={
-  platformReloadAfterLogin:null,manuscripts:[],activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[],activeDatabaseRecord:null,databaseAllowedFields:{},artAssetsManifest:null};
+  platformReloadAfterLogin:null,manuscripts:[],manuscriptSequence:[],manuscriptSequenceLoaded:false,activePart:null,activeStage:"stage2",rbac:null,activeReader:null,readerEligibleParts:[],activeDatabaseRecord:null,databaseAllowedFields:{},artAssetsManifest:null};
 const $=(s)=>document.querySelector(s);
 const $$=(s)=>[...document.querySelectorAll(s)];
 
@@ -426,6 +426,7 @@ async function loadManuscripts(){
   try{
     const envelope=await platformFunction("genesis-manuscripts-index",params);
     state.manuscripts=Array.isArray(envelope?.data)?envelope.data:[];
+    state.manuscriptSequenceLoaded=false;
     if(!state.manuscripts.length){
       table.innerHTML='<div class="empty">No manuscripts match this filter.</div>';
       return;
@@ -1962,6 +1963,115 @@ function renderMeta(v){
   ).join("");
 }
 
+function sortManuscriptSequence(rows){
+  return [...(rows||[])].sort((a,b)=>
+    (Number(a.saga_number||0)-Number(b.saga_number||0))||
+    (Number(a.episode_number||0)-Number(b.episode_number||0))||
+    (Number(a.part_number||0)-Number(b.part_number||0))||
+    String(a.part_key||"").localeCompare(String(b.part_key||""))
+  );
+}
+
+async function ensureManuscriptSequence(force=false){
+  if(!force&&state.manuscriptSequenceLoaded&&state.manuscriptSequence.length){
+    return state.manuscriptSequence;
+  }
+
+  const rows=[];
+  let offset=0;
+  let total=Infinity;
+
+  while(offset<total){
+    const envelope=await platformFunction("genesis-manuscripts-index",{
+      limit:"200",
+      offset:String(offset)
+    });
+    const batch=Array.isArray(envelope?.data)?envelope.data:[];
+    rows.push(...batch);
+
+    const reportedTotal=Number(envelope?.total);
+    if(Number.isFinite(reportedTotal))total=reportedTotal;
+
+    if(!batch.length||batch.length<200||rows.length>=total)break;
+    offset+=batch.length;
+  }
+
+  const canonicalByPart=new Map();
+  for(const row of rows){
+    const key=String(row.part_key||row.production_part_id||"");
+    const current=canonicalByPart.get(key);
+    const score=(candidate)=>{
+      const development=/DEVELOPMENT/i.test(String(candidate?.production_state||""))||
+        /DEVELOPMENT/i.test(String(candidate?.dashboard_state||""))||
+        /EXPANSION-DEVELOPMENT/i.test(String(candidate?.batch_key||""));
+      return (development?-1000:0)+
+        (candidate?.final_canon_available?100:0)+
+        (candidate?.stage2_available?30:0)+
+        (candidate?.stage1_available?10:0);
+    };
+    if(!current||
+       score(row)>score(current)||
+       (score(row)===score(current)&&new Date(row.updated_at||0)>new Date(current.updated_at||0))){
+      canonicalByPart.set(key,row);
+    }
+  }
+
+  state.manuscriptSequence=sortManuscriptSequence([...canonicalByPart.values()]);
+  state.manuscriptSequenceLoaded=true;
+  return state.manuscriptSequence;
+}
+
+function partHasStage(part,stage){
+  if(!part)return false;
+  if(stage==="final")return Boolean(part.final_canon_available);
+  if(stage==="stage2")return Boolean(part.stage2_available);
+  return Boolean(part.stage1_available);
+}
+
+function preferredStageForPart(part,requestedStage){
+  if(requestedStage&&partHasStage(part,requestedStage))return requestedStage;
+  if(part?.final_canon_available)return "final";
+  if(part?.stage2_available)return "stage2";
+  return "stage1";
+}
+
+function updateViewerNavigation(sequence=state.manuscriptSequence){
+  const previous=$("#previous-part-button");
+  const next=$("#next-part-button");
+  const position=$("#viewer-position");
+  if(!previous||!next||!position||!state.activePart)return;
+
+  const index=(sequence||[]).findIndex((row)=>row.production_part_id===state.activePart.production_part_id);
+  const prev=index>0?sequence[index-1]:null;
+  const nxt=index>=0&&index<sequence.length-1?sequence[index+1]:null;
+
+  previous.disabled=!prev;
+  next.disabled=!nxt;
+  previous.textContent=prev?"← "+prev.part_key:"← Previous";
+  next.textContent=nxt?nxt.part_key+" →":"Next →";
+  position.textContent=index>=0?"Part "+(index+1)+" of "+sequence.length+" · "+state.activePart.part_key:state.activePart.part_key;
+}
+
+async function navigateManuscript(direction){
+  if(!state.activePart)return;
+
+  const editor=$("#stage1-editor");
+  if(editor&&!editor.classList.contains("hidden")){
+    const leave=confirm("Leave the Stage 1 editor and move to another Part? Unsaved local edits will be discarded.");
+    if(!leave)return;
+  }
+
+  const requestedStage=state.activeStage;
+  const sequence=await ensureManuscriptSequence();
+  const index=sequence.findIndex((row)=>row.production_part_id===state.activePart.production_part_id);
+  if(index<0)return;
+
+  const target=sequence[index+(direction<0?-1:1)];
+  if(!target)return;
+
+  await openPart(target.production_part_id,{requestedStage});
+}
+
 async function showVersion(stage){
   if(!state.activePart)return;
   state.activeStage=stage;
@@ -1990,16 +2100,36 @@ async function showVersion(stage){
   }
 }
 
-async function openPart(partId){
-  const p=state.manuscripts.find((x)=>x.production_part_id===partId);
+async function openPart(partId,options={}){
+  let p=state.manuscripts.find((x)=>x.production_part_id===partId)||
+    state.manuscriptSequence.find((x)=>x.production_part_id===partId);
+
+  let sequence=state.manuscriptSequence;
+  if(!p||!state.manuscriptSequenceLoaded){
+    sequence=await ensureManuscriptSequence();
+    p=p||sequence.find((x)=>x.production_part_id===partId);
+  }
   if(!p)return;
+
   state.activePart=p;
   $("#viewer-key").textContent=p.part_key;
   $("#viewer-title").textContent=p.title;
-  $("#viewer").showModal();
 
-  const preferred=p.final_canon_available?"final":(p.stage2_available?"stage2":"stage1");
+  $("#stage1-editor")?.classList.add("hidden");
+  const body=$("#manuscript-body");
+  body.classList.remove("hidden");
+  body.textContent="Loading manuscript…";
+  body.scrollTop=0;
+  $("#viewer-meta").innerHTML="";
+
+  const viewer=$("#viewer");
+  if(!viewer.open)viewer.showModal();
+
+  updateViewerNavigation(sequence);
+  const preferred=preferredStageForPart(p,options.requestedStage);
   await showVersion(preferred);
+  body.scrollTop=0;
+  updateViewerNavigation(sequence);
 }
 
 async function loadStage1IntoEditor(){
@@ -2288,6 +2418,8 @@ $("#refresh-manuscripts").addEventListener("click",loadManuscripts);
 $("#search").addEventListener("keydown",(e)=>{if(e.key==="Enter")loadManuscripts();});
 $("#episode-filter").addEventListener("change",loadManuscripts);
 $("#close-viewer").addEventListener("click",()=>$("#viewer").close());
+$("#previous-part-button")?.addEventListener("click",()=>navigateManuscript(-1));
+$("#next-part-button")?.addEventListener("click",()=>navigateManuscript(1));
 $("#close-preview").addEventListener("click",()=>$("#preview").close());
 $$(".tabs [data-stage]").forEach((b)=>b.addEventListener("click",()=>showVersion(b.dataset.stage)));
 $("#compare-button").addEventListener("click",compareCurrent);
