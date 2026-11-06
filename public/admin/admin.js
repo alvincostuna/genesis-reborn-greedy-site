@@ -1996,8 +1996,27 @@ async function ensureManuscriptSequence(force=false){
     offset+=batch.length;
   }
 
-  const deduped=[...new Map(rows.map((row)=>[row.production_part_id,row])).values()];
-  state.manuscriptSequence=sortManuscriptSequence(deduped);
+  const canonicalByPart=new Map();
+  for(const row of rows){
+    const key=String(row.part_key||row.production_part_id||"");
+    const current=canonicalByPart.get(key);
+    const score=(candidate)=>{
+      const development=/DEVELOPMENT/i.test(String(candidate?.production_state||""))||
+        /DEVELOPMENT/i.test(String(candidate?.dashboard_state||""))||
+        /EXPANSION-DEVELOPMENT/i.test(String(candidate?.batch_key||""));
+      return (development?-1000:0)+
+        (candidate?.final_canon_available?100:0)+
+        (candidate?.stage2_available?30:0)+
+        (candidate?.stage1_available?10:0);
+    };
+    if(!current||
+       score(row)>score(current)||
+       (score(row)===score(current)&&new Date(row.updated_at||0)>new Date(current.updated_at||0))){
+      canonicalByPart.set(key,row);
+    }
+  }
+
+  state.manuscriptSequence=sortManuscriptSequence([...canonicalByPart.values()]);
   state.manuscriptSequenceLoaded=true;
   return state.manuscriptSequence;
 }
