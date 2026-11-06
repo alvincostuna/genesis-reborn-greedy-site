@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex,nofollow">
   <title>GENESIS Admin — Control Center</title>
   <link rel="icon" type="image/png" href="/assets/genesis-official-logo-64.png">
-  <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="stylesheet" href="/admin/admin.css?v=manuscript-nav-v1">
 </head>
 <body>
   <div class="shell">
@@ -403,6 +403,11 @@
     </div>
 
     <div id="viewer-meta" class="meta-grid"></div>
+    <div class="manuscript-nav" aria-label="Manuscript part navigation">
+      <button id="previous-part-button" type="button">← Previous Part</button>
+      <span id="viewer-position" aria-live="polite"></span>
+      <button id="next-part-button" type="button">Next Part →</button>
+    </div>
     <article id="manuscript-body" class="manuscript"></article>
   </dialog>
 
@@ -412,6 +417,6 @@
     <article id="preview-body" class="reader-preview"></article>
   </dialog>
 
-  <script type="module" src="/admin/admin.js?v=phase-d-full-bridge-v1"></script>
+  <script type="module" src="/admin/admin.js?v=manuscript-nav-v1"></script>
 </body>
 </html>
