@@ -1373,30 +1373,34 @@ async function loadCodex(){
     const counts={};
     for(const x of items)counts[x.status]=(counts[x.status]||0)+1;
 
+    const activePlans=items.filter(x=>String(x.roadmap_status||"").toUpperCase()==="ACTIVE");
+    const historicalApproved=items.filter(x=>x.status==="APPROVED"&&String(x.roadmap_status||"").toUpperCase()!=="ACTIVE");
+    const executed=items.filter(x=>x.executed===true);
     summary.innerHTML=
-      '<div class="card"><span>Total plans</span><strong>'+escapeHtml(d.total??items.length)+'</strong></div>'+
-      '<div class="card"><span>Approved</span><strong>'+escapeHtml(counts.APPROVED??0)+'</strong></div>'+
+      '<div class="card"><span>Core reveal plans</span><strong>'+escapeHtml(d.source_total??items.length)+'</strong></div>'+
+      '<div class="card"><span>Active-roadmap plans</span><strong>'+escapeHtml(activePlans.length)+'</strong></div>'+
+      '<div class="card"><span>Historical approved</span><strong>'+escapeHtml(historicalApproved.length)+'</strong></div>'+
       '<div class="card"><span>Draft</span><strong>'+escapeHtml(counts.DRAFT??0)+'</strong></div>'+
-      '<div class="card"><span>Retired</span><strong>'+escapeHtml(counts.RETIRED??0)+'</strong></div>'+
-      '<div class="card"><span>Core source total</span><strong>'+escapeHtml(d.source_total??items.length)+'</strong></div>'+
-      '<div class="card"><span>Read mode</span><strong>CORE → PLATFORM</strong></div>';
+      '<div class="card"><span>Executed</span><strong>'+escapeHtml(executed.length)+'</strong></div>'+
+      '<div class="card"><span>Mode</span><strong>ADMIN READ ONLY</strong></div>';
 
     create.innerHTML=
       '<div class="database-head"><span>Codex Mutation Controls</span><small>HOLD</small></div>'+
       '<div class="admin-note compact">'+
         '<strong>Read cutover complete; mutation cutover remains isolated.</strong>'+
-        '<p>Create, edit, approve and retire controls are intentionally disabled. Existing Core reveal plans are synchronized into the Platform read model, but this screen does not write canonical Codex state back to Core.</p>'+
+        '<p>Create, edit, approve and retire controls are intentionally disabled. Existing Core reveal plans are synchronized into the Platform read model. An approved historical roadmap plan is NOT a released reader entry; only published Final Canon passes public reveal gates.</p>'+
       '</div>'+
       '<p class="muted codex-allowlist">Allowed public field keys: '+escapeHtml((d.allowed_public_fields||[]).join(", "))+'</p>';
 
     root.innerHTML=
       '<div class="database-head"><span>Reveal Plans</span><small>'+escapeHtml(items.length)+' shown · PLATFORM READ MODEL</small></div>'+
       (items.length
-        ?'<div class="table-scroll"><table><thead><tr><th>Entity</th><th>Part</th><th>Kind</th><th>Status</th><th>Public fields</th><th>First-use evidence</th><th>Actions</th></tr></thead><tbody>'+
+        ?'<div class="table-scroll"><table><thead><tr><th>Entity</th><th>Roadmap</th><th>Part</th><th>Kind</th><th>Status</th><th>Public fields</th><th>First-use evidence</th><th>Actions</th></tr></thead><tbody>'+
           items.map(x=>{
             const first=x.first_use||{};
             return '<tr>'+
               '<td><strong>'+escapeHtml(x.public_name||x.canonical_name||"—")+'</strong><br><code>'+escapeHtml(x.entity_code||"—")+'</code></td>'+
+              '<td><strong>V'+escapeHtml(x.roadmap_version??"—")+'</strong><br><small>'+escapeHtml(x.roadmap_status||"—")+'</small></td>'+
               '<td><code>'+escapeHtml(x.part_key||"—")+'</code><br><small>'+escapeHtml(x.part_title||"")+'</small></td>'+
               '<td>'+escapeHtml(x.reveal_kind||"—")+'</td>'+
               '<td><span class="status '+(x.status==="APPROVED"?"final":"review")+'">'+escapeHtml(x.status||"—")+'</span>'+(x.executed?'<br><small>EXECUTED</small>':'')+'</td>'+
