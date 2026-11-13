@@ -635,7 +635,11 @@ async function loadDatabaseSummary(){
 
 async function loadDatabase(){
   const table=$("#database-table");
+  const staging=$("#database-staging");
   table.innerHTML='<div class="empty">Loading World Database through GENESIS PLATFORM…</div>';
+  if(staging){
+    staging.innerHTML='<div class="empty">Choose a World Database record to inspect its protected details and reveal gate. Admin inspection does not publish content.</div>';
+  }
 
   if(!platformSession()){
     table.innerHTML='<div class="empty">Waiting for the shared GENESIS PLATFORM Admin session.</div>';
@@ -651,22 +655,59 @@ async function loadDatabase(){
     const data=await platformFunction("genesis-world-database",params);
     const items=Array.isArray(data?.data)?data.data:[];
     if(!items.length){
-      table.innerHTML='<div class="empty"><strong>No records.</strong><br>'+escapeHtml(domain)+' returned no matching rows.</div>';
+      table.innerHTML='<div class="empty"><strong>No matching records.</strong><br>'+escapeHtml(domain)+' returned no matching rows. The private registry and public Codex have separate publication gates.</div>';
       return;
     }
 
     const layer=data.layer||items[0]?.layer||"";
-    table.innerHTML=
-      '<div class="database-head"><span>'+escapeHtml(domain.toUpperCase())+' · READ ONLY</span><small>'+escapeHtml(data.total??items.length)+' total records · '+escapeHtml(layer||"CORE")+'</small></div>'+
+    const regionNames=[...new Set(items.map(x=>String(x?.meta?.region||"Unassigned region")))].sort((a,b)=>a.localeCompare(b));
+    const regionNumbers=new Map(regionNames.map((name,index)=>[name,String(index)]));
+    const regionIndex=x=>regionNumbers.get(String(x?.meta?.region||"Unassigned region"))||"0";
+    const regionBrowser=domain==="maps"?
+      '<div class="database-head"><span>ADMIN ATLAS · REGION DIRECTORY</span><small>Read-only location registry · not geographic artwork</small></div>'+
+      '<div class="admin-note compact"><strong>'+escapeHtml(data.total??items.length)+' canonical maps</strong><p>These map records exist in private CORE. Reader visibility remains controlled by published Final Canon and approved reveal gates. Region selection filters only this Admin table.</p></div>'+
+      '<div class="cards" id="database-map-regions"><button type="button" class="db-region-filter" data-db-region="all">All regions ('+items.length+')</button>'+
+      regionNames.map((name,i)=>'<button type="button" class="db-region-filter" data-db-region="'+i+'">'+escapeHtml(name)+' ('+items.filter(x=>regionIndex(x)===String(i)).length+')</button>').join("")+
+      '</div>':"";
+
+    table.innerHTML=regionBrowser+
+      '<div class="database-head"><span>'+escapeHtml(domain.toUpperCase())+' · ADMIN READ ONLY</span><small>'+escapeHtml(data.total??items.length)+' total records · '+escapeHtml(layer||"CORE")+'</small></div>'+
       '<div class="table-scroll"><table><thead><tr><th>Name</th><th>Code</th><th>Status</th><th>Key metadata</th><th>Detail</th></tr></thead><tbody>'+
-      items.map((x)=>
-        '<tr><td><strong>'+escapeHtml(x.name||"—")+'</strong></td>'+
-        '<td><code>'+escapeHtml(x.code||"—")+'</code></td>'+
-        '<td><span class="status review">'+escapeHtml(x.status||"—")+'</span></td>'+
-        '<td class="meta-text">'+escapeHtml(compactMeta(x.meta))+'</td>'+
-        '<td><button class="db-stage-button" disabled title="Protected detail migrates in the next World phase">Detail migration pending</button></td></tr>'
-      ).join("")+
+      items.map((x,index)=>{
+        const validId=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(x.record_id||""));
+        const inspectable=x.layer!=="CORE_DATABASE"||validId;
+        return '<tr data-db-region-index="'+escapeHtml(regionIndex(x))+'"><td><strong>'+escapeHtml(x.name||"—")+'</strong></td>'+
+          '<td><code>'+escapeHtml(x.code||"—")+'</code></td>'+
+          '<td><span class="status review">'+escapeHtml(x.status||"—")+'</span></td>'+
+          '<td class="meta-text">'+escapeHtml(compactMeta(x.meta))+'</td>'+
+          '<td><button type="button" class="db-stage-button db-inspect-button" data-record-index="'+index+'"'+(inspectable?'':' disabled title="Canonical UUID not available"')+'>'+(inspectable?'Inspect':'Unavailable')+'</button></td></tr>';
+      }).join("")+
       '</tbody></table></div>';
+
+    table.querySelectorAll(".db-inspect-button").forEach(button=>button.addEventListener("click",()=>{
+      const index=Number(button.dataset.recordIndex);
+      const entry=items[index];
+      if(!entry||!staging)return;
+      const id=String(entry.record_id||"");
+      const validId=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+      const record={
+        id,code:entry.code,name:entry.name,status:entry.status,meta:entry.meta||{},
+        _layer:entry.layer||layer,
+        _readOnly:entry.layer!=="CORE_DATABASE"||!validId
+      };
+      renderDatabaseStaging(domain,record);
+      staging.scrollIntoView({behavior:"smooth",block:"start"});
+    }));
+
+    table.querySelectorAll(".db-region-filter").forEach(button=>button.addEventListener("click",()=>{
+      const selected=button.dataset.dbRegion||"all";
+      table.querySelectorAll(".db-region-filter").forEach(x=>x.setAttribute("aria-pressed",String(x===button)));
+      table.querySelectorAll("tr[data-db-region-index]").forEach(row=>{
+        row.hidden=selected!=="all"&&row.dataset.dbRegionIndex!==selected;
+      });
+    }));
+    const allRegions=table.querySelector('[data-db-region="all"]');
+    if(allRegions)allRegions.setAttribute("aria-pressed","true");
   }catch(error){
     table.innerHTML=bridgeFailurePanel(error);
   }
@@ -1332,30 +1373,34 @@ async function loadCodex(){
     const counts={};
     for(const x of items)counts[x.status]=(counts[x.status]||0)+1;
 
+    const activePlans=items.filter(x=>String(x.roadmap_status||"").toUpperCase()==="ACTIVE");
+    const historicalApproved=items.filter(x=>x.status==="APPROVED"&&String(x.roadmap_status||"").toUpperCase()!=="ACTIVE");
+    const executed=items.filter(x=>x.executed===true);
     summary.innerHTML=
-      '<div class="card"><span>Total plans</span><strong>'+escapeHtml(d.total??items.length)+'</strong></div>'+
-      '<div class="card"><span>Approved</span><strong>'+escapeHtml(counts.APPROVED??0)+'</strong></div>'+
+      '<div class="card"><span>Core reveal plans</span><strong>'+escapeHtml(d.source_total??items.length)+'</strong></div>'+
+      '<div class="card"><span>Active-roadmap plans</span><strong>'+escapeHtml(activePlans.length)+'</strong></div>'+
+      '<div class="card"><span>Historical approved</span><strong>'+escapeHtml(historicalApproved.length)+'</strong></div>'+
       '<div class="card"><span>Draft</span><strong>'+escapeHtml(counts.DRAFT??0)+'</strong></div>'+
-      '<div class="card"><span>Retired</span><strong>'+escapeHtml(counts.RETIRED??0)+'</strong></div>'+
-      '<div class="card"><span>Core source total</span><strong>'+escapeHtml(d.source_total??items.length)+'</strong></div>'+
-      '<div class="card"><span>Read mode</span><strong>CORE → PLATFORM</strong></div>';
+      '<div class="card"><span>Executed</span><strong>'+escapeHtml(executed.length)+'</strong></div>'+
+      '<div class="card"><span>Mode</span><strong>ADMIN READ ONLY</strong></div>';
 
     create.innerHTML=
       '<div class="database-head"><span>Codex Mutation Controls</span><small>HOLD</small></div>'+
       '<div class="admin-note compact">'+
         '<strong>Read cutover complete; mutation cutover remains isolated.</strong>'+
-        '<p>Create, edit, approve and retire controls are intentionally disabled. Existing Core reveal plans are synchronized into the Platform read model, but this screen does not write canonical Codex state back to Core.</p>'+
+        '<p>Create, edit, approve and retire controls are intentionally disabled. Existing Core reveal plans are synchronized into the Platform read model. An approved historical roadmap plan is NOT a released reader entry; only published Final Canon passes public reveal gates.</p>'+
       '</div>'+
       '<p class="muted codex-allowlist">Allowed public field keys: '+escapeHtml((d.allowed_public_fields||[]).join(", "))+'</p>';
 
     root.innerHTML=
       '<div class="database-head"><span>Reveal Plans</span><small>'+escapeHtml(items.length)+' shown · PLATFORM READ MODEL</small></div>'+
       (items.length
-        ?'<div class="table-scroll"><table><thead><tr><th>Entity</th><th>Part</th><th>Kind</th><th>Status</th><th>Public fields</th><th>First-use evidence</th><th>Actions</th></tr></thead><tbody>'+
+        ?'<div class="table-scroll"><table><thead><tr><th>Entity</th><th>Roadmap</th><th>Part</th><th>Kind</th><th>Status</th><th>Public fields</th><th>First-use evidence</th><th>Actions</th></tr></thead><tbody>'+
           items.map(x=>{
             const first=x.first_use||{};
             return '<tr>'+
               '<td><strong>'+escapeHtml(x.public_name||x.canonical_name||"—")+'</strong><br><code>'+escapeHtml(x.entity_code||"—")+'</code></td>'+
+              '<td><strong>V'+escapeHtml(x.roadmap_version??"—")+'</strong><br><small>'+escapeHtml(x.roadmap_status||"—")+'</small></td>'+
               '<td><code>'+escapeHtml(x.part_key||"—")+'</code><br><small>'+escapeHtml(x.part_title||"")+'</small></td>'+
               '<td>'+escapeHtml(x.reveal_kind||"—")+'</td>'+
               '<td><span class="status '+(x.status==="APPROVED"?"final":"review")+'">'+escapeHtml(x.status||"—")+'</span>'+(x.executed?'<br><small>EXECUTED</small>':'')+'</td>'+
