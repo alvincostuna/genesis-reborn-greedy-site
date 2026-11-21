@@ -425,7 +425,38 @@ async function loadManuscripts(){
 
   try{
     const envelope=await platformFunction("genesis-manuscripts-index",params);
-    state.manuscripts=Array.isArray(envelope?.data)?envelope.data:[];
+    const incoming=Array.isArray(envelope?.data)?envelope.data:[];
+    const canonicalByPart=new Map();
+
+    for(const row of incoming){
+      const productionState=String(row?.production_state||"");
+      const dashboardState=String(row?.dashboard_state||"");
+      const batchKey=String(row?.batch_key||"");
+
+      // Canonical Manuscripts is the current production surface.
+      // Historical/development overlays remain in Core history but must not
+      // appear as extra Parts beside already-promoted Final Canon rows.
+      if(/DEVELOPMENT_AWAITING_MECHANICS|HISTORY_AUTHORING_DRAFT/i.test(productionState)||
+         /Development Draft|History Draft/i.test(dashboardState)||
+         /VFINAL-EXPANSION-DEVELOPMENT|VFINAL-HISTORY-DRAFT/i.test(batchKey)){
+        continue;
+      }
+
+      const key=String(row?.part_key||row?.production_part_id||"");
+      const current=canonicalByPart.get(key);
+      const score=(candidate)=>
+        (candidate?.final_canon_available?100:0)+
+        (candidate?.stage2_available?30:0)+
+        (candidate?.stage1_available?10:0);
+
+      if(!current||
+         score(row)>score(current)||
+         (score(row)===score(current)&&new Date(row.updated_at||0)>new Date(current.updated_at||0))){
+        canonicalByPart.set(key,row);
+      }
+    }
+
+    state.manuscripts=sortManuscriptSequence([...canonicalByPart.values()]);
     state.manuscriptSequenceLoaded=false;
     if(!state.manuscripts.length){
       table.innerHTML='<div class="empty">No manuscripts match this filter.</div>';
@@ -433,7 +464,7 @@ async function loadManuscripts(){
     }
 
     table.innerHTML=
-      '<div class="database-head"><span>CORE MANUSCRIPTS</span><small>READ ONLY · '+escapeHtml(envelope.total??state.manuscripts.length)+' MATCHING</small></div>'+
+      '<div class="database-head"><span>CORE MANUSCRIPTS</span><small>READ ONLY · '+escapeHtml(state.manuscripts.length)+' MATCHING</small></div>'+
       '<table><thead><tr>'+
       '<th>Part</th><th>Title</th><th>Current stage</th><th>Historical label</th><th>S1</th><th>S2</th><th>Final</th><th>Words (latest)</th>'+
       '</tr></thead><tbody>'+
